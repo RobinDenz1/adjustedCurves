@@ -1,0 +1,89 @@
+\name{surv_method_el}
+\alias{surv_method_el}
+%- Also NEED an '\alias' for EACH other topic documented here.
+\title{
+Empirical Likelihood Estimation Survival Curves
+}
+\description{
+%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+}
+\usage{
+surv_method_el(data, variable, ev_time, event, sd,
+               times, treatment_vars, moment="first",
+               standardize=F, ...)
+}
+%- maybe also 'usage' for other objects documented here.
+\arguments{
+  \item{data}{
+A \code{data.frame} object containing the needed time-to-event data in standard format.
+}
+  \item{variable}{
+A character string specifying the variable by which the survival curves should be grouped. Must be a valid columname of \code{data}.
+}
+  \item{ev_time}{
+A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid columname of \code{data}.
+}
+  \item{event}{
+A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
+}
+  \item{sd}{
+A logical variable, indicating whether the standard deviation of the survival probabilities should be calculated. Needed to calculate confidence intervals.
+}
+  \item{times}{
+Method used in \code{WeightIt} function call. Ignored if \code{treatment_model} is not a formula object.
+}
+  \item{treatment_vars}{
+A character vector of column names specifying variables to be used as covariates in the empirical likelihood estimation. See details and examples.
+}
+  \item{moment}{
+A character string specifying which moment to adjust for. See details.
+}
+  \item{standardize}{
+A logical variable indicating whether the \code{treatment_vars} variables should be standardized. See details.
+}
+  \item{...}{
+Further arguments passed to the \code{el.est} function inside of the \code{adjKMtest} package.
+}
+}
+\details{
+%%  ~~ If necessary, more details than the description above ~~
+}
+\value{
+Returns a \code{data.frame} object containing the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
+}
+\references{
+Xiaofei Wang, Fangfang Bai, Herbert Pang, and Stephen L. George. "Bias-Adjusted Kaplan-Meier Survival Curves for Marginal Treatment Effect in Observational Studies". In: Journal of Biopharmaceutical Statistics 29.4 (2019), pp. 592-605.
+
+Art B. Owen. Empirical Likelihood. Boca Raton: CRC Press, 2001.
+}
+\author{
+%%  ~~who you are~~
+}
+\note{
+%%  ~~further notes~~
+}
+
+%% ~Make other sections like Warning with \section{Warning }{....} ~
+
+\seealso{
+%% ~~objects to See Also as \code{\link{help}}, ~~~
+}
+\examples{
+##---- Should be DIRECTLY executable !! ----
+##-- ==>  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
+
+## The function is currently defined as
+function (x)
+{
+  }
+}
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory (show via RShowDoc("KEYWORDS")):
+% \keyword{ ~kwd1 }
+% \keyword{ ~kwd2 }
+% Use only one keyword per line.
+% For non-standard keywords, use \concept instead of \keyword:
+% \concept{ ~cpt1 }
+% \concept{ ~cpt2 }
+% Use only one concept per line.

@@ -1,0 +1,108 @@
+\name{surv_method_ostmle}
+\alias{surv_method_ostmle}
+%- Also NEED an '\alias' for EACH other topic documented here.
+\title{
+One-Step Targeted Maximum Likelihood Estimation Survival Curves
+}
+\description{
+%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+}
+\usage{
+surv_method_ostmle(data, variable, ev_time, event, sd,
+                   times, t_max=NULL, adjust_vars=NULL,
+                   SL.ftime=NULL, SL.ctime=NULL, SL.trt=NULL,
+                   epsilon=1, max_num_iteration=100,
+                   psi_moss_method="l2", tmle_tolerance=NULL,
+                   gtol=1e-3)
+}
+%- maybe also 'usage' for other objects documented here.
+\arguments{
+  \item{data}{
+A \code{data.frame} object containing the needed time-to-event data in standard format.
+}
+  \item{variable}{
+A character string specifying the variable by which the survival curves should be grouped. Must be a valid columname of \code{data}.
+}
+  \item{ev_time}{
+A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid columname of \code{data}.
+}
+  \item{event}{
+A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
+}
+  \item{sd}{
+A logical variable, indicating whether the standard deviation of the survival probabilities should be calculated. Needed to calculate confidence intervals.
+}
+  \item{times}{
+A numeric vector of time points at which the survival probability should be estimated or \code{NULL}. If \code{NULL} the survival is estimated at all points in time at which an event occured.
+}
+  \item{t_max}{
+The furthest point in time to consider in the survival curve estimation. See \code{MOSS}.
+}
+  \item{adjust_vars}{
+A character vector of column names specifying variables to be used when modeling the outcome, treatment and censoring mechanism. See details and examples.
+}
+  \item{SL.ftime}{
+
+}
+  \item{SL.ctime}{
+
+}
+  \item{SL.trt}{
+
+}
+  \item{epsilon}{
+
+}
+  \item{max_num_iteration}{
+
+}
+  \item{psi_moss_method}{
+
+}
+  \item{tmle_tolerance}{
+
+}
+  \item{gtol}{
+
+}
+}
+\details{
+%%  ~~ If necessary, more details than the description above ~~
+}
+\value{
+Returns a \code{data.frame} object containing the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
+}
+\references{
+Weixin Cai and Mark J. van der Laan. "One-Step Targeted Maximum Likelihood Estimation for Time-To-Event Outcomes". In: Biometrics 76 (2020), pp. 722-733.
+}
+\author{
+%%  ~~who you are~~
+}
+\note{
+%%  ~~further notes~~
+}
+
+%% ~Make other sections like Warning with \section{Warning }{....} ~
+
+\seealso{
+%% ~~objects to See Also as \code{\link{help}}, ~~~
+}
+\examples{
+##---- Should be DIRECTLY executable !! ----
+##-- ==>  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
+
+## The function is currently defined as
+function (x)
+{
+  }
+}
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory (show via RShowDoc("KEYWORDS")):
+% \keyword{ ~kwd1 }
+% \keyword{ ~kwd2 }
+% Use only one keyword per line.
+% For non-standard keywords, use \concept instead of \keyword:
+% \concept{ ~cpt1 }
+% \concept{ ~cpt2 }
+% Use only one concept per line.
