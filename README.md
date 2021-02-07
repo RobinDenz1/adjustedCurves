@@ -13,9 +13,9 @@ Those additional features include the calculation of adjusted restricted mean su
 Currently this package is not available on Cran, but can be installed easily using the following code:
 
 ```
-library(devtool)
+library(devtools)
 
-install_github("https://github.com/RobinDenz1/adjustedCurves")
+devtools::install_github("https://github.com/RobinDenz1/adjustedCurves")
 ```
 
 ## Issues
