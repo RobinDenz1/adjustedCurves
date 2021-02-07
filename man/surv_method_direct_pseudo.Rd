@@ -54,7 +54,9 @@ Returns a \code{data.frame} object containing the estimated adjusted survival pr
 \references{
 Per K. Andersen, Elisavet Syriopoulou, and Erik T. Parner. "Causal Inference in Survival Analysis using Pseudo-Observations". In: Statistics in Medicine 36 (2017), pp. 2669-2681.
 
-Per Kragh Andersen and Maja Pohar Perme. "Pseudo-Observations in Survival Analysis". In: Statistical Methods in Medical Research 19 (2010), pp. 71-99.
+Per K. Andersen and Maja Pohar Perme. "Pseudo-Observations in Survival Analysis". In: Statistical Methods in Medical Research 19 (2010), pp. 71-99.
+
+Aris Perperoglou, Willi Sauerbrei, Michal Abrahamowicz, and Matthias Schmid. "A Review of Spline Function Procedures in R". In: BMC Medical Research Methodology 19 (2019), pp. 1-16
 }
 \author{
 %%  ~~who you are~~
@@ -66,7 +68,7 @@ Per Kragh Andersen and Maja Pohar Perme. "Pseudo-Observations in Survival Analys
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{geese}}, \code{\link{jacknife}}, \code{\link{ns}}, \code{\link{bs}}
 }
 \examples{
 ##---- Should be DIRECTLY executable !! ----

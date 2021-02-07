@@ -5,11 +5,11 @@
 Plot Confounder-Adjusted Survival Curves
 }
 \description{
-
+A function to graphically display confounder-adjusted survival curves which where previously estimated using the \code{adjustedsurv} function. The user can customize the plot using a variety of options. Internally it uses the \code{ggplot2} package, so additional not implemented features can be added using the standard \code{ggplot2} syntax. This function also includes the option to use isotonic regression on the survival curves, which is of benefit if the estimated curves are not monotone.
 }
 \usage{
 plot.adjustedsurv(adjsurv, draw_ci=T, max_t=Inf,
-                  isotonic_regression=F, force_bounds=F,
+                  iso_reg=F, force_bounds=F, use_boot=F,
                   color=T, linetype=F, facet=F,
                   line_size=1, xlab="Time",
                   ylab="Adjusted Survival Probability",
@@ -30,11 +30,14 @@ A logical variable indicating whether the confidence intervals should be drawn.
   \item{max_t}{
 A number indicating the latest survival time which is to be plotted.
   }
-  \item{isotonic_regression}{
+  \item{iso_reg}{
 A logical variable indicating whether the estimates should be monotonized using isotonic regression. See details.
   }
   \item{force_bounds}{
 A logical variable indicating whether the 0 and 1 bounds of the survival probabilities should be forced in the plot. See details.
+  }
+  \item{use_boot}{
+A logical variable denoting whether the bootstrapped estimates should be used for the curves and their confidence intervals. Can only be used if they were calculated. See \code{adjustedsurv}.
   }
   \item{color}{
 A logical variable indicating whether the curves should be colored differently.
@@ -99,7 +102,7 @@ A number indicating the level of transparency that should be used when drawing t
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{adjusted_surv}}, \code{\link{ggplot2}}, \code{\link{pammtools}}
+\code{\link{adjustedsurv}}, \code{\link{ggplot2}}, \code{\link{pammtools}}
 }
 \examples{
 ##---- Should be DIRECTLY executable !! ----
