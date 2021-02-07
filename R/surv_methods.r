@@ -34,7 +34,8 @@ surv_method_iptw_km <- function(data, variable, ev_time, event, sd,
   # get weights
   if (inherits(treatment_model, "formula") | inherits(treatment_model, "glm") |
       inherits(treatment_model, "multinom")) {
-    weights <- get_iptw_weights(data, treatment_model, weight_method, ...)
+    weights <- get_iptw_weights(data, treatment_model, weight_method,
+                                variable, ...)
   } else if (is.numeric(treatment_model)) {
     weights <- treatment_model
   }
@@ -127,7 +128,8 @@ surv_method_iptw_cox <- function(data, variable, ev_time, event, sd,
   # get weights
   if (inherits(treatment_model, "formula") | inherits(treatment_model, "glm") |
       inherits(treatment_model, "multinom")) {
-    weights <- get_iptw_weights(data, treatment_model, weight_method, ...)
+    weights <- get_iptw_weights(data, treatment_model, weight_method,
+                                variable, ...)
   } else if (is.numeric(treatment_model)) {
     weights <- treatment_model
   }
@@ -165,7 +167,8 @@ surv_method_iptw_pseudo <- function(data, variable, ev_time, event, sd,
   # get weights
   if (inherits(treatment_model, "formula") | inherits(treatment_model, "glm") |
       inherits(treatment_model, "multinom")) {
-    weights <- get_iptw_weights(data, treatment_model, weight_method, ...)
+    weights <- get_iptw_weights(data, treatment_model, weight_method,
+                                variable, ...)
   } else if (is.numeric(treatment_model)) {
     weights <- treatment_model
   }

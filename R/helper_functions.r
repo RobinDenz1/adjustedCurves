@@ -1,7 +1,8 @@
 ####################### Helper functions for R-Package #########################
 
 ## estimate iptw weights
-get_iptw_weights <- function(data, treatment_model, weight_method, ...) {
+get_iptw_weights <- function(data, treatment_model, weight_method,
+                             variable, ...) {
 
   if (inherits(treatment_model, "formula")) {
 
@@ -32,11 +33,11 @@ get_iptw_weights <- function(data, treatment_model, weight_method, ...) {
 # TODO: This can't be correct ...
 confint_surv <- function(surv, sd, n, alpha, conf_type="plain") {
   if (conf_type=="plain") {
-    error <- qnorm(1-(alpha/2)) * sd #/ sqrt(n)
+    error <- qnorm(1-(alpha/2)) * sd / sqrt(n)
     left <- surv - error
     right <- surv + error
   } else if (conf_type=="log") {
-    error <- qnorm(1-(alpha/2)) * sd #/ sqrt(n)
+    error <- qnorm(1-(alpha/2)) * sd / sqrt(n)
     left <- surv * exp(-error)
     right <- surv * exp(error)
   }
@@ -325,4 +326,19 @@ check_inputs_sim_fun <- function(n, lcovars, outcome_betas, surv_dist,
   }
 }
 
+## throw error when inputs don't make sense
+check_inputs_adj_rmst <- function(adjsurv, from, to, use_boot) {
 
+  if (!is.numeric(from) | !is.numeric(to)) {
+    stop("'from' and 'to' must be numbers.")
+  } else if (!inherits(adjsurv, "adjustedsurv")) {
+    stop("'adjsurv' must be an 'adjustedsurv' object created using ",
+         "the 'adjustedsurv()' function.")
+  } else if (from >= to) {
+    stop("'from' must be smaller than 'to'.")
+  } else if (use_boot & is.null(adjsurv$boot_data)) {
+    warning("Cannot use bootstrapped estimates because they were not estimated.",
+            " Need 'bootstrap=TRUE' in 'adjustedsurv' function call.")
+  }
+
+}

@@ -319,6 +319,88 @@ print.adjustedsurv_test <- function(adjtest) {
   cat("##################################################################\n")
 }
 
+## function to calculate the restricted mean survival time of each
+## adjusted survival curve previously estimated using the adjustedsurv function
+# TODO: - 'from' argument doesn't work yet
+#       - allow multicore bootstrapping
+#       - allow confidence interval calculation for rmsts
+#       - a print method maybe?
+#' @export
+adjusted_rmst <- function(adjsurv, from=0, to=Inf, use_boot=F) {
+
+  check_inputs_adj_rmst(adjsurv=adjsurv, from=from, to=to, use_boot=use_boot)
+
+  if (use_boot) {
+
+    n_boot <- max(adjsurv$boot_data$boot)
+    booted_areas <- vector(mode="list", length=n_boot)
+    booted_rmsts <- vector(mode="list", length=n_boot)
+
+    for (i in 1:n_boot) {
+
+      # select one bootstrap data set each
+      boot_dat <- adjsurv$boot_data[adjsurv$boot_data$boot==i,]
+
+      # create fake adjustedsurv object
+      fake_adjsurv <- list(adjsurv=boot_dat)
+      class(fake_adjsurv) <- "adjustedsurv"
+
+      # recursion call
+      adj_rmst <- adjusted_rmst(fake_adjsurv, from=from, to=to, use_boot=F)
+
+      booted_areas[[i]] <- adj_rmst$areas
+      booted_rmsts[[i]] <- adj_rmst$rmsts
+    }
+    booted_areas <- dplyr::bind_rows(booted_areas)
+    booted_rmsts <- dplyr::bind_rows(booted_rmsts)
+  }
+
+  levs <- unique(adjsurv$adjsurv$group)
+
+  rmsts <- vector(mode="numeric", length=length(levs))
+  areas <- vector(mode="numeric", length=length(levs))
+  for (i in 1:length(levs)) {
+
+    surv_dat <- adjsurv$adjsurv[adjsurv$adjsurv$group==levs[i],]
+    surv_dat$group <- NULL
+    surv_dat$sd <- NULL
+    surv_dat$ci_lower <- NULL
+    surv_dat$ci_upper <- NULL
+    surv_dat$boot <- NULL
+
+    if (is.finite(to)) {
+      latest <- read_from_step_function(to, step_data=surv_dat)
+      surv_dat <- surv_dat[surv_dat$time <= to,]
+
+      if (!to %in% surv_dat$time) {
+        surv_dat <- rbind(surv_dat, data.frame(time=to, surv=latest))
+      }
+
+    }
+
+    rmst <- exact_stepfun_integral(surv_dat)
+    areas[i] <- rmst
+
+    rmst <- 1/max(surv_dat$time) * rmst
+    rmsts[i] <- rmst
+  }
+  names(rmsts) <- levs
+  names(areas) <- levs
+
+  out <- list(areas=areas,
+              rmsts=rmsts)
+  class(out) <- "adjusted_rmst"
+
+  if (use_boot) {
+    out$booted_areas <- booted_areas
+    out$booted_rmsts <- booted_rmsts
+    out$areas_sd <- apply(booted_areas, 2, sd)
+    out$rmsts_sd <- apply(booted_rmsts, 2, sd)
+  }
+
+  return(out)
+}
+
 ## function to simulate confounded survival data
 #' @export
 sim_confounded_surv <- function(n=500, lcovars=NULL, outcome_betas=NULL,
@@ -326,7 +408,7 @@ sim_confounded_surv <- function(n=500, lcovars=NULL, outcome_betas=NULL,
                                 gamma=1.8, lambda=2, treatment_betas=NULL,
                                 intercept=-0.5, gtol=0.001,
                                 cens_fun=function(n){rweibull(n, 1, 2)},
-                                cens_args=list(), max_t=Inf, seed=42) {
+                                cens_args=list(), max_t=Inf) {
 
   check_inputs_sim_fun(n=n, lcovars=lcovars, outcome_betas=outcome_betas,
                        surv_dist=surv_dist, gamma=gamma, lambda=lambda,
@@ -381,7 +463,6 @@ sim_confounded_surv <- function(n=500, lcovars=NULL, outcome_betas=NULL,
   covars$group <- rbinom(n=n, size=1, prob=group_p)
 
   # generate survival times
-  set.seed(seed)
   covars$time <- apply(X=covars, MARGIN=1, FUN=sim_surv_time,
                        betas=c(outcome_betas, group=group_beta),
                        dist=surv_dist, lambda=lambda, gamma=gamma)
