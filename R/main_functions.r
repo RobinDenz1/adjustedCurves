@@ -1,6 +1,8 @@
 ## Main function of the package. Is basically a wrapper around
 ## all other functions, offering additional high level stuff
-# TODO: might be nice to allow multicore execution for bootstrapping
+# TODO: - might be nice to allow multicore execution for bootstrapping
+#       - bootstrapping times are off with iptw methods
+#       - bootstrapping fails when categorical
 #' @export
 adjustedsurv <- function(data, variable, ev_time, event, method, sd=T,
                          times=NULL, alpha=0.05, bootstrap=F,
