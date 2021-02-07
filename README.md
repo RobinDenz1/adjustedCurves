@@ -24,7 +24,7 @@ If you encounter any bugs or have any specific feature requests, please file an 
 
 ## Examples
 
-This minimal example shows how to calculate adjusted survival curves using *Direct Adjustment* this package:
+This minimal example shows how to calculate adjusted survival curves using *Direct Adjustment* with this package:
 
 ```
 library(adjustedCurves)
