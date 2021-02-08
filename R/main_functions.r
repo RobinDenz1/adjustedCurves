@@ -1,8 +1,6 @@
 ## Main function of the package. Is basically a wrapper around
 ## all other functions, offering additional high level stuff
 # TODO: - might be nice to allow multicore execution for bootstrapping
-#       - bootstrapping times are off with iptw methods
-#       - bootstrapping fails when categorical
 #' @export
 adjustedsurv <- function(data, variable, ev_time, event, method, sd=T,
                          times=NULL, alpha=0.05, bootstrap=F,
@@ -17,6 +15,8 @@ adjustedsurv <- function(data, variable, ev_time, event, method, sd=T,
   if (is.null(times)) {
     times <- sort(unique(data[, ev_time][data[, event]==1]))
   }
+
+  levs <- unique(data[,variable])
 
   # get relevant surv_method function
   surv_fun <- get(paste0("surv_method_", method))
@@ -49,7 +49,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method, sd=T,
       if (method %in% c("iptw_km", "iptw_cox", "iptw_pseudo", "aiptw",
                         "aiptw_pseudo")) {
         pass_args$treatment_model <- update(pass_args$treatment_model,
-                                            data=boot_samp)
+                                               data=boot_samp, trace=F)
       }
 
       # call surv_method with correct arguments
@@ -62,42 +62,34 @@ adjustedsurv <- function(data, variable, ev_time, event, method, sd=T,
       boot_data_list[[i]] <- adjsurv_boot
 
       # read from resulting step function at all t in times
-      # TODO: this doesn't really work with iptw methods
-      surv_0 <- sapply(times, read_from_step_function,
-                       step_data=subset(adjsurv_boot, group==0))
-      surv_1 <- sapply(times, read_from_step_function,
-                       step_data=subset(adjsurv_boot, group==1))
+      boot_surv <- vector(mode="list", length=length(levs))
+      for (j in 1:length(levs)) {
 
-      boot_stats_list[[i]] <- data.frame(times=times,
-                                         surv_0=surv_0,
-                                         surv_1=surv_1,
-                                         boot=i)
+        if (method %in% c("iptw_km", "iptw_cox")) {
+          times <- unique(data[,ev_time][data[,variable]==levs[j]])
+        }
+
+        surv_boot <- sapply(times, read_from_step_function,
+                            step_data=adjsurv_boot[adjsurv_boot$group==levs[j],])
+
+        dat_temp <- data.frame(time=times,
+                               surv_b=surv_boot,
+                               group=levs[j],
+                               boot=i)
+        boot_stats_list[[length(boot_stats_list)+1]] <- dat_temp
+      }
     }
-    boot_data <- dplyr::bind_rows(boot_data_list)
-    boot_data_same_t <- dplyr::bind_rows(boot_stats_list)
+    boot_data <- as.data.frame(dplyr::bind_rows(boot_data_list))
+    boot_data_same_t <- as.data.frame(dplyr::bind_rows(boot_stats_list))
 
     # calculate some statistics
     boot_stats <- boot_data_same_t %>%
-      dplyr::group_by(., times) %>%
-      dplyr::summarise(mean_s0=mean(surv_0, na.rm=na.rm),
-                       mean_s1=mean(surv_1, na.rm=na.rm),
-                       sd_s0=sd(surv_0, na.rm=na.rm),
-                       sd_s1=sd(surv_1, na.rm=na.rm),
-                       ci_lower_s0=quantile(surv_0, probs=alpha/2, na.rm=na.rm),
-                       ci_lower_s1=quantile(surv_1, probs=alpha/2, na.rm=na.rm),
-                       ci_upper_s0=quantile(surv_0, probs=1-(alpha/2), na.rm=na.rm),
-                       ci_upper_s1=quantile(surv_1, probs=1-(alpha/2), na.rm=na.rm),
+      dplyr::group_by(., time, group) %>%
+      dplyr::summarise(surv=mean(surv_b, na.rm=na.rm),
+                       sd=sd(surv_b, na.rm=na.rm),
+                       ci_lower=quantile(surv_b, probs=alpha/2, na.rm=na.rm),
+                       ci_upper=quantile(surv_b, probs=1-(alpha/2), na.rm=na.rm),
                        .groups="drop_last")
-    # reshape data
-    boot_stats <- data.frame(time=rep(times, 2),
-                             surv=c(boot_stats$mean_s0, boot_stats$mean_s1),
-                             group=c(rep(0, length(times)),
-                                     rep(1, length(times))),
-                             sd=c(boot_stats$sd_s0, boot_stats$sd_s1),
-                             ci_lower=c(boot_stats$ci_lower_s0,
-                                        boot_stats$ci_lower_s1),
-                             ci_upper=c(boot_stats$ci_upper_s0,
-                                        boot_stats$ci_upper_s1))
   }
 
   # core of the function
@@ -134,7 +126,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method, sd=T,
 #' @importFrom rlang .data
 #' @importFrom ggplot2 ggplot aes geom_step theme_bw theme facet_wrap
 #' ggtitle ylim scale_colour_manual scale_linetype_manual
-# TODO: maybe need to recalculate confidence intervals when using iso_reg
+# TODO: maybe need to recalculate confidence intervals when using iso_reg?
 #' @export
 plot.adjustedsurv <- function(adjsurv, draw_ci=T, max_t=Inf,
                               iso_reg=F, force_bounds=F, use_boot=F,
@@ -323,10 +315,8 @@ print.adjustedsurv_test <- function(adjtest) {
 
 ## function to calculate the restricted mean survival time of each
 ## adjusted survival curve previously estimated using the adjustedsurv function
-# TODO: - 'from' argument doesn't work yet
-#       - allow multicore bootstrapping
+# TODO: - allow multicore bootstrapping
 #       - allow confidence interval calculation for rmsts
-#       - a print method maybe?
 #' @export
 adjusted_rmst <- function(adjsurv, from=0, to=Inf, use_boot=F) {
 
@@ -370,6 +360,7 @@ adjusted_rmst <- function(adjsurv, from=0, to=Inf, use_boot=F) {
     surv_dat$ci_upper <- NULL
     surv_dat$boot <- NULL
 
+    # constrain step function end
     if (is.finite(to)) {
       latest <- read_from_step_function(to, step_data=surv_dat)
       surv_dat <- surv_dat[surv_dat$time <= to,]
@@ -378,6 +369,21 @@ adjusted_rmst <- function(adjsurv, from=0, to=Inf, use_boot=F) {
         surv_dat <- rbind(surv_dat, data.frame(time=to, surv=latest))
       }
 
+    }
+
+    # constrain step function beginning
+    if (from != 0) {
+      earliest <- read_from_step_function(from, step_data=surv_dat)
+      surv_dat <- surv_dat[surv_dat$time >= from,]
+
+      if (!from %in% surv_dat$time) {
+        surv_dat <- rbind(data.frame(time=from, surv=earliest), surv_dat)
+      }
+
+    } else {
+      if (!0 %in% surv_dat$time) {
+        surv-dat <- rbind(data.frame(time=0, surv=1), surv_dat)
+      }
     }
 
     rmst <- exact_stepfun_integral(surv_dat)
@@ -390,10 +396,13 @@ adjusted_rmst <- function(adjsurv, from=0, to=Inf, use_boot=F) {
   names(areas) <- levs
 
   out <- list(areas=areas,
-              rmsts=rmsts)
+              rmsts=rmsts,
+              from=from,
+              to=to)
   class(out) <- "adjusted_rmst"
 
   if (use_boot) {
+    out$n_boot <- max(adjsurv$boot_data$boot)
     out$booted_areas <- booted_areas
     out$booted_rmsts <- booted_rmsts
     out$areas_sd <- apply(booted_areas, 2, sd)
@@ -401,6 +410,35 @@ adjusted_rmst <- function(adjsurv, from=0, to=Inf, use_boot=F) {
   }
 
   return(out)
+}
+
+## print method for adjusted_rmst function
+#' @export
+print.adjusted_rmst <- function(adj_rmst, digits=5) {
+
+  rmsts_str <- paste(names(adj_rmst$rmsts), round(adj_rmst$rmsts, digits),
+                     sep="=", collapse="  ")
+  areas_str <- paste(names(adj_rmst$areas), round(adj_rmst$areas, digits),
+                     sep="=", collapse="  ")
+
+  cat("Confounder-Adjusted Restricted Mean Survival Time\n")
+  cat("\n")
+  cat("Using the interval:", adj_rmst$from, "to", adj_rmst$to, "\n")
+  cat("RMSTS: ", rmsts_str, "\n")
+  cat("Areas under the curves (AUC): ", areas_str, "\n")
+
+  if (!is.null(adj_rmst$booted_areas)) {
+    rmsts_sd_str <- paste(names(adj_rmst$rmsts_sd), round(adj_rmst$rmsts_sd, digits),
+                          sep="=", collapse="  ")
+    areas_sd_str <- paste(names(adj_rmst$areas_sd), round(adj_rmst$areas_sd, digits),
+                          sep="=", collapse="  ")
+
+    cat("RMSTS Standard Deviation: ", rmsts_sd_str, "\n")
+    cat("AUC Standard Deviation: ", areas_sd_str, "\n")
+    cat("\n")
+    cat("SD estimated using", adj_rmst$n_boot, "bootstrap replications.")
+  }
+
 }
 
 ## function to simulate confounded survival data

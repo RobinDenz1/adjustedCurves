@@ -382,7 +382,7 @@ surv_method_direct_pseudo <- function(data, variable, ev_time, event, sd,
     if (sd) {
 
       pseudo_direct_sd <- function(x, n, na.rm) {
-        sqrt(var(x, na.rm=na.rm) / 250)
+        sqrt(var(x, na.rm=na.rm) / n)
       }
       survsd <- apply(m, 2, pseudo_direct_sd, n=n, na.rm=na.rm)
 
