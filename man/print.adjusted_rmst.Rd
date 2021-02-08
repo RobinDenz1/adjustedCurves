@@ -1,19 +1,19 @@
-\name{print.adjustedsurv_test}
-\alias{print.adjustedsurv_test}
+\name{print.adjusted_rmst}
+\alias{print.adjusted_rmst}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Print Method for \code{adjustedsurv_test} Objects
+Print Method for \code{adjusted_rmst} Objects
 }
 \description{
 
 }
 \usage{
-print.adjustedsurv_test(adjtest)
+print.adjusted_rmst(adj_rmst, digits=5)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{adjsurv_stats}{
-An object of class \code{adjustedsurv_test} created by the \code{adjustedsurv_test} function.
+An object of class \code{adjusted_rmst} created by the \code{adjusted_rmst} function.
   }
 }
 \details{
@@ -35,7 +35,7 @@ An object of class \code{adjustedsurv_test} created by the \code{adjustedsurv_te
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{adjustedsurv_test}}, \code{\link{adjustedsurv}}
+\code{\link{adjusted_rmst}}, \code{\link{adjustedsurv}}
 }
 \examples{
 ##---- Should be DIRECTLY executable !! ----

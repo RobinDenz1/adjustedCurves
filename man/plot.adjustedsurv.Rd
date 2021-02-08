@@ -22,7 +22,7 @@ plot.adjustedsurv(adjsurv, draw_ci=T, max_t=Inf,
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{adjsurv}{
-An \code{adjustedsurv} object created using the \code{adjusted_surv} function.
+An \code{adjustedsurv} object created using the \code{adjustedsurv} function.
   }
   \item{draw_ci}{
 A logical variable indicating whether the confidence intervals should be drawn.

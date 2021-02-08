@@ -33,11 +33,11 @@ get_iptw_weights <- function(data, treatment_model, weight_method,
 # TODO: This can't be correct ...
 confint_surv <- function(surv, sd, n, alpha, conf_type="plain") {
   if (conf_type=="plain") {
-    error <- qnorm(1-(alpha/2)) * sd / sqrt(n)
+    error <- stats::qnorm(1-(alpha/2)) * sd / sqrt(n)
     left <- surv - error
     right <- surv + error
   } else if (conf_type=="log") {
-    error <- qnorm(1-(alpha/2)) * sd / sqrt(n)
+    error <- stats::qnorm(1-(alpha/2)) * sd / sqrt(n)
     left <- surv * exp(-error)
     right <- surv * exp(error)
   }
@@ -48,7 +48,7 @@ confint_surv <- function(surv, sd, n, alpha, conf_type="plain") {
 ## simulate survival time according to Bender et al. (2005)
 sim_surv_time <- function(row, betas, dist, lambda,
                           gamma) {
-  U <- runif(1, min=0, max=1)
+  U <- stats::runif(1, min=0, max=1)
   eff <- sum(row * betas)
 
   if (dist=="weibull") {
@@ -93,8 +93,6 @@ exact_stepfun_difference <- function(adjsurv, times, max_t) {
 ## calculate exact integral under step function
 # 'stepfun' needs to be a data.frame with columns 'time' and 'surv',
 # sorted by time with no duplicates in time
-
-# TODO: allow different starting values than 0
 exact_stepfun_integral <- function(stepfun) {
   integral <- 0
   for (i in 1:(length(stepfun$time)-1)) {
@@ -110,12 +108,13 @@ exact_stepfun_integral <- function(stepfun) {
 ## throw errors when inputs don't make sense
 check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
                                       sd, times, bootstrap, n_boot, na.rm, ...) {
+  requireNamespace("survival")
 
   obj <- list(...)
 
   if (!inherits(data, "data.frame")) {
     stop("'data' argument must be a data.frame object.")
-    # needed variables
+  # needed variables
   } else if (!is.character(variable) | !is.character(ev_time) |
              !is.character(event) | !is.character(method)) {
     stop("Arguments 'variable', 'ev_time', 'event' and 'method' must be ",
@@ -126,13 +125,13 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     stop(ev_time, " is not a valid column name in 'data'.")
   } else if (!event %in% colnames(data)) {
     stop(event, " is not a valid column name in 'data'.")
-    # method
+  # method
   } else if (!method %in% c("km", "iptw_km", "iptw_cox", "iptw_pseudo",
                             "direct", "direct_pseudo", "aiptw_pseudo",
                             "aiptw", "tmle", "ostmle", "matching", "el")) {
     stop("Method '", method, "' is undefined. See documentation for ",
          "details on available methods.")
-    # sd
+  # sd
   } else if (!is.logical(sd)) {
     stop("'sd' must be either TRUE or FALSE.")
   } else if (!is.logical(na.rm)) {
@@ -174,8 +173,8 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
 
   # Direct Pseudo, AIPTW Pseudo
   if (method=="direct_pseudo" | method=="aiptw_pseudo" | method=="iptw_pseudo") {
-    require("geepack")
-    require("prodlim")
+    requireNamespace("geepack")
+    requireNamespace("prodlim")
 
     if ("outcome_vars" %in% names(obj)) {
       if (!is.character(obj$outcome_vars)) {
@@ -204,21 +203,21 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     }
   # TMLE
   } else if (method=="tmle") {
-    require("survtmle")
+    requireNamespace("survtmle")
 
     if (!all(obj$times==floor(obj$times))) {
       stop("Only integer time is allowed when using method='tmle'.")
     }
   # OSTMLE
   } else if (method=="ostmle") {
-    require("MOSS")
+    requireNamespace("MOSS")
 
     if (!all(obj$times==floor(obj$times))) {
         stop("Only integer time is allowed when using method='ostmle'.")
     }
   # Empirical Likelihood
   } else if (method=="el") {
-    require("adjKMtest")
+    requireNamespace("adjKMtest")
 
     if (!is.character(obj$treatment_vars)) {
       stop("'treatment_vars' should be a character vector of column names ",
@@ -251,7 +250,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
 check_inputs_sim_fun <- function(n, lcovars, outcome_betas, surv_dist,
                                  gamma, lambda, treatment_betas,
                                  intercept, gtol, cens_fun, cens_args,
-                                 max_t, seed, group_beta) {
+                                 max_t, group_beta) {
 
   if (!is.numeric(n)) {
     stop("'n' must be a positive integer.")
@@ -308,6 +307,7 @@ check_inputs_sim_fun <- function(n, lcovars, outcome_betas, surv_dist,
     }
   }
 
+  # TODO: what is this d?
   if (!is.null(lcovars)) {
     if (!all(sapply(list(names(lcovars), names(outcome_betas),
                          names(treatment_betas)), function(x) x == d))) {

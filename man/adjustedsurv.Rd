@@ -9,7 +9,7 @@ This is the main function of this R-Package. It allows the user to calculate con
 }
 \usage{
 adjustedsurv(data, variable, ev_time, event, method, sd=T,
-             times="events_overall", alpha=0.05, bootstrap=F,
+             times=NULL, alpha=0.05, bootstrap=F,
              n_boot=500, na.rm=F,...)
 }
 %- maybe also 'usage' for other objects documented here.

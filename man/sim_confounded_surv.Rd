@@ -9,11 +9,11 @@ A function to simulate time-to-event data with one or multiple confounders. The 
 }
 \usage{
 sim_confounded_surv(n=500, lcovars=NULL, outcome_betas=NULL,
-                    group_beta=-1, surv_dist="weibull", gamma=1.8,
-                    lambda=2, treatment_betas=NULL,
+                    group_beta=-1, surv_dist="weibull",
+                    gamma=1.8, lambda=2, treatment_betas=NULL,
                     intercept=-0.5, gtol=0.001,
-                    cens_fun=function(n){rweibull(n, 1, 2)},
-                    cens_args=list(), max_t=Inf, seed=42)
+                    cens_fun=function(n){stats::rweibull(n, 1, 2)},
+                    cens_args=list(), max_t=Inf)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

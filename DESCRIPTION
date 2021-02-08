@@ -8,9 +8,9 @@ Authors@R:
            email = "robin.denz@rub.de",
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: A collection of methods to calculate confounder-adjusted survival curves and cumulative incidence functions.
-License: `use_mit_license()`
+License: MIT License
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
-Imports: dplyr, ggplot2, pammtools, R.utils, Matching, WeightIt, RISCA, prodlim, survtmle, MOSS, adjKMtest, riskRegression
+Imports: dplyr, ggplot2, pammtools, R.utils, Matching, WeightIt, RISCA, prodlim, survtmle, MOSS, adjKMtest, riskRegression, rlang, geepack, survival

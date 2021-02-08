@@ -67,13 +67,15 @@ Xu Zhang, Fausto R. Loberiza, John P. Klein, and Mei-Jie Zhang. "A SAS Macro for
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
+library(survival)
+
 # simulate some data as example
 sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # estimate a cox-regression for the outcome
 cox_mod <- coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
-                 data=sim_dat, x=T)
+                 data=sim_dat, x=TRUE)
 
 
 # use it to calculate adjusted survival curves
@@ -83,10 +85,10 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         event="event",
                         method="direct",
                         outcome_model=cox_mod,
-                        sd=T)
+                        sd=TRUE)
 
 # plot the curves
-plot(adjsurv, draw_ci=F)
+plot(adjsurv, draw_ci=FALSE)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

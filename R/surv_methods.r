@@ -3,9 +3,9 @@
 #' @export
 surv_method_km <- function(data, variable, ev_time, event, sd, ...) {
 
-  form <- paste0("Surv(", ev_time, ", ", event, ") ~ ", variable)
+  form <- paste0("survival::Surv(", ev_time, ", ", event, ") ~ ", variable)
 
-  surv <- survival::survfit(as.formula(form), data=data, se.fit=sd, ...)
+  surv <- survival::survfit(stats::as.formula(form), data=data, se.fit=sd, ...)
   plotdata <- data.frame(time=surv$time,
                          surv=surv$surv)
   # get grouping variable
@@ -135,8 +135,9 @@ surv_method_iptw_cox <- function(data, variable, ev_time, event, sd,
   }
 
   # univariate, weighted cox model
-  form <- paste0("Surv(", ev_time, ", ", event, ") ~ strata(", variable, ")")
-  model <- survival::coxph(as.formula(form), weights=weights, data=data)
+  form <- paste0("survival::Surv(", ev_time, ", ", event, ") ~ strata(",
+                 variable, ")")
+  model <- survival::coxph(stats::as.formula(form), weights=weights, data=data)
   surv <- survival::survfit(model, se.fit=sd)
 
   plotdata <- data.frame(time=surv$time,
@@ -174,8 +175,9 @@ surv_method_iptw_pseudo <- function(data, variable, ev_time, event, sd,
   }
 
   # estimate pseudo observations
-  hist_formula <- as.formula(paste("Hist(", ev_time, ", ", event, ") ~ 1"))
-  pseudo <- prodlim::jackknife(prodlim(hist_formula, data=data),
+  hist_formula <- stats::as.formula(paste("prodlim::Hist(", ev_time, ", ",
+                                   event, ") ~ 1"))
+  pseudo <- prodlim::jackknife(prodlim::prodlim(hist_formula, data=data),
                                times=times)
 
   # take weighted mean
@@ -183,7 +185,7 @@ surv_method_iptw_pseudo <- function(data, variable, ev_time, event, sd,
   plotdata <- vector(mode="list", length=length(levs))
   for (i in 1:length(levs)) {
     surv_lev <- pseudo[data[,variable]==levs[i],]
-    surv_lev <- apply(surv_lev, 2, weighted.mean,
+    surv_lev <- apply(surv_lev, 2, stats::weighted.mean,
                       w=weights[data[,variable]==levs[i]],
                       na.rm=na.rm)
     plotdata[[i]] <- data.frame(time=times, surv=surv_lev, group=levs[i])
@@ -193,7 +195,7 @@ surv_method_iptw_pseudo <- function(data, variable, ev_time, event, sd,
 
   if (sd) {
     # PLACEHOLDER to avoid error
-    plotdata$sd <- runif(n=nrow(plotdata))
+    plotdata$sd <- stats::runif(n=nrow(plotdata))
   }
 
   return(plotdata)
@@ -234,8 +236,8 @@ surv_method_matching <- function(data, variable, ev_time, event, sd,
   m_dat <- rbind(data[rr$index.treated,], data[rr$index.control,])
 
   # estimate survival curve
-  form <- paste0("Surv(", ev_time, ", ", event, ") ~ ", variable)
-  surv <- survfit(as.formula(form), data=m_dat, se.fit=sd)
+  form <- paste0("survival::Surv(", ev_time, ", ", event, ") ~ ", variable)
+  surv <- survival::survfit(stats::as.formula(form), data=m_dat, se.fit=sd)
   plotdata <- data.frame(time=surv$time,
                          est=surv$surv,
                          var=c(rep(0, surv$strata[1]),
@@ -261,16 +263,16 @@ surv_method_aiptw <- function(data, variable, ev_time, event, sd, times,
   }
 
   if (is.null(censoring_model)) {
-    form <- paste0("Surv(", ev_time, ", ", event, "==0) ~ 1")
-    censoring_model <- coxph(as.formula(form), data=data, x=T)
+    form <- paste0("survival::Surv(", ev_time, ", ", event, "==0) ~ 1")
+    censoring_model <- survival::coxph(stats::as.formula(form), data=data, x=T)
   }
   if (is.null(treatment_model)) {
     form <- paste0(variable, " ~ 1")
-    treatment_model <- glm(as.formula(form), data=data, family="binomial")
+    treatment_model <- stats::glm(stats::as.formula(form), data=data, family="binomial")
   }
   if (is.null(outcome_model)) {
-    form <- paste0("Surv(", ev_time, ", ", event, ") ~ 1")
-    outcome_model <- coxph(as.formula(form), data=data, x=T)
+    form <- paste0("survival::Surv(", ev_time, ", ", event, ") ~ 1")
+    outcome_model <- survival::coxph(stats::as.formula(form), data=data, x=T)
   }
 
   # estimate AIPTW cumulative incidence
@@ -304,7 +306,7 @@ geese_predictions <- function(geese_mod, Sdata, times, n) {
   current.na.action <- options('na.action')
   options(na.action="na.pass")
   # full model matrix and betas
-  mod_mat <- model.matrix(geese_mod$formula, data=Sdata)
+  mod_mat <- stats::model.matrix(geese_mod$formula, data=Sdata)
   options(na.action=current.na.action[[1]])
 
   betas <- geese_mod$beta
@@ -337,8 +339,9 @@ surv_method_direct_pseudo <- function(data, variable, ev_time, event, sd,
   group <- data[,variable]
 
   # estimate pseudo observations
-  hist_formula <- as.formula(paste("Hist(", ev_time, ", ", event, ") ~ 1"))
-  pseudo <- prodlim::jackknife(prodlim(hist_formula, data=data),
+  hist_formula <- stats::as.formula(paste("prodlim::Hist(", ev_time, ", ",
+                                    event, ") ~ 1"))
+  pseudo <- prodlim::jackknife(prodlim::prodlim(hist_formula, data=data),
                                times=times)
   # create data for geese
   Sdata <- data.frame(yi=c(pseudo),
@@ -354,15 +357,15 @@ surv_method_direct_pseudo <- function(data, variable, ev_time, event, sd,
     geese_formula <- paste("yi ~ vtime + ", paste(outcome_vars, collapse=" + "),
                            " + group")
   } else if (type_time=="bs") {
-    geese_formula <- paste("yi ~ bs(vtime, df=", spline_df, ") + ",
+    geese_formula <- paste("yi ~ splines::bs(vtime, df=", spline_df, ") + ",
                            paste(outcome_vars, collapse=" + "), " + group")
   } else if (type_time=="ns") {
-    geese_formula <- paste("yi ~ ns(vtime, df=", spline_df, ") + ",
+    geese_formula <- paste("yi ~ splines::ns(vtime, df=", spline_df, ") + ",
                            paste(outcome_vars, collapse=" + "), " + group")
   }
 
   # call geese
-  geese_mod <- geepack::geese(as.formula(geese_formula), scale.fix=TRUE,
+  geese_mod <- geepack::geese(stats::as.formula(geese_formula), scale.fix=TRUE,
                               data=Sdata, family=gaussian, id=id, jack=F,
                               mean.link="cloglog", corstr="independence")
 
@@ -382,7 +385,7 @@ surv_method_direct_pseudo <- function(data, variable, ev_time, event, sd,
     if (sd) {
 
       pseudo_direct_sd <- function(x, n, na.rm) {
-        sqrt(var(x, na.rm=na.rm) / 250)
+        sqrt(stats::var(x, na.rm=na.rm) / n)
       }
       survsd <- apply(m, 2, pseudo_direct_sd, n=n, na.rm=na.rm)
 
@@ -419,8 +422,9 @@ surv_method_aiptw_pseudo <- function(data, variable, ev_time, event, sd,
   }
 
   # estimate pseudo observations
-  hist_formula <- as.formula(paste("Hist(", ev_time, ", ", event, ") ~ 1"))
-  pseudo <- prodlim::jackknife(prodlim(hist_formula, data=data),
+  hist_formula <- stats::as.formula(paste("prodlim::Hist(", ev_time, ", ",
+                                    event, ") ~ 1"))
+  pseudo <- prodlim::jackknife(prodlim::prodlim(hist_formula, data=data),
                                times=times)
   # create data for geese
   Sdata <- data.frame(yi=c(pseudo),
@@ -436,15 +440,15 @@ surv_method_aiptw_pseudo <- function(data, variable, ev_time, event, sd,
     geese_formula <- paste("yi ~ vtime + ", paste(outcome_vars, collapse=" + "),
                            " + group")
   } else if (type_time=="bs") {
-    geese_formula <- paste("yi ~ bs(vtime, df=", spline_df, ") + ",
+    geese_formula <- paste("yi ~ splines::bs(vtime, df=", spline_df, ") + ",
                            paste(outcome_vars, collapse=" + "), " + group")
   } else if (type_time=="ns") {
-    geese_formula <- paste("yi ~ ns(vtime, df=", spline_df, ") + ",
+    geese_formula <- paste("yi ~ splines::ns(vtime, df=", spline_df, ") + ",
                            paste(outcome_vars, collapse=" + "), " + group")
   }
 
   # call geese
-  geese_mod <- geepack::geese(as.formula(geese_formula), scale.fix=TRUE,
+  geese_mod <- geepack::geese(stats::as.formula(geese_formula), scale.fix=TRUE,
                               data=Sdata, family=gaussian, id=id, jack=F,
                               mean.link="cloglog", corstr="independence")
 
