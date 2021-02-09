@@ -1,17 +1,17 @@
 \name{surv_method_iptw_km}
 \alias{surv_method_iptw_km}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Inverse Probability of Treatment Weighted Kaplan-Meier estimates
 }
 \description{
-
+This method works by modelling the treatment assignment mechanism. The individual observations are weighted using inverse probability of treatment weights or other balancing weights (see details) and a modified Kaplan-Meier estimator. If the model is correctly specified, unbiased results will be obtained. The only difference to the \code{surv_method_iptw_cox} is a slightly different weighting approach. They are essentially equal in large samples. See details for more information.
 }
 \usage{
 surv_method_iptw_km(data, variable, ev_time, event, sd,
                     treatment_model, weight_method="ps", ...)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{data}{
 A \code{data.frame} object containing the needed time-to-event data in standard format.
@@ -48,16 +48,11 @@ Returns a \code{data.frame} object containing the estimated adjusted survival pr
 Jun Xie and Chaofeng Liu. "Adjusted Kaplan-Meier Estimator and Log-Rank Test with Inverse Probability of Treatment Weighting for Survival Data". In: Statistics in Medicine 24 (2005), pp. 3089-3110.
 }
 \author{
-%%  ~~who you are~~
+Robin Denz
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{WeightIt}}, \code{RISCA}
+\code{\link{WeightIt}}
 }
 \examples{
 ##---- Should be DIRECTLY executable !! ----

@@ -1,6 +1,6 @@
 \name{surv_method_km}
 \alias{surv_method_km}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Group-Specific Kaplan-Meier Survival Curves
 }
@@ -11,7 +11,7 @@ No adjustment for any confounders is made. This function is included only for re
 \usage{
 surv_method_km(data, variable, ev_time, event, sd, ...)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{data}{
 A \code{data.frame} object containing the needed time-to-event data in standard format.
@@ -42,13 +42,8 @@ Returns a \code{data.frame} object containing the estimated survival probabiliti
 E. L. Kaplan and Paul Meier. "Nonparametric Estimation from Incomplete Observations". In: Journal of the American Statistical Association 53.282 (1958), pp. 457-481.
 }
 \author{
-%%  ~~who you are~~
+The wrapper function was written by Robin Denz, the \code{survfit} function (which this wrapper is build around) was written by other people. See \code{?survfit} for more details.
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
 \code{\link{survival}}, \code{\link{survfit}}

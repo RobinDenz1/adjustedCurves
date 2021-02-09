@@ -1,6 +1,6 @@
 \name{adjustedsurv_test}
 \alias{adjustedsurv_test}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Test for the Equality of Two Confounder-Adjusted Survival Curves
 }
@@ -10,7 +10,7 @@ This function implements a modified version of the Pepe-Flemming (ZITAT) test fo
 \usage{
 adjustedsurv_test(adjsurv, from=0, to=Inf)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{adjsurv}{
 An \code{adjustedsurv} object created using the \code{adjustedsurv} function.
@@ -41,16 +41,17 @@ Returns a \code{adjustedsurv_test} object containing the following object:
 
 }
 \references{
+Margaret Sullivan Pepe and Thomas R. Fleming. "Weighted Kaplan-Meier Statistics: A Class of Distance Tests for Censored Survival Data". In: Biometrics 45.2 (1989), pp. 497-507.
 
+Margaret Sullivan Pepe and Thomas R. Fleming. "Weighted Kaplan-Meier Statistics: Large Sample and Optimality Considerations". In: Journal of the Royal Statistical Society: Series B 53.2 (1991), pp. 341–352.
+
+Nicholas I. Fisher and Peter Hall. "On Bootstrap Hypothesis Testing". In: Australian Journal of Statistics 32.2 (1990), pp. 177-190.
+
+Florent Le Borgne, Bruno Giraudeau, Anne Héléne Querard, Magali Giral, and Yohann Foucher. "Comparisons of the Performance of Different Statistical Tests for Time-To-Event Analysis with Confounding Factors: Practical Illustrations in Kidney Transplantation". In: Statistics in Medicine 35 (2016), pp. 1103-1116.
 }
 \author{
-%%  ~~who you are~~
+Robin Denz
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
 \code{\link{print.adjustedsurv_test}}, \code{\link{adjustedsurv}}

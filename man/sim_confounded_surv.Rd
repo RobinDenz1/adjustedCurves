@@ -56,9 +56,6 @@ sim_confounded_surv(n=500, lcovars=NULL, outcome_betas=NULL,
   \item{max_t}{
   A number denoting the maximum follow-up time. Every event time bigger than this threshhold are censored.
   }
-  \item{seed}{
-  The starting seed used in the random number generation.
-  }
 }
 \details{
 
@@ -75,17 +72,9 @@ Ralf Bender, Thomas Augustin, and Maria Blettner. "Generating Survival Times to 
 Arthur Chatton, Florent Le Borgne, Clemence Leyrat, and Yohann Foucher. G-Computation and Inverse Probability Weighting for Time-To-Event Outcomes: A Comparative Study. arXiv:2006.16859v1. (2020).
 }
 \author{
-%%  ~~who you are~~
-}
-\note{
-%%  ~~further notes~~
+Robin Denz
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%\code{\link{survival}}, \code{\link{survfit}}
-}
 \examples{
 ##---- Should be DIRECTLY executable !! ----
 ##-- ==>  Define data, use random,

@@ -13,12 +13,13 @@ get_iptw_weights <- function(data, treatment_model, weight_method,
 
   } else if (inherits(treatment_model, "glm")) {
 
-    ps <- predict(treatment_model, newdata=data, type="response")
+    ps <- stats::predict.glm(treatment_model, newdata=data, type="response")
     weights <- ifelse(data[, variable]==1, 1/ps, 1/(1-ps))
 
   } else if (inherits(treatment_model, "multinom")) {
 
-    ps <- predict(treatment_model, newdata=data, type="probs")
+    predict.multinom <- utils::getFromNamespace("predict.multinom", "nnet")
+    ps <- predict.multinom(treatment_model, newdata=data, type="probs")
 
     weights <- rep(0, nrow(data))
     for (i in levels(data[,variable])) {
@@ -307,10 +308,10 @@ check_inputs_sim_fun <- function(n, lcovars, outcome_betas, surv_dist,
     }
   }
 
-  # TODO: what is this d?
   if (!is.null(lcovars)) {
-    if (!all(sapply(list(names(lcovars), names(outcome_betas),
-                         names(treatment_betas)), function(x) x == d))) {
+    if (!(names(lcovars) == names(outcome_betas) &
+        names(treatment_betas) == names(lcovars) &
+        names(outcome_betas) == names(treatment_betas))) {
       stop("The names of the objects in 'lcovars', 'outcome_betas' and ",
            " 'treatment_betas' must be the same.")
     }

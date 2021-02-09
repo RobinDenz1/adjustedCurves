@@ -6,6 +6,7 @@ bibentry(bibtype = "Article",
          author = c(person("Robin", "Denz"),
                     person("Nina", "Timmesfeld"),
                     person("Henrik", "Rudolf")),
-         year = year,
+		 journal = "Statistics in Medicine",
+         year = 2021,
          note = note,
          url = "https://github.com/RobinDenz1/adjustedCurves")

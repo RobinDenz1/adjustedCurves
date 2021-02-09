@@ -1,38 +1,32 @@
 \name{print.adjustedsurv_test}
 \alias{print.adjustedsurv_test}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Print Method for \code{adjustedsurv_test} Objects
 }
 \description{
-
+Prints some important parts of the output object.
 }
 \usage{
-print.adjustedsurv_test(adjtest)
+\method{print}{adjustedsurv_test}(x, ...)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
-  \item{adjsurv_stats}{
+  \item{x}{
 An object of class \code{adjustedsurv_test} created by the \code{adjustedsurv_test} function.
   }
+  \item{...}{
+Currently not used.
+  }
 }
-\details{
 
-}
 \value{
 \code{NULL}
 }
-\references{
 
-}
 \author{
-%%  ~~who you are~~
+Robin Denz
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
 \code{\link{adjustedsurv_test}}, \code{\link{adjustedsurv}}

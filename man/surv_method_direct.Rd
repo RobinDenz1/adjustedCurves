@@ -1,6 +1,6 @@
 \name{surv_method_direct}
 \alias{surv_method_direct}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Direct Adjusted Survival Curves
 }
@@ -11,7 +11,7 @@ Calculate confounder-adjusted survival curves using a previously fit cox-regress
 surv_method_direct(data, variable, ev_time, event, sd,
                    outcome_model, times, verbose=F, ...)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{data}{
 A \code{data.frame} object containing the needed time-to-event data in standard format.
@@ -55,16 +55,11 @@ Robert W. Makuch. "Adjusted Survival Curve Estimation Using Covariates". In: Jou
 Xu Zhang, Fausto R. Loberiza, John P. Klein, and Mei-Jie Zhang. "A SAS Macro for Estimation of Direct Adjusted Survival Curves Based on a Stratified Cox Regression Model". In: Computer Methods and Programs in Biomedicine 88 (2007), pp. 95-101.
 }
 \author{
-%%  ~~who you are~~
+The wrapper function was written by Robin Denz, the \code{ate} function (which this wrapper is build around) was written by other people. See \code{?ate} for more details.
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{ate}}, \code{\link{coxph}}, \code{\link{glm}}
 }
 \examples{
 library(survival)

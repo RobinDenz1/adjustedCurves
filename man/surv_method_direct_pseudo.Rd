@@ -1,18 +1,18 @@
 \name{surv_method_direct_pseudo}
 \alias{surv_method_direct_pseudo}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Direct Adjusted Survival Curves using Pseudo-Values
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+This function can be used to calculate direct adjusted survival curves using pseudo-values. It uses essentially the same methodology as the regular direct adjustment method, with the difference that the outcome mechanism is modeled using pseudo-values. Here, the outcome model is a generalised estimating equation model. See details for more information.
 }
 \usage{
 surv_method_direct_pseudo(data, variable, ev_time, event, sd,
                           times, outcome_vars, type_time="factor",
                           spline_df=10, na.rm=F)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{data}{
 A \code{data.frame} object containing the needed time-to-event data in standard format.
@@ -59,16 +59,11 @@ Per K. Andersen and Maja Pohar Perme. "Pseudo-Observations in Survival Analysis"
 Aris Perperoglou, Willi Sauerbrei, Michal Abrahamowicz, and Matthias Schmid. "A Review of Spline Function Procedures in R". In: BMC Medical Research Methodology 19 (2019), pp. 1-16
 }
 \author{
-%%  ~~who you are~~
+Robin Denz
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{geese}}, \code{\link{jacknife}}, \code{\link{ns}}, \code{\link{bs}}
+\code{\link[geepack]{geese}}, \code{\link[prodlim]{jackknife}}, \code{\link[splines]{ns}}, \code{\link[splines]{bs}}
 }
 \examples{
 ##---- Should be DIRECTLY executable !! ----

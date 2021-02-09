@@ -1,18 +1,18 @@
 \name{surv_method_el}
 \alias{surv_method_el}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Empirical Likelihood Estimation Survival Curves
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+This method utilizes the empirical likelihood estimation methodology to calculate adjusted survival curves. Neither outcome nor treatment assignment models are required for this function to work. Since the exact form of both mechanisms are left unspecified, it is more robust to model misspecification than IPTW or direct adjustment. See details for more information.
 }
 \usage{
 surv_method_el(data, variable, ev_time, event, sd,
                times, treatment_vars, moment="first",
                standardize=F, ...)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{data}{
 A \code{data.frame} object containing the needed time-to-event data in standard format.
@@ -57,16 +57,11 @@ Xiaofei Wang, Fangfang Bai, Herbert Pang, and Stephen L. George. "Bias-Adjusted 
 Art B. Owen. Empirical Likelihood. Boca Raton: CRC Press, 2001.
 }
 \author{
-%%  ~~who you are~~
+The wrapper function was written by Robin Denz, the \code{el.est} function (which this wrapper is build around) was written by Kaiyuan "Kimi" Hua. See \code{?el.est} for more details.
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link[adjKMtest]{el.est}}
 }
 \examples{
 ##---- Should be DIRECTLY executable !! ----

@@ -1,11 +1,11 @@
 \name{surv_method_tmle}
 \alias{surv_method_tmle}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Targeted Maximum Likelihood Estimation for Adjusted Survival Curves
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+This method utilizes the targeted maximum likelihood methodology to estimate adjusted survival curves. Similar to the AIPTW methods it posseses the doubly-robust property and can also be used to adjust for dependent censoring. It is however important to note that this method should only be used when the time variable is truly discrete and only a few distinct points in time are observed. See details for more information.
 }
 \usage{
 surv_method_tmle(data, variable, ev_time, event, sd,
@@ -14,7 +14,7 @@ surv_method_tmle(data, variable, ev_time, event, sd,
                  glm.ftime=NULL, glm.ctime=NULL, glm.trt=NULL,
                  ...)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{data}{
 A \code{data.frame} object containing the needed time-to-event data in standard format.
@@ -27,9 +27,6 @@ A character string specifying the variable indicating the time-to-event or time-
   }
   \item{event}{
 A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
-  }
-  \item{method}{
-A character string specifying the adjustment method to use. See details.
   }
   \item{sd}{
 A logical variable, indicating whether the standard deviation of the survival probabilities should be calculated. Needed to calculate confidence intervals.
@@ -72,19 +69,16 @@ Additional arguments passed to \code{survtmle}.
 Returns a \code{data.frame} object containing the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
 }
 \references{
-%% ~put references to the literature/web site here ~
+Megan S. Schuler and Sherri Rose. "Targeted Maximum Likelihood Estimation for Causal Inference in Observational Studies". In: American Journal of Epidemiology 186.1 (2017), pp. 65-73.
+
+
 }
 \author{
-%%  ~~who you are~~
+The wrapper function was written by Robin Denz, the \code{survtmle} package (which this wrapper is based on) was written by David Benkeser and Nima Hejazi. See \code{?survtmle} for more details.
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{survtmle}}, \code{\link{SuperLearner}}, \code{\link{glm}}
+\code{\link{survtmle}}, \code{\link[SuperLearner]{SuperLearner}}, \code{\link{glm}}
 }
 \examples{
 ##---- Should be DIRECTLY executable !! ----

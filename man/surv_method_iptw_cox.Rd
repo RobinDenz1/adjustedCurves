@@ -1,17 +1,17 @@
 \name{surv_method_iptw_cox}
 \alias{surv_method_iptw_cox}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Inverse Probability of Treatment Weighted Survival using Cox-Regression
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+This method works by modelling the treatment assignment mechanism. The individual observations are weighted using inverse probability of treatment weights or other balancing weights (see details) and a univariate cox-regression model. If the model is correctly specified, unbiased results will be obtained. The only difference to the \code{surv_method_iptw_km} is a slightly different weighting approach. They are essentially equal in large samples. See details for more information.
 }
 \usage{
 surv_method_iptw_cox(data, variable, ev_time, event, sd,
                      treatment_model, weight_method="ps", ...)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{data}{
 A \code{data.frame} object containing the needed time-to-event data in standard format.
@@ -48,13 +48,8 @@ Returns a \code{data.frame} object containing the estimated adjusted survival pr
 Stephen R. Cole and Miguel A. Hernan. "Adjusted Survival Curves with Inverse Probability Weights". In: Computer Methods and Programs in Biomedicine 2003.75 (2004), pp. 45-49.
 }
 \author{
-%%  ~~who you are~~
+Robin Denz
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
 \code{\link{WeightIt}}, \code{\link{coxph}}

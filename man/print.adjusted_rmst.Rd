@@ -1,39 +1,33 @@
 \name{print.adjusted_rmst}
 \alias{print.adjusted_rmst}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Print Method for \code{adjusted_rmst} Objects
 }
 \description{
-
+Prints some important parts of the output object.
 }
 \usage{
-print.adjusted_rmst(adj_rmst, digits=5)
+\method{print}{adjusted_rmst}(x, digits=5, ...)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
-  \item{adjsurv_stats}{
+  \item{x}{
 An object of class \code{adjusted_rmst} created by the \code{adjusted_rmst} function.
   }
-}
-\details{
-
+  \item{digits}{
+How many digits to use when rounding the results.
+  }
+  \item{...}{
+Currently not used.
+  }
 }
 \value{
 \code{NULL}
 }
-\references{
-
-}
 \author{
-%%  ~~who you are~~
+Robin Denz
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
 \code{\link{adjusted_rmst}}, \code{\link{adjustedsurv}}
 }

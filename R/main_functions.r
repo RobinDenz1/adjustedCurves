@@ -1,6 +1,7 @@
 ## Main function of the package. Is basically a wrapper around
 ## all other functions, offering additional high level stuff
 # TODO: - might be nice to allow multicore execution for bootstrapping
+#' @importFrom dplyr %>%
 #' @export
 adjustedsurv <- function(data, variable, ev_time, event, method, sd=T,
                          times=NULL, alpha=0.05, bootstrap=F,
@@ -10,6 +11,10 @@ adjustedsurv <- function(data, variable, ev_time, event, method, sd=T,
                             ev_time=ev_time, event=event, method=method,
                             sd=sd, times=times, bootstrap=bootstrap,
                             n_boot=n_boot, na.rm=na.rm, ...)
+
+  # define those to remove Notes in devtools::check()
+  . <- time <- group <- surv_b <- NULL
+
   # get event specific times
   times_input <- times
   if (is.null(times)) {
@@ -128,7 +133,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method, sd=T,
 # TODO: maybe need to recalculate confidence intervals when using iso_reg?
 #' @importFrom rlang .data
 #' @export
-plot.adjustedsurv <- function(adjsurv, draw_ci=T, max_t=Inf,
+plot.adjustedsurv <- function(x, draw_ci=T, max_t=Inf,
                               iso_reg=F, force_bounds=F, use_boot=F,
                               color=T, linetype=F, facet=F,
                               line_size=1, xlab="Time",
@@ -137,15 +142,15 @@ plot.adjustedsurv <- function(adjsurv, draw_ci=T, max_t=Inf,
                               legend_position="right",
                               ylim=NULL, custom_colors=NULL,
                               custom_linetypes=NULL,
-                              ci_draw_alpha=0.4) {
+                              ci_draw_alpha=0.4, ...) {
 
-  if (use_boot & is.null(adjsurv$boot_adjsurv)) {
+  if (use_boot & is.null(x$boot_adjsurv)) {
     stop("Cannot use bootstrapped estimates as they were not estimated.",
          " Need bootstrap=TRUE in adjustedsurv() call.")
   } else if (use_boot) {
-    plotdata <- adjsurv$boot_adjsurv
+    plotdata <- x$boot_adjsurv
   } else {
-    plotdata <- adjsurv$adjsurv
+    plotdata <- x$adjsurv
   }
   plotdata$group <- factor(plotdata$group)
 
@@ -297,19 +302,19 @@ adjustedsurv_test <- function(adjsurv, from=0, to=Inf) {
 
 ## print method for adjustedsurv_test
 #' @export
-print.adjustedsurv_test <- function(adjtest) {
+print.adjustedsurv_test <- function(x, ...) {
 
   cat("##################################################################\n")
   cat("Pepe-Flemming Test of Equality of Two Adjusted Survival Curves \n")
   cat("------------------------------------------------------------------")
   cat("\n")
-  cat("The equality was tested for the time interval: ", adjtest$from, " to ",
-      adjtest$to, "\n")
-  cat("Observed Integral of the difference: ", adjtest$observed_diff_integral,
+  cat("The equality was tested for the time interval: ", x$from, " to ",
+      x$to, "\n")
+  cat("Observed Integral of the difference: ", x$observed_diff_integral,
       "\n")
-  cat("Bootstrap standard deviation: ", stats::sd(adjtest$diff_integrals), "\n")
-  cat("P-Value: ", adjtest$p_value, "\n\n")
-  cat("Calculated using ", adjtest$n_boot, " bootstrap replications.\n")
+  cat("Bootstrap standard deviation: ", stats::sd(x$diff_integrals), "\n")
+  cat("P-Value: ", x$p_value, "\n\n")
+  cat("Calculated using ", x$n_boot, " bootstrap replications.\n")
   cat("##################################################################\n")
 }
 
@@ -382,7 +387,7 @@ adjusted_rmst <- function(adjsurv, from=0, to=Inf, use_boot=F) {
 
     } else {
       if (!0 %in% surv_dat$time) {
-        surv-dat <- rbind(data.frame(time=0, surv=1), surv_dat)
+        surv_dat <- rbind(data.frame(time=0, surv=1), surv_dat)
       }
     }
 
@@ -405,8 +410,8 @@ adjusted_rmst <- function(adjsurv, from=0, to=Inf, use_boot=F) {
     out$n_boot <- max(adjsurv$boot_data$boot)
     out$booted_areas <- booted_areas
     out$booted_rmsts <- booted_rmsts
-    out$areas_sd <- apply(booted_areas, 2, sd)
-    out$rmsts_sd <- apply(booted_rmsts, 2, sd)
+    out$areas_sd <- apply(booted_areas, 2, stats::sd)
+    out$rmsts_sd <- apply(booted_rmsts, 2, stats::sd)
   }
 
   return(out)
@@ -414,29 +419,29 @@ adjusted_rmst <- function(adjsurv, from=0, to=Inf, use_boot=F) {
 
 ## print method for adjusted_rmst function
 #' @export
-print.adjusted_rmst <- function(adj_rmst, digits=5) {
+print.adjusted_rmst <- function(x, digits=5, ...) {
 
-  rmsts_str <- paste(names(adj_rmst$rmsts), round(adj_rmst$rmsts, digits),
+  rmsts_str <- paste(names(x$rmsts), round(x$rmsts, digits),
                      sep="=", collapse="  ")
-  areas_str <- paste(names(adj_rmst$areas), round(adj_rmst$areas, digits),
+  areas_str <- paste(names(x$areas), round(x$areas, digits),
                      sep="=", collapse="  ")
 
   cat("Confounder-Adjusted Restricted Mean Survival Time\n")
   cat("\n")
-  cat("Using the interval:", adj_rmst$from, "to", adj_rmst$to, "\n")
+  cat("Using the interval:", x$from, "to", x$to, "\n")
   cat("RMSTS: ", rmsts_str, "\n")
   cat("Areas under the curves (AUC): ", areas_str, "\n")
 
-  if (!is.null(adj_rmst$booted_areas)) {
-    rmsts_sd_str <- paste(names(adj_rmst$rmsts_sd), round(adj_rmst$rmsts_sd, digits),
+  if (!is.null(x$booted_areas)) {
+    rmsts_sd_str <- paste(names(x$rmsts_sd), round(x$rmsts_sd, digits),
                           sep="=", collapse="  ")
-    areas_sd_str <- paste(names(adj_rmst$areas_sd), round(adj_rmst$areas_sd, digits),
+    areas_sd_str <- paste(names(x$areas_sd), round(x$areas_sd, digits),
                           sep="=", collapse="  ")
 
     cat("RMSTS Standard Deviation: ", rmsts_sd_str, "\n")
     cat("AUC Standard Deviation: ", areas_sd_str, "\n")
     cat("\n")
-    cat("SD estimated using", adj_rmst$n_boot, "bootstrap replications.")
+    cat("SD estimated using", x$n_boot, "bootstrap replications.")
   }
 
 }

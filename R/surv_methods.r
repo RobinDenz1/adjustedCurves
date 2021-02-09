@@ -1,3 +1,6 @@
+# Assign to global, to get rid off devtools::check() note
+utils::globalVariables(c("gaussian", "id"))
+
 ## simple Kaplan-Meier estimate
 # TODO: - sd calculation seems to be wrong, check this
 #' @export
@@ -67,7 +70,8 @@ surv_method_iptw_km <- function(data, variable, ev_time, event, sd,
     if (inherits(treatment_model, "glm")) {
       ps_score <- treatment_model$fitted.values
     } else if (inherits(treatment_model, "multinom")) {
-      ps_score <- predict(treatment_model, newdata=data, type="probs")
+      predict.multinom <- utils::getFromNamespace("predict.multinom", "nnet")
+      ps_score <- predict.multinom(treatment_model, newdata=data, type="probs")
     }
 
     for (i in 1:length(levs)) {
@@ -229,7 +233,7 @@ surv_method_matching <- function(data, variable, ev_time, event, sd,
   if (is.numeric(treatment_model)) {
     ps_score <- treatment_model
   } else {
-    ps_score <- predict(treatment_model, newdata=data, type="response")
+    ps_score <- stats::predict.glm(treatment_model, newdata=data, type="response")
   }
 
   rr <- Matching::Match(Tr=data[, variable], X=ps_score, estimand="ATE", ...)
@@ -333,6 +337,9 @@ geese_predictions <- function(geese_mod, Sdata, times, n) {
 surv_method_direct_pseudo <- function(data, variable, ev_time, event, sd,
                                       times, outcome_vars, type_time="factor",
                                       spline_df=10, na.rm=F) {
+  # removing Notes from devtools::check()
+  #gaussian <- id <- NULL
+
   # some constants
   len <- length(times)
   n <- nrow(data)
@@ -408,6 +415,9 @@ surv_method_direct_pseudo <- function(data, variable, ev_time, event, sd,
 surv_method_aiptw_pseudo <- function(data, variable, ev_time, event, sd,
                                      times, outcome_vars, treatment_model,
                                      type_time="factor", spline_df=10, na.rm=F) {
+  # removing Notes from devtools::check()
+  #gaussian <- id <- NULL
+
   # some constants
   len <- length(times)
   n <- nrow(data)
@@ -418,7 +428,8 @@ surv_method_aiptw_pseudo <- function(data, variable, ev_time, event, sd,
   } else if (inherits(treatment_model, "glm")) {
     ps_score <- treatment_model$fitted.values
   } else if (inherits(treatment_model, "multinom")) {
-    ps_score <- predict(treatment_model, newdata=data, type="probs")
+    predict.multinom <- utils::getFromNamespace("predict.multinom", "nnet")
+    ps_score <- predict.multinom(treatment_model, newdata=data, type="probs")
   }
 
   # estimate pseudo observations
@@ -483,7 +494,7 @@ surv_method_aiptw_pseudo <- function(data, variable, ev_time, event, sd,
     if (sd) {
 
       pseudo_dr_sd <- function(x, n, na.rm) {
-        sqrt(var(x, na.rm=na.rm) / n)
+        sqrt(stats::var(x, na.rm=na.rm) / n)
       }
       survsd <- apply(dr, 2, pseudo_dr_sd, n=n, na.rm=na.rm)
 

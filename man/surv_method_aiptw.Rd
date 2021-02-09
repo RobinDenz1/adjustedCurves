@@ -1,18 +1,18 @@
 \name{surv_method_aiptw}
 \alias{surv_method_aiptw}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Augmented Inverse Probability of Treatment Weighted Survival Curves
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Function to calculate augmented inverse probability of treatment weighted survival curves. Instead of only modeling the outcome mechanism or the treatment assignment mechanism, both kind of models are required to use this method. If either of those models are correctly specified, unbiased estimates will be obtained. Can also be used to adjust for dependent censoring. See details for more information.
 }
 \usage{
 surv_method_aiptw(data, variable, ev_time, event, sd, times,
                   outcome_model=NULL, treatment_model=NULL,
                   censoring_model=NULL, verbose=F, ...)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{data}{
 A \code{data.frame} object containing the needed time-to-event data in standard format.
@@ -68,16 +68,11 @@ Brice Maxime Hugues Ozenne, Thomas Harder Scheike, and Laila Staerk. "On the Est
 
 }
 \author{
-%%  ~~who you are~~
+The wrapper function was written by Robin Denz, the \code{ate} function (which this wrapper is build around) was written by other people. See \code{?ate} for more details.
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{ate}}, \code{\link{coxph}}, \code{\link{glm}}
 }
 \examples{
 ##---- Should be DIRECTLY executable !! ----

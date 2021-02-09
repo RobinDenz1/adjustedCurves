@@ -1,6 +1,6 @@
 \name{adjusted_rmst}
 \alias{adjusted_rmst}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Calculate Confounder-Adjusted Restricted Mean Survival Times
 }
@@ -10,7 +10,7 @@ This function can be utilized to calculate the confounder-adjusted restricted me
 \usage{
 adjusted_rmst(adjsurv, from=0, to=Inf, use_boot=F)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{adjsurv}{
 An \code{adjustedsurv} object created using the \code{adjustedsurv} function.
@@ -53,16 +53,13 @@ If \code{use_boot} is set to \code{TRUE} and \code{bootstrap} was also set to \c
 
 }
 \references{
+Sarah C. Conner, Lisa M. Sullivan, Emelia J. Benjamin, Michael P. LaValley, Sandro Galea, and Ludovic Trinquart. "Adjusted Restricted Mean Survival Times in Observational Studies". In: Statistics in Medicine 38 (2019), pp. 3832-3860.
 
+Patrick Royston and Mahesh K. B. Parmar. "Restricted Mean Survival Time: An Alternative to the Hazard Ratio for the Design and Analysis of Randomized Trials with a Time-To-Event Outcome". In: BMC Medical Research Methodology 13.152 (2013).
 }
 \author{
-%%  ~~who you are~~
+Robin Denz
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
 \code{\link{print.adjusted_rmst}}, \code{\link{adjustedsurv}}

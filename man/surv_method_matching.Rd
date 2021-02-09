@@ -1,17 +1,17 @@
 \name{surv_method_matching}
 \alias{surv_method_matching}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Using Matching to Calculate Adjusted Survival Curves
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+This method works by first matching controls and treated patients using a previously estimated propensity score. Using this new matched population, a simple Kaplan-Meier or Nelson-Aalen estimator is used to calculate the adjusted survival curves. Simulation studies have shown that this method, while unbiased if used appropriately, is significantly less efficient than other methods. See details.
 }
 \usage{
 surv_method_matching(data, variable, ev_time, event, sd,
                      treatment_model, ...)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{data}{
 A \code{data.frame} object containing the needed time-to-event data in standard format.
@@ -47,16 +47,11 @@ Angela Winnett and Peter Sasieni. "Adjusted Nelson-Aalen Estimates with Retrospe
 Peter C. Austin, Neal Thomas, and Donald B. Rubin. "Covariate-Adjusted Survival Analyses in Propensity-Score Matched Samples: Imputing Potential Time-To-Event Outcomes". In: Statistical Methods in Medical Research 29.3 (2020), pp. 728-751.
 }
 \author{
-%%  ~~who you are~~
+The wrapper function was written by Robin Denz, the \code{Match} function (which this wrapper is build around) was written by other people. See \code{?Match} for more details.
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link[Matching]{Match}}, \code{\link[survival]{survfit}}
 }
 \examples{
 ##---- Should be DIRECTLY executable !! ----

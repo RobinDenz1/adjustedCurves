@@ -1,6 +1,6 @@
 \name{plot.adjustedsurv}
 \alias{plot.adjustedsurv}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Plot Confounder-Adjusted Survival Curves
 }
@@ -8,20 +8,20 @@ Plot Confounder-Adjusted Survival Curves
 A function to graphically display confounder-adjusted survival curves which where previously estimated using the \code{adjustedsurv} function. The user can customize the plot using a variety of options. Internally it uses the \code{ggplot2} package, so additional not implemented features can be added using the standard \code{ggplot2} syntax. This function also includes the option to use isotonic regression on the survival curves, which is of benefit if the estimated curves are not monotone.
 }
 \usage{
-plot.adjustedsurv(adjsurv, draw_ci=T, max_t=Inf,
-                  iso_reg=F, force_bounds=F, use_boot=F,
-                  color=T, linetype=F, facet=F,
-                  line_size=1, xlab="Time",
-                  ylab="Adjusted Survival Probability",
-                  title=NULL, legend_title="Group",
-                  legend_position="right",
-                  ylim=NULL, custom_colors=NULL,
-                  custom_linetypes=NULL,
-                  ci_draw_alpha=0.4)
+\method{plot}{adjustedsurv}(x, draw_ci=T, max_t=Inf,
+     iso_reg=F, force_bounds=F, use_boot=F,
+     color=T, linetype=F, facet=F,
+     line_size=1, xlab="Time",
+     ylab="Adjusted Survival Probability",
+     title=NULL, legend_title="Group",
+     legend_position="right",
+     ylim=NULL, custom_colors=NULL,
+     custom_linetypes=NULL,
+     ci_draw_alpha=0.4, ...)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
-  \item{adjsurv}{
+  \item{x}{
 An \code{adjustedsurv} object created using the \code{adjustedsurv} function.
   }
   \item{draw_ci}{
@@ -78,28 +78,24 @@ A (named) vector to specify the linetype of each adjusted survival curve. Set to
   \item{ci_draw_alpha}{
 A number indicating the level of transparency that should be used when drawing the confidence regions.
   }
+  \item{...}{
+Currently not used.
+  }
 }
 \details{
 
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+Returns a \code{ggplot2} object.
 }
 \references{
+Ted Westling, Mark J. van der Laan, and Marco Carone. "Correcting an Estimator of a Multivariate Monotone Function with Isotonic Regression". In: Electronic Journal of Statistics 14 (2020), pp. 3032-3069.
 
+Robertson, T., Wright, F. T. and Dykstra, R. L. "Order Restricted Statistical Inference". John Wiley & Sons, (1988)
 }
 \author{
-%%  ~~who you are~~
+Robin Denz
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
 \code{\link{adjustedsurv}}, \code{\link{ggplot2}}, \code{\link{pammtools}}

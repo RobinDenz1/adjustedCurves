@@ -1,6 +1,6 @@
 \name{adjustedsurv}
 \alias{adjustedsurv}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Calculate Confounder-Adjusted Survival Curves
 }
@@ -12,7 +12,7 @@ adjustedsurv(data, variable, ev_time, event, method, sd=T,
              times=NULL, alpha=0.05, bootstrap=F,
              n_boot=500, na.rm=F,...)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{data}{
 A \code{data.frame} object containing the needed time-to-event data in standard format.
@@ -83,13 +83,8 @@ When the argument \code{bootstrap} is set to \code{TRUE} it additionally contain
 Hier meine eigenen Paper
 }
 \author{
-%%  ~~who you are~~
+The function itself was written by Robin Denz, but it includes wrappers for functions written by other people. More information can be found in the respective \code{surv_method} documentation.
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
 \code{\link{survival}}, \code{\link{survfit}}

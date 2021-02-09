@@ -1,11 +1,11 @@
 \name{surv_method_ostmle}
 \alias{surv_method_ostmle}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 One-Step Targeted Maximum Likelihood Estimation Survival Curves
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+This method utilizes the one-step targeted maximum likelihood methodology to estimate adjusted survival curves. It is very similar to \code{surv_method_tmle}, with some difference in the estimation techniques. Similar to the AIPTW methods it posseses the doubly-robust property and can also be used to adjust for dependent censoring. It is however important to note that this method should only be used when the time variable is truly discrete and only a few distinct points in time are observed. See details for more information.
 }
 \usage{
 surv_method_ostmle(data, variable, ev_time, event, sd,
@@ -15,7 +15,7 @@ surv_method_ostmle(data, variable, ev_time, event, sd,
                    psi_moss_method="l2", tmle_tolerance=NULL,
                    gtol=1e-3)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{data}{
 A \code{data.frame} object containing the needed time-to-event data in standard format.
@@ -76,16 +76,11 @@ Returns a \code{data.frame} object containing the estimated adjusted survival pr
 Weixin Cai and Mark J. van der Laan. "One-Step Targeted Maximum Likelihood Estimation for Time-To-Event Outcomes". In: Biometrics 76 (2020), pp. 722-733.
 }
 \author{
-%%  ~~who you are~~
+The wrapper function was written by Robin Denz, the \code{MOSS} package (which this wrapper is based on) was written by Wilson Cai. See \code{?MOSS} for more details.
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{survtmle}}, \code{\link{MOSS}}
 }
 \examples{
 ##---- Should be DIRECTLY executable !! ----

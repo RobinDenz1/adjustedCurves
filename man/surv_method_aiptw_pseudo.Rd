@@ -1,18 +1,18 @@
 \name{surv_method_aiptw_pseudo}
 \alias{surv_method_aiptw_pseudo}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Augmented Inverse Probability of Treatment Weighted Survival Curves using Pseudo-Values
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Function to calculate augmented inverse probability of treatment weighted survival curves using pseudo-values. Instead of only modeling the outcome mechanism or the treatment assignment mechanism, both kind of models are required to use this method. If either of those models are correctly specified, unbiased estimates will be obtained. Both the outcome and treatment assignment part are modeled using pseudo-values. See details for more information.
 }
 \usage{
 surv_method_aiptw_pseudo(data, variable, ev_time, event, sd,
                          times, outcome_vars, treatment_model,
                          type_time="factor", spline_df=10, na.rm=F)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{data}{
 A \code{data.frame} object containing the needed time-to-event data in standard format.
@@ -67,16 +67,11 @@ Per K. Andersen and Maja Pohar Perme. "Pseudo-Observations in Survival Analysis"
 Aris Perperoglou, Willi Sauerbrei, Michal Abrahamowicz, and Matthias Schmid. "A Review of Spline Function Procedures in R". In: BMC Medical Research Methodology 19 (2019), pp. 1-16
 }
 \author{
-%%  ~~who you are~~
+Robin Denz
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{geese}}, \code{\link{jacknife}}, \code{\link{ns}}, \code{\link{bs}}
+\code{\link[geepack]{geese}}, \code{\link[prodlim]{jackknife}}, \code{\link[splines]{ns}}, \code{\link[splines]{bs}}
 }
 \examples{
 ##---- Should be DIRECTLY executable !! ----

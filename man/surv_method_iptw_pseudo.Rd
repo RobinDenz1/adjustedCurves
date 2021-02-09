@@ -1,18 +1,18 @@
 \name{surv_method_iptw_pseudo}
 \alias{surv_method_iptw_pseudo}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Inverse Probability of Treatment Weighted Survival Estimates using Pseudo-Values
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+This method works by modelling the treatment assignment mechanism. The individual observations are weighted using inverse probability of treatment weights or other balancing weights (see details) and pseudo-values. If the model is correctly specified, unbiased results will be obtained. The main difference to the \code{surv_method_iptw_cox} and \code{surv_method_iptw_km} functions is the use of pseudo-values. See details for more information.
 }
 \usage{
 surv_method_iptw_pseudo(data, variable, ev_time, event, sd,
                         times, treatment_model,
                         weight_method="ps", na.rm=F, ...)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{data}{
 A \code{data.frame} object containing the needed time-to-event data in standard format.
@@ -52,16 +52,13 @@ Further arguments passed to \code{WeightIt}.
 Returns a \code{data.frame} object containing the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
 }
 \references{
-%% ~put references to the literature/web site here ~
+Per K. Andersen, Elisavet Syriopoulou, and Erik T. Parner. "Causal Inference in Survival Analysis using Pseudo-Observations". In: Statistics in Medicine 36 (2017), pp. 2669-2681.
+
+Per K. Andersen and Maja Pohar Perme. "Pseudo-Observations in Survival Analysis". In: Statistical Methods in Medical Research 19 (2010), pp. 71-99.
 }
 \author{
-%%  ~~who you are~~
+Robin Denz
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
 \code{\link{WeightIt}}, \code{\link{prodlim}}
