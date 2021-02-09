@@ -232,7 +232,6 @@ plot.adjustedsurv <- function(x, draw_ci=T, max_t=Inf,
 # - only allow estimation if both curves were estimated up to "to"
 # - should work with pairwise comparisons
 # - allow multicore / parallel processing
-# - maybe write a plot method for this function
 #' @export
 adjustedsurv_test <- function(adjsurv, from=0, to=Inf) {
 

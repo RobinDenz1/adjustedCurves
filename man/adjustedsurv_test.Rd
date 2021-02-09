@@ -5,7 +5,7 @@
 Test for the Equality of Two Confounder-Adjusted Survival Curves
 }
 \description{
-This function implements a modified version of the Pepe-Flemming (ZITAT) test for the equality of two adjusted survival curves. In particular, the Null-Hypothesis is that the integral of the difference of the two curves in a specified time interval is not different from zero. The input of this function should be a \code{adjustedsurv} object created using the \code{adjustedsurv} function, with \code{bootstap=TRUE} in the original function call.
+This function implements a modified version of the Pepe and Flemming (1989) test for the equality of two adjusted survival curves. In particular, the Null-Hypothesis is that the integral of the difference of the two curves in a specified time interval is not different from zero. The input of this function should be a \code{adjustedsurv} object created using the \code{adjustedsurv} function, with \code{bootstap=TRUE} in the original function call.
 }
 \usage{
 adjustedsurv_test(adjsurv, from=0, to=Inf)
@@ -23,7 +23,11 @@ A number specifying the right side of the time interval of interest. See details
   }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+
+To \code{adjustedsurv} function with \code{bootstrap=TRUE} draws \code{n_boot} bootstrap samples and estimates the adjusted survival curves for each one. This function uses those estimates and calculates the integral of the difference between two curves (just the two when there are two curves and pairwise comparisons if there are > 2 curves) in the interval defined by \code{to} and \code{from}. If the survival curves are approximately equal, this quantity should be close to zero. The direct variance calculation of this is quantity is quite involved even in the non-adjusted case (see ZITATE) and has not been proposed for adjusted survival curves yet. We can however use the distribution of the integrals over all bootstrap samples to approximate the variation. By shifting the bootstrap distribution to be centered around 0 we approximate the distribution of the integral under the Null-Hypothesis. The P-Value can then be calculated by taking the proportion of cases where the absolute of the integral observed in the actual curves is smaller or equal to the shifted bootstrap values.
+
+This function has not been tested extensively yet and is still in the experimental stage. Use with caution.
+
 }
 \value{
 Returns a \code{adjustedsurv_test} object containing the following object:

@@ -80,7 +80,7 @@ The wrapper function was written by Robin Denz, the \code{MOSS} package (which t
 }
 
 \seealso{
-\code{\link{survtmle}}, \code{\link{MOSS}}
+\code{\link[survtmle]{survtmle}}, \code{\link[MOSS]{MOSS}}, \code{\link[SuperLearner]{SuperLearner}}
 }
 \examples{
 ##---- Should be DIRECTLY executable !! ----

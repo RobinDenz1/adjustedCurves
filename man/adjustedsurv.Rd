@@ -87,7 +87,9 @@ The function itself was written by Robin Denz, but it includes wrappers for func
 }
 
 \seealso{
-\code{\link{survival}}, \code{\link{survfit}}
+\code{\link{surv_method_aiptw}}, \code{\link{surv_method_aiptw_pseudo}}, \code{\link{surv_method_direct}}, \code{\link{surv_method_direct_pseudo}},
+\code{\link{surv_method_iptw_km}}, \code{\link{surv_method_iptw_cox}}, \code{\link{surv_method_iptw_pseudo}}, \code{\link{surv_method_el}},
+\code{\link{surv_method_matching}}, \code{\link{surv_method_tmle}}, \code{\link{surv_method_ostmle}}
 }
 \examples{
 ##---- Should be DIRECTLY executable !! ----
