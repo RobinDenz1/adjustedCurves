@@ -10,7 +10,7 @@ Those additional features include the calculation of adjusted restricted mean su
 
 ## Installation
 
-Currently this package is not available on Cran, but can be installed easily using the following code:
+Currently this package is not available on CRAN, but can be installed easily using the following code:
 
 ```
 library(devtools)
