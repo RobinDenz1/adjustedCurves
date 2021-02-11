@@ -2,13 +2,14 @@
 utils::globalVariables(c("gaussian", "id"))
 
 ## simple Kaplan-Meier estimate
-# TODO: - sd calculation seems to be wrong, check this
 #' @export
-surv_method_km <- function(data, variable, ev_time, event, sd, ...) {
+surv_method_km <- function(data, variable, ev_time, event, conf_int,
+                           conf_level=0.95, ...) {
 
   form <- paste0("survival::Surv(", ev_time, ", ", event, ") ~ ", variable)
 
-  surv <- survival::survfit(stats::as.formula(form), data=data, se.fit=sd, ...)
+  surv <- survival::survfit(stats::as.formula(form), data=data, se.fit=conf_int,
+                            conf.int=conf_level, ...)
   plotdata <- data.frame(time=surv$time,
                          surv=surv$surv)
   # get grouping variable
@@ -19,9 +20,11 @@ surv_method_km <- function(data, variable, ev_time, event, sd, ...) {
   group <- gsub(paste0(variable, "="), "", group)
   plotdata$group <- group
 
-  # get sd
-  if (sd) {
-    plotdata$sd <- surv$std.err * sqrt(nrow(data))
+  # get se and confidence interval
+  if (conf_int) {
+    plotdata$se <- surv$std.err
+    plotdata$ci_lower <- surv$lower
+    plotdata$ci_upper <- surv$upper
   }
 
   return(plotdata)
@@ -30,17 +33,18 @@ surv_method_km <- function(data, variable, ev_time, event, sd, ...) {
 ## IPTW Kaplan-Meier estimate
 # TODO: - standard deviation calculation may be a little off,
 #         or its just a problem with the CI calculation
+# IMPORTANT: This seems to no longer work adequately. Same estimates as KM
 #' @export
-surv_method_iptw_km <- function(data, variable, ev_time, event, sd,
-                                treatment_model, weight_method="ps", ...) {
+surv_method_iptw_km <- function(data, variable, ev_time, event, conf_int,
+                                conf_level=0.95, treatment_model,
+                                weight_method="ps", ...) {
 
   # get weights
-  if (inherits(treatment_model, "formula") | inherits(treatment_model, "glm") |
-      inherits(treatment_model, "multinom")) {
+  if (is.numeric(treatment_model)) {
+    weights <- treatment_model
+  } else {
     weights <- get_iptw_weights(data, treatment_model, weight_method,
                                 variable, ...)
-  } else if (is.numeric(treatment_model)) {
-    weights <- treatment_model
   }
 
   # weighted Kaplan-Meier estimator
@@ -62,7 +66,8 @@ surv_method_iptw_km <- function(data, variable, ev_time, event, sd,
   }
   plotdata <- dplyr::bind_rows(plotdata)
 
-  if (sd) {
+  # variance, confidence interval
+  if (conf_int) {
     plotdata$sd <- NA
     plotdata$s_j <- 1 - (plotdata$d_j / plotdata$Y_j)
 
@@ -97,6 +102,8 @@ surv_method_iptw_km <- function(data, variable, ev_time, event, sd,
       plotdata$sd[plotdata$group==levs[i]] <- sqrt(iptw_km_var)
     }
     plotdata$s_j <- NULL
+
+    # TODO: hier confidence interval
   }
 
   plotdata$d_j <- NULL
@@ -105,44 +112,25 @@ surv_method_iptw_km <- function(data, variable, ev_time, event, sd,
   return(plotdata)
 }
 
-## a stat needed to calculate the variance of the iptw_km method
-calc_Mj <- function(t, data, ev_time, ps_score) {
-
-  relevant_ps <- ps_score[data[,ev_time] >= t]
-  Mj <- ((sum(1/relevant_ps))^2) / (sum((1/relevant_ps)^2))
-  return(Mj)
-
-}
-
-## calculate the variance of iptw_km estimates
-calc_iptw_km_var <- function(t, adj_km) {
-
-  rel_t <- adj_km[adj_km$time <= t,]
-  rel_t$in_sum <- (1-rel_t$s_j) / (rel_t$Mj * rel_t$s_j)
-  var_iptw_km <- rel_t$surv[rel_t$time==t]^2 * sum(rel_t$in_sum)
-  return(var_iptw_km)
-
-}
-
 ## IPTW with univariate cox-model
 #' @export
-surv_method_iptw_cox <- function(data, variable, ev_time, event, sd,
-                                 treatment_model, weight_method="ps", ...) {
+surv_method_iptw_cox <- function(data, variable, ev_time, event, conf_int,
+                                 conf_level=0.95, treatment_model,
+                                 weight_method="ps", ...) {
 
   # get weights
-  if (inherits(treatment_model, "formula") | inherits(treatment_model, "glm") |
-      inherits(treatment_model, "multinom")) {
+  if (is.numeric(treatment_model)) {
+    weights <- treatment_model
+  } else {
     weights <- get_iptw_weights(data, treatment_model, weight_method,
                                 variable, ...)
-  } else if (is.numeric(treatment_model)) {
-    weights <- treatment_model
   }
 
   # univariate, weighted cox model
   form <- paste0("survival::Surv(", ev_time, ", ", event, ") ~ strata(",
                  variable, ")")
   model <- survival::coxph(stats::as.formula(form), weights=weights, data=data)
-  surv <- survival::survfit(model, se.fit=sd)
+  surv <- survival::survfit(model, se.fit=conf_int, conf.int=conf_level)
 
   plotdata <- data.frame(time=surv$time,
                          surv=surv$surv)
@@ -155,9 +143,11 @@ surv_method_iptw_cox <- function(data, variable, ev_time, event, sd,
   group <- gsub(paste0(variable, "="), "", group)
   plotdata$group <- group
 
-  # get sd
-  if (sd) {
-    plotdata$sd <- surv$std.err * sqrt(nrow(data))
+  # get se and confidence interval
+  if (conf_int) {
+    plotdata$se <- surv$std.err
+    plotdata$ci_lower <- surv$lower
+    plotdata$ci_upper <- surv$upper
   }
 
   return(plotdata)
@@ -166,16 +156,15 @@ surv_method_iptw_cox <- function(data, variable, ev_time, event, sd,
 ## Using Pseudo-Observations and IPTW
 # TODO: add variance calculation
 #' @export
-surv_method_iptw_pseudo <- function(data, variable, ev_time, event, sd,
-                                    times, treatment_model,
+surv_method_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
+                                    conf_level=0.95, times, treatment_model,
                                     weight_method="ps", na.rm=F, ...) {
   # get weights
-  if (inherits(treatment_model, "formula") | inherits(treatment_model, "glm") |
-      inherits(treatment_model, "multinom")) {
+  if (is.numeric(treatment_model)) {
+    weights <- treatment_model
+  } else {
     weights <- get_iptw_weights(data, treatment_model, weight_method,
                                 variable, ...)
-  } else if (is.numeric(treatment_model)) {
-    weights <- treatment_model
   }
 
   # estimate pseudo observations
@@ -197,7 +186,7 @@ surv_method_iptw_pseudo <- function(data, variable, ev_time, event, sd,
   plotdata <- dplyr::bind_rows(plotdata)
   rownames(plotdata) <- NULL
 
-  if (sd) {
+  if (conf_int) {
     # PLACEHOLDER to avoid error
     plotdata$sd <- stats::runif(n=nrow(plotdata))
   }
@@ -207,28 +196,35 @@ surv_method_iptw_pseudo <- function(data, variable, ev_time, event, sd,
 
 ## Direct Adjustment
 #' @export
-surv_method_direct <- function(data, variable, ev_time, event, sd,
-                               outcome_model, times, verbose=F, ...) {
+surv_method_direct <- function(data, variable, ev_time, event, conf_int,
+                               conf_level=0.95, times, outcome_model,
+                               verbose=F, ...) {
 
   surv <- riskRegression::ate(event=outcome_model, treatment=variable,
                               data=data, estimator="Gformula",
-                              times=times, se=sd, verbose=verbose, ...)
+                              times=times, se=conf_int, verbose=verbose, ...)
   plotdata <- data.frame(time=surv$meanRisk$time,
                          surv=1 - surv$meanRisk$estimate,
                          group=surv$meanRisk$treatment)
 
-  if (sd) {
-    plotdata$sd <- surv$meanRisk$se * sqrt(nrow(data))
+  if (conf_int) {
+    plotdata$se <- surv$meanRisk$se
+
+    confint.ate <- utils::getFromNamespace("confint.ate", "riskRegression")
+
+    cis <- confint.ate(surv, level=conf_level)$meanRisk
+    plotdata$ci_lower <- 1 - cis$lower
+    plotdata$ci_upper <- 1 - cis$upper
   }
 
   return(plotdata)
 }
 
 ## Using propensity score matching
-# TODO: check if variance calculation makes sense
+# TODO: variance calculation probably off
 #' @export
-surv_method_matching <- function(data, variable, ev_time, event, sd,
-                                 treatment_model, ...) {
+surv_method_matching <- function(data, variable, ev_time, event, conf_int,
+                                 conf_level=0.95, treatment_model, ...) {
 
   if (is.numeric(treatment_model)) {
     ps_score <- treatment_model
@@ -241,14 +237,17 @@ surv_method_matching <- function(data, variable, ev_time, event, sd,
 
   # estimate survival curve
   form <- paste0("survival::Surv(", ev_time, ", ", event, ") ~ ", variable)
-  surv <- survival::survfit(stats::as.formula(form), data=m_dat, se.fit=sd)
+  surv <- survival::survfit(stats::as.formula(form), data=m_dat, se.fit=conf_int,
+                            conf.int=conf_level)
   plotdata <- data.frame(time=surv$time,
-                         est=surv$surv,
-                         var=c(rep(0, surv$strata[1]),
-                               rep(1, surv$strata[2])))
+                         surv=surv$surv,
+                         group=c(rep(0, surv$strata[1]),
+                                 rep(1, surv$strata[2])))
 
-  if (sd) {
-    plotdata$sd <- surv$std.err * sqrt(nrow(data))
+  if (conf_int) {
+    plotdata$se <- surv$std.err
+    plotdata$ci_lower <- surv$lower
+    plotdata$ci_upper <- surv$upper
   }
 
   return(plotdata)
@@ -256,16 +255,12 @@ surv_method_matching <- function(data, variable, ev_time, event, sd,
 
 ## Using Augmented Inverse Probability of Treatment Weighting
 #' @export
-surv_method_aiptw <- function(data, variable, ev_time, event, sd, times,
-                              outcome_model=NULL, treatment_model=NULL,
-                              censoring_model=NULL, verbose=F, ...) {
+surv_method_aiptw <- function(data, variable, ev_time, event, conf_int,
+                              conf_level=0.95, times, outcome_model=NULL,
+                              treatment_model=NULL, censoring_model=NULL,
+                              verbose=F, ...) {
 
-  if (is.null(censoring_model) & is.null(treatment_model) &
-      is.null(outcome_model)) {
-    stop("At least one of 'treatment_model', 'outcome_model' and ",
-         "'censoring_model' needs to be specified, see details.")
-  }
-
+  # defaults for input models
   if (is.null(censoring_model)) {
     form <- paste0("survival::Surv(", ev_time, ", ", event, "==0) ~ 1")
     censoring_model <- survival::coxph(stats::as.formula(form), data=data, x=T)
@@ -285,61 +280,32 @@ surv_method_aiptw <- function(data, variable, ev_time, event, sd, times,
                                censor=censoring_model,
                                data=data,
                                times=times,
-                               se=sd,
+                               se=conf_int,
                                verbose=verbose,
-                               estimator="AIPTW,AIPCW")$meanRisk
+                               estimator="AIPTW,AIPCW")
   # calculate survival estimates
-  plotdata <- data.frame(time=c(curve$time[curve$treatment==0],
-                                curve$time[curve$treatment==1]),
-                         surv=c(1 - curve$estimate[curve$treatment==0],
-                                1 - curve$estimate[curve$treatment==1]),
-                         group=c(rep(0, length(times)),
-                                 rep(1, length(times))))
-  if (sd) {
-    plotdata$sd <- c(curve$se[curve$treatment==0],
-                     curve$se[curve$treatment==1]) * sqrt(nrow(data))
+  plotdata <- data.frame(time=curve$meanRisk$time,
+                         surv=1 - curve$meanRisk$estimate,
+                         group=curve$meanRisk$treatment)
+  if (conf_int) {
+    plotdata$se <- curve$meanRisk$se
+
+    confint.ate <- utils::getFromNamespace("confint.ate", "riskRegression")
+
+    cis <- confint.ate(curve, level=conf_level, ci=T)$meanRisk
+    plotdata$ci_lower <- 1 - cis$lower
+    plotdata$ci_upper <- 1 - cis$upper
   }
 
   return(plotdata)
 }
 
-## function to get predicted values from any kind of geese object,
-## for multiple time points
-geese_predictions <- function(geese_mod, Sdata, times, n) {
-
-  current.na.action <- options('na.action')
-  options(na.action="na.pass")
-  # full model matrix and betas
-  mod_mat <- stats::model.matrix(geese_mod$formula, data=Sdata)
-  options(na.action=current.na.action[[1]])
-
-  betas <- geese_mod$beta
-
-  apply_betas <- function(x, betas) {
-    return(sum(x * betas))
-  }
-
-  pred_mat <- matrix(nrow=n, ncol=length(times))
-  for (i in 1:length(times)) {
-    # take only relevant portion (at time t) of model matrix
-    mod_mat_t <- mod_mat[Sdata$vtime==times[i],]
-    # apply coefficients
-    preds <- apply(X=mod_mat_t, MARGIN=1, FUN=apply_betas, betas=betas)
-    pred_mat[,i] <- preds
-  }
-  colnames(pred_mat) <- paste0("t.", times)
-  return(pred_mat)
-}
-
 ## Using Pseudo Observations and Direct Adjustment
 # TODO: fix variance calculation, makes no sense yet
 #' @export
-surv_method_direct_pseudo <- function(data, variable, ev_time, event, sd,
-                                      times, outcome_vars, type_time="factor",
-                                      spline_df=10, na.rm=F) {
-  # removing Notes from devtools::check()
-  #gaussian <- id <- NULL
-
+surv_method_direct_pseudo <- function(data, variable, ev_time, event, conf_int,
+                                      conf_level=0.95, times, outcome_vars,
+                                      type_time="factor", spline_df=10, na.rm=F) {
   # some constants
   len <- length(times)
   n <- nrow(data)
@@ -389,7 +355,7 @@ surv_method_direct_pseudo <- function(data, variable, ev_time, event, sd,
     m <- 1 - exp(-exp(pred))
     surv <- apply(m, 2, mean, na.rm=na.rm)
 
-    if (sd) {
+    if (conf_int) {
 
       pseudo_direct_sd <- function(x, n, na.rm) {
         sqrt(stats::var(x, na.rm=na.rm) / n)
@@ -412,12 +378,10 @@ surv_method_direct_pseudo <- function(data, variable, ev_time, event, sd,
 ## Using Pseudo Observations Doubly-Robust, Wang (2018)
 # TODO: Variance calculation is off, needs fix
 #' @export
-surv_method_aiptw_pseudo <- function(data, variable, ev_time, event, sd,
-                                     times, outcome_vars, treatment_model,
-                                     type_time="factor", spline_df=10, na.rm=F) {
-  # removing Notes from devtools::check()
-  #gaussian <- id <- NULL
-
+surv_method_aiptw_pseudo <- function(data, variable, ev_time, event, conf_int,
+                                     conf_level=0.95, times, outcome_vars,
+                                     treatment_model, type_time="factor",
+                                     spline_df=10, na.rm=F) {
   # some constants
   len <- length(times)
   n <- nrow(data)
@@ -442,6 +406,8 @@ surv_method_aiptw_pseudo <- function(data, variable, ev_time, event, sd,
                       group=rep(group, len),
                       vtime=rep(times, rep(n, len)),
                       id=rep(1:n, len))
+
+  outcome_vars <- outcome_vars[outcome_var != variable]
   for (col in outcome_vars) {
     Sdata[,col] <- rep(data[,col], len)
   }
@@ -491,15 +457,19 @@ surv_method_aiptw_pseudo <- function(data, variable, ev_time, event, sd,
 
     surv <- apply(dr, 2, mean, na.rm=na.rm)
 
-    if (sd) {
+    if (conf_int) {
 
       pseudo_dr_sd <- function(x, n, na.rm) {
         sqrt(stats::var(x, na.rm=na.rm) / n)
       }
-      survsd <- apply(dr, 2, pseudo_dr_sd, n=n, na.rm=na.rm)
+      surv_sd <- apply(dr, 2, pseudo_dr_sd, n=n, na.rm=na.rm)
+
+      surv_ci <- confint_surv(surv=surv, sd=surv_sd, n=n,
+                              conf_level=conf_level, conf_type="plain")
 
       plotdata[[i]] <- data.frame(time=times, surv=surv, group=levs[i],
-                                  sd=survsd)
+                                  sd=surv_sd, ci_lower=surv_ci$left,
+                                  ci_upper=surv_ci$right)
 
     } else {
       plotdata[[i]] <- data.frame(time=times, surv=surv, group=levs[i])
@@ -514,7 +484,7 @@ surv_method_aiptw_pseudo <- function(data, variable, ev_time, event, sd,
 
 ## Using Empirical Likelihood Estimation
 #' @export
-surv_method_el <- function(data, variable, ev_time, event, sd,
+surv_method_el <- function(data, variable, ev_time, event, conf_int, conf_level=0.95,
                            times, treatment_vars, moment="first",
                            standardize=F, ...) {
 
@@ -526,7 +496,7 @@ surv_method_el <- function(data, variable, ev_time, event, sd,
                             t=times,
                             psix_moment=moment,
                             standardize=standardize,
-                            get.sd=sd,
+                            get.sd=F,
                             ...)
   el_1 <- adjKMtest::el.est(y=data[, ev_time],
                             delta=data[, event],
@@ -536,25 +506,21 @@ surv_method_el <- function(data, variable, ev_time, event, sd,
                             t=times,
                             psix_moment=moment,
                             standardize=standardize,
-                            get.sd=sd,
+                            get.sd=F,
                             ...)
 
   plotdata <- data.frame(time=c(times, times),
                          surv=c(el_0$St, el_1$St),
                          group=c(rep(0, length(el_0$St)),
                                  rep(1, length(el_0$St))))
-  if (sd) {
-    plotdata$sd <- c(el_0$sd, el_1$sd)
-  }
 
   return(plotdata)
 }
 
 ## Targeted Maximum Likelihood Estimation
-# TODO: Add variance calculation
 #' @export
-surv_method_tmle <- function(data, variable, ev_time, event, sd,
-                             times, t_max=NULL, adjust_vars=NULL,
+surv_method_tmle <- function(data, variable, ev_time, event, conf_int,
+                             conf_level=0.95, times, t_max=NULL, adjust_vars=NULL,
                              SL.ftime=NULL, SL.ctime=NULL, SL.trt=NULL,
                              glm.ftime=NULL, glm.ctime=NULL, glm.trt=NULL,
                              ...) {
@@ -593,19 +559,9 @@ surv_method_tmle <- function(data, variable, ev_time, event, sd,
     if (startsWith(conditionMessage(w), "Using formula(x) is deprecated"))
       invokeRestart("muffleWarning")
   })
-  len_groups <- length(unique(data[, variable]))
 
-  # extract estimates of survival
-  names_groups <- unique(lapply(lapply(tpfit, FUN=`[[`, "est"),
-                                FUN=rownames))[[1]]
-
-  est_only <- t(matrix(unlist(lapply(tpfit, FUN=`[[`, "est")),
-                       ncol=len_groups, byrow=TRUE))
-  est_only <- as.data.frame(est_only)
-  rownames(est_only) <- names_groups
-
-  s_0 <- 1 - as.numeric(est_only[1, ])
-  s_1 <- 1 - as.numeric(est_only[2, ])
+  s_0 <- 1 - unlist(lapply(tpfit, function(x) {x$est[1]}))
+  s_1 <- 1 - unlist(lapply(tpfit, function(x) {x$est[2]}))
 
   # put together
   plotdata <- data.frame(time=rep(times, 2),
@@ -613,16 +569,31 @@ surv_method_tmle <- function(data, variable, ev_time, event, sd,
                          group=c(rep(0, length(times)),
                                  rep(1, length(times))))
 
+  if (conf_int) {
+
+    var_0 <- unlist(lapply(tpfit, function(x) {x$var[1]}))
+    var_1 <- unlist(lapply(tpfit, function(x) {x$var[2]}))
+
+    plotdata$sd <- sqrt(c(var_0, var_1))
+
+    confint.tp.survtmle <- utils::getFromNamespace("confint.tp.survtmle",
+                                                   "survtmle")
+    survtmle_ci <- confint.tp.survtmle(tpfit, level=conf_level)
+
+    plotdata$ci_lower <- 1 - c(survtmle_ci$`0 1`[,1], survtmle_ci$`1 1`[,1])
+    plotdata$ci_upper <- 1 - c(survtmle_ci$`0 1`[,2], survtmle_ci$`1 1`[,2])
+
+  }
+
   return(plotdata)
 }
 
 ## One-Step Targeted Maximum Likelihood Estimation
-# TODO: Add variance calculation
 #' @export
-surv_method_ostmle <- function(data, variable, ev_time, event, sd,
-                               times, t_max=NULL, adjust_vars=NULL,
-                               SL.ftime=NULL, SL.ctime=NULL, SL.trt=NULL,
-                               epsilon=1, max_num_iteration=100,
+surv_method_ostmle <- function(data, variable, ev_time, event, conf_int,
+                               conf_level=0.95, times, t_max=NULL,
+                               adjust_vars=NULL, SL.ftime=NULL, SL.ctime=NULL,
+                               SL.trt=NULL, epsilon=1, max_num_iteration=100,
                                psi_moss_method="l2", tmle_tolerance=NULL,
                                gtol=1e-3) {
   if (is.null(t_max)) {
@@ -652,7 +623,8 @@ surv_method_ostmle <- function(data, variable, ev_time, event, sd,
   invisible(sl_fit$density_failure_1$hazard_to_survival())
   invisible(sl_fit$density_failure_0$hazard_to_survival())
 
-  moss_hazard_fit <- MOSS::MOSS_hazard$new(
+  # for treatment == 1
+  moss_hazard_fit_1 <- MOSS::MOSS_hazard$new(
     A=data[, variable],
     T_tilde=data[, ev_time],
     Delta=data[, event],
@@ -662,7 +634,7 @@ surv_method_ostmle <- function(data, variable, ev_time, event, sd,
     A_intervene=1,
     k_grid=k_grid
   )
-  psi_moss_hazard_1 <- moss_hazard_fit$iterate_onestep(
+  psi_moss_hazard_1 <- moss_hazard_fit_1$iterate_onestep(
     epsilon=epsilon,
     max_num_interation=max_num_iteration,
     tmle_tolerance=tmle_tolerance,
@@ -670,7 +642,8 @@ surv_method_ostmle <- function(data, variable, ev_time, event, sd,
     method=psi_moss_method
   )
 
-  moss_hazard_fit <- MOSS::MOSS_hazard$new(
+  # for treatment == 0
+  moss_hazard_fit_0 <- MOSS::MOSS_hazard$new(
     A=data[, variable],
     T_tilde=data[, ev_time],
     Delta=data[, event],
@@ -680,7 +653,7 @@ surv_method_ostmle <- function(data, variable, ev_time, event, sd,
     A_intervene=0,
     k_grid=k_grid
   )
-  psi_moss_hazard_0 <- moss_hazard_fit$iterate_onestep(
+  psi_moss_hazard_0 <- moss_hazard_fit_0$iterate_onestep(
     epsilon=epsilon,
     max_num_interation=max_num_iteration,
     tmle_tolerance=tmle_tolerance,
@@ -693,5 +666,47 @@ surv_method_ostmle <- function(data, variable, ev_time, event, sd,
                          surv=c(psi_moss_hazard_0, psi_moss_hazard_1),
                          group=c(rep(0, length(k_grid)),
                                  rep(1, length(k_grid))))
+
+  if (conf_int) {
+
+    # for treatment == 1
+    s_1 <- as.vector(psi_moss_hazard_1)
+    eic_fit <- MOSS::eic$new(
+      A = data[, variable],
+      T_tilde = data[, ev_time],
+      Delta = data[, event],
+      density_failure = moss_hazard_fit_1$density_failure,
+      density_censor = moss_hazard_fit_1$density_censor,
+      g1W = moss_hazard_fit_1$g1W,
+      psi = s_1,
+      A_intervene = 1
+    )
+    eic_matrix <- eic_fit$all_t(k_grid=k_grid)
+    se_1 <- compute_se_moss(eic_matrix, alpha=1-conf_level)
+
+
+    # for treatment == 0
+    s_0 <- as.vector(psi_moss_hazard_0)
+    eic_fit <- MOSS::eic$new(
+      A = data[, variable],
+      T_tilde = data[, ev_time],
+      Delta = data[, event],
+      density_failure = moss_hazard_fit_0$density_failure,
+      density_censor = moss_hazard_fit_0$density_censor,
+      g1W = moss_hazard_fit_0$g1W,
+      psi = s_0,
+      A_intervene = 1
+    )
+    eic_matrix <- eic_fit$all_t(k_grid=k_grid)
+    se_0 <- compute_se_moss(eic_matrix, alpha=1-conf_level)
+
+    plotdata$se <- c(se_0, se_1)
+
+    crit <- stats::qnorm(1-((1-conf_level)/2))
+    plotdata$ci_lower <- plotdata$surv - crit * plotdata$se
+    plotdata$ci_upper <- plotdata$surv + crit * plotdata$se
+
+  }
+
   return(plotdata)
 }

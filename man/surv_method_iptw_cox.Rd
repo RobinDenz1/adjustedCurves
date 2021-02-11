@@ -8,8 +8,8 @@ Inverse Probability of Treatment Weighted Survival using Cox-Regression
 This method works by modelling the treatment assignment mechanism. The individual observations are weighted using inverse probability of treatment weights or other balancing weights (see details) and a univariate cox-regression model. If the model is correctly specified, unbiased results will be obtained. The only difference to the \code{surv_method_iptw_km} is a slightly different weighting approach. They are essentially equal in large samples. See details for more information.
 }
 \usage{
-surv_method_iptw_cox(data, variable, ev_time, event, sd,
-                     treatment_model, weight_method="ps", ...)
+surv_method_iptw_cox(data, variable, ev_time, event, conf_int,
+                     conf_level=0.95, treatment_model, weight_method="ps", ...)
 }
 
 \arguments{
@@ -25,9 +25,12 @@ A character string specifying the variable indicating the time-to-event or time-
   \item{event}{
 A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
 }
-  \item{sd}{
-A logical variable, indicating whether the standard deviation of the survival probabilities should be calculated. Needed to calculate confidence intervals.
-}
+  \item{conf_int}{
+A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated. Not available for all methods.
+  }
+  \item{conf_level}{
+A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
+  }
   \item{treatment_model}{
 Must be either a model object with \code{variable} as response variable, a vector of weights or a formula which can be passed to \code{WeightIt}.
 }
@@ -39,20 +42,24 @@ Further arguments passed to \code{WeightIt}.
   }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+HIER GENAU BESCHREIBEN
+
+By default this method uses a a robust sandwich-type variance estimator (\code{robust=TRUE} in the \code{coxph} function call) to calculate the standard error used in the construction of confidence intervals. This estimator has been shown to be biased by Austin (2016). It is recommended to use bootstrap confidence intervals instead. This can be done by setting \code{bootstrap=TRUE} in the \code{adjustedsurv} function call.
 }
 \value{
 Returns a \code{data.frame} object containing the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
 }
 \references{
 Stephen R. Cole and Miguel A. Hernan. "Adjusted Survival Curves with Inverse Probability Weights". In: Computer Methods and Programs in Biomedicine 2003.75 (2004), pp. 45-49.
+
+Peter C. Austin. "Variance Estimation when Using Inverse Probabiltiy of Treatment Weighting (IPTW) with Survival Analysis". In: Statistics in Medicine 35 (2016), pp. 5642-5655.
 }
 \author{
 Robin Denz
 }
 
 \seealso{
-\code{\link{WeightIt}}, \code{\link{coxph}}
+\code{\link{WeightIt}}, \code{\link{coxph}}, \code{\link{survfit.coxph}}
 }
 \examples{
 ##---- Should be DIRECTLY executable !! ----

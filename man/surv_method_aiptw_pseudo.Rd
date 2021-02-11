@@ -8,9 +8,10 @@ Augmented Inverse Probability of Treatment Weighted Survival Curves using Pseudo
 Function to calculate augmented inverse probability of treatment weighted survival curves using pseudo-values. Instead of only modeling the outcome mechanism or the treatment assignment mechanism, both kind of models are required to use this method. If either of those models are correctly specified, unbiased estimates will be obtained. Both the outcome and treatment assignment part are modeled using pseudo-values. See details for more information.
 }
 \usage{
-surv_method_aiptw_pseudo(data, variable, ev_time, event, sd,
-                         times, outcome_vars, treatment_model,
-                         type_time="factor", spline_df=10, na.rm=F)
+surv_method_aiptw_pseudo(data, variable, ev_time, event, conf_int,
+                         conf_level=0.95, times, outcome_vars,
+                         treatment_model, type_time="factor",
+                         spline_df=10, na.rm=F)
 }
 
 \arguments{
@@ -26,9 +27,12 @@ A character string specifying the variable indicating the time-to-event or time-
   \item{event}{
 A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
 }
-  \item{sd}{
-A logical variable, indicating whether the standard deviation of the survival probabilities should be calculated. Needed to calculate confidence intervals.
-}
+  \item{conf_int}{
+A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated.
+  }
+  \item{conf_level}{
+A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
+  }
   \item{times}{
 A numeric vector of time points at which the survival probability should be estimated or \code{NULL}. If \code{NULL} the survival is estimated at all points in time at which an event occured.
 }

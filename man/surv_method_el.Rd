@@ -8,9 +8,8 @@ Empirical Likelihood Estimation Survival Curves
 This method utilizes the empirical likelihood estimation methodology to calculate adjusted survival curves. Neither outcome nor treatment assignment models are required for this function to work. Since the exact form of both mechanisms are left unspecified, it is more robust to model misspecification than IPTW or direct adjustment. See details for more information.
 }
 \usage{
-surv_method_el(data, variable, ev_time, event, sd,
-               times, treatment_vars, moment="first",
-               standardize=F, ...)
+surv_method_el(data, variable, ev_time, event, conf_int, conf_level=0.95,
+               times, treatment_vars, moment="first", standardize=F, ...)
 }
 
 \arguments{
@@ -26,9 +25,12 @@ A character string specifying the variable indicating the time-to-event or time-
   \item{event}{
 A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
 }
-  \item{sd}{
-A logical variable, indicating whether the standard deviation of the survival probabilities should be calculated. Needed to calculate confidence intervals.
-}
+  \item{conf_int}{
+A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated. Currently not available for this method. The argument is only included for consistency.
+  }
+  \item{conf_level}{
+A number specifying the confidence level of the confidence intervals. Currently not used.
+  }
   \item{times}{
 Method used in \code{WeightIt} function call. Ignored if \code{treatment_model} is not a formula object.
 }

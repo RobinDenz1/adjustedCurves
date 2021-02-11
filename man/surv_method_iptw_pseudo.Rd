@@ -8,8 +8,8 @@ Inverse Probability of Treatment Weighted Survival Estimates using Pseudo-Values
 This method works by modelling the treatment assignment mechanism. The individual observations are weighted using inverse probability of treatment weights or other balancing weights (see details) and pseudo-values. If the model is correctly specified, unbiased results will be obtained. The main difference to the \code{surv_method_iptw_cox} and \code{surv_method_iptw_km} functions is the use of pseudo-values. See details for more information.
 }
 \usage{
-surv_method_iptw_pseudo(data, variable, ev_time, event, sd,
-                        times, treatment_model,
+surv_method_iptw_pseudo(data, variable, ev_time, event, conf_int,
+                        conf_level=0.95, times, treatment_model,
                         weight_method="ps", na.rm=F, ...)
 }
 
@@ -26,9 +26,12 @@ A character string specifying the variable indicating the time-to-event or time-
   \item{event}{
 A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
 }
-  \item{sd}{
-A logical variable, indicating whether the standard deviation of the survival probabilities should be calculated. Needed to calculate confidence intervals.
-}
+  \item{conf_int}{
+A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated.
+  }
+  \item{conf_level}{
+A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
+  }
   \item{times}{
 A numeric vector of time points at which the survival probability should be estimated or \code{NULL}. If \code{NULL} the survival is estimated at all points in time at which an event occured.
 }
