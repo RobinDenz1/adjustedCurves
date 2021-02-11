@@ -3,13 +3,14 @@
 # TODO: - might be nice to allow multicore execution for bootstrapping
 #' @importFrom dplyr %>%
 #' @export
-adjustedsurv <- function(data, variable, ev_time, event, method, sd=T,
-                         times=NULL, alpha=0.05, bootstrap=F,
+adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=T,
+                         conf_level=0.95, times=NULL, bootstrap=F,
                          n_boot=500, na.rm=F, ...) {
 
   check_inputs_adjustedsurv(data=data, variable=variable,
                             ev_time=ev_time, event=event, method=method,
-                            sd=sd, times=times, bootstrap=bootstrap,
+                            conf_int=conf_int, conf_level=conf_level,
+                            times=times, bootstrap=bootstrap,
                             n_boot=n_boot, na.rm=na.rm, ...)
 
   # define those to remove Notes in devtools::check()
@@ -51,6 +52,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method, sd=T,
         pass_args$outcome_model <- stats::update(pass_args$outcome_model,
                                                  data=boot_samp)
       }
+      # TODO: Allow WeightIT, input check for custom weights
       if (method %in% c("iptw_km", "iptw_cox", "iptw_pseudo", "aiptw",
                         "aiptw_pseudo")) {
         pass_args$treatment_model <- stats::update(pass_args$treatment_model,
@@ -59,7 +61,8 @@ adjustedsurv <- function(data, variable, ev_time, event, method, sd=T,
 
       # call surv_method with correct arguments
       args <- list(data=boot_samp, variable=variable, ev_time=ev_time,
-                   event=event, sd=F, times=times, na.rm=na.rm)
+                   event=event, conf_int=F, conf_level=conf_level, times=times,
+                   na.rm=na.rm)
       args <- c(args, pass_args)
 
       adjsurv_boot <- R.utils::doCall(surv_fun, args=args)
@@ -92,27 +95,18 @@ adjustedsurv <- function(data, variable, ev_time, event, method, sd=T,
       dplyr::group_by(., time, group) %>%
       dplyr::summarise(surv=mean(surv_b, na.rm=na.rm),
                        sd=stats::sd(surv_b, na.rm=na.rm),
-                       ci_lower=stats::quantile(surv_b, probs=alpha/2,
+                       ci_lower=stats::quantile(surv_b, probs=1-conf_level,
                                                 na.rm=na.rm),
-                       ci_upper=stats::quantile(surv_b, probs=1-(alpha/2),
+                       ci_upper=stats::quantile(surv_b, probs=conf_level,
                                                 na.rm=na.rm),
                        .groups="drop_last")
   }
 
   # core of the function
   args <- list(data=data, variable=variable, ev_time=ev_time,
-               event=event, sd=sd, times=times, na.rm=na.rm, ...)
+               event=event, conf_int=conf_int, conf_level=conf_level, times=times,
+               na.rm=na.rm, ...)
   plotdata <- R.utils::doCall(surv_fun, args=args)
-
-  # calculate point-wise confidence intervals
-  if (sd) {
-    plotdata$ci_lower <- confint_surv(surv=plotdata$surv, sd=plotdata$sd,
-                                      n=nrow(data), alpha=alpha,
-                                      conf_type="plain")$left
-    plotdata$ci_upper <- confint_surv(surv=plotdata$surv, sd=plotdata$sd,
-                                      n=nrow(data), alpha=alpha,
-                                      conf_type="plain")$right
-  }
 
   out <- list(adjsurv=plotdata,
               method=method,
@@ -122,7 +116,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method, sd=T,
   if (bootstrap) {
     out$boot_data <- boot_data
     out$boot_data_same_t <- boot_data_same_t
-    out$boot_adjsurv <- boot_stats
+    out$boot_adjsurv <- as.data.frame(boot_stats)
   }
 
   class(out) <- "adjustedsurv"
@@ -144,9 +138,16 @@ plot.adjustedsurv <- function(x, draw_ci=T, max_t=Inf,
                               custom_linetypes=NULL,
                               ci_draw_alpha=0.4, ...) {
 
+  if (!color & !linetype & !facet) {
+    stop("Groups must be distinguished with at least one of 'color',",
+         "'linetype' or 'facet'. Can't all be FALSE.")
+  }
+
   if (use_boot & is.null(x$boot_adjsurv)) {
-    stop("Cannot use bootstrapped estimates as they were not estimated.",
-         " Need bootstrap=TRUE in adjustedsurv() call.")
+    warning("Cannot use bootstrapped estimates as they were not estimated.",
+            " Need bootstrap=TRUE in adjustedsurv() call.")
+    draw_ci <- F
+    plotdata <- x$adjsurv
   } else if (use_boot) {
     plotdata <- x$boot_adjsurv
   } else {
@@ -211,12 +212,12 @@ plot.adjustedsurv <- function(x, draw_ci=T, max_t=Inf,
     p <- p + ggplot2::scale_fill_manual(values=custom_colors)
   }
 
-  if (draw_ci & !"sd" %in% colnames(plotdata)) {
-    warning("Cannot draw confidence intervals. Need 'sd=TRUE' in",
+  if (draw_ci & !"ci_lower" %in% colnames(plotdata)) {
+    warning("Cannot draw confidence intervals. Need 'conf_int=TRUE' in",
             " 'adjustedsurv()' call. Alternatively, use the bootstrap estimates.")
   }
 
-  if (draw_ci & "sd" %in% colnames(plotdata)) {
+  if (draw_ci & "ci_lower" %in% colnames(plotdata)) {
     p <- p + pammtools::geom_stepribbon(ggplot2::aes(ymin=.data$ci_lower,
                                             ymax=.data$ci_upper,
                                             fill=.data$group,
@@ -235,15 +236,7 @@ plot.adjustedsurv <- function(x, draw_ci=T, max_t=Inf,
 #' @export
 adjustedsurv_test <- function(adjsurv, from=0, to=Inf) {
 
-  if (!inherits(adjsurv, "adjustedsurv")) {
-    stop("'adjsurv' must be an 'adjustedsurv' object, created using the ",
-         "adjustedsurv function.")
-  } else if (is.null(adjsurv$boot_data)) {
-    stop("Can only perform a significance test if bootstrapping was ",
-         "performed (bootstrap=TRUE in adjsutedsurv() call).")
-  } else if (adjsurv$categorical) {
-    stop("This function currently only supports a test of two survival curves.")
-  }
+  check_inputs_adj_test(adjsurv=adjsurv, from=from, to=to)
 
   # calculate the integral of the difference for every bootstrap sample
   stats_vec <- vector(mode="numeric", length=max(adjsurv$boot_data$boot))
@@ -303,26 +296,30 @@ adjustedsurv_test <- function(adjsurv, from=0, to=Inf) {
 #' @export
 print.adjustedsurv_test <- function(x, ...) {
 
-  cat("##################################################################\n")
+  cat("------------------------------------------------------------------\n")
   cat("Pepe-Flemming Test of Equality of Two Adjusted Survival Curves \n")
   cat("------------------------------------------------------------------")
   cat("\n")
-  cat("The equality was tested for the time interval: ", x$from, " to ",
+  cat("The equality was tested for the time interval:", x$from, "to",
       x$to, "\n")
-  cat("Observed Integral of the difference: ", x$observed_diff_integral,
+  cat("Observed Integral of the difference:", x$observed_diff_integral,
       "\n")
-  cat("Bootstrap standard deviation: ", stats::sd(x$diff_integrals), "\n")
-  cat("P-Value: ", x$p_value, "\n\n")
-  cat("Calculated using ", x$n_boot, " bootstrap replications.\n")
-  cat("##################################################################\n")
+  cat("Bootstrap standard deviation:", stats::sd(x$diff_integrals), "\n")
+  cat("P-Value:", x$p_value, "\n\n")
+  cat("Calculated using", x$n_boot, "bootstrap replications.\n")
+  cat("------------------------------------------------------------------\n")
 }
 
 ## function to calculate the restricted mean survival time of each
 ## adjusted survival curve previously estimated using the adjustedsurv function
 # TODO: - allow multicore bootstrapping
-#       - allow confidence interval calculation for rmsts
+#       - Notes on calculation:
+#         - shouldnt be extrapolated, since estimates of the curves are
+#           biased after the last observed time
+#         - how to handle bootstrap samples that don't include the whole
+#           interval of interest? Remove?
 #' @export
-adjusted_rmst <- function(adjsurv, from=0, to=Inf, use_boot=F) {
+adjusted_rmst <- function(adjsurv, from=0, to=Inf, use_boot=F, conf_level=0.95) {
 
   check_inputs_adj_rmst(adjsurv=adjsurv, from=from, to=to, use_boot=use_boot)
 
@@ -360,6 +357,7 @@ adjusted_rmst <- function(adjsurv, from=0, to=Inf, use_boot=F) {
     surv_dat <- adjsurv$adjsurv[adjsurv$adjsurv$group==levs[i],]
     surv_dat$group <- NULL
     surv_dat$sd <- NULL
+    surv_dat$se <- NULL
     surv_dat$ci_lower <- NULL
     surv_dat$ci_upper <- NULL
     surv_dat$boot <- NULL
@@ -411,12 +409,17 @@ adjusted_rmst <- function(adjsurv, from=0, to=Inf, use_boot=F) {
     out$booted_rmsts <- booted_rmsts
     out$areas_sd <- apply(booted_areas, 2, stats::sd)
     out$rmsts_sd <- apply(booted_rmsts, 2, stats::sd)
+    out$rmsts_ci_lower <- apply(booted_rmsts, 2, stats::quantile,
+                                probs=1-conf_level)
+    out$rmsts_ci_higher <- apply(booted_rmsts, 2, stats::quantile,
+                                 probs=conf_level)
   }
 
   return(out)
 }
 
 ## print method for adjusted_rmst function
+# TODO: Also print confidence intervals
 #' @export
 print.adjusted_rmst <- function(x, digits=5, ...) {
 
@@ -424,8 +427,9 @@ print.adjusted_rmst <- function(x, digits=5, ...) {
                      sep="=", collapse="  ")
   areas_str <- paste(names(x$areas), round(x$areas, digits),
                      sep="=", collapse="  ")
-
+  cat("------------------------------------------------------------------\n")
   cat("Confounder-Adjusted Restricted Mean Survival Time\n")
+  cat("------------------------------------------------------------------\n")
   cat("\n")
   cat("Using the interval:", x$from, "to", x$to, "\n")
   cat("RMSTS: ", rmsts_str, "\n")
@@ -440,8 +444,10 @@ print.adjusted_rmst <- function(x, digits=5, ...) {
     cat("RMSTS Standard Deviation: ", rmsts_sd_str, "\n")
     cat("AUC Standard Deviation: ", areas_sd_str, "\n")
     cat("\n")
-    cat("SD estimated using", x$n_boot, "bootstrap replications.")
+    cat("SD estimated using", x$n_boot, "bootstrap replications.\n")
   }
+
+  cat("------------------------------------------------------------------\n")
 
 }
 

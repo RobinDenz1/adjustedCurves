@@ -8,7 +8,7 @@ Calculate Confounder-Adjusted Restricted Mean Survival Times
 This function can be utilized to calculate the confounder-adjusted restricted mean survival time, given previously estimated adjusted survival curves.
 }
 \usage{
-adjusted_rmst(adjsurv, from=0, to=Inf, use_boot=F)
+adjusted_rmst(adjsurv, from=0, to=Inf, use_boot=F, conf_level=0.95)
 }
 
 \arguments{
@@ -23,6 +23,9 @@ A number specifying the right side of the time interval of interest. See details
   }
   \item{use_boot}{
 Whether bootstrap estimates should be used to calculate the standard deviation of the RMST estimates.
+  }
+  \item{conf_level}{
+A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
   }
 }
 \details{

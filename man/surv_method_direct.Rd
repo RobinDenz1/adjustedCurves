@@ -8,8 +8,8 @@ Direct Adjusted Survival Curves
 Calculate confounder-adjusted survival curves using a previously fit cox-regression model. This is the most popular method used for adjusting survival curves. Also known as "G-Formula" estimates or "Corrected Group-Prognosis" method. A bunch of copies of the original dataset are created, one for each possible value of 'variable'. In each copy, the 'variable' is set to one of the possible levels for all observations respectively. Using the cox-model, the survival probability for each patient is predicted at some points in time in every artificial dataset. The estimates are consequently averaged for each point in time in each dataset.
 }
 \usage{
-surv_method_direct(data, variable, ev_time, event, sd,
-                   outcome_model, times, verbose=F, ...)
+surv_method_direct(data, variable, ev_time, event, conf_int,
+                   conf_level=0.95, times, outcome_model, verbose=F, ...)
 }
 
 \arguments{
@@ -25,9 +25,12 @@ A character string specifying the variable indicating the time-to-event or time-
   \item{event}{
 A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
 }
-  \item{sd}{
-A logical variable, indicating whether the standard deviation of the survival probabilities should be calculated. Needed to calculate confidence intervals.
-}
+  \item{conf_int}{
+A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated. Not available for all methods.
+  }
+  \item{conf_level}{
+A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
+  }
   \item{outcome_model}{
 Must be a \code{coxph} model object with \code{variable} as independent variable.
 }

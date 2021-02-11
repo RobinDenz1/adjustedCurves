@@ -9,7 +9,8 @@ Calculates standard Kaplan-Meier survival curves, stratified by the group variab
 No adjustment for any confounders is made. This function is included only for reference and should not be used when confounder adjusted survival curves are desired.
 }
 \usage{
-surv_method_km(data, variable, ev_time, event, sd, ...)
+surv_method_km(data, variable, ev_time, event, conf_int,
+               conf_level=0.95, ...)
 }
 
 \arguments{
@@ -25,11 +26,14 @@ A character string specifying the variable indicating the time-to-event or time-
   \item{event}{
 A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
 }
-  \item{sd}{
-A logical variable, indicating whether the standard deviation of the survival probabilities should be calculated. Needed to calculate confidence intervals.
-}
+  \item{conf_int}{
+A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated. For the available types of confidence intervals see \code{?survfit}.
+  }
+  \item{conf_level}{
+A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
+  }
   \item{...}{
-Further arguments passed to \code{survfit()}.
+Further arguments passed to \code{survfit}.
   }
 }
 \details{

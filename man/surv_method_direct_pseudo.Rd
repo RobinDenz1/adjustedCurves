@@ -8,9 +8,9 @@ Direct Adjusted Survival Curves using Pseudo-Values
 This function can be used to calculate direct adjusted survival curves using pseudo-values. It uses essentially the same methodology as the regular direct adjustment method, with the difference that the outcome mechanism is modeled using pseudo-values. Here, the outcome model is a generalised estimating equation model. See details for more information.
 }
 \usage{
-surv_method_direct_pseudo(data, variable, ev_time, event, sd,
-                          times, outcome_vars, type_time="factor",
-                          spline_df=10, na.rm=F)
+surv_method_direct_pseudo(data, variable, ev_time, event, conf_int,
+                          conf_level=0.95, times, outcome_vars,
+                          type_time="factor", spline_df=10, na.rm=F)
 }
 
 \arguments{
@@ -26,9 +26,12 @@ A character string specifying the variable indicating the time-to-event or time-
   \item{event}{
 A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
 }
-  \item{sd}{
-A logical variable, indicating whether the standard deviation of the survival probabilities should be calculated. Needed to calculate confidence intervals.
-}
+  \item{conf_int}{
+A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated.
+  }
+  \item{conf_level}{
+A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
+  }
   \item{times}{
 A numeric vector of time points at which the survival probability should be estimated or \code{NULL}. If \code{NULL} the survival is estimated at all points in time at which an event occured.
 }

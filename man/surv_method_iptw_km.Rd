@@ -8,8 +8,8 @@ Inverse Probability of Treatment Weighted Kaplan-Meier estimates
 This method works by modelling the treatment assignment mechanism. The individual observations are weighted using inverse probability of treatment weights or other balancing weights (see details) and a modified Kaplan-Meier estimator. If the model is correctly specified, unbiased results will be obtained. The only difference to the \code{surv_method_iptw_cox} is a slightly different weighting approach. They are essentially equal in large samples. See details for more information.
 }
 \usage{
-surv_method_iptw_km(data, variable, ev_time, event, sd,
-                    treatment_model, weight_method="ps", ...)
+surv_method_iptw_km(data, variable, ev_time, event, conf_int,
+                    conf_level=0.95, treatment_model, weight_method="ps", ...)
 }
 
 \arguments{
@@ -25,9 +25,12 @@ A character string specifying the variable indicating the time-to-event or time-
   \item{event}{
 A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
 }
-  \item{sd}{
-A logical variable, indicating whether the standard deviation of the survival probabilities should be calculated. Needed to calculate confidence intervals.
-}
+  \item{conf_int}{
+A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated.
+  }
+  \item{conf_level}{
+A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
+  }
   \item{treatment_model}{
 Must be either a model object with \code{variable} as response variable, a vector of weights or a formula which can be passed to \code{WeightIt}.
 }
@@ -46,6 +49,8 @@ Returns a \code{data.frame} object containing the estimated adjusted survival pr
 }
 \references{
 Jun Xie and Chaofeng Liu. "Adjusted Kaplan-Meier Estimator and Log-Rank Test with Inverse Probability of Treatment Weighting for Survival Data". In: Statistics in Medicine 24 (2005), pp. 3089-3110.
+
+Stanley Xu, Colleen Ross abd Marsha A. Raebel, Susan Shetterly, Christopher Blanchette, and David Smith. "Use of Stabilized Inverse Propensity Scores as Weights to Directly Estimate Relative Risk and Its Confidence Intervals". In: Value in Health 13.2 (2010), pp. 273-277.
 }
 \author{
 Robin Denz

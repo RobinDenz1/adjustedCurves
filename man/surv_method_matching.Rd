@@ -8,8 +8,8 @@ Using Matching to Calculate Adjusted Survival Curves
 This method works by first matching controls and treated patients using a previously estimated propensity score. Using this new matched population, a simple Kaplan-Meier or Nelson-Aalen estimator is used to calculate the adjusted survival curves. Simulation studies have shown that this method, while unbiased if used appropriately, is significantly less efficient than other methods. See details.
 }
 \usage{
-surv_method_matching(data, variable, ev_time, event, sd,
-                     treatment_model, ...)
+surv_method_matching(data, variable, ev_time, event, conf_int,
+                     conf_level=0.95, treatment_model, ...)
 }
 
 \arguments{
@@ -25,9 +25,12 @@ A character string specifying the variable indicating the time-to-event or time-
   \item{event}{
 A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
 }
-  \item{sd}{
-A logical variable, indicating whether the standard deviation of the survival probabilities should be calculated. Needed to calculate confidence intervals.
-}
+  \item{conf_int}{
+A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated.
+  }
+  \item{conf_level}{
+A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
+  }
   \item{treatment_model}{
 Must be either a model object with \code{variable} as response variable, a vector of weights or a formula which can be passed to \code{WeightIt}.
 }
