@@ -5,11 +5,12 @@
 Inverse Probability of Treatment Weighted Kaplan-Meier estimates
 }
 \description{
-This method works by modelling the treatment assignment mechanism. The individual observations are weighted using inverse probability of treatment weights or other balancing weights (see details) and a modified Kaplan-Meier estimator. If the model is correctly specified, unbiased results will be obtained. The only difference to the \code{surv_method_iptw_cox} is a slightly different weighting approach. They are essentially equal in large samples. See details for more information.
+This method works by modelling the treatment assignment mechanism. The individual observations are weighted using inverse probability of treatment weights or other balancing weights (see details) and a modified Kaplan-Meier estimator. If the model is correctly specified, unbiased results will be obtained. The only difference to the \code{\link[=surv_method_iptw_cox]{"iptw_cox"}} is a slightly different weighting approach. They are essentially equal in large samples. See details for more information.
 }
 \usage{
 surv_method_iptw_km(data, variable, ev_time, event, conf_int,
-                    conf_level=0.95, treatment_model, weight_method="ps", ...)
+                    conf_level=0.95, treatment_model, weight_method="ps",
+                    stabilize=T, ...)
 }
 
 \arguments{
@@ -37,12 +38,30 @@ Must be either a model object with \code{variable} as response variable, a vecto
   \item{weight_method}{
 Method used in \code{WeightIt} function call. Ignored if \code{treatment_model} is not a formula object.
 }
+  \item{stabilize}{
+Whether to stabilize the weights or not. Is set to \code{TRUE} by default. Stabilizing has no effect on the estimates, only on the asymptotic variance calculations and confidence intervals. Without stabilizing, those estimates are biased downward.
+  }
   \item{...}{
 Further arguments passed to \code{WeightIt}.
   }
 }
 \details{
-BLA
+
+\itemize{
+\item{\strong{Type of Adjustment:} Requires a model describing the treatment assignment mechanism. This must be either a \code{\link{glm}} or \code{\link{multinom}} object.}
+\item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
+\item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
+\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
+\item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
+\item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
+\item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
+\item{\strong{Dependencies:} This method does not depend on other packages directly. However the \code{WeightIt} package is required if \code{treatment_model} is a formula object.}
+}
+
+Adjusted survival curves are calculated by first estimating appropriate case-weights for each observation in \code{data}. This can be done using inverse probability of treatment weights using the propensity score (usually estimated using a logistic regression model) or by some other method (see \code{?weightit}). Those weights are used in a weighted version of the Kaplan-Meier estimator proposed by Xie and Liu (2005). If the weights are correctly estimated the resulting estimates will be unbiased.
+
+Asymptotic variances are calculated using the equations given in Xie and Liu (2005). It is also recommended to use stabilized weights by using \code{stabilize=TRUE} (the default value). More information can be found in the cited literature.
+
 }
 \value{
 Returns a \code{data.frame} object containing the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
@@ -60,14 +79,54 @@ Robin Denz
 \code{\link{WeightIt}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+\dontrun{
+# simulate some data as example
+sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat$group <- as.factor(sim_dat$group)
 
-## The function is currently defined as
-function (x)
-{
-  }
+# estimate a treatment assignment model
+glm_mod <- glm(group ~ x1 + x3 + x5 + x6, data=sim_dat, family="binomial")
+
+# use it to calculate adjusted survival curves
+adjsurv <- adjustedsurv(data=sim_dat,
+                        variable="group",
+                        ev_time="time",
+                        event="event",
+                        method="iptw_km",
+                        treatment_model=glm_mod)
+
+# Alternatively, use custom weights
+# In this example we use weights calculated using the propensity score,
+# which is equal to using the glm model directly in the function
+ps_score <- glm_mod$fitted.values
+weights <- ifelse(sim_dat$group==1, 1/ps_score, 1/(1-ps_score))
+
+adjsurv <- adjustedsurv(data=sim_dat,
+                        variable="group",
+                        ev_time="time",
+                        event="event",
+                        method="iptw_km",
+                        treatment_model=weights)
+
+# And a third alternative: use the WeightIt package
+# here an example with equal results to the ones above:
+adjsurv <- adjustedsurv(data=sim_dat,
+                        variable="group",
+                        ev_time="time",
+                        event="event",
+                        method="iptw_km",
+                        treatment_model=group ~ x1 + x3 + x5 + x6,
+                        weight_method="ps")
+
+# here an example using Optimization-Based Weighting:
+adjsurv <- adjustedsurv(data=sim_dat,
+                        variable="group",
+                        ev_time="time",
+                        event="event",
+                        method="iptw_km",
+                        treatment_model=group ~ x1 + x3 + x5 + x6,
+                        weight_method="optweight")
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

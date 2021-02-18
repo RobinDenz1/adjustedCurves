@@ -77,11 +77,11 @@ weighted.var.se <- function(x, w, se_method, na.rm=F) {
     se <- (n/(sum(w)^2)) * ( (n*sum(w^2 * x^2) - sum(w*x)^2) / (n*(n-1)) )
   ## Cochrane (1977)
   } else if (se_method=="cochrane") {
-
     mean_W <- mean(w)
     se <- (n/((n-1)*sum(w)^2))*(sum((w*x - mean_W*mean_Xw)^2)
                                 - 2*mean_Xw*sum((w-mean_W)*(w*x-mean_W*mean_Xw))
                                 + mean_Xw^2*sum((w-mean_W)^2))
+  ## just use a classic weighted version (Hmisc)
   } else if (se_method=="simple") {
     se <- (sum(w * (x - mean_Xw)^2) / (sum(w) - 1)) / n
   }
@@ -117,13 +117,13 @@ geese_predictions <- function(geese_mod, Sdata, times, n) {
 }
 
 ## calculate CI from sd
-confint_surv <- function(surv, sd, conf_level, conf_type="plain") {
+confint_surv <- function(surv, se, conf_level, conf_type="plain") {
   if (conf_type=="plain") {
-    error <- stats::qnorm(1-((1-conf_level)/2)) * sd
+    error <- stats::qnorm(1-((1-conf_level)/2)) * se
     left <- surv - error
     right <- surv + error
   } else if (conf_type=="log") {
-    error <- stats::qnorm(1-((1-conf_level)/2)) * sd
+    error <- stats::qnorm(1-((1-conf_level)/2)) * se
     left <- surv * exp(-error)
     right <- surv * exp(error)
   }
@@ -161,8 +161,14 @@ sim_surv_time <- function(row, betas, dist, lambda, gamma) {
 
 ## takes a value x at which to read from the step function
 ## and step function data from which to read it
-# TODO: return NA when x > max_t
 read_from_step_function <- function(x, step_data) {
+
+  # no extrapolation
+  if (x > max(step_data$time)) {
+    return(NA)
+  }
+
+  # otherwise get value
   check <- step_data[which(step_data$time <= x),]
   if (nrow(check)==0) {
     val <- 1
@@ -174,16 +180,27 @@ read_from_step_function <- function(x, step_data) {
 
 ## calculate difference between two step functions
 ## according to some transformation function
-exact_stepfun_difference <- function(adjsurv, times, max_t) {
-
-  times <- times[times<=max_t]
+exact_stepfun_difference <- function(adjsurv, times) {
 
   levs <- unique(adjsurv$group)
   adjsurv_0 <- adjsurv[which(adjsurv$group==levs[1]),]
   adjsurv_1 <- adjsurv[which(adjsurv$group==levs[2]),]
 
-  surv_0 <- sapply(times, read_from_step_function, step_data=adjsurv_0)
-  surv_1 <- sapply(times, read_from_step_function, step_data=adjsurv_1)
+  if (nrow(adjsurv_0) == nrow(adjsurv_1)) {
+
+    if (all(adjsurv_0$time == adjsurv_1$time)) {
+      surv_0 <- adjsurv_0$surv
+      surv_1 <- adjsurv_1$surv
+    } else {
+      surv_0 <- sapply(times, read_from_step_function, step_data=adjsurv_0)
+      surv_1 <- sapply(times, read_from_step_function, step_data=adjsurv_1)
+    }
+
+  } else {
+    surv_0 <- sapply(times, read_from_step_function, step_data=adjsurv_0)
+    surv_1 <- sapply(times, read_from_step_function, step_data=adjsurv_1)
+  }
+
   surv_diff <- surv_1 - surv_0
 
   diff_dat <- data.frame(time=times, surv=surv_diff)
@@ -194,7 +211,35 @@ exact_stepfun_difference <- function(adjsurv, times, max_t) {
 ## calculate exact integral under step function
 # 'stepfun' needs to be a data.frame with columns 'time' and 'surv',
 # sorted by time with no duplicates in time
-exact_stepfun_integral <- function(stepfun) {
+exact_stepfun_integral <- function(stepfun, from, to) {
+
+  # constrain step function end
+  latest <- read_from_step_function(to, step_data=stepfun)
+  stepfun <- stepfun[stepfun$time <= to,]
+
+  if (!to %in% stepfun$time) {
+    stepfun <- rbind(stepfun, data.frame(time=to, surv=latest))
+  }
+
+  # constrain step function beginning
+  if (from != 0) {
+    earliest <- read_from_step_function(from, step_data=stepfun)
+    stepfun <- stepfun[stepfun$time >= from,]
+
+    if (!from %in% stepfun$time) {
+      stepfun <- rbind(data.frame(time=from, surv=earliest), stepfun)
+    }
+
+  }
+
+  # when there are unknown survival times, return NA
+  # only neccessary when the last time is NA, since my
+  # algorithm technically still works in that case, but makes no sense
+  if (anyNA(stepfun)) {
+    return(NA)
+  }
+
+  # calculate exact integral
   integral <- 0
   for (i in 1:(length(stepfun$time)-1)) {
     x1 <- stepfun$time[i]
@@ -205,3 +250,16 @@ exact_stepfun_integral <- function(stepfun) {
   }
   return(integral)
 }
+
+## used to combine output from foreach
+multi_result_class <- function(boot_data=NULL, boot_data_same_t=NULL) {
+  me <- list(
+    boot_data = boot_data,
+    boot_data_same_t = boot_data_same_t
+  )
+
+  ## Set the name for the class
+  class(me) <- append(class(me),"multiResultClass")
+  return(me)
+}
+

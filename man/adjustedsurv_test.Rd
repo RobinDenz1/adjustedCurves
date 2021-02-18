@@ -8,18 +8,18 @@ Test for the Equality of Two Confounder-Adjusted Survival Curves
 This function implements a modified version of the Pepe and Flemming (1989) test for the equality of two adjusted survival curves. In particular, the Null-Hypothesis is that the integral of the difference of the two curves in a specified time interval is not different from zero. The input of this function should be a \code{adjustedsurv} object created using the \code{adjustedsurv} function, with \code{bootstap=TRUE} in the original function call.
 }
 \usage{
-adjustedsurv_test(adjsurv, from=0, to=Inf)
+adjustedsurv_test(adjsurv, to, from=0)
 }
 
 \arguments{
   \item{adjsurv}{
 An \code{adjustedsurv} object created using the \code{adjustedsurv} function.
   }
-  \item{from}{
-A number specifying the left side of the time interval of interest. See details.
+    \item{to}{
+A number specifying the right side of the time interval of interest. It has to be a value of time that can be read from both of the estimated survival curves.
   }
-  \item{to}{
-A number specifying the right side of the time interval of interest. See details.
+  \item{from}{
+A number specifying the left side of the time interval of interest. It has to be a value of time that can be read from both of the estimated survival curves. It is set to 0 by default.
   }
 }
 \details{
@@ -61,14 +61,33 @@ Robin Denz
 \code{\link{print.adjustedsurv_test}}, \code{\link{adjustedsurv}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+\dontrun{
+library(survival)
 
-## The function is currently defined as
-function (x)
-{
-  }
+# simulate some data as example
+sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat$group <- as.factor(sim_dat$group)
+
+# estimate a cox-regression for the outcome
+cox_mod <- coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
+                 data=sim_dat, x=TRUE)
+
+
+# use it to calculate adjusted survival curves with bootstrapping
+adjsurv <- adjustedsurv(data=sim_dat,
+                        variable="group",
+                        ev_time="time",
+                        event="event",
+                        method="direct",
+                        outcome_model=cox_mod,
+                        conf_int=FALSE,
+                        bootstrap=TRUE,
+                        n_boot=500)
+
+# test the equality of both curves in the interval 0 to 1
+adjtest <- adjustedsurv_test(adjsurv, from=0, to=1)
+print(adjtest)
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

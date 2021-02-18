@@ -23,7 +23,7 @@ Currently not used.
   }
 }
 \value{
-\code{NULL}
+Silently returns the \code{data.frame} which can be seen when calling the function.
 }
 \author{
 Robin Denz
@@ -32,14 +32,7 @@ Robin Denz
 \code{\link{adjusted_rmst}}, \code{\link{adjustedsurv}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function (x)
-{
-  }
+# See ?adjusted_rmst
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

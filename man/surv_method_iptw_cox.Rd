@@ -9,7 +9,8 @@ This method works by modelling the treatment assignment mechanism. The individua
 }
 \usage{
 surv_method_iptw_cox(data, variable, ev_time, event, conf_int,
-                     conf_level=0.95, treatment_model, weight_method="ps", ...)
+                     conf_level=0.95, treatment_model, weight_method="ps",
+                     stabilize=T, ...)
 }
 
 \arguments{
@@ -37,14 +38,29 @@ Must be either a model object with \code{variable} as response variable, a vecto
   \item{weight_method}{
 Method used in \code{WeightIt} function call. Ignored if \code{treatment_model} is not a formula object.
 }
+  \item{stabilize}{
+Whether to stabilize the weights or not. Is set to \code{TRUE} by default. Stabilizing has no effect on the estimates, only on the asymptotic variance calculations and confidence intervals. Without stabilizing, those estimates are biased downward.
+  }
   \item{...}{
 Further arguments passed to \code{WeightIt}.
   }
 }
 \details{
-HIER GENAU BESCHREIBEN
 
-By default this method uses a a robust sandwich-type variance estimator (\code{robust=TRUE} in the \code{coxph} function call) to calculate the standard error used in the construction of confidence intervals. This estimator has been shown to be biased by Austin (2016). It is recommended to use bootstrap confidence intervals instead. This can be done by setting \code{bootstrap=TRUE} in the \code{adjustedsurv} function call.
+\itemize{
+\item{\strong{Type of Adjustment:} Requires a model describing the treatment assignment mechanism. This must be either a \code{\link{glm}} or \code{\link{multinom}} object.}
+\item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
+\item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
+\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
+\item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
+\item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
+\item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
+\item{\strong{Dependencies:} This method relies on the \code{\link{survival}} package. Additionally, the \code{WeightIt} package is required if \code{treatment_model} is a formula object.}
+}
+
+Adjusted survival curves are calculated by first estimating appropriate case-weights for each observation in \code{data}. This can be done using inverse probability of treatment weights using the propensity score (usually estimated using a logistic regression model) or by some other method (see \code{?weightit}). Those estimates are then used to fit a weighted Cox-Regression model, using only \code{variable} as independent variable. Survival Curves based on this model are estimated using the method implemented in the \code{survfit.coxph} function. More information can be found in the literature listed under "references".
+
+By default this method uses a a robust sandwich-type variance estimator (\code{robust=TRUE} in the \code{coxph} function call) to calculate the standard error used in the construction of confidence intervals. This estimator has been shown to be biased by Austin (2016). Coupled with stabilized weights however (\code{stabilize=TRUE}) this gives conservative estimates of the variance and confidence intervals (Xu et al. 2010). It is still recommended to use bootstrap confidence intervals instead. This can be done by setting \code{bootstrap=TRUE} in the \code{adjustedsurv} function call.
 }
 \value{
 Returns a \code{data.frame} object containing the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
@@ -64,14 +80,54 @@ Robin Denz
 \code{\link{WeightIt}}, \code{\link{coxph}}, \code{\link{survfit.coxph}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+\dontrun{
+# simulate some data as example
+sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat$group <- as.factor(sim_dat$group)
 
-## The function is currently defined as
-function (x)
-{
-  }
+# estimate a treatment assignment model
+glm_mod <- glm(group ~ x1 + x3 + x5 + x6, data=sim_dat, family="binomial")
+
+# use it to calculate adjusted survival curves
+adjsurv <- adjustedsurv(data=sim_dat,
+                        variable="group",
+                        ev_time="time",
+                        event="event",
+                        method="iptw_cox",
+                        treatment_model=glm_mod)
+
+# Alternatively, use custom weights
+# In this example we use weights calculated using the propensity score,
+# which is equal to using the glm model directly in the function
+ps_score <- glm_mod$fitted.values
+weights <- ifelse(sim_dat$group==1, 1/ps_score, 1/(1-ps_score))
+
+adjsurv <- adjustedsurv(data=sim_dat,
+                        variable="group",
+                        ev_time="time",
+                        event="event",
+                        method="iptw_cox",
+                        treatment_model=weights)
+
+# And a third alternative: use the WeightIt package
+# here an example with equal results to the ones above:
+adjsurv <- adjustedsurv(data=sim_dat,
+                        variable="group",
+                        ev_time="time",
+                        event="event",
+                        method="iptw_cox",
+                        treatment_model=group ~ x1 + x3 + x5 + x6,
+                        weight_method="ps")
+
+# here an example using Optimization-Based Weighting:
+adjsurv <- adjustedsurv(data=sim_dat,
+                        variable="group",
+                        ev_time="time",
+                        event="event",
+                        method="iptw_cox",
+                        treatment_model=group ~ x1 + x3 + x5 + x6,
+                        weight_method="optweight")
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

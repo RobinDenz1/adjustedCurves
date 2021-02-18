@@ -8,7 +8,7 @@ Plot Confounder-Adjusted Survival Curves
 A function to graphically display confounder-adjusted survival curves which where previously estimated using the \code{adjustedsurv} function. The user can customize the plot using a variety of options. Internally it uses the \code{ggplot2} package, so additional not implemented features can be added using the standard \code{ggplot2} syntax. This function also includes the option to use isotonic regression on the survival curves, which is of benefit if the estimated curves are not monotone.
 }
 \usage{
-\method{plot}{adjustedsurv}(x, draw_ci=T, max_t=Inf,
+\method{plot}{adjustedsurv}(x, draw_ci=F, max_t=Inf,
      iso_reg=F, force_bounds=F, use_boot=F,
      color=T, linetype=F, facet=F,
      line_size=1, xlab="Time",
@@ -103,14 +103,59 @@ Robin Denz
 \code{\link{adjustedsurv}}, \code{\link{ggplot2}}, \code{\link{pammtools}}, \code{\link[stats]{isoreg}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+\dontrun{
+library(survival)
+library(ggplot2)
 
-## The function is currently defined as
-function (x)
-{
-  }
+# simulate some data as example
+sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat$group <- as.factor(sim_dat$group)
+
+# estimate a cox-regression for the outcome
+cox_mod <- coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
+                 data=sim_dat, x=TRUE)
+
+
+# use it to calculate adjusted survival curves with bootstrapping
+adjsurv <- adjustedsurv(data=sim_dat,
+                        variable="group",
+                        ev_time="time",
+                        event="event",
+                        method="direct",
+                        outcome_model=cox_mod,
+                        conf_int=TRUE,
+                        bootstrap=TRUE,
+                        n_boot=500)
+
+# plot the curves with default values
+plot(adjsurv)
+
+# plot after applying isotonic regression
+plot(adjsurv, iso_reg=TRUE)
+
+# plot with confidence intervals estimated using asymptotic variances
+plot(adjsurv, draw_ci=TRUE)
+
+# plot with confidence intervals estimated using bootstrapping
+plot(adjsurv, draw_ci=TRUE, use_boot=TRUE)
+
+# plot with different linetypes only
+plot(adjsurv, linetype=TRUE, color=FALSE, facet=FALSE)
+
+# plot with different facets only
+plot(adjsurv, linetype=FALSE, color=FALSE, facet=TRUE)
+
+# plot with different linetypes and different colors
+plot(adjsurv, linetype=TRUE, color=TRUE, facet=FALSE)
+
+# plot with some custom characteristics
+plot(adjsurv, legend_position="bottom", linetype=TRUE,
+     custom_colors=c("green", "blue"), legend_title="Custom",
+     title="Custom Plot", draw_ci=TRUE, linesize=0.5)
+
+# plot with not directly included ggplot2 functionality
+plot(adjsurv) + theme_classic()
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

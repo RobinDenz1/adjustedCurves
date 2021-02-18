@@ -20,7 +20,7 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
-Imports: dplyr, ggplot2, pammtools, R.utils, Matching, WeightIt, prodlim, survtmle, MOSS, adjKMtest, riskRegression, rlang, geepack, survival, nnet, stats, splines, utils
+Imports: dplyr, ggplot2, pammtools, R.utils, Matching, WeightIt, prodlim, survtmle, MOSS, adjKMtest, riskRegression, rlang, geepack, survival, nnet, stats, splines, utils, doParallel, doRNG, foreach
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

@@ -8,8 +8,8 @@ Empirical Likelihood Estimation Survival Curves
 This method utilizes the empirical likelihood estimation methodology to calculate adjusted survival curves. Neither outcome nor treatment assignment models are required for this function to work. Since the exact form of both mechanisms are left unspecified, it is more robust to model misspecification than IPTW or direct adjustment. See details for more information.
 }
 \usage{
-surv_method_el(data, variable, ev_time, event, conf_int, conf_level=0.95,
-               times, treatment_vars, moment="first", standardize=F, ...)
+surv_method_el(data, variable, ev_time, event, times, treatment_vars,
+               moment="first", standardize=F, ...)
 }
 
 \arguments{
@@ -25,12 +25,6 @@ A character string specifying the variable indicating the time-to-event or time-
   \item{event}{
 A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
 }
-  \item{conf_int}{
-A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated. Currently not available for this method. The argument is only included for consistency.
-  }
-  \item{conf_level}{
-A number specifying the confidence level of the confidence intervals. Currently not used.
-  }
   \item{times}{
 Method used in \code{WeightIt} function call. Ignored if \code{treatment_model} is not a formula object.
 }
@@ -48,7 +42,18 @@ Further arguments passed to the \code{el.est} function inside of the \code{adjKM
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+
+\itemize{
+\item{\strong{Type of Adjustment:} Requires a character vector of variable names used to balance the distribution of covariates (treatment assignment mechanism)}
+\item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
+\item{\strong{Categorical groups:} Only binary treatments are allowed. Column specified by \code{variable} must be an integer with only 0 and 1 as values.}
+\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are not available. The user has to use bootstrapping if those are desired.}
+\item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
+\item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
+\item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
+\item{\strong{Dependencies:} This method relies on the \code{adjKMtest} package. It can be installed using the \code{\link[devtools]{install_github}}} function from the official repository: <https://github.com/kimihua1995/adjKMtest>
+}
+
 }
 \value{
 Returns a \code{data.frame} object containing the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
@@ -66,14 +71,22 @@ The wrapper function was written by Robin Denz, the \code{el.est} function (whic
 \code{\link[adjKMtest]{el.est}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+\dontrun{
+# simulate some data as example (needs a binary integer "variable")
+sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
 
-## The function is currently defined as
-function (x)
-{
-  }
+# calculate adjusted survival curves
+adjsurv <- adjustedsurv(data=sim_dat,
+                        variable="group",
+                        ev_time="time",
+                        event="event",
+                        method="el",
+                        treatment_vars=c("x1", "x2", "x3", "x4", "x5", "x6"),
+                        moment="first")
+
+# plot the curves
+plot(adjsurv)
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

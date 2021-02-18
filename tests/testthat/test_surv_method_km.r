@@ -32,7 +32,8 @@ test_that("2 treatments, no conf_int, with boot, no ...", {
                                             method="km",
                                             conf_int=F,
                                             bootstrap=T,
-                                            n_boot=10), NA)
+                                            n_boot=10,
+                                            na.rm=T), NA)
 })
 
 test_that("2 treatments, with conf_int, with boot, no ...", {
@@ -43,7 +44,8 @@ test_that("2 treatments, with conf_int, with boot, no ...", {
                                             method="km",
                                             conf_int=T,
                                             bootstrap=T,
-                                            n_boot=10), NA)
+                                            n_boot=10,
+                                            na.rm=T), NA)
 })
 
 test_that("2 treatments, no conf_int, no boot, with ...", {
@@ -65,6 +67,7 @@ test_that("2 treatments, with conf_it, with boot, with ...", {
                                             conf_int=T,
                                             bootstrap=T,
                                             n_boot=10,
+                                            na.rm=T,
                                             error="greenwood"), NA)
 })
 
@@ -102,7 +105,8 @@ test_that("> 2 treatments, no conf_int, with boot, no ...", {
                                             method="km",
                                             conf_int=F,
                                             bootstrap=T,
-                                            n_boot=10), NA)
+                                            n_boot=10,
+                                            na.rm=T), NA)
 })
 
 test_that("> 2 treatments, with conf_int, with boot, no ...", {
@@ -113,7 +117,8 @@ test_that("> 2 treatments, with conf_int, with boot, no ...", {
                                             method="km",
                                             conf_int=T,
                                             bootstrap=T,
-                                            n_boot=10), NA)
+                                            n_boot=10,
+                                            na.rm=T), NA)
 })
 
 test_that("> 2 treatments, no conf_int, no boot, with ...", {
@@ -135,6 +140,7 @@ test_that("> 2 treatments, with conf_int, with boot, with ...", {
                                             conf_int=T,
                                             bootstrap=T,
                                             n_boot=10,
+                                            na.rm=T,
                                             error="greenwood"), NA)
 })
 

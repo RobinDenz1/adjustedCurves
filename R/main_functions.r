@@ -1,11 +1,12 @@
 ## Main function of the package. Is basically a wrapper around
 ## all other functions, offering additional high level stuff
-# TODO: - might be nice to allow multicore execution for bootstrapping
 #' @importFrom dplyr %>%
+#' @importFrom doRNG %dorng%
+#' @importFrom foreach %dopar%
 #' @export
-adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=T,
+adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
                          conf_level=0.95, times=NULL, bootstrap=F,
-                         n_boot=500, na.rm=F, ...) {
+                         n_boot=500, na.rm=F, n_cores=1, ...) {
 
   check_inputs_adjustedsurv(data=data, variable=variable,
                             ev_time=ev_time, event=event, method=method,
@@ -14,12 +15,17 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=T,
                             n_boot=n_boot, na.rm=na.rm, ...)
 
   # define those to remove Notes in devtools::check()
-  . <- time <- group <- surv_b <- NULL
+  . <- i <- time <- group <- surv_b <- NULL
 
   # get event specific times
   times_input <- times
   if (is.null(times)) {
     times <- sort(unique(data[, ev_time][data[, event]==1]))
+
+    # add zero if not already in there
+    if (!0 %in% times) {
+      times <- c(0, times)
+    }
   }
 
   levs <- unique(data[,variable])
@@ -30,65 +36,48 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=T,
   # bootstrap the whole procedure, can be useful to get sd, p-values
   if (bootstrap) {
 
-    boot_data_list <- list()
-    boot_stats_list <- list()
+    if (n_cores > 1) {
+      # needed packages for parallel processing
+      requireNamespace("parallel")
+      requireNamespace("doRNG")
+      requireNamespace("doParallel")
+      requireNamespace("foreach")
 
-    for (i in 1:n_boot) {
-      indices <- sample(x=rownames(data), size=nrow(data), replace=T)
-      boot_samp <- data[indices,]
+      # initialize clusters
+      cl <- parallel::makeCluster(n_cores, outfile="")
+      doParallel::registerDoParallel(cl)
+      pkgs <- c("adjustedCurves", "survival")
+      export_objs <- c("get_iptw_weights", "read_from_step_function",
+                       "multi_result_class", "adjustedsurv_boot")
 
-      # if event specific times are used, use event specific times
-      # in bootstrapping as well
-      if (is.null(times_input)) {
-        times_boot <- sort(unique(boot_samp[, ev_time][boot_samp[, event]==1]))
-      } else {
-        times_boot <- times
+      boot_out <- foreach::foreach(i=1:n_boot, .packages=pkgs,
+                                   .export=export_objs) %dorng% {
+
+      adjustedsurv_boot(data=data, variable=variable, ev_time=ev_time,
+                        event=event, method=method, times_input=times_input,
+                        times=times, na.rm=na.rm, i=i, surv_fun=surv_fun,
+                        levs=levs, ...)
       }
+      parallel::stopCluster(cl)
 
-      # update models/recalculate weights using bootstrap sample
-      pass_args <- list(...)
-      if (method %in% c("direct", "aiptw") &
-          !inherits(pass_args$outcome_model, "formula")) {
-        pass_args$outcome_model <- stats::update(pass_args$outcome_model,
-                                                 data=boot_samp)
-      }
-      # TODO: Allow WeightIT, input check for custom weights
-      if (method %in% c("iptw_km", "iptw_cox", "iptw_pseudo", "aiptw",
-                        "aiptw_pseudo")) {
-        pass_args$treatment_model <- stats::update(pass_args$treatment_model,
-                                                   data=boot_samp, trace=F)
-      }
+    } else {
 
-      # call surv_method with correct arguments
-      args <- list(data=boot_samp, variable=variable, ev_time=ev_time,
-                   event=event, conf_int=F, conf_level=conf_level, times=times,
-                   na.rm=na.rm)
-      args <- c(args, pass_args)
-
-      adjsurv_boot <- R.utils::doCall(surv_fun, args=args)
-      adjsurv_boot$boot <- i
-      boot_data_list[[i]] <- adjsurv_boot
-
-      # read from resulting step function at all t in times
-      boot_surv <- vector(mode="list", length=length(levs))
-      for (j in 1:length(levs)) {
-
-        if (method %in% c("iptw_km", "iptw_cox")) {
-          times <- unique(data[,ev_time][data[,variable]==levs[j]])
-        }
-
-        surv_boot <- sapply(times, read_from_step_function,
-                            step_data=adjsurv_boot[adjsurv_boot$group==levs[j],])
-
-        dat_temp <- data.frame(time=times,
-                               surv_b=surv_boot,
-                               group=levs[j],
-                               boot=i)
-        boot_stats_list[[length(boot_stats_list)+1]] <- dat_temp
+      boot_out <- vector(mode="list", length=n_boot)
+      for (i in 1:n_boot) {
+        boot_out[[i]] <- adjustedsurv_boot(data=data, variable=variable,
+                                           ev_time=ev_time, event=event,
+                                           method=method, times_input=times_input,
+                                           times=times, na.rm=na.rm, i=i,
+                                           surv_fun=surv_fun, levs=levs, ...)
       }
     }
-    boot_data <- as.data.frame(dplyr::bind_rows(boot_data_list))
-    boot_data_same_t <- as.data.frame(dplyr::bind_rows(boot_stats_list))
+
+    # transform into data.frames
+    boot_data <- lapply(boot_out, function(x) x$boot_data)
+    boot_data_same_t <- lapply(boot_out, function(x) x$boot_data_same_t)
+
+    boot_data <- as.data.frame(dplyr::bind_rows(boot_data))
+    boot_data_same_t <- as.data.frame(dplyr::bind_rows(boot_data_same_t))
 
     # calculate some statistics
     boot_stats <- boot_data_same_t %>%
@@ -99,13 +88,14 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=T,
                                                 na.rm=na.rm),
                        ci_upper=stats::quantile(surv_b, probs=conf_level,
                                                 na.rm=na.rm),
+                       n_boot=sum(!is.na(surv_b)),
                        .groups="drop_last")
   }
 
   # core of the function
   args <- list(data=data, variable=variable, ev_time=ev_time,
-               event=event, conf_int=conf_int, conf_level=conf_level, times=times,
-               na.rm=na.rm, ...)
+               event=event, conf_int=conf_int, conf_level=conf_level,
+               times=times, na.rm=na.rm, ...)
   plotdata <- R.utils::doCall(surv_fun, args=args)
 
   out <- list(adjsurv=plotdata,
@@ -123,11 +113,86 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=T,
   return(out)
 }
 
+## perform one bootstrap iteration
+adjustedsurv_boot <- function(data, variable, ev_time, event, method,
+                              times_input, times, na.rm, i, surv_fun,
+                              levs, ...) {
+
+  indices <- sample(x=rownames(data), size=nrow(data), replace=T)
+  boot_samp <- data[indices,]
+
+  # if event specific times are used, use event specific times
+  # in bootstrapping as well
+  if (is.null(times_input)) {
+    times_boot <- sort(unique(boot_samp[, ev_time][boot_samp[, event]==1]))
+
+    if (!0 %in% times_boot) {
+      times_boot <- c(0, times_boot)
+    }
+  } else {
+    times_boot <- times
+  }
+
+  # update models/recalculate weights using bootstrap sample
+  pass_args <- list(...)
+  if (method %in% c("direct", "aiptw") &
+      !inherits(pass_args$outcome_model, "formula")) {
+    pass_args$outcome_model <- stats::update(pass_args$outcome_model,
+                                             data=boot_samp)
+  }
+
+  if (method %in% c("iptw_km", "iptw_cox", "iptw_pseudo", "aiptw",
+                    "aiptw_pseudo")) {
+    if (inherits(pass_args$treatment_model, "glm") |
+        inherits(pass_args$treatment_model, "multinom")) {
+      pass_args$treatment_model <- stats::update(pass_args$treatment_model,
+                                                 data=boot_samp, trace=F)
+    }
+  }
+
+  # call surv_method with correct arguments
+  args <- list(data=boot_samp, variable=variable, ev_time=ev_time,
+               event=event, conf_int=F, conf_level=0.95, times=times,
+               na.rm=na.rm)
+  args <- c(args, pass_args)
+
+  adjsurv_boot <- R.utils::doCall(surv_fun, args=args)
+  adjsurv_boot$boot <- i
+
+  # read from resulting step function at all t in times
+  boot_surv <- vector(mode="list", length=length(levs))
+  for (j in 1:length(levs)) {
+
+    if (method %in% c("iptw_km", "iptw_cox")) {
+      times <- unique(data[,ev_time][data[,variable]==levs[j]])
+    }
+
+    surv_boot <- sapply(times, read_from_step_function,
+                        step_data=adjsurv_boot[adjsurv_boot$group==levs[j],])
+
+    dat_temp <- data.frame(time=times,
+                           surv_b=surv_boot,
+                           group=levs[j],
+                           boot=i)
+    boot_surv[[j]] <- dat_temp
+  }
+  boot_surv <- as.data.frame(dplyr::bind_rows(boot_surv))
+
+  # output
+  result <- multi_result_class()
+
+  result$boot_data <- adjsurv_boot
+  result$boot_data_same_t <- boot_surv
+
+  return(result)
+
+}
+
 ## plot the survival curves
-# TODO: maybe need to recalculate confidence intervals when using iso_reg?
+# TODO: reposition the confidence intervals when using iso_reg?
 #' @importFrom rlang .data
 #' @export
-plot.adjustedsurv <- function(x, draw_ci=T, max_t=Inf,
+plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
                               iso_reg=F, force_bounds=F, use_boot=F,
                               color=T, linetype=F, facet=F,
                               line_size=1, xlab="Time",
@@ -230,11 +295,10 @@ plot.adjustedsurv <- function(x, draw_ci=T, max_t=Inf,
 
 ## Function to calculate some statistics for the survival curves
 # TODO:
-# - only allow estimation if both curves were estimated up to "to"
 # - should work with pairwise comparisons
-# - allow multicore / parallel processing
+# - give confidence interval for difference integral
 #' @export
-adjustedsurv_test <- function(adjsurv, from=0, to=Inf) {
+adjustedsurv_test <- function(adjsurv, to, from=0) {
 
   check_inputs_adj_test(adjsurv=adjsurv, from=from, to=to)
 
@@ -251,12 +315,11 @@ adjustedsurv_test <- function(adjsurv, from=0, to=Inf) {
     times <- sort(unique(boot_dat$time))
 
     # new curve of the difference
-    surv_diff <- exact_stepfun_difference(adjsurv=boot_dat, times=times,
-                                          max_t=to)
+    surv_diff <- exact_stepfun_difference(adjsurv=boot_dat, times=times)
     curve_list[[i]] <- surv_diff
 
     # integral of that curve
-    diff_integral <- exact_stepfun_integral(surv_diff)
+    diff_integral <- exact_stepfun_integral(surv_diff, to=to, from=from)
 
     stats_vec[i]<- diff_integral
   }
@@ -270,9 +333,12 @@ adjustedsurv_test <- function(adjsurv, from=0, to=Inf) {
   # actually observed values
   times <- sort(unique(adjsurv$adjsurv$time))
   observed_diff_curve <- exact_stepfun_difference(adjsurv=adjsurv$adjsurv,
-                                                  times=times,
-                                                  max_t=to)
-  observed_diff_integral <- exact_stepfun_integral(observed_diff_curve)
+                                                  times=times)
+  observed_diff_integral <- exact_stepfun_integral(observed_diff_curve,
+                                                   to=to, from=from)
+
+  # remove NA values
+  stats_vec <- stats_vec[!is.na(stats_vec)]
 
   # shit bootstrap distribution
   diff_under_H0 <- stats_vec - mean(stats_vec)
@@ -312,21 +378,14 @@ print.adjustedsurv_test <- function(x, ...) {
 
 ## function to calculate the restricted mean survival time of each
 ## adjusted survival curve previously estimated using the adjustedsurv function
-# TODO: - allow multicore bootstrapping
-#       - Notes on calculation:
-#         - shouldnt be extrapolated, since estimates of the curves are
-#           biased after the last observed time
-#         - how to handle bootstrap samples that don't include the whole
-#           interval of interest? Remove?
 #' @export
-adjusted_rmst <- function(adjsurv, from=0, to=Inf, use_boot=F, conf_level=0.95) {
+adjusted_rmst <- function(adjsurv, to, from=0, use_boot=F, conf_level=0.95) {
 
   check_inputs_adj_rmst(adjsurv=adjsurv, from=from, to=to, use_boot=use_boot)
 
   if (use_boot) {
 
     n_boot <- max(adjsurv$boot_data$boot)
-    booted_areas <- vector(mode="list", length=n_boot)
     booted_rmsts <- vector(mode="list", length=n_boot)
 
     for (i in 1:n_boot) {
@@ -341,17 +400,14 @@ adjusted_rmst <- function(adjsurv, from=0, to=Inf, use_boot=F, conf_level=0.95) 
       # recursion call
       adj_rmst <- adjusted_rmst(fake_adjsurv, from=from, to=to, use_boot=F)
 
-      booted_areas[[i]] <- adj_rmst$areas
       booted_rmsts[[i]] <- adj_rmst$rmsts
     }
-    booted_areas <- dplyr::bind_rows(booted_areas)
-    booted_rmsts <- dplyr::bind_rows(booted_rmsts)
+    booted_rmsts <- as.data.frame(dplyr::bind_rows(booted_rmsts))
   }
 
   levs <- unique(adjsurv$adjsurv$group)
 
   rmsts <- vector(mode="numeric", length=length(levs))
-  areas <- vector(mode="numeric", length=length(levs))
   for (i in 1:length(levs)) {
 
     surv_dat <- adjsurv$adjsurv[adjsurv$adjsurv$group==levs[i],]
@@ -362,93 +418,68 @@ adjusted_rmst <- function(adjsurv, from=0, to=Inf, use_boot=F, conf_level=0.95) 
     surv_dat$ci_upper <- NULL
     surv_dat$boot <- NULL
 
-    # constrain step function end
-    if (is.finite(to)) {
-      latest <- read_from_step_function(to, step_data=surv_dat)
-      surv_dat <- surv_dat[surv_dat$time <= to,]
-
-      if (!to %in% surv_dat$time) {
-        surv_dat <- rbind(surv_dat, data.frame(time=to, surv=latest))
-      }
-
-    }
-
-    # constrain step function beginning
-    if (from != 0) {
-      earliest <- read_from_step_function(from, step_data=surv_dat)
-      surv_dat <- surv_dat[surv_dat$time >= from,]
-
-      if (!from %in% surv_dat$time) {
-        surv_dat <- rbind(data.frame(time=from, surv=earliest), surv_dat)
-      }
-
-    } else {
-      if (!0 %in% surv_dat$time) {
-        surv_dat <- rbind(data.frame(time=0, surv=1), surv_dat)
-      }
-    }
-
-    rmst <- exact_stepfun_integral(surv_dat)
-    areas[i] <- rmst
-
-    rmst <- 1/max(surv_dat$time) * rmst
+    rmst <- exact_stepfun_integral(surv_dat, from=from, to=to)
     rmsts[i] <- rmst
+
   }
   names(rmsts) <- levs
-  names(areas) <- levs
 
-  out <- list(areas=areas,
-              rmsts=rmsts,
+  out <- list(rmsts=rmsts,
               from=from,
               to=to)
   class(out) <- "adjusted_rmst"
 
   if (use_boot) {
-    out$n_boot <- max(adjsurv$boot_data$boot)
-    out$booted_areas <- booted_areas
+
+    n_boot_rmst <- apply(booted_rmsts, 2, function(x){sum(!is.na(x))})
+    names(n_boot_rmst) <- levs
+
+    out$conf_level <- conf_level
+    out$n_boot <- n_boot_rmst
     out$booted_rmsts <- booted_rmsts
-    out$areas_sd <- apply(booted_areas, 2, stats::sd)
-    out$rmsts_sd <- apply(booted_rmsts, 2, stats::sd)
+    out$rmsts_sd <- apply(booted_rmsts, 2, stats::sd, na.rm=T)
     out$rmsts_ci_lower <- apply(booted_rmsts, 2, stats::quantile,
-                                probs=1-conf_level)
-    out$rmsts_ci_higher <- apply(booted_rmsts, 2, stats::quantile,
-                                 probs=conf_level)
+                                probs=1-conf_level, na.rm=T)
+    out$rmsts_ci_upper <- apply(booted_rmsts, 2, stats::quantile,
+                                probs=conf_level, na.rm=T)
   }
 
   return(out)
 }
 
 ## print method for adjusted_rmst function
-# TODO: Also print confidence intervals
 #' @export
 print.adjusted_rmst <- function(x, digits=5, ...) {
 
-  rmsts_str <- paste(names(x$rmsts), round(x$rmsts, digits),
-                     sep="=", collapse="  ")
-  areas_str <- paste(names(x$areas), round(x$areas, digits),
-                     sep="=", collapse="  ")
   cat("------------------------------------------------------------------\n")
   cat("Confounder-Adjusted Restricted Mean Survival Time\n")
   cat("------------------------------------------------------------------\n")
   cat("\n")
   cat("Using the interval:", x$from, "to", x$to, "\n")
-  cat("RMSTS: ", rmsts_str, "\n")
-  cat("Areas under the curves (AUC): ", areas_str, "\n")
+  cat("\n")
 
-  if (!is.null(x$booted_areas)) {
-    rmsts_sd_str <- paste(names(x$rmsts_sd), round(x$rmsts_sd, digits),
-                          sep="=", collapse="  ")
-    areas_sd_str <- paste(names(x$areas_sd), round(x$areas_sd, digits),
-                          sep="=", collapse="  ")
+  if (!is.null(x$booted_rmsts)) {
+    all_data <- rbind(x$rmsts, x$rmsts_sd, x$rmsts_ci_lower,
+                      x$rmsts_ci_upper, x$n_boot)
 
-    cat("RMSTS Standard Deviation: ", rmsts_sd_str, "\n")
-    cat("AUC Standard Deviation: ", areas_sd_str, "\n")
-    cat("\n")
-    cat("SD estimated using", x$n_boot, "bootstrap replications.\n")
+    ci_lower_name <- paste0(round(x$conf_level*100, 2), "% CI (lower)")
+    ci_upper_name <- paste0(round(x$conf_level*100, 2), "% CI (upper)")
+
+    rownames(all_data) <- c("RMST", "RMST SD", ci_lower_name, ci_upper_name,
+                            "N Boot")
+  } else {
+    all_data <- data.frame(x$rmsts)
+    rownames(all_data) <- c("RMST")
   }
+
+  colnames(all_data) <- paste0("Group=", colnames(all_data))
+  all_data <- round(all_data, digits)
+  print(t(all_data))
 
   cat("------------------------------------------------------------------\n")
 
+  # also silently return that data.frame
+  return(invisible(t(all_data)))
 }
 
 ## function to simulate confounded survival data
@@ -502,7 +533,8 @@ sim_confounded_surv <- function(n=500, lcovars=NULL, outcome_betas=NULL,
   covars$id <- NULL
 
   # assign binary treatment using logistic regression
-  group_p <- intercept + rowSums(treatment_betas * covars[,names(treatment_betas)])
+  group_p <- intercept + rowSums(treatment_betas *
+                                 covars[,names(treatment_betas)])
   group_p <- 1/(1 + exp(-group_p))
 
   # in order to keep the positivity assumption,

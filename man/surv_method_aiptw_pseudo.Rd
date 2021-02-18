@@ -53,7 +53,22 @@ A logical variable, indicating whether rows with missing Pseudo-Values should be
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+
+\itemize{
+\item{\strong{Type of Adjustment:} Requires a treatment assignment model (\code{\link{glm}} or \code{\link{multinom}}) and a character vector of variable names used to model the outcome mechanism (internally uses \code{\link[geepack]{geese}}). In contrast to the \code{\link[=surv_method_aiptw]{"aiptw"}} method this function does not allow for dependent censoring.}
+\item{\strong{Doubly-Robust:} Estimates are Doubly-Robust.}
+\item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
+\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
+\item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
+\item{\strong{Bounded Estimates:} Estimates are not guaranteed to be bounded in the 0 to 1 probability range.}
+\item{\strong{Monotone Function:} Estimates are not guaranteed to be monotone.}
+\item{\strong{Dependencies:} This method relies on the \code{geepack} and \code{\link{prodlim}} packages.}
+}
+
+Instead of only modeling the outcome mechanism or the treatment assignment mechanism, both kind of models are required to use this method. If either of those models are correctly specified, unbiased estimates will be obtained. In contrast to the \code{\link[=surv_method_aiptw]{"aiptw"}} method, the "aiptw_pseudo" method uses a generalised estimation equation (geese) approach to model the outcome mechanism. The model is fit in the same way as described in the \code{\link[=surv_method_direct_pseudo]{"direct_pseudo"}} method. Those Direct Standardization based estimates are then transformed using the previously estimated propensity score. This results in the doubly-robust property of the method. More information on this particular method can be found in the original article by Wang (2018), more information on Pseudo-Values is available in Andersen et al. (2017) and Andersen and Perme (2010).
+
+When estimating the \code{geese} model the \code{ev_time} variable is used as a factor by default. This results in one coefficient being estimated for each unique point in time, which can be very slow computationally if there are a lot of unique points in time and/or the dataset has many rows. In these cases it is recommended to use \code{type_time="bs"} or \code{type_time="ns"}, which results in the \code{ev_time} being modeled using B-Splines or Natural Splines. Simulation studies indicate that there is little difference in the estimates when an appropriately large number of \code{spline_df} is used.
+
 }
 \value{
 Returns a \code{data.frame} object containing the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
@@ -78,14 +93,27 @@ Robin Denz
 \code{\link[geepack]{geese}}, \code{\link[prodlim]{jackknife}}, \code{\link[splines]{ns}}, \code{\link[splines]{bs}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+\dontrun{
+# simulate some data as example
+sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat$group <- as.factor(sim_dat$group)
 
-## The function is currently defined as
-function (x)
-{
-  }
+# estimate a treatment assignment model
+glm_mod <- glm(group ~ x1 + x3 + x5 + x6, data=sim_dat, family="binomial")
+
+# use it + pseudo values + geese model to calculate adjusted survival curves
+adjsurv <- adjustedsurv(data=sim_dat,
+                        variable="group",
+                        ev_time="time",
+                        event="event",
+                        method="aiptw_pseudo",
+                        outcome_vars=c("x1", "x2", "x3", "x4", "x5", "x6"),
+                        treatment_model=glm_mod,
+                        conf_int=TRUE)
+
+# plot the curves
+plot(adjsurv, draw_ci=TRUE)
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

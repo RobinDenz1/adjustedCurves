@@ -5,7 +5,7 @@
 Direct Adjusted Survival Curves
 }
 \description{
-Calculate confounder-adjusted survival curves using a previously fit cox-regression model. This is the most popular method used for adjusting survival curves. Also known as "G-Formula" estimates or "Corrected Group-Prognosis" method. A bunch of copies of the original dataset are created, one for each possible value of 'variable'. In each copy, the 'variable' is set to one of the possible levels for all observations respectively. Using the cox-model, the survival probability for each patient is predicted at some points in time in every artificial dataset. The estimates are consequently averaged for each point in time in each dataset.
+Calculate confounder-adjusted survival curves using a previously fit Cox-Regression model. This is the most popular method used for adjusting survival curves. See details for more information.
 }
 \usage{
 surv_method_direct(data, variable, ev_time, event, conf_int,
@@ -45,7 +45,22 @@ Further arguments passed to \code{ate}.
   }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+
+\itemize{
+\item{\strong{Type of Adjustment:} Requires a model describing the outcome mechanism. This must be a \code{\link{coxph}} model.}
+\item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
+\item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
+\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
+\item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
+\item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
+\item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
+\item{\strong{Dependencies:} This method relies on the \code{\link{riskRegression}} package.}
+}
+
+This method works by executing the following steps: (1) First a model is fitted which describes the outcome mechanism (time-to-event). Next (2) multiple copies of the original dataset are created, one for each possible level of the \code{variable} of interest. (3) The \code{variable} is then set to one level for all observations in each dataset. (4) The model is used to predict the survival probabilities at some points in time T for each observation in all dataset copies. (5) Those estimated probabilities are averaged for each dataset at each point in time, resulting in adjusted survival probabilities for all levels of the group variable at the specified points in time.
+
+In the literature this method is sometimes also called "Corrected Group-Prognosis", "G-Computation" or "G-Formula". If the model in step (1) is correct this method will produce unbiased estimates of the causal survival curves. It is also one of the most efficient methods. Technically any type of model could be used. Currently only \code{\link{coxph}} models are supported however. More information can be found in the literature listed in the references.
+
 }
 \value{
 Returns a \code{data.frame} object containing the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
@@ -65,6 +80,7 @@ The wrapper function was written by Robin Denz, the \code{ate} function (which t
 \code{\link{ate}}, \code{\link{coxph}}, \code{\link{glm}}
 }
 \examples{
+\dontrun{
 library(survival)
 
 # simulate some data as example
@@ -83,10 +99,11 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         event="event",
                         method="direct",
                         outcome_model=cox_mod,
-                        sd=TRUE)
+                        conf_int=FALSE)
 
 # plot the curves
-plot(adjsurv, draw_ci=FALSE)
+plot(adjsurv)
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

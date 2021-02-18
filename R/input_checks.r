@@ -147,24 +147,43 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
       if (!is.logical(obj$standardize)) {
         stop("Argument 'standardize' must be either TRUE or FALSE.")
       }
-    } else if (conf_int) {
-      warning("No asymptotic or exact variance approximations exist for ",
-              "method='el'. Use bootstrap=TRUE to get bootstrap estimates.")
     }
      # TODO: check for dichotomous variables, warn when 0, 1
+  } else if (method=="matching") {
+
+    if (bootstrap) {
+      warning("Bootstrapping generally doesn't produce unbiased variance",
+              " estimates with matching estimators. Use with caution. ",
+              "See ?surv_method_matching.")
+    } else if (is.numeric(obj$treatment_model)) {
+      if (any(obj$treatment_model > 1) | any(obj$treatment_model < 0)) {
+        stop("Propensity Scores > 1 or < 0 not allowed. Perhaps you supplied ",
+             "weights on accident?")
+      }
+    }
+
   }
 
   # bootstrapping
   if (bootstrap) {
 
     if (is.numeric(obj$treatment_model)) {
-      stop("'treatment_model' needs to be an actual model that can be ",
-           "refit when using bootstrap=TRUE.")
+      stop("'treatment_model' needs to be a model that can be ",
+           "refit or a formula object when using bootstrap=TRUE.")
     } else if (is.numeric(obj$outcome_model)) {
       stop("'outcome_model' needs to be an actual model that can be ",
            "refit when using bootstrap=TRUE.")
     }
 
+  }
+
+  # asymptotic variance calculations
+  if (conf_int) {
+    if (method %in% c("el", "direct_pseudo", "matching")) {
+      stop("Asymptotic or exact variance calculations are currently",
+           " not available for method='", method, "'. Use bootstrap=TRUE",
+           "to get bootstrap estimates.")
+    }
   }
 }
 
@@ -273,9 +292,19 @@ check_inputs_adj_test <- function(adjsurv, from, to) {
          "adjustedsurv function.")
   } else if (is.null(adjsurv$boot_data)) {
     stop("Can only perform a significance test if bootstrapping was ",
-         "performed (bootstrap=TRUE in adjsutedsurv() call).")
+         "performed (bootstrap=TRUE in adjustedsurv() call).")
   } else if (adjsurv$categorical) {
     stop("This function currently only supports a test of two survival curves.")
+  } else if (!is.numeric(from)) {
+    stop("'from' must be a number >= 0.")
+  } else if (from < 0) {
+    stop("'from' must be a number >= 0.")
+  } else if (!is.numeric(to)) {
+    stop("'to' must be a number >= 0.")
+  } else if (to <= from) {
+    stop("'to' must be greater than 'from'.")
+  } else if (to > max(adjsurv$adjsurv$time)) {
+    stop("'to' can not be greater than the latest observed time.")
   }
 
 }

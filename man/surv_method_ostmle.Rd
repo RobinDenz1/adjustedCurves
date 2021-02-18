@@ -70,7 +70,18 @@ A character vector or list specification to be passed to the \code{SL.library} a
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+
+\itemize{
+\item{\strong{Type of Adjustment:} Adjustments are made based on the treatment assignment mechanism, the outcome mechanism and the censoring mechanism. No models can be supplied. The adjustments are made based on \code{\link[SuperLearner]{SuperLearner}}} libraries.
+\item{\strong{Doubly-Robust:} Estimates are Doubly-Robust.}
+\item{\strong{Categorical groups:} Currently only two groups in \code{variable} are allowed. Must be an integer variable only containing 0 and 1.}
+\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
+\item{\strong{Allowed Time Values:} Allows only integer time.}
+\item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
+\item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
+\item{\strong{Dependencies:} This method relies on the \code{survtmle}, \code{MOSS} and \code{SuperLearner} packages.}
+}
+
 }
 \value{
 Returns a \code{data.frame} object containing the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
@@ -86,14 +97,29 @@ The wrapper function was written by Robin Denz, the \code{MOSS} package (which t
 \code{\link[survtmle]{survtmle}}, \code{\link[MOSS]{MOSS}}, \code{\link[SuperLearner]{SuperLearner}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+\dontrun{
+# simulate some data as example (needs a binary integer "variable")
+sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
 
-## The function is currently defined as
-function (x)
-{
-  }
+# only works with integer time, only unbiased with small amounts of them
+sim_dat$time <- round(sim_dat$time*15) + 1
+
+# calculate adjusted survival curves, using SuperLearner but only
+# using the SL.glm library. In practice you would want to use more than
+# that. See ?MOSS and ?survtmle
+adjsurv <- adjustedsurv(data=sim_dat,
+                        variable="group",
+                        ev_time="time",
+                        event="event",
+                        method="ostmle",
+                        adjust_vars=c("x1", "x2", "x3", "x4", "x5", "x6"),
+                        SL.ftime=c("SL.glm"),
+                        SL.ctim=c("SL.glm"),
+                        SL.trt=c("SL.glm"))
+
+# plot the curves
+plot(adjsurv)
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

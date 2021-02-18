@@ -38,6 +38,17 @@ Further arguments passed to \code{survfit}.
 }
 \details{
 
+\itemize{
+\item{\strong{Type of Adjustment:} NO adjustments are made. This is just a stratified Kaplan-Meier estimator.}
+\item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
+\item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
+\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
+\item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
+\item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
+\item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
+\item{\strong{Dependencies:} This method relies on the the \code{\link{survival}} package.}
+}
+
 }
 \value{
 Returns a \code{data.frame} object containing the estimated survival probabilities for some points in time for each level of \code{variable}.
@@ -53,14 +64,23 @@ The wrapper function was written by Robin Denz, the \code{survfit} function (whi
 \code{\link{survival}}, \code{\link{survfit}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+\dontrun{
+library(survival)
 
-## The function is currently defined as
-function (x)
-{
-  }
+# simulate some data as example
+sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat$group <- as.factor(sim_dat$group)
+
+# calculate un-adjusted kaplan-meier survival curves
+adjsurv <- adjustedsurv(data=sim_dat,
+                        variable="group",
+                        ev_time="time",
+                        event="event",
+                        method="km")
+
+# plot the curves
+plot(adjsurv)
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

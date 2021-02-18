@@ -29,17 +29,10 @@ Robin Denz
 }
 
 \seealso{
-\code{\link{adjustedsurv_test}}, \code{\link{adjustedsurv}}
+\code{\link{adjustedsurv_test}}, \code{\link{adjustedsurv}}, \code{\link{adjusted_rmst}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function (x)
-{
-  }
+# See ?adjustedsurv_test
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

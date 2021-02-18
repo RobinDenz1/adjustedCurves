@@ -8,7 +8,7 @@ Calculate Confounder-Adjusted Restricted Mean Survival Times
 This function can be utilized to calculate the confounder-adjusted restricted mean survival time, given previously estimated adjusted survival curves.
 }
 \usage{
-adjusted_rmst(adjsurv, from=0, to=Inf, use_boot=F, conf_level=0.95)
+adjusted_rmst(adjsurv, to, from=0, use_boot=F, conf_level=0.95)
 }
 
 \arguments{
@@ -22,20 +22,28 @@ A number specifying the left side of the time interval of interest. See details.
 A number specifying the right side of the time interval of interest. See details.
   }
   \item{use_boot}{
-Whether bootstrap estimates should be used to calculate the standard deviation of the RMST estimates.
+Whether bootstrap estimates should be used to calculate the standard deviation and confidence intervals of the RMST estimates. Can only be used if \code{bootstrap=TRUE} was used in the \code{\link{adjustedsurv}} call.
   }
   \item{conf_level}{
 A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
   }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+
+The adjusted restricted mean survival times (RMST) are calculated by integrating the estimated adjusted survival curves in a specified interval. Let \eqn{Z} be the grouping variable (corresponding to the \code{variable} argument in the \code{\link{adjustedsurv}} function) with possible levels \eqn{Z = z \in \{0, 1, 2, ..., k\}}. \eqn{T} is defined as the time and \eqn{X} is a vector or matrix of covariates. \eqn{\hat{S}(T = t | Z = z, X)} denotes the estimated counterfactual survival function. The RMST is then defined as:
+
+\deqn{RMST_{z} = \int_{from}^{to} \hat{S}(T = t | Z = z, X)}
+
+It can be interpreted as the mean survival time of individuals in group \eqn{Z = z}. Note however that simply substracting the estimates from each other does not give a correct estimate of the area between the survival curves if the respective curves cross at some point. The \code{\link{adjustedsurv_test}} function can be used to calculate the actual area between the curves instead. See \code{?adjustedsurv_test} for more information.
+
+Since the estimated survival functions are step functions the integrals are calculated exactly instead of relying on trapezoid approximations.
+
+If the \code{adjsurv} object was created with \code{bootstrap = TRUE} in the \code{\link{adjustedsurv}} function, bootstrap confidence intervals and standard deviations for the RMSTs can be approximated by setting \code{use_boot} to \code{TRUE}. If bootstrap samples occur where the survival function is not estimated up to \code{to}, the bootstrap sample is discarded and not used in further calculations. Approximate variance calculations not relying on the bootstrap estimates are currently not implemented.
+
 }
 \value{
 Returns a \code{adjusted_rmst} object containing the following object:
 
-\item{areas}{A named vector containing the actual areas under the survival curves.
-}
 \item{rmsts}{A named vector containing the adjusted restricted mean survival time estimates.
 }
 \item{from}{\code{from} argument in function call.
@@ -45,13 +53,17 @@ Returns a \code{adjusted_rmst} object containing the following object:
 
 If \code{use_boot} is set to \code{TRUE} and \code{bootstrap} was also set to \code{TRUE} in the original \code{adjustedsurv} function call, the following objects are also added to the output:
 
-\item{booted_areas}{A \code{datal.frame} containing the areas under the survival curves for each bootstrap sample.
+\item{conf_level}{The confidence level used when calculating the confidence intervals.
+}
+\item{n_boot}{The numbers of bootstrap iterations actually used to calculate the bootstrap estimates.
 }
 \item{booted_rmsts}{A \code{datal.frame} containing the adjusted restricted mean survival time estimates for each bootstrap sample.
 }
-\item{areas_sd}{A named vector containing the bootstrapped standard deviations of the areas under the survival curves.
-}
 \item{rmsts_sd}{A named vector containing the bootstrapped standard deviations of the restricted mean survival times.
+}
+\item{rmsts_ci_lower}{Lower value of the bootstrap confidence intervals.
+}
+\item{rmsts_ci_upper}{Upper value of the bootstrap confidence intervals.
 }
 
 }
@@ -68,14 +80,39 @@ Robin Denz
 \code{\link{print.adjusted_rmst}}, \code{\link{adjustedsurv}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+\dontrun{
+library(survival)
 
-## The function is currently defined as
-function (x)
-{
-  }
+# simulate some data as example
+sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat$group <- as.factor(sim_dat$group)
+
+# estimate a cox-regression for the outcome
+cox_mod <- coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
+                 data=sim_dat, x=TRUE)
+
+
+# use it to calculate adjusted survival curves with bootstrapping
+adjsurv <- adjustedsurv(data=sim_dat,
+                        variable="group",
+                        ev_time="time",
+                        event="event",
+                        method="direct",
+                        outcome_model=cox_mod,
+                        conf_int=FALSE,
+                        bootstrap=TRUE,
+                        n_boot=500)
+
+# calculate adjusted restricted mean survival times from 0 to 1
+adjrmst <- adjusted_rmst(adjsurv, from=0, to=1, use_boot=FALSE)
+print(adjrmst)
+
+# calculate adjusted restricted mean survival times from 0 to 1,
+# including standard deviations and confidence intervals
+adjrmst <- adjusted_rmst(adjsurv, from=0, to=1, use_boot=TRUE,
+                         conf_level=0.95)
+print(adjrmst)
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

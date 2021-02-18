@@ -9,7 +9,7 @@ This method works by first matching controls and treated patients using a previo
 }
 \usage{
 surv_method_matching(data, variable, ev_time, event, conf_int,
-                     conf_level=0.95, treatment_model, ...)
+                     conf_level=0.95, treatment_model, stabilize=T, ...)
 }
 
 \arguments{
@@ -34,12 +34,28 @@ A number specifying the confidence level of asymptotic and/or bootstrap confiden
   \item{treatment_model}{
 Must be either a model object with \code{variable} as response variable, a vector of weights or a formula which can be passed to \code{WeightIt}.
 }
+  \item{stabilize}{
+Whether to stabilize the weights or not. Is set to \code{TRUE} by default. Stabilizing has no effect on the estimates, only on the asymptotic variance calculations and confidence intervals. Without stabilizing, those estimates are biased downward.
+  }
   \item{...}{
 Further arguments passed to the \code{Match} function of the \code{Matching} Package.
   }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+
+\itemize{
+\item{\strong{Type of Adjustment:} Requires a model describing the treatment assignment mechanism. This must be either a \code{\link{glm}} object.}
+\item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
+\item{\strong{Categorical groups:} Only two groups in \code{variable} are allowed. Must be an integer variable containing only 0 and 1.}
+\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are currently not available. Bootstrapping is also discouraged.}
+\item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
+\item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
+\item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
+\item{\strong{Dependencies:} This method relies on the \code{Matching} package.}
+}
+
+WARUM KEIN BOOTSTRAP?
+
 }
 \value{
 Returns a \code{data.frame} object containing the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
@@ -57,14 +73,37 @@ The wrapper function was written by Robin Denz, the \code{Match} function (which
 \code{\link[Matching]{Match}}, \code{\link[survival]{survfit}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+\dontrun{
+# simulate some data as example (needs a binary integer "variable")
+sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
 
-## The function is currently defined as
-function (x)
-{
-  }
+# estimate treatment assignment model
+glm_mod <- glm(group ~ x1 + x2 + x4 + x6, data=sim_dat, family="binomial")
+
+# calculate adjusted survival curves
+adjsurv <- adjustedsurv(data=sim_dat,
+                        variable="group",
+                        ev_time="time",
+                        event="event",
+                        method="matching",
+                        treatment_model=glm_mod)
+
+# Alternatively, supply the propensity score directly
+# Here we use the logistic regression to calculate it, so we get
+# exactly the same result. The propensity score can be calculated in
+# any other way in practice, allowing flexibility
+ps_score <- glm_mod$fitted.values
+
+adjsurv <- adjustedsurv(data=sim_dat,
+                        variable="group",
+                        ev_time="time",
+                        event="event",
+                        method="matching",
+                        treatment_model=ps_score)
+
+# plot the curves
+plot(adjsurv)
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

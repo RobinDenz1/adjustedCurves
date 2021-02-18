@@ -113,7 +113,7 @@ surv_method_iptw_km <- function(data, variable, ev_time, event, conf_int,
     }
     plotdata$s_j <- NULL
 
-    surv_cis <- confint_surv(surv=plotdata$surv, sd=plotdata$sd,
+    surv_cis <- confint_surv(surv=plotdata$surv, se=plotdata$sd,
                              conf_level=conf_level, conf_type="plain")
     plotdata$ci_lower <- surv_cis$left
     plotdata$ci_upper <- surv_cis$right
@@ -126,7 +126,6 @@ surv_method_iptw_km <- function(data, variable, ev_time, event, conf_int,
 }
 
 ## IPTW with univariate cox-model
-# stabilize?
 #' @export
 surv_method_iptw_cox <- function(data, variable, ev_time, event, conf_int,
                                  conf_level=0.95, treatment_model,
@@ -210,7 +209,7 @@ surv_method_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
                        na.rm=na.rm, se_method=se_method)
       data_temp$se <- sqrt(surv_sd)
 
-      surv_cis <- confint_surv(surv=data_temp$surv, sd=data_temp$se,
+      surv_cis <- confint_surv(surv=data_temp$surv, se=data_temp$se,
                                conf_level=conf_level, conf_type="plain")
       data_temp$ci_lower <- surv_cis$left
       data_temp$ci_upper <- surv_cis$right
@@ -255,12 +254,14 @@ surv_method_direct <- function(data, variable, ev_time, event, conf_int,
 # TODO: variance calculation is off
 #' @export
 surv_method_matching <- function(data, variable, ev_time, event, conf_int,
-                                 conf_level=0.95, treatment_model, stabilize=T, ...) {
+                                 conf_level=0.95, treatment_model,
+                                 stabilize=T, ...) {
 
   if (is.numeric(treatment_model)) {
     ps_score <- treatment_model
   } else {
-    ps_score <- stats::predict.glm(treatment_model, newdata=data, type="response")
+    ps_score <- stats::predict.glm(treatment_model, newdata=data,
+                                   type="response")
   }
 
   rr <- Matching::Match(Tr=data[, variable], X=ps_score, estimand="ATE", ...)
@@ -306,7 +307,8 @@ surv_method_aiptw <- function(data, variable, ev_time, event, conf_int,
   }
   if (is.null(treatment_model)) {
     form <- paste0(variable, " ~ 1")
-    treatment_model <- stats::glm(stats::as.formula(form), data=data, family="binomial")
+    treatment_model <- stats::glm(stats::as.formula(form), data=data,
+                                  family="binomial")
   }
   if (is.null(outcome_model)) {
     form <- paste0("survival::Surv(", ev_time, ", ", event, ") ~ 1")
@@ -340,11 +342,10 @@ surv_method_aiptw <- function(data, variable, ev_time, event, conf_int,
 }
 
 ## Using Pseudo Observations and Direct Adjustment
-# TODO: fix variance calculation, makes no sense yet
 #' @export
-surv_method_direct_pseudo <- function(data, variable, ev_time, event, conf_int,
-                                      conf_level=0.95, times, outcome_vars,
-                                      type_time="factor", spline_df=10, na.rm=F) {
+surv_method_direct_pseudo <- function(data, variable, ev_time, event, times,
+                                      outcome_vars, type_time="factor",
+                                      spline_df=10, na.rm=F) {
   # some constants
   len <- length(times)
   n <- nrow(data)
@@ -394,23 +395,8 @@ surv_method_direct_pseudo <- function(data, variable, ev_time, event, conf_int,
     m <- 1 - exp(-exp(pred))
     surv <- apply(m, 2, mean, na.rm=na.rm)
 
-    if (conf_int) {
+    plotdata[[i]] <- data.frame(time=times, surv=surv, group=levs[i])
 
-      pseudo_direct_sd <- function(x, n, na.rm) {
-        sqrt(stats::var(x, na.rm=na.rm) / n)
-      }
-      surv_sd <- apply(m, 2, pseudo_direct_sd, n=n, na.rm=na.rm)
-
-      surv_ci <- confint_surv(surv=surv, sd=surv_sd, conf_level=conf_level,
-                              conf_type="plain")
-
-      plotdata[[i]] <- data.frame(time=times, surv=surv, group=levs[i],
-                                  sd=surv_sd, ci_lower=surv_ci$left,
-                                  ci_upper=surv_ci$right)
-
-    } else {
-      plotdata[[i]] <- data.frame(time=times, surv=surv, group=levs[i])
-    }
   }
   plotdata <- dplyr::bind_rows(plotdata)
   rownames(plotdata) <- NULL
@@ -526,7 +512,7 @@ surv_method_aiptw_pseudo <- function(data, variable, ev_time, event, conf_int,
 
 ## Using Empirical Likelihood Estimation
 #' @export
-surv_method_el <- function(data, variable, ev_time, event, conf_int, conf_level=0.95,
+surv_method_el <- function(data, variable, ev_time, event,
                            times, treatment_vars, moment="first",
                            standardize=F, ...) {
 
