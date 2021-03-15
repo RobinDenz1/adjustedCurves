@@ -294,6 +294,7 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
 # TODO:
 # - should work with pairwise comparisons
 # - give confidence interval for difference integral
+# - make this work with CIFs as well
 #' @export
 adjustedsurv_test <- function(adjsurv, to, from=0) {
 

@@ -1,0 +1,163 @@
+\name{plot.adjustedcif}
+\alias{plot.adjustedcif}
+
+\title{
+Plot Confounder-Adjusted Cumulative Incidence Functions
+}
+\description{
+A function to graphically display confounder-adjusted cumulative incidence functions which where previously estimated using the \code{adjustedcif} function. The user can customize the plot using a variety of options. Internally it uses the \code{ggplot2} package, so additional not implemented features can be added using the standard \code{ggplot2} syntax. This function also includes the option to use isotonic regression on the CIFs, which is of benefit if the estimated curves are not monotone.
+}
+\usage{
+\method{plot}{adjustedcif}(x, draw_ci=F, max_t=Inf,
+     iso_reg=F, force_bounds=F, use_boot=F,
+     color=T, linetype=F, facet=F,
+     line_size=1, xlab="Time",
+     ylab="Adjusted Cumulative Incidence",
+     title=NULL, legend_title="Group",
+     legend_position="right",
+     ylim=NULL, custom_colors=NULL,
+     custom_linetypes=NULL,
+     ci_draw_alpha=0.4, ...)
+}
+
+\arguments{
+  \item{x}{
+An \code{adjustedcif} object created using the \code{adjustedcif} function.
+  }
+  \item{draw_ci}{
+A logical variable indicating whether the confidence intervals should be drawn.
+  }
+  \item{max_t}{
+A number indicating the latest event time which is to be plotted.
+  }
+  \item{iso_reg}{
+A logical variable indicating whether the estimates should be monotonized using isotonic regression. See details.
+  }
+  \item{force_bounds}{
+A logical variable indicating whether the 0 and 1 bounds of the CIFs should be forced in the plot. See details.
+  }
+  \item{use_boot}{
+A logical variable denoting whether the bootstrapped estimates should be used for the curves and their confidence intervals. Can only be used if they were calculated. See \code{adjustedsurv}.
+  }
+  \item{color}{
+A logical variable indicating whether the curves should be colored differently.
+  }
+  \item{linetype}{
+A logical variable indicating whether the curves should have different linetypes.
+  }
+  \item{facet}{
+A logical variable indicating whether the curves should be in different facets.
+  }
+  \item{line_size}{
+A number controlling the thickness of the curves.
+  }
+  \item{xlab}{
+A character string to be used as the X-Axis label of the plot.
+  }
+  \item{ylab}{
+A character string to be used as the Y-Axis label of the plot.
+  }
+  \item{title}{
+A character string to be used as the title of the plot. Set to \code{NULL} if no title should be used.
+  }
+  \item{legend_title}{
+A character string to be used as the title of the legend. Set to \code{NULL} if no legend should be included.
+  }
+  \item{legend_position}{
+A character string specifying the position of the legend. Ignored if \code{legend_title=NULL}.
+  }
+  \item{ylim}{
+A numeric vector of length two, specifying the limits of the Y-Axis. Set to \code{NULL} to use the \code{ggplot2} default values.
+  }
+  \item{custom_colors}{
+A (named) vector to specify the colors of each CIF and possibly its confidence region. Set to \code{NULL} to use the \code{ggplot2} default values.
+  }
+  \item{custom_linetypes}{
+A (named) vector to specify the linetype of each CIF. Set to \code{NULL} to use the \code{ggplot2} default values.
+  }
+  \item{ci_draw_alpha}{
+A number indicating the level of transparency that should be used when drawing the confidence regions.
+  }
+  \item{...}{
+Currently not used.
+  }
+}
+\details{
+When using certain methods there is no guarantee that the resulting estimated CIFs are monotonically increasing. This is unfortunate since we know that it has to be the case. Isotonic regression can be used to fix this problem by ensuring that the CIFs are actually monotonically increasing everywhere, while also being as close to the observations as possible. Westling et al. (2020) showed mathematically that this usually does not add any systematic bias to the estimates. More information on the method can be found in Robertson et al. (1988). This adjustment can be done using this function by setting \code{iso_reg} to \code{TRUE}.
+
+Similarly, some methods can produce estimates that lie outside the theoretical 0 and 1 bounds of probability. By setting \code{force_bounds} to \code{TRUE} these estimates are manually set to either 0 or 1 (whichever is closer).
+}
+\value{
+Returns a \code{ggplot2} object.
+}
+\references{
+Ted Westling, Mark J. van der Laan, and Marco Carone. "Correcting an Estimator of a Multivariate Monotone Function with Isotonic Regression". In: Electronic Journal of Statistics 14 (2020), pp. 3032-3069.
+
+Robertson, T., Wright, F. T. and Dykstra, R. L. "Order Restricted Statistical Inference". John Wiley & Sons, (1988)
+}
+\author{
+Robin Denz
+}
+
+\seealso{
+\code{\link{adjustedcif}}, \code{\link{ggplot2}}, \code{\link{pammtools}}, \code{\link[stats]{isoreg}}
+}
+\examples{
+\dontrun{
+library(survival)
+library(ggplot2)
+
+# simulate some data as example
+# PUT HERE
+
+
+# use it to calculate adjusted survival curves with bootstrapping
+adjcif <- adjustedcif(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      outcome_model=cox_mod,
+                      conf_int=TRUE,
+                      bootstrap=TRUE,
+                      n_boot=500)
+
+# plot the curves with default values
+plot(adjsurv)
+
+# plot after applying isotonic regression
+plot(adjsurv, iso_reg=TRUE)
+
+# plot with confidence intervals estimated using asymptotic variances
+plot(adjsurv, draw_ci=TRUE)
+
+# plot with confidence intervals estimated using bootstrapping
+plot(adjsurv, draw_ci=TRUE, use_boot=TRUE)
+
+# plot with different linetypes only
+plot(adjsurv, linetype=TRUE, color=FALSE, facet=FALSE)
+
+# plot with different facets only
+plot(adjsurv, linetype=FALSE, color=FALSE, facet=TRUE)
+
+# plot with different linetypes and different colors
+plot(adjsurv, linetype=TRUE, color=TRUE, facet=FALSE)
+
+# plot with some custom characteristics
+plot(adjsurv, legend_position="bottom", linetype=TRUE,
+     custom_colors=c("green", "blue"), legend_title="Custom",
+     title="Custom Plot", draw_ci=TRUE, linesize=0.5)
+
+# plot with not directly included ggplot2 functionality
+plot(adjsurv) + theme_classic()
+}
+}
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory (show via RShowDoc("KEYWORDS")):
+% \keyword{ ~kwd1 }
+% \keyword{ ~kwd2 }
+% Use only one keyword per line.
+% For non-standard keywords, use \concept instead of \keyword:
+% \concept{ ~cpt1 }
+% \concept{ ~cpt2 }
+% Use only one concept per line.

@@ -5,7 +5,7 @@
 Calculate Confounder-Adjusted Survival Curves
 }
 \description{
-This is the main function of this R-Package. It allows the user to calculate confounder-adjusted survival curves using a variety of different methods. It is basically a wrapper for each \code{surv_method_} function with some additional functionality, such as bootstrapping. Some of these methods require additional packages to be installed and depending on the specified method there might be additional required arguments in the function call. Documentation on that can be found in the respective \code{surv_method_} function. See details and examples.
+This is one of the two main functions of this R-Package. It allows the user to calculate confounder-adjusted survival curves using a variety of different methods. It is basically a wrapper for each \code{surv_method_} function with some additional functionality, such as bootstrapping. Some of these methods require additional packages to be installed and depending on the specified method there might be additional required arguments in the function call. Documentation on that can be found in the respective \code{surv_method_} function. See details and examples.
 }
 \usage{
 adjustedsurv(data, variable, ev_time, event, method, conf_int=F,

@@ -1,0 +1,132 @@
+\name{adjustedcif}
+\alias{adjustedcif}
+
+\title{
+Calculate Cause-Specific Confounder-Adjusted Cumulative Incidence Functions
+}
+\description{
+This is one of two main functions of this R-Package. It allows the user to calculate cause-specific confounder-adjusted cumulative incidence functions using a variety of different methods. It is basically a wrapper for each \code{cif_method_} function with some additional functionality, such as bootstrapping. Some of these methods require additional packages to be installed and depending on the specified method there might be additional required arguments in the function call. Documentation on that can be found in the respective \code{cif_method_} function. See details and examples.
+}
+\usage{
+adjustedcif(data, variable, ev_time, event, cause, method, conf_int=F,
+            conf_level=0.95, times=NULL, bootstrap=F, n_boot=500,
+            n_cores=1, ...)
+}
+
+\arguments{
+  \item{data}{
+A \code{data.frame} object containing the needed time-to-event data in standard format.
+  }
+  \item{variable}{
+A character string specifying the variable by which the cumulative incidence functions should be grouped. Must be a valid columname of \code{data}.
+  }
+  \item{ev_time}{
+A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid columname of \code{data}.
+  }
+  \item{event}{
+A character string specifying the numeric event indicator. The censoring indicator should be coded as 0 and all other events of interest as 1, 2, etc. Must be a valid columname of \code{data}.
+  }
+  \item{cause}{
+The cause of interest for which the cumulative incidence functions should be calculated. Should be a number that appears in the \code{event} column of \code{data}.
+  }
+  \item{method}{
+A character string specifying the adjustment method to use. See details.
+  }
+  \item{conf_int}{
+A logical variable, indicating whether the asymptotic variances and confidence intervals of the cumulative incidence should be calculated. Not available for all methods.
+  }
+  \item{conf_level}{
+A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
+  }
+  \item{times}{
+A numeric vector of time points at which the cumulative incidences should be estimated or \code{NULL}. If \code{NULL} the cumulative incidence is estimated at all points in time at which an event occured. Only relevant for some methods, ignored otherwise. See details.
+  }
+  \item{bootstrap}{
+A logical variable indicating whether bootstrapping should be performed or not. See details.
+  }
+  \item{n_boot}{
+Number of bootstrap replications to perform. Ignored if \code{bootstrap} is \code{FALSE}.
+  }
+  \item{n_cores}{
+The number of cores to use when calculating bootstrap estimates. Ignored if \code{bootstrap=FALSE}. Is set to 1 by default, resulting in single threaded processing. Internally uses the \code{doParallel} package if \code{n_cores > 1}. In that case it also uses the \code{doRNG} package to make the results replicable. See \code{?doRNG} and \code{?doParallel} for more details.
+  }
+  \item{...}{
+Further arguments passed to the respective \code{cif_method}. See details.
+  }
+}
+\details{
+The primary purpose of the \code{adjustedcif} function is to provide a convenient way to calculate confounder-adjusted cumulative incidence functions using any of the methods provided in the literature. A \code{\link[=plot.adjustedcif]{plot}} method is provided to graphically display the estimated cumulative incidence functions as well. Currently the following methods can be used:
+
+\itemize{
+  \item{"\link[=cif_method_direct]{direct}": Direct Standardization based on a Cause-Specific Cox-Regression model.}
+  \item{"\link[=cif_method_direct_pseudo]{direct_pseudo}": Direct Standardization based on Pseudo-Values.}
+  \item{"\link[=cif_method_iptw]{iptw}": A weighted Nelson-Aalen estimator.}
+  \item{"\link[=cif_method_iptw_pseudo]{iptw_pseudo}": A weighted estimator based on Pseudo-Values.}
+  \item{"\link[=cif_method_matching]{matching}": Using propensity score matching to estimate the adjusted CIFs.}
+  \item{"\link[=cif_method_aiptw]{aiptw}": An Augmented Inverse Probability of Treatment Weighting estimator.}
+  \item{"\link[=cif_method_aiptw_pseudo]{aiptw_pseudo}": An Augmented Inverse Probability of Treatment Weighting estimator using Pseudo-Values.}
+  \item{"\link[=cif_method_tmle]{tmle}": Targeted Maximum Likelihood Estimation for CIFs.}
+  \item{"\link[=cif_method_aalen_johansen]{aalen_johansen}": A simple stratified Nelson-Aalen estimator without any form of adjustment.}
+}
+
+An overview over all of these methods can be found in PAPER. A shorter overview can be gained using the documentation of the respective \code{cif_method} function.
+
+For most methods approximations for the asymptotic variance of point estimates of the CIF have been proposed in the literature. Where available, those can be calculated and added to the output object using \code{conf_int=TRUE}. It is however recommended to use bootstrapping to estimate the variance instead, which can be done by setting \code{bootstrap=TRUE}. The \code{n_boot} argument is set to 500 by default. This number was choosen because it worked well in simulations but it does not guarantee convergence in practice. Users are recommended to inspect the bootstrapped estimates and adjust the number of replications accordingly.
+
+To allow faster bootstrapping the user can choose to run the function on multiple CPU cores in parallel using the \code{n_cores} argument.
+
+}
+\value{
+Returns an \code{adjustedcif} object containing the following objects:
+
+\item{adjcif}{A \code{data.frame} of estimated cumulative incidences for \code{cause} at some points in time for each level of \code{variable}. Depending on the arguments used also includes standard deviations and confidence intervals at points in time.
+}
+\item{method}{
+The method used to adjust the CIFs.
+}
+\item{categorical}{Whether there are more than 2 groups in \code{variable}.
+}
+\item{call}{
+The original function call.
+}
+
+When the argument \code{bootstrap} is set to \code{TRUE} it additionally contains the following objects:
+
+\item{boot_data}{The adjusted CIFs estimated in each bootstrap sample.
+}
+\item{boot_data_same_t}{The value of the adjusted CIFs at the same points in time as the original CIFs for each bootstrap sample.
+}
+\item{boot_adjcif}{The mean CIFs of all bootstrap samples and corresponding standard deviations and percentile confidence intervals.
+}
+
+}
+
+\references{
+Hier meine eigenen Paper
+}
+\author{
+The function itself was written by Robin Denz, but it includes wrappers for functions written by other people. More information can be found in the respective \code{cif_method} documentation.
+}
+
+\seealso{
+\code{\link{cif_method_aiptw}}, \code{\link{cif_method_aiptw_pseudo}}, \code{\link{cif_method_direct}}, \code{\link{cif_method_direct_pseudo}},
+\code{\link{cif_method_iptw}}, \code{\link{cif_method_iptw_pseudo}}, \code{\link{cif_method_matching}}, \code{\link{cif_method_tmle}}, \code{\link{cif_method_aalen_johansen}}
+}
+\examples{
+\dontrun{
+
+# NOTHING HERE YET
+
+# More specific examples can be found in the documentation of each
+# respective cif_method. See ?surv_method_ + "method" for more information.
+}
+}
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory (show via RShowDoc("KEYWORDS")):
+% \keyword{ ~kwd1 }
+% \keyword{ ~kwd2 }
+% Use only one keyword per line.
+% For non-standard keywords, use \concept instead of \keyword:
+% \concept{ ~cpt1 }
+% \concept{ ~cpt2 }
+% Use only one concept per line.
