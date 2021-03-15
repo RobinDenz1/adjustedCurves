@@ -4,7 +4,7 @@ Author: Robin Denz
 
 ## Description
 
-`adjustedCurves` is an R-Package which can be used to calculate and plot confounder-adjusted survival curves as well as their confidence intervals using a variety of methods.
+`adjustedCurves` is an R-Package which can be used to calculate and plot confounder-adjusted survival curves + confidence intervals as well as cause-specific confounder-adjusted cumulative incidence functions + confidence intervals using a variety of methods.
 It provides an convenient wrapper around existing R-Packages on the topic and adds additional methods and functionality on top of it.
 Those additional features include the calculation of adjusted restricted mean survival time and testing the equality of two confounder-adjusted survival curves.
 
