@@ -4,20 +4,18 @@
 get_iptw_weights <- function(data, treatment_model, weight_method,
                              variable, stabilize=T, ...) {
 
+  # using WeightIt
   if (inherits(treatment_model, "formula")) {
-
     args <- list(formula=treatment_model, data=data,
                  method=weight_method,
                  estimand="ATE")
     weights <- do.call(WeightIt::weightit, c(args, ...))$weights
-
+  # using a logistic regression model
   } else if (inherits(treatment_model, "glm")) {
-
     ps <- stats::predict.glm(treatment_model, newdata=data, type="response")
     weights <- ifelse(data[, variable]==1, 1/ps, 1/(1-ps))
-
+  # using a multinomial logistic regression model
   } else if (inherits(treatment_model, "multinom")) {
-
     predict.multinom <- utils::getFromNamespace("predict.multinom", "nnet")
     ps <- predict.multinom(treatment_model, newdata=data, type="probs")
 
@@ -25,7 +23,7 @@ get_iptw_weights <- function(data, treatment_model, weight_method,
     for (i in levels(data[,variable])) {
       weights[data[,variable] == i] <- 1/ps[data[,variable] == i, i]
     }
-
+  # nothing else allowed
   } else {
     stop("Unsuported input: '", class(treatment_model), "'. See documentation.")
   }
@@ -161,7 +159,7 @@ sim_surv_time <- function(row, betas, dist, lambda, gamma) {
 
 ## takes a value x at which to read from the step function
 ## and step function data from which to read it
-read_from_step_function <- function(x, step_data) {
+read_from_step_function <- function(x, step_data, est="surv") {
 
   # no extrapolation
   if (x > max(step_data$time)) {
@@ -173,7 +171,7 @@ read_from_step_function <- function(x, step_data) {
   if (nrow(check)==0) {
     val <- 1
   } else {
-    val <- check$surv[which(check$time==max(check$time))][1]
+    val <- check[,est][which(check$time==max(check$time))][1]
   }
   return(val)
 }

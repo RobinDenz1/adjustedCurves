@@ -9,9 +9,8 @@ This method utilizes the targeted maximum likelihood methodology to estimate adj
 }
 \usage{
 surv_method_tmle(data, variable, ev_time, event, conf_int, conf_level=0.95,
-                 times, t_max=NULL, adjust_vars=NULL, SL.ftime=NULL,
-                 SL.ctime=NULL, SL.trt=NULL, glm.ftime=NULL, glm.ctime=NULL,
-                 glm.trt=NULL, ...)
+                 times, adjust_vars=NULL, SL.ftime=NULL, SL.ctime=NULL,
+                 SL.trt=NULL, glm.ftime=NULL, glm.ctime=NULL, glm.trt=NULL, ...)
 }
 
 \arguments{
@@ -35,9 +34,6 @@ A number specifying the confidence level of asymptotic confidence intervals.
   }
   \item{times}{
 A numeric vector of time points at which the survival probability should be estimated or \code{NULL}. If \code{NULL} the survival is estimated at all points in time at which an event occured. Only relevant for some methods, ignored otherwise. See details.
-  }
-  \item{t_max}{
-The furthest point in time to consider in the survival curve estimation. See \code{survtmle}.
   }
   \item{adjust_vars}{
 A character vector of column names specifying variables to be used when modeling the outcome, treatment and censoring mechanism. See details and examples.

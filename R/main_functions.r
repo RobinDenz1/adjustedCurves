@@ -6,13 +6,13 @@
 #' @export
 adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
                          conf_level=0.95, times=NULL, bootstrap=F,
-                         n_boot=500, na.rm=F, n_cores=1, ...) {
+                         n_boot=500, n_cores=1, ...) {
 
   check_inputs_adjustedsurv(data=data, variable=variable,
                             ev_time=ev_time, event=event, method=method,
                             conf_int=conf_int, conf_level=conf_level,
                             times=times, bootstrap=bootstrap,
-                            n_boot=n_boot, na.rm=na.rm, ...)
+                            n_boot=n_boot, ...)
 
   # define those to remove Notes in devtools::check()
   . <- i <- time <- group <- surv_b <- NULL
@@ -55,7 +55,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
 
       adjustedsurv_boot(data=data, variable=variable, ev_time=ev_time,
                         event=event, method=method, times_input=times_input,
-                        times=times, na.rm=na.rm, i=i, surv_fun=surv_fun,
+                        times=times, i=i, surv_fun=surv_fun,
                         levs=levs, ...)
       }
       parallel::stopCluster(cl)
@@ -67,7 +67,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
         boot_out[[i]] <- adjustedsurv_boot(data=data, variable=variable,
                                            ev_time=ev_time, event=event,
                                            method=method, times_input=times_input,
-                                           times=times, na.rm=na.rm, i=i,
+                                           times=times, i=i,
                                            surv_fun=surv_fun, levs=levs, ...)
       }
     }
@@ -82,12 +82,12 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
     # calculate some statistics
     boot_stats <- boot_data_same_t %>%
       dplyr::group_by(., time, group) %>%
-      dplyr::summarise(surv=mean(surv_b, na.rm=na.rm),
-                       sd=stats::sd(surv_b, na.rm=na.rm),
+      dplyr::summarise(surv=mean(surv_b, na.rm=T),
+                       sd=stats::sd(surv_b, na.rm=T),
                        ci_lower=stats::quantile(surv_b, probs=1-conf_level,
-                                                na.rm=na.rm),
+                                                na.rm=T),
                        ci_upper=stats::quantile(surv_b, probs=conf_level,
-                                                na.rm=na.rm),
+                                                na.rm=T),
                        n_boot=sum(!is.na(surv_b)),
                        .groups="drop_last")
   }
@@ -95,7 +95,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
   # core of the function
   args <- list(data=data, variable=variable, ev_time=ev_time,
                event=event, conf_int=conf_int, conf_level=conf_level,
-               times=times, na.rm=na.rm, ...)
+               times=times, ...)
   plotdata <- R.utils::doCall(surv_fun, args=args)
 
   out <- list(adjsurv=plotdata,
@@ -115,8 +115,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
 
 ## perform one bootstrap iteration
 adjustedsurv_boot <- function(data, variable, ev_time, event, method,
-                              times_input, times, na.rm, i, surv_fun,
-                              levs, ...) {
+                              times_input, times, i, surv_fun, levs, ...) {
 
   indices <- sample(x=rownames(data), size=nrow(data), replace=T)
   boot_samp <- data[indices,]
@@ -152,8 +151,7 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
 
   # call surv_method with correct arguments
   args <- list(data=boot_samp, variable=variable, ev_time=ev_time,
-               event=event, conf_int=F, conf_level=0.95, times=times,
-               na.rm=na.rm)
+               event=event, conf_int=F, conf_level=0.95, times=times)
   args <- c(args, pass_args)
 
   adjsurv_boot <- R.utils::doCall(surv_fun, args=args)
@@ -189,7 +187,6 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
 }
 
 ## plot the survival curves
-# TODO: reposition the confidence intervals when using iso_reg?
 #' @importFrom rlang .data
 #' @export
 plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
@@ -278,8 +275,8 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
   }
 
   if (draw_ci & !"ci_lower" %in% colnames(plotdata)) {
-    warning("Cannot draw confidence intervals. Need 'conf_int=TRUE' in",
-            " 'adjustedsurv()' call. Alternatively, use the bootstrap estimates.")
+    warning("Cannot draw confidence intervals. Either set 'conf_int=TRUE' in",
+            " 'adjustedsurv()' call or use bootstrap estimates.")
   }
 
   if (draw_ci & "ci_lower" %in% colnames(plotdata)) {
@@ -321,7 +318,7 @@ adjustedsurv_test <- function(adjsurv, to, from=0) {
     # integral of that curve
     diff_integral <- exact_stepfun_integral(surv_diff, to=to, from=from)
 
-    stats_vec[i]<- diff_integral
+    stats_vec[i] <- diff_integral
   }
 
   diff_curves <- as.data.frame(dplyr::bind_rows(curve_list))
@@ -364,12 +361,9 @@ print.adjustedsurv_test <- function(x, ...) {
 
   cat("------------------------------------------------------------------\n")
   cat("Pepe-Flemming Test of Equality of Two Adjusted Survival Curves \n")
-  cat("------------------------------------------------------------------")
-  cat("\n")
-  cat("The equality was tested for the time interval:", x$from, "to",
-      x$to, "\n")
-  cat("Observed Integral of the difference:", x$observed_diff_integral,
-      "\n")
+  cat("------------------------------------------------------------------\n")
+  cat("The equality was tested for the time interval:", x$from, "to", x$to, "\n")
+  cat("Observed Integral of the difference:", x$observed_diff_integral, "\n")
   cat("Bootstrap standard deviation:", stats::sd(x$diff_integrals), "\n")
   cat("P-Value:", x$p_value, "\n\n")
   cat("Calculated using", x$n_boot, "bootstrap replications.\n")

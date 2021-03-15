@@ -11,7 +11,7 @@ Function to calculate augmented inverse probability of treatment weighted surviv
 surv_method_aiptw_pseudo(data, variable, ev_time, event, conf_int,
                          conf_level=0.95, times, outcome_vars,
                          treatment_model, type_time="factor",
-                         spline_df=10, na.rm=F)
+                         spline_df=10)
 }
 
 \arguments{
@@ -47,9 +47,6 @@ A character string specifying how the time should be modeled. See details.
 }
   \item{spline_df}{
 The number of degrees of freedom used for the natural-spline or B-spline function. Ignored if \code{type_time="factor"}.
-}
-  \item{na.rm}{
-A logical variable, indicating whether rows with missing Pseudo-Values should be removed.
 }
 }
 \details{

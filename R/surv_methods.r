@@ -172,7 +172,7 @@ surv_method_iptw_cox <- function(data, variable, ev_time, event, conf_int,
 surv_method_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
                                     conf_level=0.95, times, treatment_model,
                                     weight_method="ps", stabilize=T,
-                                    se_method="cochrane", na.rm=F, ...) {
+                                    se_method="cochrane", ...) {
   # get weights
   if (is.numeric(treatment_model)) {
     weights <- treatment_model
@@ -195,7 +195,7 @@ surv_method_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
     surv_lev <- pseudo[data[,variable]==levs[i],]
     surv_lev <- apply(surv_lev, 2, stats::weighted.mean,
                       w=weights[data[,variable]==levs[i]],
-                      na.rm=na.rm)
+                      na.rm=T)
 
     data_temp <- data.frame(time=times, surv=surv_lev, group=levs[i])
 
@@ -206,7 +206,7 @@ surv_method_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
 
       surv_sd <- apply(surv_lev, 2, weighted.var.se,
                        w=weights[data[,variable]==levs[i]],
-                       na.rm=na.rm, se_method=se_method)
+                       na.rm=T, se_method=se_method)
       data_temp$se <- sqrt(surv_sd)
 
       surv_cis <- confint_surv(surv=data_temp$surv, se=data_temp$se,
@@ -342,10 +342,11 @@ surv_method_aiptw <- function(data, variable, ev_time, event, conf_int,
 }
 
 ## Using Pseudo Observations and Direct Adjustment
+# TODO: fails when len==1: either add linear regression or stop()
 #' @export
 surv_method_direct_pseudo <- function(data, variable, ev_time, event, times,
                                       outcome_vars, type_time="factor",
-                                      spline_df=10, na.rm=F) {
+                                      spline_df=10) {
   # some constants
   len <- length(times)
   n <- nrow(data)
@@ -393,7 +394,7 @@ surv_method_direct_pseudo <- function(data, variable, ev_time, event, times,
     pred <- geese_predictions(geese_mod, Sdata, times=times, n=n)
 
     m <- 1 - exp(-exp(pred))
-    surv <- apply(m, 2, mean, na.rm=na.rm)
+    surv <- apply(m, 2, mean, na.rm=T)
 
     plotdata[[i]] <- data.frame(time=times, surv=surv, group=levs[i])
 
@@ -409,7 +410,7 @@ surv_method_direct_pseudo <- function(data, variable, ev_time, event, times,
 surv_method_aiptw_pseudo <- function(data, variable, ev_time, event, conf_int,
                                      conf_level=0.95, times, outcome_vars,
                                      treatment_model, type_time="factor",
-                                     spline_df=10, na.rm=F) {
+                                     spline_df=10) {
   # some constants
   len <- length(times)
   n <- nrow(data)
@@ -483,14 +484,14 @@ surv_method_aiptw_pseudo <- function(data, variable, ev_time, event, conf_int,
       dr <- (pseudo*group-(group-ps_score)*m)/ps_score
     }
 
-    surv <- apply(dr, 2, mean, na.rm=na.rm)
+    surv <- apply(dr, 2, mean, na.rm=T)
 
     if (conf_int) {
 
       pseudo_dr_se <- function(x, n, na.rm) {
         sqrt(stats::var(x, na.rm=na.rm) / n)
       }
-      surv_se <- apply(dr, 2, pseudo_dr_se, n=n, na.rm=na.rm)
+      surv_se <- apply(dr, 2, pseudo_dr_se, n=n, na.rm=T)
 
       surv_ci <- confint_surv(surv=surv, se=surv_se, conf_level=conf_level,
                               conf_type="plain")
@@ -546,19 +547,19 @@ surv_method_el <- function(data, variable, ev_time, event,
 }
 
 ## Targeted Maximum Likelihood Estimation
+# TODO: Fails with multiple time points cause of weird evaluation in "timepoints"
 #' @export
 surv_method_tmle <- function(data, variable, ev_time, event, conf_int,
-                             conf_level=0.95, times, t_max=NULL, adjust_vars=NULL,
+                             conf_level=0.95, times, adjust_vars=NULL,
                              SL.ftime=NULL, SL.ctime=NULL, SL.trt=NULL,
                              glm.ftime=NULL, glm.ctime=NULL, glm.trt=NULL,
                              ...) {
-  if (is.null(t_max)) {
-    t_max <- max(times)
-  }
   if (is.null(adjust_vars)) {
     all_covars <- colnames(data)
     all_covars <- all_covars[!all_covars %in% c(variable, ev_time, event)]
-    adjust_vars <- data[, all_covars]
+    adjust_vars <- data[,all_covars]
+  } else {
+    adjust_vars <- data[,adjust_vars]
   }
 
   # TMLE fit
@@ -566,7 +567,7 @@ surv_method_tmle <- function(data, variable, ev_time, event, conf_int,
     ftime=data[, ev_time],
     ftype=data[, event],
     trt=data[, variable],
-    t0=t_max,
+    t0=max(data[, ev_time]),
     adjustVars=adjust_vars,
     method="hazard",
     returnIC=TRUE,
@@ -619,22 +620,21 @@ surv_method_tmle <- function(data, variable, ev_time, event, conf_int,
 ## One-Step Targeted Maximum Likelihood Estimation
 #' @export
 surv_method_ostmle <- function(data, variable, ev_time, event, conf_int,
-                               conf_level=0.95, times, t_max=NULL,
-                               adjust_vars=NULL, SL.ftime=NULL, SL.ctime=NULL,
-                               SL.trt=NULL, epsilon=1, max_num_iteration=100,
+                               conf_level=0.95, times, adjust_vars=NULL,
+                               SL.ftime=NULL, SL.ctime=NULL, SL.trt=NULL,
+                               epsilon=1, max_num_iteration=100,
                                psi_moss_method="l2", tmle_tolerance=NULL,
                                gtol=1e-3) {
-  if (is.null(t_max)) {
-    t_max <- max(times)
-  }
   if (is.null(adjust_vars)) {
     all_covars <- colnames(data)
     all_covars <- all_covars[!all_covars %in% c(variable, ev_time, event)]
     adjust_vars <- data[, all_covars]
+  } else {
+    adjust_vars <- data[, adjust_vars]
   }
 
   # time point grid
-  k_grid <- 1:max(data[, ev_time])
+  k_grid <- 1:max(data[,ev_time])
 
   # create initial fit object
   sl_fit <- MOSS::initial_sl_fit(
@@ -642,12 +642,19 @@ surv_method_ostmle <- function(data, variable, ev_time, event, conf_int,
     Delta=data[, event],
     A=data[, variable],
     W=adjust_vars,
-    t_max=t_max,
+    t_max=max(data[,ev_time]),
     sl_treatment=SL.trt,
     sl_censoring=SL.ctime,
     sl_failure=SL.ftime,
     gtol=gtol
   )
+
+  # set to same time point grid
+  sl_fit$density_failure_1$t <- k_grid
+  sl_fit$density_failure_0$t <- k_grid
+  sl_fit$density_censor_1$t <- k_grid
+  sl_fit$density_censor_0$t <- k_grid
+
   invisible(sl_fit$density_failure_1$hazard_to_survival())
   invisible(sl_fit$density_failure_0$hazard_to_survival())
 
@@ -694,6 +701,8 @@ surv_method_ostmle <- function(data, variable, ev_time, event, conf_int,
                          surv=c(psi_moss_hazard_0, psi_moss_hazard_1),
                          group=c(rep(0, length(k_grid)),
                                  rep(1, length(k_grid))))
+  # keep only time points in times
+  plotdata <- plotdata[which(plotdata$time %in% times),]
 
   if (conf_int) {
 

@@ -9,9 +9,9 @@ This method utilizes the one-step targeted maximum likelihood methodology to est
 }
 \usage{
 surv_method_ostmle(data, variable, ev_time, event, conf_int,
-                   conf_level=0.95, times, t_max=NULL,
-                   adjust_vars=NULL, SL.ftime=NULL, SL.ctime=NULL,
-                   SL.trt=NULL, epsilon=1, max_num_iteration=100,
+                   conf_level=0.95, times, adjust_vars=NULL,
+                   SL.ftime=NULL, SL.ctime=NULL, SL.trt=NULL,
+                   epsilon=1, max_num_iteration=100,
                    psi_moss_method="l2", tmle_tolerance=NULL,
                    gtol=1e-3)
 }
@@ -37,9 +37,6 @@ A number specifying the confidence level of asymptotic and/or bootstrap confiden
   }
   \item{times}{
 A numeric vector of time points at which the survival probability should be estimated or \code{NULL}. If \code{NULL} the survival is estimated at all points in time at which an event occured.
-}
-  \item{t_max}{
-The furthest point in time to consider in the survival curve estimation. See \code{MOSS}.
 }
   \item{adjust_vars}{
 A character vector of column names specifying variables to be used when modeling the outcome, treatment and censoring mechanism. See details and examples.

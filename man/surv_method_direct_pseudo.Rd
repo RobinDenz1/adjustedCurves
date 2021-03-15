@@ -9,7 +9,7 @@ This function can be used to calculate direct adjusted survival curves using pse
 }
 \usage{
 surv_method_direct_pseudo(data, variable, ev_time, event, times, outcome_vars,
-                          type_time="factor", spline_df=10, na.rm=F)
+                          type_time="factor", spline_df=10)
 }
 
 \arguments{
@@ -36,9 +36,6 @@ A character string specifying how the time should be modeled. See details.
 }
   \item{spline_df}{
 The number of degrees of freedom used for the natural-spline or B-spline function. Ignored if \code{type_time="factor"}.
-}
-  \item{na.rm}{
-A logical variable, indicating whether rows with missing Pseudo-Values should be removed.
 }
 }
 \details{

@@ -1,7 +1,7 @@
 ## for adjustedsurv function
 check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
                                       conf_int, conf_level, times, bootstrap,
-                                      n_boot, na.rm, ...) {
+                                      n_boot, ...) {
   requireNamespace("survival")
 
   obj <- list(...)
@@ -28,8 +28,6 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
   # conf_int
   } else if (!is.logical(conf_int)) {
     stop("'conf_int' must be either TRUE or FALSE.")
-  } else if (!is.logical(na.rm)) {
-    stop("'na.rm' must be either TRUE or FALSE.")
   } else if (!is.numeric(conf_level)) {
     stop("'conf_level' must be a number < 1 and > 0.")
   } else if (conf_level >= 1 | conf_level <= 0) {

@@ -11,7 +11,7 @@ This method works by modelling the treatment assignment mechanism. The individua
 surv_method_iptw_pseudo(data, variable, ev_time, event, conf_int,
                         conf_level=0.95, times, treatment_model,
                         weight_method="ps", stabilize=T,
-                        se_method="cochrane", na.rm=F, ...)
+                        se_method="cochrane", ...)
 }
 
 \arguments{
@@ -48,9 +48,6 @@ Whether to stabilize the weights or not. Is set to \code{TRUE} by default. Stabi
   \item{se_method}{
 One of \code{"miller"}, \code{"galloway"}, \code{"cochrane"} and \code{"simple"}. Specifies which kind of standard error to calculate. Defaults to \code{"cochrane"}. See details.
 }
-  \item{na.rm}{
-A logical variable, indicating whether rows with missing Pseudo-Values should be removed.
-}
   \item{...}{
 Further arguments passed to \code{WeightIt}.
   }
@@ -70,7 +67,7 @@ Further arguments passed to \code{WeightIt}.
 
 Adjusted survival curves are calculated by first estimating appropriate case-weights for each observation in \code{data}. This can be done using inverse probability of treatment weights using the propensity score (usually estimated using a logistic regression model) or by some other method (see \code{?weightit}). Pseudo-Values are then calculated for every observation in \code{data} at some points in time \eqn{T}. Since Pseudo-Values bypass the problem of censoring, a simple weighted average of the Pseudo-Values can be taken for every \eqn{T}. See Andersen et al. (2017) for more details on this method and Andersen and Perme (2010) for more information on Pseudo-Values in general.
 
-The standard error of this estimator can be approximated by calculation a weighted version of the standard error estimator. Interestingly, no exact method exists in the weighted case. Four approximations are implemented which can be choosen using the \code{se_method} argument. The equations for \code{"miller"}, \code{"galloway"} and \code{"cochrane"} are described and compared in Gatz and Smith (1995). \code{"simple"} is just the standard equation with a weight term added and should only be used with stabilized weightd (\code{stabilize=TRUE}). The resulting estimates are conservative in nature. It is generally recommended to use bootstrap estimates instead.
+The standard error of this estimator can be approximated by calculation a weighted version of the standard error estimator. Interestingly, no exact method exists in the weighted case. Four approximations are implemented which can be choosen using the \code{se_method} argument. The equations for \code{"miller"}, \code{"galloway"} and \code{"cochrane"} are described and compared in Gatz and Smith (1995). \code{"simple"} is just the standard equation with a weight term added and should only be used with stabilized weightd (\code{stabilize=TRUE}). The resulting estimates are conservative in nature, because they ignore the variation introduced by the pseudo-value calculation (Zeng et al. 2021). It is generally recommended to use bootstrap estimates instead.
 
 }
 \value{
@@ -88,6 +85,8 @@ William G. Cochran. Sampling Techniques. Vol. 3. New York: Wiley, 1977.
 J. N. Galloway, G. E. Likens, and M. E. Hawley. "Acid Precipitation: Natural Versus Anthropogenic Components". In: Science 226 (1984), pp. 829-831.
 
 J. M. Miller. A Statistical Evaluation of the U.S. Precipitation Chemistry Network. Precipitation Scavenging (edited by Semonin R. G. and Beadle R. W.) pp. 639-659. Available as CONF 74100 from National Technical Information Service, U.S. Dept. of Commerce, Springfiel, VA. 1977.
+
+ZENG PAPER
 }
 \author{
 Robin Denz

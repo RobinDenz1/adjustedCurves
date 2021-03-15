@@ -10,7 +10,7 @@ This is the main function of this R-Package. It allows the user to calculate con
 \usage{
 adjustedsurv(data, variable, ev_time, event, method, conf_int=F,
              conf_level=0.95, times=NULL, bootstrap=F, n_boot=500,
-             na.rm=F, n_cores=1, ...)
+             n_cores=1, ...)
 }
 
 \arguments{
@@ -43,9 +43,6 @@ A logical variable indicating whether bootstrapping should be performed or not. 
   }
   \item{n_boot}{
 Number of bootstrap replications to perform. Ignored if \code{bootstrap} is \code{FALSE}.
-  }
-  \item{na.rm}{
-Whether to remove missing values or not. Only used in calculation of bootstrap statistics and methods using pseudo-values.
   }
   \item{n_cores}{
 The number of cores to use when calculating bootstrap estimates. Ignored if \code{bootstrap=FALSE}. Is set to 1 by default, resulting in single threaded processing. Internally uses the \code{doParallel} package if \code{n_cores > 1}. In that case it also uses the \code{doRNG} package to make the results replicable. See \code{?doRNG} and \code{?doParallel} for more details.
