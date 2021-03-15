@@ -306,3 +306,156 @@ check_inputs_adj_test <- function(adjsurv, from, to) {
   }
 
 }
+
+## for adjustedcif
+check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
+                                     conf_int, conf_level, times, bootstrap,
+                                     n_boot, cause=cause, ...) {
+  requireNamespace("survival")
+
+  obj <- list(...)
+
+  if (!inherits(data, "data.frame")) {
+    stop("'data' argument must be a data.frame object.")
+  # needed variables
+  } else if (!is.character(variable) | !is.character(ev_time) |
+             !is.character(event) | !is.character(method)) {
+    stop("Arguments 'variable', 'ev_time', 'event' and 'method' must be ",
+         "character strings, specifying variables in 'data'.")
+  } else if (!variable %in% colnames(data)) {
+    stop(variable, " is not a valid column name in 'data'.")
+  } else if (!ev_time %in% colnames(data)) {
+    stop(ev_time, " is not a valid column name in 'data'.")
+  } else if (!event %in% colnames(data)) {
+    stop(event, " is not a valid column name in 'data'.")
+  # method
+  } else if (!method %in% c("km", "iptw", "iptw_pseudo", "direct",
+                            "direct_pseudo", "aiptw_pseudo",
+                            "aiptw", "tmle", "matching")) {
+    stop("Method '", method, "' is undefined. See documentation for ",
+         "details on available methods.")
+  # conf_int
+  } else if (!is.logical(conf_int)) {
+    stop("'conf_int' must be either TRUE or FALSE.")
+  } else if (!is.numeric(conf_level)) {
+    stop("'conf_level' must be a number < 1 and > 0.")
+  } else if (conf_level >= 1 | conf_level <= 0) {
+    stop("'conf_level' must be a number < 1 and > 0.")
+  # cause
+  } else if (!is.numeric(cause)) {
+    stop("'cause' must be a number specifying the cause of interest in ",
+         "the column specified with 'event'.")
+  # time
+  } else if (!is.numeric(times) & !is.null(times)) {
+    stop("'times' must be a numeric vector or NULL.")
+  }
+
+  # Check if the group variable has the right format
+  if (method %in% c("matching", "tmle") &
+      is.factor(data[,variable])) {
+    stop("The column in 'data' specified by 'variable' needs to be ",
+         "a dichotomous integer variable if method='", method, "'.")
+  }
+
+  if (!method %in% c("matching", "tmle") &
+      !is.factor(data[,variable])) {
+    stop("The column in 'data' specified by 'variable' needs to be ",
+         "a factor variable if method='", method, "'.")
+  }
+
+  # Check if categorical should be allowed
+  if (length(unique(data[,variable])) > 2 &
+      method %in% c("matching", "tmle", "aiptw")) {
+    stop("Categorical treatments are currently not supported for ",
+         "method='", method, "'.")
+  }
+
+  # Direct Pseudo, AIPTW Pseudo
+  if (method=="direct_pseudo" | method=="aiptw_pseudo" | method=="iptw_pseudo") {
+    requireNamespace("geepack")
+    requireNamespace("prodlim")
+
+    if ("outcome_vars" %in% names(obj)) {
+      if (!is.character(obj$outcome_vars)) {
+        stop("'outcome_vars' should be a character vector of column names ",
+             "in 'data', used to model the outcome mechanism.")
+      }
+    }
+
+    if ("type_time" %in% names(obj)) {
+      if (!obj$type_time %in% c("factor", "bs", "ns")) {
+        stop("'type_time' should be either 'factor', 'bs' or 'ns'.")
+      }
+    }
+
+    if ("treatment_model" %in% names(obj)) {
+      if (method=="aiptw_pseudo" | method=="iptw_pseudo") {
+        if (!(is.numeric(obj$treatment_model) |
+              inherits(obj$treatment_model, "glm") |
+              inherits(obj$treatment_model, "multinom"))) {
+          stop("Argument 'treatment_model' must be either a glm object or a",
+               " numeric vector of propensity scores.")
+        }
+      }
+    } else {
+      stop("Argument 'treatment_model' is missing with no standard value.")
+    }
+
+    if (method=="aiptw") {
+      if ((!"censoring_model" %in% names(obj)) &
+          (!"treatment_model" %in% names(obj)) &
+          (!"outcome_model" %in% names(obj))) {
+        stop("At least one of 'treatment_model', 'outcome_model' and ",
+             "'censoring_model' needs to be specified, see details.")
+      }
+    }
+
+  # TMLE
+  } else if (method=="tmle") {
+    requireNamespace("survtmle")
+
+    if (!is.null(obj$times)) {
+      if (!all(obj$times==floor(obj$times))) {
+        stop("Only integer time is allowed when using method='tmle'.")
+      }
+    }
+  # Matching
+  } else if (method=="matching") {
+
+    if (bootstrap) {
+      warning("Bootstrapping generally doesn't produce unbiased variance",
+              " estimates with matching estimators. Use with caution. ",
+              "See ?surv_method_matching.")
+    } else if (is.numeric(obj$treatment_model)) {
+      if (any(obj$treatment_model > 1) | any(obj$treatment_model < 0)) {
+        stop("Propensity Scores > 1 or < 0 not allowed. Perhaps you supplied ",
+             "weights on accident?")
+      }
+    }
+
+  } else if (method=="aalen") {
+    requireNamespace("cmprsk")
+  }
+
+  # bootstrapping
+  if (bootstrap) {
+
+    if (is.numeric(obj$treatment_model)) {
+      stop("'treatment_model' needs to be a model that can be ",
+           "refit or a formula object when using bootstrap=TRUE.")
+    } else if (is.numeric(obj$outcome_model)) {
+      stop("'outcome_model' needs to be an actual model that can be ",
+           "refit when using bootstrap=TRUE.")
+    }
+
+  }
+
+  # asymptotic variance calculations
+  if (conf_int) {
+    if (method %in% c("direct_pseudo", "matching")) {
+      stop("Asymptotic or exact variance calculations are currently",
+           " not available for method='", method, "'. Use bootstrap=TRUE",
+           "to get bootstrap estimates.")
+    }
+  }
+}

@@ -77,7 +77,7 @@ The wrapper function was written by Robin Denz, the \code{ate} function (which t
 }
 
 \seealso{
-\code{\link{ate}}, \code{\link{coxph}}, \code{\link{glm}}
+\code{\link{ate}}, \code{\link{coxph}}
 }
 \examples{
 \dontrun{

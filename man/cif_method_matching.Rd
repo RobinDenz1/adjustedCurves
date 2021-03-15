@@ -1,15 +1,15 @@
-\name{surv_method_matching}
-\alias{surv_method_matching}
+\name{cif_method_matching}
+\alias{cif_method_matching}
 
 \title{
-Using Matching to Calculate Adjusted Survival Curves
+Using Matching to Calculate Adjusted CIFs
 }
 \description{
-This method works by first matching controls and treated patients using a previously estimated propensity score. Using this new matched population, a simple Kaplan-Meier or Nelson-Aalen estimator is used to calculate the adjusted survival curves. Simulation studies have shown that this method, while unbiased if used appropriately, is significantly less efficient than other methods. See details.
+This method works by first matching controls and treated patients using a previously estimated propensity score. Using this new matched population, a simple Aalen-Johansen estimator is used to calculate the adjusted CIFs.
 }
 \usage{
-surv_method_matching(data, variable, ev_time, event, conf_int,
-                     conf_level=0.95, treatment_model, stabilize=T, ...)
+cif_method_matching(data, variable, ev_time, event, cause, conf_int,
+                    conf_level=0.95, treatment_model, ...)
 }
 
 \arguments{
@@ -17,16 +17,19 @@ surv_method_matching(data, variable, ev_time, event, conf_int,
 A \code{data.frame} object containing the needed time-to-event data in standard format.
 }
   \item{variable}{
-A character string specifying the variable by which the survival curves should be grouped. Must be a valid columname of \code{data}.
+A character string specifying the variable by which the CIFs should be grouped. Must be a valid columname of \code{data}.
 }
   \item{ev_time}{
 A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid columname of \code{data}.
 }
   \item{event}{
-A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
-}
+A character string specifying the numeric event indicator. The censoring indicator should be coded as 0 and all other events of interest as 1, 2, etc. Must be a valid columname of \code{data}.
+  }
+  \item{cause}{
+The cause of interest for which the cumulative incidence functions should be calculated. Should be a number that appears in the \code{event} column of \code{data}.
+  }
   \item{conf_int}{
-A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated.
+A logical variable, indicating whether the asymptotic variances and confidence intervals of the CIFs should be calculated.
   }
   \item{conf_level}{
 A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
@@ -34,9 +37,6 @@ A number specifying the confidence level of asymptotic and/or bootstrap confiden
   \item{treatment_model}{
 Must be either a model object with \code{variable} as response variable or a vector of previously estimated propensity scores.
 }
-  \item{stabilize}{
-Whether to stabilize the weights or not. Is set to \code{TRUE} by default. Stabilizing has no effect on the estimates, only on the asymptotic variance calculations and confidence intervals. Without stabilizing, those estimates are biased downward.
-  }
   \item{...}{
 Further arguments passed to the \code{Match} function of the \code{Matching} Package.
   }
@@ -44,21 +44,21 @@ Further arguments passed to the \code{Match} function of the \code{Matching} Pac
 \details{
 
 \itemize{
-\item{\strong{Type of Adjustment:} Requires a model describing the treatment assignment mechanism. This must be either a \code{\link{glm}} object.}
+\item{\strong{Type of Adjustment:} Requires a model describing the treatment assignment mechanism. This must be either a \code{\link{glm}} object or a vector of propensity scores.}
 \item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
 \item{\strong{Categorical groups:} Only two groups in \code{variable} are allowed. Must be an integer variable containing only 0 and 1.}
 \item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are currently not available. Bootstrapping is also discouraged.}
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on the \code{Matching} package.}
+\item{\strong{Dependencies:} This method relies on both the \code{Matching} and the \code{cmprsk} packages.}
 }
 
 WARUM KEIN BOOTSTRAP?
 
 }
 \value{
-Returns a \code{data.frame} object containing the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
+Returns a \code{data.frame} object containing the estimated adjusted CIFs for \code{cause} at some points in time for each level of \code{variable}.
 }
 \references{
 Angela Winnett and Peter Sasieni. "Adjusted Nelson-Aalen Estimates with Retrospective Matching". In: Journal of the American Statistical Association 97.457 (2002), pp. 245-256.
@@ -70,7 +70,7 @@ The wrapper function was written by Robin Denz, the \code{Match} function (which
 }
 
 \seealso{
-\code{\link[Matching]{Match}}, \code{\link[survival]{survfit}}
+\code{\link[Matching]{Match}}, \code{\link[cmprsk]{cuminc}}
 }
 \examples{
 \dontrun{
