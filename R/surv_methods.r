@@ -366,6 +366,8 @@ surv_method_direct_pseudo <- function(data, variable, ev_time, event, times,
     Sdata[,col] <- rep(data[,col], len)
   }
 
+  Sdata <- Sdata[,!is.na(Sdata$yi)]
+
   if (type_time=="factor") {
     Sdata$vtime <- as.factor(Sdata$vtime)
     geese_formula <- paste("yi ~ vtime + ", paste(outcome_vars, collapse=" + "),

@@ -55,7 +55,7 @@ calc_iptw_km_var <- function(t, adj_km) {
 }
 
 ## Computes the standard error of a weighted mean using one of
-## three possible approximation
+## four possible approximations
 weighted.var.se <- function(x, w, se_method, na.rm=F) {
 
   if (na.rm) {
@@ -260,4 +260,3 @@ multi_result_class <- function(boot_data=NULL, boot_data_same_t=NULL) {
   class(me) <- append(class(me),"multiResultClass")
   return(me)
 }
-

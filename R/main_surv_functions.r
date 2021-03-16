@@ -318,7 +318,6 @@ adjustedsurv_test <- function(adjsurv, to, from=0) {
 
     # integral of that curve
     diff_integral <- exact_stepfun_integral(surv_diff, to=to, from=from)
-
     stats_vec[i] <- diff_integral
   }
 

@@ -172,10 +172,10 @@ cif_method_matching <- function(data, variable, ev_time, event, cause, conf_int,
   m_dat <- rbind(data[rr$index.treated,], data[rr$index.control,])
 
   # estimate cif
-  plotdata <- cif_method_aalen(data=m_dat, variable=variable,
-                               ev_time=ev_time, event=event,
-                               cause=cause, conf_int=conf_int,
-                               conf_level=conf_level)
+  plotdata <- cif_method_aalen_johansen(data=m_dat, variable=variable,
+                                        ev_time=ev_time, event=event,
+                                        cause=cause, conf_int=conf_int,
+                                        conf_level=conf_level)
 
   return(plotdata)
 }

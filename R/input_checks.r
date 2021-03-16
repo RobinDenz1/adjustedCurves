@@ -86,7 +86,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     }
 
     if ("treatment_model" %in% names(obj)) {
-      if (method=="aiptw_pseudo" | method=="iptw_pseudo") {
+      if (method=="aiptw_pseudo") {
         if (!(is.numeric(obj$treatment_model) |
               inherits(obj$treatment_model, "glm") |
               inherits(obj$treatment_model, "multinom"))) {
@@ -94,8 +94,6 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
                " numeric vector of propensity scores.")
         }
       }
-    } else {
-      stop("Argument 'treatment_model' is missing with no standard value.")
     }
 
     if (method=="aiptw") {
@@ -159,7 +157,13 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
              "weights on accident?")
       }
     }
-
+  # IPTW KM
+  } else if (method=="iptw_km") {
+    if (conf_int & inherits(obj$treatment_model, "formula")) {
+      stop("Approximate confidence intervals currently not supported in ",
+           "method='iptw_km' when 'treatment_model' is not a 'glm' or 'multinom'",
+           " object.")
+    }
   }
 
   # bootstrapping
