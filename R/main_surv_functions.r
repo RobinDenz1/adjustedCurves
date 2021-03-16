@@ -1,5 +1,5 @@
 ## Main function of the package. Is basically a wrapper around
-## all other functions, offering additional high level stuff
+## all other functions, offering additional high level stufff
 #' @importFrom dplyr %>%
 #' @importFrom doRNG %dorng%
 #' @importFrom foreach %dopar%
