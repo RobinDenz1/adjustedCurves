@@ -62,7 +62,7 @@ The number of degrees of freedom used for the natural-spline or B-spline functio
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are not guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are not guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on the \code{geepack} and \code{\link{prodlim}} packages.}
+\item{\strong{Dependencies:} This method relies on the \code{geepack} and \code{\link[prodlim]{prodlim}} packages.}
 }
 
 Instead of only modeling the outcome mechanism or the treatment assignment mechanism, both kind of models are required to use this method. If either of those models are correctly specified, unbiased estimates will be obtained. In contrast to the \code{\link[=cif_method_aiptw]{"aiptw"}} method, the "aiptw_pseudo" method uses a generalised estimation equation (geese) approach to model the outcome mechanism. The model is fit in the same way as described in the \code{\link[=cif_method_direct_pseudo]{"direct_pseudo"}} method. Those Direct Standardization based estimates are then transformed using the previously estimated propensity score. This results in the doubly-robust property of the method. More information on this particular method can be found in the original article by Wang (2018). The original article only deals with survival probabilities without competing risks, but the only difference to the CIF estimation with competing risks is the calculation of the pseudo-values. More information on Pseudo-Values is available in Andersen et al. (2017) and Andersen and Perme (2010).

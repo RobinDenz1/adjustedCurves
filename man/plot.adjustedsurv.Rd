@@ -100,7 +100,7 @@ Robin Denz
 }
 
 \seealso{
-\code{\link{adjustedsurv}}, \code{\link{ggplot2}}, \code{\link{pammtools}}, \code{\link[stats]{isoreg}}
+\code{\link{adjustedsurv}}, \code{\link[ggplot2]{ggplot2}}, \code{\link[pammtools]{pammtools}}, \code{\link[stats]{isoreg}}
 }
 \examples{
 \dontrun{

@@ -33,7 +33,7 @@ A logical variable, indicating whether the asymptotic variances and confidence i
 A number specifying the confidence level of asymptotic confidence intervals.
   }
   \item{times}{
-A numeric vector of time points at which the survival probability should be estimated or \code{NULL}. If \code{NULL} the survival is estimated at all points in time at which an event occured. Only relevant for some methods, ignored otherwise. See details.
+A numeric vector of time points at which the survival probability should be estimated.
   }
   \item{adjust_vars}{
 A character vector of column names specifying variables to be used when modeling the outcome, treatment and censoring mechanism. See details and examples.
@@ -68,7 +68,7 @@ Additional arguments passed to \code{survtmle}.
 \item{\strong{Categorical groups:} Currently only two groups in \code{variable} are allowed. Must be an integer variable only containing 0 and 1.}
 \item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
 \item{\strong{Allowed Time Values:} Allows only integer time.}
-\item{\strong{Bounded Estimates:} Estimates are not guaranteed to be bounded in the 0 to 1 probability range.}
+\item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are not guaranteed to be monotone.}
 \item{\strong{Dependencies:} This method relies on the \code{survtmle} and \code{SuperLearner} packages.}
 }
@@ -87,7 +87,7 @@ The wrapper function was written by Robin Denz, the \code{survtmle} package (whi
 }
 
 \seealso{
-\code{\link{survtmle}}, \code{\link[SuperLearner]{SuperLearner}}, \code{\link{glm}}
+\code{\link[survtmle]{survtmle}}, \code{\link[SuperLearner]{SuperLearner}}, \code{\link{glm}}
 }
 \examples{
 \dontrun{

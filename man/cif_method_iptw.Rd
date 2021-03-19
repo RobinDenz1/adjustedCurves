@@ -61,7 +61,7 @@ Further arguments passed to \code{WeightIt}.
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on the \code{\link{riskRegression}} package}
+\item{\strong{Dependencies:} This method relies on the \code{\link[riskRegression]{riskRegression}} package}
 }
 
 Adjusted CIFs are calculated by first estimating appropriate case-weights for each observation in \code{data}. HIER MORE. A more detailed description can be found in Neumann et al. (2016) and Ozenne et al. (2020).
@@ -70,14 +70,18 @@ Adjusted CIFs are calculated by first estimating appropriate case-weights for ea
 Returns a \code{data.frame} object containing the estimated adjusted CIFs for some points in time for each level of \code{variable}.
 }
 \references{
-NEW STUFF
+Anke Neumann and Cecile Billionnet. "Covariate Adjustment of Cumulative Incidence Functions for Competing Risks Data Using Inverse Probability of Treatment Weighting". In: Computer Methods and Programs in Biomedicine 129 (2016), pp. 63–70.
+
+Sangbum Choi, Chaewon Kim, Hua Zhong, Eun-Seok Ryu, and SungWon Han. "Adjusted-Crude-Incidence Analysis of Multiple Treatments and Unbalanced Samples on Competing Risks". In: Statistics and Its Inference 12 (2019), pp. 423–437.
+
+Brice Maxime Hugues Ozenne, Thomas Harder Scheike, and Laila Staerk. "On the Estimation of Average Treatment Effects with Right-Censored Time to Event Outcome and Competing Risks". In: Biometrical Journal 62 (2020), pp. 751–763.
 }
 \author{
 Robin Denz
 }
 
 \seealso{
-\code{\link{ate}}, \code{\link{glm}}, \code{\link{multinom}}
+\code{\link[riskRegression]{ate}}, \code{\link{glm}}, \code{\link[nnet]{multinom}}
 }
 \examples{
 \dontrun{

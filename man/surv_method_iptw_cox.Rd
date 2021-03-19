@@ -55,7 +55,7 @@ Further arguments passed to \code{WeightIt}.
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on the \code{\link{survival}} package. Additionally, the \code{WeightIt} package is required if \code{treatment_model} is a formula object.}
+\item{\strong{Dependencies:} This method relies on the \code{survival} package. Additionally, the \code{WeightIt} package is required if \code{treatment_model} is a formula object.}
 }
 
 Adjusted survival curves are calculated by first estimating appropriate case-weights for each observation in \code{data}. This can be done using inverse probability of treatment weights using the propensity score (usually estimated using a logistic regression model) or by some other method (see \code{?weightit}). Those estimates are then used to fit a weighted Cox-Regression model, using only \code{variable} as independent variable. Survival Curves based on this model are estimated using the method implemented in the \code{survfit.coxph} function. More information can be found in the literature listed under "references".
@@ -77,7 +77,7 @@ Robin Denz
 }
 
 \seealso{
-\code{\link{WeightIt}}, \code{\link{coxph}}, \code{\link{survfit.coxph}}
+\code{\link[WeightIt]{WeightIt}}, \code{\link[survival]{coxph}}, \code{\link{survfit.coxph}}
 }
 \examples{
 \dontrun{

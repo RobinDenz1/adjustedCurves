@@ -22,7 +22,8 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
   # method
   } else if (!method %in% c("km", "iptw_km", "iptw_cox", "iptw_pseudo",
                             "direct", "direct_pseudo", "aiptw_pseudo",
-                            "aiptw", "tmle", "ostmle", "matching", "el")) {
+                            "aiptw", "tmle", "ostmle", "matching", "el",
+                            "tmle_pseudo")) {
     stop("Method '", method, "' is undefined. See documentation for ",
          "details on available methods.")
   # conf_int
@@ -35,13 +36,13 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
   }
 
   # Check if the group variable has the right format
-  if (method %in% c("matching", "el", "tmle", "ostmle") &
+  if (method %in% c("matching", "el", "tmle", "ostmle", "tmle_pseudo") &
       is.factor(data[,variable])) {
     stop("The column in 'data' specified by 'variable' needs to be ",
          "a dichotomous integer variable if method='", method, "'.")
   }
 
-  if (!method %in% c("matching", "el", "tmle", "ostmle") &
+  if (!method %in% c("matching", "el", "tmle", "ostmle", "tmle_pseudo") &
       !is.factor(data[,variable])) {
     stop("The column in 'data' specified by 'variable' needs to be ",
          "a factor variable if method='", method, "'.")
@@ -61,9 +62,34 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
       stop("'times' must be a numeric vector.")
     }
   } else {
-    if (!is.null(obj$times)) {
+    if (!is.null(times)) {
       warning("Object 'times' is not defined for method='",
               method, "' and will be ignored.")
+    }
+  }
+  if (!is.null(times)) {
+    if (max(times) > max(data[,ev_time])) {
+      stop("Values in '", ev_time, "' must be smaller than max(data[,ev_time]).",
+           " No extrapolation allowed.")
+    }
+  }
+  # Check for missing values
+  if (anyNA(data[,variable]) | anyNA(data[,ev_time]) | anyNA(data[,event])) {
+    stop("Missing values in 'variable', 'ev_time' or 'event' are not allowed.")
+  }
+  if (!is.null(obj$treatment_vars)) {
+    if (anyNA(data[,obj$treatment_vars])) {
+      stop("Missing values in columns specified by 'treatment_vars' are not allowed.")
+    }
+  }
+  if (!is.null(obj$outcome_vars)) {
+    if (anyNA(data[,obj$outcome_vars])) {
+      stop("Missing values in columns specified by 'outcome_vars' are not allowed.")
+    }
+  }
+  if (!is.null(obj$adjust_vars)) {
+    if (anyNA(data[,obj$adjust_vars])) {
+      stop("Missing values in columns specified by 'adjust_vars' are not allowed.")
     }
   }
 
@@ -96,16 +122,24 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
       }
     }
 
-    if (method=="aiptw") {
-      if ((!"censoring_model" %in% names(obj)) &
-          (!"treatment_model" %in% names(obj)) &
-          (!"outcome_model" %in% names(obj))) {
-        stop("At least one of 'treatment_model', 'outcome_model' and ",
-             "'censoring_model' needs to be specified, see details.")
+    if (method %in% c("aiptw_pseudo", "direct_pseudo") & !is.null(times)) {
+      if (length(times)==1) {
+        stop("'geese' models require at least two distinct time points. ",
+             "Add more points in time to 'times' and run again.")
+      }
+      if (!is.null(obj$spline_df)) {
+        if (obj$spline_df > length(times)) {
+          warning("'spline_df' > len(times) might lead to problems.")
+        }
+      } else if (!is.null(obj$type_time)) {
+        if (10 > length(times) & obj$type_time!="factor") {
+          warning("'spline_df' > len(times) might lead to problems when",
+                  " type_time!='factor'.")
+        }
       }
     }
 
-    # TMLE
+  # TMLE
   } else if (method=="tmle") {
     requireNamespace("survtmle")
 
@@ -114,7 +148,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
         stop("Only integer time is allowed when using method='tmle'.")
       }
     }
-    # OSTMLE
+  # OSTMLE
   } else if (method=="ostmle") {
     requireNamespace("MOSS")
 
@@ -123,7 +157,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
         stop("Only integer time is allowed when using method='ostmle'.")
       }
     }
-    # Empirical Likelihood
+  # Empirical Likelihood
   } else if (method=="el") {
     requireNamespace("adjKMtest")
 
@@ -163,6 +197,14 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
       stop("Approximate confidence intervals currently not supported in ",
            "method='iptw_km' when 'treatment_model' is not a 'glm' or 'multinom'",
            " object.")
+    }
+  # AIPTW
+  } else if (method=="aiptw") {
+    if ((!"censoring_model" %in% names(obj)) &
+        (!"treatment_model" %in% names(obj)) &
+        (!"outcome_model" %in% names(obj))) {
+      stop("At least one of 'treatment_model', 'outcome_model' and ",
+           "'censoring_model' needs to be specified, see details.")
     }
   }
 
@@ -289,14 +331,14 @@ check_inputs_adj_rmst <- function(adjsurv, from, to, use_boot) {
 ## for adjustedsurv_test
 check_inputs_adj_test <- function(adjsurv, from, to) {
 
-  if (!inherits(adjsurv, "adjustedsurv")) {
+  if (!(inherits(adjsurv, "adjustedsurv") | inherits(adjsurv, "adjustedcif"))) {
     stop("'adjsurv' must be an 'adjustedsurv' object, created using the ",
          "adjustedsurv function.")
   } else if (is.null(adjsurv$boot_data)) {
     stop("Can only perform a significance test if bootstrapping was ",
-         "performed (bootstrap=TRUE in adjustedsurv() call).")
+         "performed (bootstrap=TRUE in adjustedsurv/adjustedcif call).")
   } else if (adjsurv$categorical) {
-    stop("This function currently only supports a test of two survival curves.")
+    stop("This function currently only supports a test of two curves.")
   } else if (!is.numeric(from)) {
     stop("'from' must be a number >= 0.")
   } else if (from < 0) {
@@ -305,8 +347,16 @@ check_inputs_adj_test <- function(adjsurv, from, to) {
     stop("'to' must be a number >= 0.")
   } else if (to <= from) {
     stop("'to' must be greater than 'from'.")
-  } else if (to > max(adjsurv$adjsurv$time)) {
-    stop("'to' can not be greater than the latest observed time.")
+  }
+
+  if (class(adjsurv)=="adjustedsurv") {
+    if (to > max(adjsurv$adjsurv$time)) {
+      stop("'to' can not be greater than the latest observed time.")
+    }
+  } else {
+    if (to > max(adjsurv$adjcif$time)) {
+      stop("'to' can not be greater than the latest observed time.")
+    }
   }
 
 }
@@ -333,7 +383,7 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
   } else if (!event %in% colnames(data)) {
     stop(event, " is not a valid column name in 'data'.")
   # method
-  } else if (!method %in% c("aalen", "iptw", "iptw_pseudo", "direct",
+  } else if (!method %in% c("aalen_johansen", "iptw", "iptw_pseudo", "direct",
                             "direct_pseudo", "aiptw_pseudo",
                             "aiptw", "tmle", "matching")) {
     stop("Method '", method, "' is undefined. See documentation for ",
@@ -437,7 +487,7 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
       }
     }
 
-  } else if (method=="aalen") {
+  } else if (method=="aalen_johansen") {
     requireNamespace("cmprsk")
   }
 

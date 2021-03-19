@@ -47,19 +47,19 @@ Further arguments passed to \code{ate}.
 \details{
 
 \itemize{
-\item{\strong{Type of Adjustment:} Requires a model describing the outcome mechanism. This must be a \code{\link{coxph}} model.}
+\item{\strong{Type of Adjustment:} Requires a model describing the outcome mechanism. This must be a \code{\link[survival]{coxph}} model.}
 \item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
 \item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
 \item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on the \code{\link{riskRegression}} package.}
+\item{\strong{Dependencies:} This method relies on the \code{\link[riskRegression]{riskRegression}} package.}
 }
 
 This method works by executing the following steps: (1) First a model is fitted which describes the outcome mechanism (time-to-event). Next (2) multiple copies of the original dataset are created, one for each possible level of the \code{variable} of interest. (3) The \code{variable} is then set to one level for all observations in each dataset. (4) The model is used to predict the survival probabilities at some points in time T for each observation in all dataset copies. (5) Those estimated probabilities are averaged for each dataset at each point in time, resulting in adjusted survival probabilities for all levels of the group variable at the specified points in time.
 
-In the literature this method is sometimes also called "Corrected Group-Prognosis", "G-Computation" or "G-Formula". If the model in step (1) is correct this method will produce unbiased estimates of the causal survival curves. It is also one of the most efficient methods. Technically any type of model could be used. Currently only \code{\link{coxph}} models are supported however. More information can be found in the literature listed in the references.
+In the literature this method is sometimes also called "Corrected Group-Prognosis", "G-Computation" or "G-Formula". If the model in step (1) is correct this method will produce unbiased estimates of the causal survival curves. It is also one of the most efficient methods. Technically any type of model could be used. Currently only \code{\link[survival]{coxph}} models are supported however. More information can be found in the literature listed in the references.
 
 }
 \value{
@@ -77,7 +77,7 @@ The wrapper function was written by Robin Denz, the \code{ate} function (which t
 }
 
 \seealso{
-\code{\link{ate}}, \code{\link{coxph}}
+\code{\link[riskRegression]{ate}}, \code{\link[survival]{coxph}}
 }
 \examples{
 \dontrun{

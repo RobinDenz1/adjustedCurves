@@ -76,7 +76,7 @@ Robin Denz
 }
 
 \seealso{
-\code{\link{WeightIt}}
+\code{\link[WeightIt]{WeightIt}}
 }
 \examples{
 \dontrun{

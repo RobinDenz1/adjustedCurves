@@ -11,7 +11,8 @@ Function to calculate augmented inverse probability of treatment weighted surviv
 surv_method_aiptw_pseudo(data, variable, ev_time, event, conf_int,
                          conf_level=0.95, times, outcome_vars,
                          treatment_model, type_time="factor",
-                         spline_df=10)
+                         spline_df=10, censoring_vars=NULL,
+                         ipcw_method="binder")
 }
 
 \arguments{
@@ -48,18 +49,24 @@ A character string specifying how the time should be modeled. See details.
   \item{spline_df}{
 The number of degrees of freedom used for the natural-spline or B-spline function. Ignored if \code{type_time="factor"}.
 }
+  \item{censoring_vars}{
+An optional character vector specifying variables in \code{data}. Those are used in the calculation of inverse probability of censoring weighted pseudo observations. See \code{?pseudo_aareg} for more information. Set to \code{NULL} (default) to use standard pseudo-values without corrections for dependent censoring instead.
+}
+  \item{ipcw_method}{
+The specific method used in the calculation of inverse probability of censoring weighted pseudo observations. Can be either \code{"binder"} (default) or \code{"hajek"}. See \code{?pseudo_aareg} for more information. Ignored if \code{censoring_vars=NULL}.
+}
 }
 \details{
 
 \itemize{
-\item{\strong{Type of Adjustment:} Requires a treatment assignment model (\code{\link{glm}} or \code{\link{multinom}}) and a character vector of variable names used to model the outcome mechanism (internally uses \code{\link[geepack]{geese}}). In contrast to the \code{\link[=surv_method_aiptw]{"aiptw"}} method this function does not allow for dependent censoring.}
+\item{\strong{Type of Adjustment:} Requires a treatment assignment model (\code{\link{glm}} or \code{\link[nnet]{multinom}}) and a character vector of variable names used to model the outcome mechanism (internally uses \code{\link[geepack]{geese}}). In contrast to the \code{\link[=surv_method_aiptw]{"aiptw"}} method this function does not allow for dependent censoring.}
 \item{\strong{Doubly-Robust:} Estimates are Doubly-Robust.}
 \item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
 \item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are not guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are not guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on the \code{geepack} and \code{\link{prodlim}} packages.}
+\item{\strong{Dependencies:} This method relies on the \code{geepack} and \code{\link[prodlim]{prodlim}} packages.}
 }
 
 Instead of only modeling the outcome mechanism or the treatment assignment mechanism, both kind of models are required to use this method. If either of those models are correctly specified, unbiased estimates will be obtained. In contrast to the \code{\link[=surv_method_aiptw]{"aiptw"}} method, the "aiptw_pseudo" method uses a generalised estimation equation (geese) approach to model the outcome mechanism. The model is fit in the same way as described in the \code{\link[=surv_method_direct_pseudo]{"direct_pseudo"}} method. Those Direct Standardization based estimates are then transformed using the previously estimated propensity score. This results in the doubly-robust property of the method. More information on this particular method can be found in the original article by Wang (2018), more information on Pseudo-Values is available in Andersen et al. (2017) and Andersen and Perme (2010).

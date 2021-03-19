@@ -1,5 +1,5 @@
 ## Main function of the package. Is basically a wrapper around
-## all other functions, offering additional high level stufff
+## all other functions, offering additional high level stuff
 #' @importFrom dplyr %>%
 #' @importFrom doRNG %dorng%
 #' @importFrom foreach %dopar%
@@ -119,6 +119,7 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
 
   indices <- sample(x=rownames(data), size=nrow(data), replace=T)
   boot_samp <- data[indices,]
+  row.names(boot_samp) <- 1:nrow(data)
 
   # if event specific times are used, use event specific times
   # in bootstrapping as well
@@ -288,86 +289,6 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
                                         alpha=ci_draw_alpha, inherit.aes=F)
   }
   return(p)
-}
-
-## Function to calculate some statistics for the survival curves
-# TODO:
-# - should work with pairwise comparisons
-# - give confidence interval for difference integral
-# - make this work with CIFs as well
-#' @export
-adjustedsurv_test <- function(adjsurv, to, from=0) {
-
-  check_inputs_adj_test(adjsurv=adjsurv, from=from, to=to)
-
-  # calculate the integral of the difference for every bootstrap sample
-  stats_vec <- vector(mode="numeric", length=max(adjsurv$boot_data$boot))
-  curve_list <- vector(mode="list", length=max(adjsurv$boot_data$boot))
-
-  for (i in 1:max(adjsurv$boot_data$boot)) {
-
-    # select one bootstrap data set each
-    boot_dat <- adjsurv$boot_data[adjsurv$boot_data$boot==i,]
-
-    # every relevant point in time
-    times <- sort(unique(boot_dat$time))
-
-    # new curve of the difference
-    surv_diff <- exact_stepfun_difference(adjsurv=boot_dat, times=times)
-    curve_list[[i]] <- surv_diff
-
-    # integral of that curve
-    diff_integral <- exact_stepfun_integral(surv_diff, to=to, from=from)
-    stats_vec[i] <- diff_integral
-  }
-
-  diff_curves <- as.data.frame(dplyr::bind_rows(curve_list))
-
-  ## use those bootstrapped integrals for the calculation of
-  ## a p-value, by shifting the observed distribution to 0 and
-  ## comparing it to the actually observed value
-
-  # actually observed values
-  times <- sort(unique(adjsurv$adjsurv$time))
-  observed_diff_curve <- exact_stepfun_difference(adjsurv=adjsurv$adjsurv,
-                                                  times=times)
-  observed_diff_integral <- exact_stepfun_integral(observed_diff_curve,
-                                                   to=to, from=from)
-
-  # remove NA values
-  stats_vec <- stats_vec[!is.na(stats_vec)]
-
-  # shit bootstrap distribution
-  diff_under_H0 <- stats_vec - mean(stats_vec)
-  p_value <- mean(abs(diff_under_H0) > abs(observed_diff_integral))
-
-  # put together output
-  out <- list(diff_curves=diff_curves,
-              diff_integrals=stats_vec,
-              observed_diff_curve=observed_diff_curve,
-              observed_diff_integral=observed_diff_integral,
-              p_value=p_value,
-              n_boot=length(stats_vec),
-              from=from,
-              to=to)
-  class(out) <- "adjustedsurv_test"
-
-  return(out)
-}
-
-## print method for adjustedsurv_test
-#' @export
-print.adjustedsurv_test <- function(x, ...) {
-
-  cat("------------------------------------------------------------------\n")
-  cat("Pepe-Flemming Test of Equality of Two Adjusted Survival Curves \n")
-  cat("------------------------------------------------------------------\n")
-  cat("The equality was tested for the time interval:", x$from, "to", x$to, "\n")
-  cat("Observed Integral of the difference:", x$observed_diff_integral, "\n")
-  cat("Bootstrap standard deviation:", stats::sd(x$diff_integrals), "\n")
-  cat("P-Value:", x$p_value, "\n\n")
-  cat("Calculated using", x$n_boot, "bootstrap replications.\n")
-  cat("------------------------------------------------------------------\n")
 }
 
 ## function to calculate the restricted mean survival time of each

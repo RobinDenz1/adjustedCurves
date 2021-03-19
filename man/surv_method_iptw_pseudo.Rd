@@ -11,7 +11,8 @@ This method works by modelling the treatment assignment mechanism. The individua
 surv_method_iptw_pseudo(data, variable, ev_time, event, conf_int,
                         conf_level=0.95, times, treatment_model,
                         weight_method="ps", stabilize=T,
-                        se_method="cochrane", ...)
+                        se_method="cochrane", censoring_vars=NULL,
+                        ipcw_method="binder", ...)
 }
 
 \arguments{
@@ -48,6 +49,12 @@ Whether to stabilize the weights or not. Is set to \code{TRUE} by default. Stabi
   \item{se_method}{
 One of \code{"miller"}, \code{"galloway"}, \code{"cochrane"} and \code{"simple"}. Specifies which kind of standard error to calculate. Defaults to \code{"cochrane"}. See details.
 }
+  \item{censoring_vars}{
+An optional character vector specifying variables in \code{data}. Those are used in the calculation of inverse probability of censoring weighted pseudo observations. See \code{?pseudo_aareg} for more information. Set to \code{NULL} (default) to use standard pseudo-values without corrections for dependent censoring instead.
+}
+  \item{ipcw_method}{
+The specific method used in the calculation of inverse probability of censoring weighted pseudo observations. Can be either \code{"binder"} (default) or \code{"hajek"}. See \code{?pseudo_aareg} for more information. Ignored if \code{censoring_vars=NULL}.
+}
   \item{...}{
 Further arguments passed to \code{WeightIt}.
   }
@@ -62,7 +69,7 @@ Further arguments passed to \code{WeightIt}.
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are not guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are not guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on the \code{\link{prodlim}} package. The \code{WeightIt} package is also required if \code{treatment_model} is a formula object.}
+\item{\strong{Dependencies:} This method relies on the \code{\link[prodlim]{prodlim}} package. The \code{WeightIt} package is also required if \code{treatment_model} is a formula object.}
 }
 
 Adjusted survival curves are calculated by first estimating appropriate case-weights for each observation in \code{data}. This can be done using inverse probability of treatment weights using the propensity score (usually estimated using a logistic regression model) or by some other method (see \code{?weightit}). Pseudo-Values are then calculated for every observation in \code{data} at some points in time \eqn{T}. Since Pseudo-Values bypass the problem of censoring, a simple weighted average of the Pseudo-Values can be taken for every \eqn{T}. See Andersen et al. (2017) for more details on this method and Andersen and Perme (2010) for more information on Pseudo-Values in general.
@@ -93,7 +100,7 @@ Robin Denz
 }
 
 \seealso{
-\code{\link{WeightIt}}, \code{\link{prodlim}}
+\code{\link[WeightIt]{WeightIt}}, \code{\link[prodlim]{prodlim}}
 }
 \examples{
 \dontrun{

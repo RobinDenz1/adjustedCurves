@@ -55,19 +55,19 @@ Further arguments passed to \code{ate}.
 \details{
 
 \itemize{
-\item{\strong{Type of Adjustment:} Requires both a treatment assignment model (\code{\link{glm}}) and a outcome model (\code{\link{coxph}}). Also allows, but does not rely on, an additional model describing the censoring mechanism (also a \code{\link{coxph}} object).}
+\item{\strong{Type of Adjustment:} Requires both a treatment assignment model (\code{\link{glm}}) and a outcome model (\code{\link[survival]{coxph}}). Also allows, but does not rely on, an additional model describing the censoring mechanism (also a \code{\link[survival]{coxph}} object).}
 \item{\strong{Doubly-Robust:} Estimates are Doubly-Robust.}
 \item{\strong{Categorical groups:} Currently only two groups in \code{variable} are allowed. Must still be a factor variable.}
 \item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are not guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are not guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on the \code{\link{riskRegression}} package.}
+\item{\strong{Dependencies:} This method relies on the \code{\link[riskRegression]{riskRegression}} package.}
 }
 
 Instead of only modeling the outcome mechanism or the treatment assignment mechanism, both kind of models are required to use this method. If either of those models are correctly specified, unbiased estimates will be obtained. Can also be used to adjust for dependent censoring using another Cox-Regression model. An obvious advantage of this method is it's doubly robust property. This however comes at the price of some efficiency (see MY PAPER). It is also possible that some estimates fall outside the 0 and 1 probability bounds, particularly if the time is near 0 or the maximal observed event time. There is also no guarantee that the estimated survival curves will be monotonically decreasing. For more information on the methods the user is referred to the literature listed in the references.
 
-This function is basically just a wrapper around the \code{\link{ate}} function from the \code{riskRegression} package. Additional arguments may be passed to that function using the \code{...} syntax. It is however recommended to use \code{\link{ate}} directly in these cases.
+This function is basically just a wrapper around the \code{\link[riskRegression]{ate}} function from the \code{riskRegression} package. Additional arguments may be passed to that function using the \code{...} syntax. It is however recommended to use \code{\link[riskRegression]{ate}} directly in these cases.
 
 }
 \value{
@@ -91,7 +91,7 @@ The wrapper function was written by Robin Denz, the \code{ate} function (which t
 }
 
 \seealso{
-\code{\link{ate}}, \code{\link{coxph}}, \code{\link{glm}}
+\code{\link[riskRegression]{ate}}, \code{\link[survival]{coxph}}, \code{\link{glm}}
 }
 \examples{
 \dontrun{

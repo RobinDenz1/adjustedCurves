@@ -65,12 +65,12 @@ Further arguments passed to \code{ate}.
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are not guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are not guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on the \code{\link{riskRegression}} package.}
+\item{\strong{Dependencies:} This method relies on the \code{\link[riskRegression]{riskRegression}} package.}
 }
 
 Instead of only modeling the outcome mechanism or the treatment assignment mechanism, both kind of models are required to use this method. If either of those models are correctly specified, unbiased estimates will be obtained. Can also be used to adjust for dependent censoring using a Cox-Regression model. An obvious advantage of this method is it's doubly robust property. This however comes at the price of some efficiency (see MY PAPER). It is also possible that some estimates fall outside the 0 and 1 probability bounds, particularly if the time is near 0 or the maximal observed event time. There is also no guarantee that the estimated CIFS will be monotonically increasing. For more information on the methods the user is referred to the literature listed in the references.
 
-This function is basically just a wrapper around the \code{\link{ate}} function from the \code{riskRegression} package. Additional arguments may be passed to that function using the \code{...} syntax. It is however recommended to use \code{\link{ate}} directly in these cases.
+This function is basically just a wrapper around the \code{\link[riskRegression]{ate}} function from the \code{riskRegression} package. Additional arguments may be passed to that function using the \code{...} syntax. It is however recommended to use \code{\link[riskRegression]{ate}} directly in these cases.
 
 }
 \value{
@@ -90,7 +90,7 @@ The wrapper function was written by Robin Denz, the \code{ate} function (which t
 }
 
 \seealso{
-\code{\link{ate}}, \code{\link{CSC}}, \code{\link{coxph}}, \code{\link{glm}}
+\code{\link[riskRegression]{ate}}, \code{\link[riskRegression]{CSC}}, \code{\link{coxph}}, \code{\link{glm}}
 }
 \examples{
 \dontrun{

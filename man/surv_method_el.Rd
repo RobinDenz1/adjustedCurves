@@ -51,7 +51,7 @@ Further arguments passed to the \code{el.est} function inside of the \code{adjKM
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on the \code{adjKMtest} package. It can be installed using the \code{\link[devtools]{install_github}}} function from the official repository: <https://github.com/kimihua1995/adjKMtest>
+\item{\strong{Dependencies:} This method relies on the \code{adjKMtest} package. It can be installed using the \code{install_github} function in the \code{devtools} R-Package (See \code{?install_github}) from the official repository: <https://github.com/kimihua1995/adjKMtest>}
 }
 
 }

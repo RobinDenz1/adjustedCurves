@@ -61,9 +61,9 @@ WARUM KEIN BOOTSTRAP?
 Returns a \code{data.frame} object containing the estimated adjusted CIFs for \code{cause} at some points in time for each level of \code{variable}.
 }
 \references{
-Angela Winnett and Peter Sasieni. "Adjusted Nelson-Aalen Estimates with Retrospective Matching". In: Journal of the American Statistical Association 97.457 (2002), pp. 245-256.
+Peter C. Austin and Jason P. Fine. "Propensity-Score Matching with Competing Risks in Survival Analysis". In: Statistics in Medicine 38 (2019), pp. 751–777.
 
-Peter C. Austin, Neal Thomas, and Donald B. Rubin. "Covariate-Adjusted Survival Analyses in Propensity-Score Matched Samples: Imputing Potential Time-To-Event Outcomes". In: Statistical Methods in Medical Research 29.3 (2020), pp. 728-751.
+Alberto Abadie and Guido W. Imbens. "On the Failure of the Bootstrap for Matching Estimators". In: Econometrica 76.6 (2008), pp. 1537–1557.
 }
 \author{
 The wrapper function was written by Robin Denz, the \code{Match} function (which this wrapper is build around) was written by other people. See \code{?Match} for more details.

@@ -44,20 +44,20 @@ A numeric vector of time points at which the CIFs should be estimated or \code{N
 Whether to print estimation information of the \code{ate} function in the \code{riskRegression} package.
 }
   \item{...}{
-Further arguments passed to \code{ate}.
+Further arguments passed to \code{\link[riskRegression]{ate}}.
   }
 }
 \details{
 
 \itemize{
-\item{\strong{Type of Adjustment:} Requires a model describing the outcome mechanism. This must be a \code{\link{CSC}} model.}
+\item{\strong{Type of Adjustment:} Requires a model describing the outcome mechanism. This must be a \code{\link[riskRegression]{CSC}} model.}
 \item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
 \item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
 \item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on the \code{\link{riskRegression}} package.}
+\item{\strong{Dependencies:} This method relies on the \code{\link[riskRegression]{riskRegression}} package.}
 }
 
 This method works by executing the following steps: (1) First a model is fitted which describes the outcome mechanism (time-to-event). Next (2) multiple copies of the original dataset are created, one for each possible level of the \code{variable} of interest. (3) The \code{variable} is then set to one level for all observations in each dataset. (4) The model is used to predict the CIF at some points in time T for each observation in all dataset copies. (5) Those estimated probabilities are averaged for each dataset at each point in time, resulting in adjusted CIFs for all levels of the group variable at the specified points in time.
@@ -69,14 +69,16 @@ In the literature this method is sometimes also called "Corrected Group-Prognosi
 Returns a \code{data.frame} object containing the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
 }
 \references{
-OTHER STUFF
+Xu Zhang and Mei-Jie Zhang. "SAS Macros for Estimation of Direct Adjusted Cumulative Incidence Curves Under Proportional Subdistribution Hazards Models". In: Computer Methods and Programs in Biomedicine 101.1 (2011), pp. 87–93.
+
+Brice Maxime Hugues Ozenne, Thomas Harder Scheike, and Laila Staerk. "On the Estimation of Average Treatment Effects with Right-Censored Time to Event Outcome and Competing Risks". In: Biometrical Journal 62 (2020), pp. 751–763.
 }
 \author{
 The wrapper function was written by Robin Denz, the \code{ate} function (which this wrapper is build around) was written by other people. See \code{?ate} for more details.
 }
 
 \seealso{
-\code{\link{ate}}, \code{\link{CSC}}
+\code{\link[riskRegression]{ate}}, \code{\link[riskRegression]{CSC}}
 }
 \examples{
 \dontrun{

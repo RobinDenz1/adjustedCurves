@@ -9,7 +9,8 @@ This function can be used to calculate direct adjusted survival curves using pse
 }
 \usage{
 surv_method_direct_pseudo(data, variable, ev_time, event, times, outcome_vars,
-                          type_time="factor", spline_df=10)
+                          type_time="factor", spline_df=10, censoring_vars=NULL,
+                          ipcw_method="binder")
 }
 
 \arguments{
@@ -37,6 +38,12 @@ A character string specifying how the time should be modeled. See details.
   \item{spline_df}{
 The number of degrees of freedom used for the natural-spline or B-spline function. Ignored if \code{type_time="factor"}.
 }
+  \item{censoring_vars}{
+An optional character vector specifying variables in \code{data}. Those are used in the calculation of inverse probability of censoring weighted pseudo observations. See \code{?pseudo_aareg} for more information. Set to \code{NULL} (default) to use standard pseudo-values without corrections for dependent censoring instead.
+}
+  \item{ipcw_method}{
+The specific method used in the calculation of inverse probability of censoring weighted pseudo observations. Can be either \code{"binder"} (default) or \code{"hajek"}. See \code{?pseudo_aareg} for more information. Ignored if \code{censoring_vars=NULL}.
+}
 }
 \details{
 
@@ -48,7 +55,7 @@ The number of degrees of freedom used for the natural-spline or B-spline functio
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are not guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are not guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on the \code{geepack} and \code{\link{prodlim}} packages.}
+\item{\strong{Dependencies:} This method relies on the \code{geepack} and \code{\link[prodlim]{prodlim}} packages.}
 }
 
 This method works by executing the following steps: (1) First Pseudo-Values for the survival probabilities are estimated for each observation in the dataset and some points in time T. Afterwards (2) a new dataset is created in which every individual observation has multiple rows, one for each point in time of interest. (3) This dataset is used to fit a generalised estimating equations (geese) model, using the Pseudo-Values as independent variable. Next (4) multiple copies of the new dataset are created, one for each possible level of the \code{variable} of interest. (5) The \code{variable} is then set to one level for all observations in each dataset. (5) The \code{geese} model is used to predict the survival probabilities at some points in time T for each observation in all dataset copies. (6) Those estimated probabilities are averaged for each dataset at each point in time, resulting in adjusted survival probabilities for all levels of the group variable at the specified points in time.

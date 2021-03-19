@@ -169,7 +169,11 @@ read_from_step_function <- function(x, step_data, est="surv") {
   # otherwise get value
   check <- step_data[which(step_data$time <= x),]
   if (nrow(check)==0) {
-    val <- 1
+    if (est=="surv") {
+      val <- 1
+    } else {
+      val <- 0
+    }
   } else {
     val <- check[,est][which(check$time==max(check$time))][1]
   }
@@ -178,7 +182,7 @@ read_from_step_function <- function(x, step_data, est="surv") {
 
 ## calculate difference between two step functions
 ## according to some transformation function
-exact_stepfun_difference <- function(adjsurv, times) {
+exact_stepfun_difference <- function(adjsurv, times, est="surv") {
 
   levs <- unique(adjsurv$group)
   adjsurv_0 <- adjsurv[which(adjsurv$group==levs[1]),]
@@ -190,18 +194,23 @@ exact_stepfun_difference <- function(adjsurv, times) {
       surv_0 <- adjsurv_0$surv
       surv_1 <- adjsurv_1$surv
     } else {
-      surv_0 <- sapply(times, read_from_step_function, step_data=adjsurv_0)
-      surv_1 <- sapply(times, read_from_step_function, step_data=adjsurv_1)
+      surv_0 <- sapply(times, read_from_step_function, step_data=adjsurv_0,
+                       est=est)
+      surv_1 <- sapply(times, read_from_step_function, step_data=adjsurv_1,
+                       est=est)
     }
 
   } else {
-    surv_0 <- sapply(times, read_from_step_function, step_data=adjsurv_0)
-    surv_1 <- sapply(times, read_from_step_function, step_data=adjsurv_1)
+    surv_0 <- sapply(times, read_from_step_function, step_data=adjsurv_0,
+                     est=est)
+    surv_1 <- sapply(times, read_from_step_function, step_data=adjsurv_1,
+                     est=est)
   }
 
   surv_diff <- surv_1 - surv_0
 
-  diff_dat <- data.frame(time=times, surv=surv_diff)
+  diff_dat <- data.frame(time=times)
+  diff_dat[,est] <- surv_diff
 
   return(diff_dat)
 }
@@ -209,23 +218,27 @@ exact_stepfun_difference <- function(adjsurv, times) {
 ## calculate exact integral under step function
 # 'stepfun' needs to be a data.frame with columns 'time' and 'surv',
 # sorted by time with no duplicates in time
-exact_stepfun_integral <- function(stepfun, from, to) {
+exact_stepfun_integral <- function(stepfun, from, to, est="surv") {
 
   # constrain step function end
-  latest <- read_from_step_function(to, step_data=stepfun)
+  latest <- read_from_step_function(to, step_data=stepfun, est=est)
   stepfun <- stepfun[stepfun$time <= to,]
 
   if (!to %in% stepfun$time) {
-    stepfun <- rbind(stepfun, data.frame(time=to, surv=latest))
+    temp <- data.frame(time=to)
+    temp[,est] <- latest
+    stepfun <- rbind(stepfun, temp)
   }
 
   # constrain step function beginning
   if (from != 0) {
-    earliest <- read_from_step_function(from, step_data=stepfun)
+    earliest <- read_from_step_function(from, step_data=stepfun, est=est)
     stepfun <- stepfun[stepfun$time >= from,]
 
     if (!from %in% stepfun$time) {
-      stepfun <- rbind(data.frame(time=from, surv=earliest), stepfun)
+      temp <- data.frame(time=from)
+      temp[,est] <- earliest
+      stepfun <- rbind(temp, stepfun)
     }
 
   }
@@ -242,7 +255,7 @@ exact_stepfun_integral <- function(stepfun, from, to) {
   for (i in 1:(length(stepfun$time)-1)) {
     x1 <- stepfun$time[i]
     x2 <- stepfun$time[i+1]
-    y <- stepfun$surv[i]
+    y <- stepfun[,est][i]
     rect_area <- (x2 - x1) * y
     integral <- integral + rect_area
   }
@@ -256,7 +269,169 @@ multi_result_class <- function(boot_data=NULL, boot_data_same_t=NULL) {
     boot_data_same_t = boot_data_same_t
   )
 
-  ## Set the name for the class
   class(me) <- append(class(me),"multiResultClass")
   return(me)
+}
+
+## redefine 'timepoints' from survtmle to fix a bug in there
+survtmle.timepoints <- function(object, times, returnModels=FALSE,
+                                SL.trt, SL.ctime, SL.ftime,
+                                glm.trt, glm.ctime, glm.ftime) {
+
+  if (is.null(object$trtMod)) {
+    stop("object must have returnModels = TRUE")
+  }
+
+  callList <- as.list(object$call)[-1]
+  cglm <- any(class(object$ctimeMod) %in% c("glm", "speedglm")) |
+    any(class(object$ctimeMod) == "noCens")
+
+  tglm <- any(class(object$trtMod) %in% c("glm", "speedglm"))
+  ftglm <- ifelse(callList$method == "hazard",
+                  any(class(object$ftimeMod[[1]]) %in% c(
+                    "glm",
+                    "speedglm"
+                  )), FALSE
+  )
+
+  myOpts <- c(
+    "t0", "returnModels",
+    ifelse(cglm, "glm.ctime", "SL.ctime"),
+    ifelse(tglm, "glm.trt", "SL.trt")
+  )
+  if (callList$method == "hazard") {
+    myOpts <- c(myOpts, ifelse(ftglm, "glm.ftime", "SL.ftime"))
+  }
+  funOpts <- callList[-which(names(callList) %in% myOpts)]
+
+  funOpts$returnModels <- returnModels
+  # used glm for censoring?
+  if (cglm) {
+    funOpts$glm.ctime <- object$ctimeMod
+    funOpts$SL.ctime <- NULL
+  } else {
+    funOpts$SL.ctime <- object$ctimeMod
+  }
+  # used glm for trt?
+  if (tglm) {
+    funOpts$glm.trt <- object$trtMod
+  } else {
+    funOpts$SL.trt <- object$trtMod
+  }
+  # used glm for ftime
+  if (ftglm & callList$method == "hazard") {
+    funOpts$glm.ftime <- object$ftimeMod
+  } else if (!ftglm & callList$method == "hazard") {
+    funOpts$SL.ftime <- object$ftimeMod
+  }
+  # add in failure times, types, trt, and adjust
+  funOpts$ftime <- object$ftime
+  funOpts$ftype <- object$ftype
+  funOpts$trt <- object$trt
+  funOpts$adjustVars <- object$adjustVars
+
+  outList <- vector(mode = "list", length = length(times))
+  ct <- 0
+  for (i in times) {
+    ct <- ct + 1
+    funOpts$t0 <- i
+    if (all(object$ftime[object$ftype > 0] > i)) {
+      outList[[ct]] <- list(
+        est = rep(0, length(object$est)),
+        var = matrix(
+          NA,
+          nrow = length(object$est),
+          ncol = length(object$est)
+        )
+      )
+    } else {
+      if (i != object$t0) {
+        outList[[ct]] <- do.call("survtmle", args = funOpts)
+      } else {
+        outList[[ct]] <- object
+      }
+    }
+  }
+  names(outList) <- paste0("t", times)
+  class(outList) <- "tp.survtmle"
+  return(outList)
+}
+
+## calculate pseudo values for the survival function
+## using either the standard way or with dependent censoring
+calc_pseudo_surv <- function(data, ev_time, event, times, censoring_vars,
+                             ipcw.method) {
+
+  # standard pseudo-values, no dependent censoring
+  if (is.null(censoring_vars)) {
+
+    # estimate pseudo observations
+    hist_formula <- stats::as.formula(paste("prodlim::Hist(", ev_time, ", ",
+                                            event, ") ~ 1"))
+    pseudo <- prodlim::jackknife(prodlim::prodlim(hist_formula, data=data),
+                                 times=times)
+
+  } else {
+
+    requireNamespace("eventglm")
+
+    cens_formula <- stats::as.formula(paste0("~ ", paste(censoring_vars,
+                                                         collapse=" + ")))
+    pseudo_formula <- stats::as.formula(paste0("survival::Surv(", ev_time,
+                                               ", ", event, ") ~ 1"))
+
+    pseudo <- sapply(times, FUN=eventglm::pseudo_aareg,
+                     formula=pseudo_formula,
+                     cause=1,
+                     data=data,
+                     type="survival",
+                     formula.censoring=cens_formula,
+                     ipcw.method=ipcw.method)
+
+  }
+  return(pseudo)
+}
+
+## function to model treatment assignment using SuperLearner
+get_SL_ps_score <- function(data, variable, treatment_vars, SL.trt,
+                            cv_folds) {
+
+  # build prediction model
+  form <- paste0("~", paste0(treatment_vars, collapse=" + "))
+  SL_dat <- as.data.frame(stats::model.matrix(stats::as.formula(form),
+                                              data=data[,treatment_vars]))
+  SL_dat$`(Intercept)` <- NULL
+  sl_fit <- SuperLearner::SuperLearner(Y=data[,variable], X=SL_dat, newX=NULL,
+                                       family="binomial", SL.library=SL.trt,
+                                       control=list(saveFitLibrary=TRUE),
+                                       cvControl=list(V=cv_folds))
+
+  # estimate propensity score
+  ps_score <- SuperLearner::predict.SuperLearner(sl_fit,
+                                                 newdata=data,
+                                                 X=SL_dat,
+                                                 Y=data[,variable])$pred
+
+  return(ps_score)
+}
+
+## calculating the variance of tmle_pseudo point estimates
+tmle_pseudo_var <- function(Y, A, ps_score, Qstar, n) {
+
+  QA <- ifelse(A==0, Qstar[,1], Qstar[,2])
+
+  mu_0 <- mean(Qstar[,1])
+  mu_1 <- mean(Qstar[,2])
+
+  g0W <- 1 - ps_score
+  g1W <- ps_score
+
+  # efficient influence curve estimates
+  IC_0 <- (1-A)/g0W * (Y - QA) + Qstar[,1] - mu_0
+  IC_1 <- A/g1W * (Y - QA) + Qstar[,2] - mu_1
+
+  # variance approximations using the ICs
+  return(c(var_0=stats::var(IC_0)/n,
+           var_1=stats::var(IC_1)/n))
+
 }

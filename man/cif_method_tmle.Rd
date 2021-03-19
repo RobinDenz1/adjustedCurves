@@ -83,14 +83,14 @@ Returns a \code{data.frame} object containing the estimated adjusted CIFs for \c
 \references{
 Megan S. Schuler and Sherri Rose. "Targeted Maximum Likelihood Estimation for Causal Inference in Observational Studies". In: American Journal of Epidemiology 186.1 (2017), pp. 65-73.
 
-
+David Benkeser, Marco Carone, and Peter B. Gilbert. "Improved Estimation of the Cumulative Incidence of Rare Outcomes". In: Statistics in Medicine 37.2 (2018), pp. 280–293.
 }
 \author{
 The wrapper function was written by Robin Denz, the \code{survtmle} package (which this wrapper is based on) was written by David Benkeser and Nima Hejazi. See \code{?survtmle} for more details.
 }
 
 \seealso{
-\code{\link{survtmle}}, \code{\link[SuperLearner]{SuperLearner}}, \code{\link{glm}}
+\code{\link[survtmle]{survtmle}}, \code{\link[SuperLearner]{SuperLearner}}, \code{\link{glm}}
 }
 \examples{
 \dontrun{

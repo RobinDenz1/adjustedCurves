@@ -65,7 +65,7 @@ Further arguments passed to \code{WeightIt}.
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are not guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are not guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on the \code{\link{prodlim}} package. The \code{WeightIt} package is also required if \code{treatment_model} is a formula object.}
+\item{\strong{Dependencies:} This method relies on the \code{\link[prodlim]{prodlim}} package. The \code{WeightIt} package is also required if \code{treatment_model} is a formula object.}
 }
 
 Adjusted CIFs are calculated by first estimating appropriate case-weights for each observation in \code{data}. This can be done using inverse probability of treatment weights using the propensity score (usually estimated using a logistic regression model) or by some other method (see \code{?weightit}). Pseudo-Values of the cause-specific CIF are then calculated for every observation in \code{data} at some points in time \eqn{T}. Since Pseudo-Values bypass the problem of censoring, a simple weighted average of the Pseudo-Values can be taken for every \eqn{T}. See Andersen et al. (2017) for more details on this method and Andersen and Perme (2010) for more information on Pseudo-Values in general.
@@ -96,7 +96,7 @@ Robin Denz
 }
 
 \seealso{
-\code{\link{WeightIt}}, \code{\link{prodlim}}
+\code{\link[WeightIt]{WeightIt}}, \code{\link[prodlim]{prodlim}}
 }
 \examples{
 \dontrun{
