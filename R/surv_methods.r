@@ -765,6 +765,7 @@ surv_ostmle <- function(data, variable, ev_time, event, conf_int,
 }
 
 ## Targeted Maximum Likelihood Estimator based on Pseudo-Values
+#' @export
 surv_tmle_pseudo <- function(data, variable, ev_time, event,
                              conf_int, conf_level=0.95, times,
                              outcome_vars, treatment_vars=NULL,

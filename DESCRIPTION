@@ -23,5 +23,6 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports: dplyr, ggplot2, R.utils, rlang, survival, stats, utils, doParallel, doRNG, foreach
 Suggests: 
-    testthat (>= 3.0.0), Matching, WeightIt, prodlim, survtmle, MOSS, adjKMtest, riskRegression, geepack, nnet, splines, cmprsk, eventglm (>= 1.1.1), tmle, SuperLearner, pammtools
+    testthat (>= 3.0.0), Matching, WeightIt, prodlim, survtmle, MOSS, adjKMtest, riskRegression, geepack, nnet, splines, cmprsk, eventglm (>= 1.1.1), tmle, SuperLearner, pammtools, knitr, rmarkdown
 Config/testthat/edition: 3
+VignetteBuilder: knitr

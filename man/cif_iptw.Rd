@@ -48,7 +48,7 @@ Either \code{NULL} to make no adjustments for dependent censoring, or a \code{co
 Whether to print estimation information of the \code{ate} function in the \code{riskRegression} package.
   }
   \item{...}{
-Further arguments passed to \code{WeightIt}.
+Further arguments passed to \code{\link[riskRegression]{ate}}.
   }
 }
 \details{
@@ -64,7 +64,10 @@ Further arguments passed to \code{WeightIt}.
 \item{\strong{Dependencies:} This method relies on the \code{\link[riskRegression]{riskRegression}} package}
 }
 
-Adjusted CIFs are calculated by first estimating appropriate case-weights for each observation in \code{data}. HIER MORE. A more detailed description can be found in Neumann et al. (2016) and Ozenne et al. (2020).
+Adjusted CIFs are calculated by first estimating appropriate case-weights for each observation in \code{data}. Those weights are used in a weighted version of the Aalen-Johansen estimator. If the weights are correctly estimated the resulting estimates will be unbiased. A more detailed description can be found in Neumann et al. (2016), Choi et al. (2019). By utilizing another set of weights, this function can also correct the estimates for covariate-dependent censoring (Ozenne et al. 2020). Asymptotic variance calculations are based on the efficient influence curve.
+
+Internally, this function simply calls the \code{\link[riskRegression]{ate}} function with appropriate arguments. The three-dot syntax can be used to pass further arguments to that function. It is however recommened to use the \code{\link[riskRegression]{ate}} function directly when specific settings are required.
+
 }
 \value{
 Returns a \code{data.frame} object containing the estimated adjusted CIFs for some points in time for each level of \code{variable}.
@@ -77,7 +80,7 @@ Sangbum Choi, Chaewon Kim, Hua Zhong, Eun-Seok Ryu, and SungWon Han. "Adjusted-C
 Brice Maxime Hugues Ozenne, Thomas Harder Scheike, and Laila Staerk. "On the Estimation of Average Treatment Effects with Right-Censored Time to Event Outcome and Competing Risks". In: Biometrical Journal 62 (2020), pp. 751–763.
 }
 \author{
-Robin Denz
+The wrapper function was written by Robin Denz, the \code{\link[riskRegression]{ate}} function itself was written by other people. See \code{?ate} for more information.
 }
 
 \seealso{

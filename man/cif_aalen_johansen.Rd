@@ -30,19 +30,19 @@ A character string specifying the numeric event indicator. The censoring indicat
 The cause of interest for which the cumulative incidence functions should be calculated. Should be a number that appears in the \code{event} column of \code{data}.
   }
   \item{conf_int}{
-A logical variable, indicating whether the asymptotic variances and confidence intervals of the CIFs should be calculated. For the available types of confidence intervals see \code{?survfit}.
+A logical variable, indicating whether the asymptotic variances and confidence intervals of the CIFs should be calculated. For the available types of confidence intervals see \code{?cuminc}.
   }
   \item{conf_level}{
 A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
   }
   \item{...}{
-Further arguments passed to \code{survfit}.
+Further arguments passed to \code{\link[cmprsk]{cuminc}}.
   }
 }
 \details{
 
 \itemize{
-\item{\strong{Type of Adjustment:} NO adjustments are made. This is just a stratified Nelson-Aalen estimator.}
+\item{\strong{Type of Adjustment:} NO adjustments are made. This is just a stratified Aalen-Johansen estimator.}
 \item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
 \item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
 \item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
@@ -52,15 +52,17 @@ Further arguments passed to \code{survfit}.
 \item{\strong{Dependencies:} This method relies on the the \code{cmprsk} package.}
 }
 
+This function is just a convenient wrapper around the \code{\link[cmprsk]{cuminc}} function. See \code{?cuminc} or the cited literature for more details.
+
 }
 \value{
 Returns a \code{data.frame} object containing the estimated CIFs for some points in time for each level of \code{variable}.
 }
 \references{
-NEW STUFF
+Odd O. Aalen and Søren Johansen. "An Empirical Transition Matrix for Non-Homogeneous Markov Chains Based on Censored Observations". In: Scandinavian Journal of Statistics 5.3 (1978), pp. 141–150.
 }
 \author{
-The wrapper function was written by Robin Denz, the \code{cumin} function (which this wrapper is build around) was written by other people. See \code{?cuminc} for more details.
+The wrapper function was written by Robin Denz, the \code{cuminc} function (which this wrapper is build around) was written by other people. See \code{?cuminc} for more details.
 }
 
 \seealso{
@@ -68,7 +70,7 @@ The wrapper function was written by Robin Denz, the \code{cumin} function (which
 }
 \examples{
 \dontrun{
-library(survival)
+library(cmprsk)
 
 # simulate some data as example
 sim_dat <- sim_confounded_surv(n=500, max_t=1.2)

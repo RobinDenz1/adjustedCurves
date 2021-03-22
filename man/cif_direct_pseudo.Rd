@@ -56,7 +56,7 @@ The number of degrees of freedom used for the natural-spline or B-spline functio
 
 This method works by executing the following steps: (1) First Pseudo-Values for the cause-specific cumulartive incidence function are estimated for each observation in the dataset and some points in time T. Afterwards (2) a new dataset is created in which every individual observation has multiple rows, one for each point in time of interest. (3) This dataset is used to fit a generalised estimating equations (geese) model, using the Pseudo-Values as independent variable. Next (4) multiple copies of the new dataset are created, one for each possible level of the \code{variable} of interest. (5) The \code{variable} is then set to one level for all observations in each dataset. (5) The \code{geese} model is used to predict the CIF at some points in time T for each observation in all dataset copies. (6) Those estimated probabilities are averaged for each dataset at each point in time, resulting in adjusted CIFs for all levels of the group variable at the specified points in time.
 
-It is essentially the same procedure as desribed in \code{\link[=cif_direct]{"direct"}}. The only difference is that instead of relying on a \code{CauseSpecificCox} model, this method uses Pseudo-Values and a geese model.
+It is essentially the same procedure as desribed in \code{\link[=cif_direct]{"direct"}}. The only difference is that instead of relying on a \code{\link[riskRegression]{CSC}} model, this method uses Pseudo-Values and a geese model.
 
 When estimating the \code{geese} model the \code{ev_time} variable is used as a factor by default. This results in one coefficient being estimated for each unique point in time, which can be very slow computationally if there are a lot of unique points in time and/or the dataset has many rows. In these cases it is recommended to use \code{type_time="bs"} or \code{type_time="ns"}, which results in the \code{ev_time} being modeled using B-Splines or Natural Splines. Simulation studies indicate that there is little difference in the estimates when an appropriately large number of \code{spline_df} is used.
 }
@@ -75,7 +75,7 @@ Robin Denz
 }
 
 \seealso{
-\code{\link[geepack]{geese}}, \code{\link[prodlim]{jackknife}}, \code{\link[splines]{ns}}, \code{\link[splines]{bs}}
+\code{\link[geepack]{geese}}, \code{\link[prodlim]{jackknife}}, \code{\link[splines]{ns}}, \code{\link[splines]{bs}}, \code{\link[riskRegression]{CSC}}
 }
 \examples{
 \dontrun{

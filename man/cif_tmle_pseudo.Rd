@@ -1,0 +1,112 @@
+\name{cif_tmle_pseudo}
+\alias{cif_tmle_pseudo}
+
+\title{
+Adjusted CIFs using Targeted Maximum Likelihood Estimation based on Pseudo-Values
+}
+\description{
+Calculate cause-specific confounder-adjusted CIFs using a standard targeted maximum likelihood estimator for continuous outcomes for right-censored competing-risks data using pseudo-values.
+}
+\usage{
+cif_tmle_pseudo(data, variable, ev_time, event, cause, conf_int,
+                conf_level=0.95, times, outcome_vars,
+                treatment_vars=NULL, SL.trt=NULL, SL.ftime=NULL,
+                treatment_model=NULL, cv_folds=5, ...)
+}
+
+\arguments{
+  \item{data}{
+A \code{data.frame} object containing the needed time-to-event data in standard format.
+}
+  \item{variable}{
+A character string specifying the variable by which the CIFs should be grouped. Must be a valid columname of \code{data}.
+}
+  \item{ev_time}{
+A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid columname of \code{data}.
+}
+  \item{event}{
+A character string specifying the numeric event indicator. The censoring indicator should be coded as 0 and all other events of interest as 1, 2, etc. Must be a valid columname of \code{data}.
+}
+  \item{cause}{
+The cause of interest for which the cumulative incidence functions should be calculated. Should be a number that appears in the \code{event} column of \code{data}.
+  }
+  \item{conf_int}{
+A logical variable, indicating whether the asymptotic variances and confidence intervals of the CIFs should be calculated.
+  }
+  \item{conf_level}{
+A number specifying the confidence level of asymptotic confidence intervals.
+  }
+  \item{times}{
+A numeric vector of time points at which the CIFs should be estimated.
+}
+  \item{outcome_vars}{
+A character vector of column names in \code{data}, specifying the variables which should be used when modeling the outcome mechanism using \code{SuperLearner}. The columns specified by \code{variable} and \code{ev_time} are included by default and therefore do not have to be mentioned in this argument.
+}
+  \item{treatment_vars}{
+An optional chracter vector of column names in \code{data}, specifying the variables which should be used when modeling the treatment assignment using \code{SuperLearner}. Alternatively, a \code{glm} model or a vector of previously estimated propensity scores can be supplied to the \code{treatment_model} argument. If both are defined, \code{treatment_model} is used.
+}
+  \item{SL.trt}{
+A character vector or list specification to be passed to the \code{SL.library} option in the call to \code{SuperLearner} for the outcome regression. See \code{?SuperLearner} for more information on how to specify valid \code{SuperLearner} libraries.
+}
+  \item{SL.ftime}{
+A character vector or list specification to be passed to the \code{SL.library} option in the call to \code{SuperLearner} for the treatment assignment regression. See \code{?SuperLearner} for more information on how to specify valid \code{SuperLearner} libraries.
+}
+  \item{treatment_model}{
+Must be either a \code{glm} model object with \code{variable} as response variable or a numeric vector of propensity scores. Alternatively, the arguments \code{SL.trt} and \code{treatment_vars} can be specified to estimate propensity scores using \code{SuperLearner}. See details and examples.
+}
+  \item{cv_folds}{
+The number of cross-validation folds to be used when estimating the models using \code{SuperLearner}.
+}
+  \item{...}{
+Further arguments passed to \code{tmle}.
+  }
+}
+\details{
+
+\itemize{
+\item{\strong{Type of Adjustment:} Adjustments are made based on the treatment assignment mechanism and the outcome mechanism. No models can be suppliedfor the outcome mechanism. The adjustments are made based on \code{\link[SuperLearner]{SuperLearner}} libraries. For the treatment assignment, either a \code{glm} model or \code{\link[SuperLearner]{SuperLearner}} can be used.}
+\item{\strong{Doubly-Robust:} Estimates are Doubly-Robust.}
+\item{\strong{Categorical groups:} Currently only two groups in \code{variable} are allowed. Must be an integer variable only containing 0 and 1.}
+\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
+\item{\strong{Allowed Time Values:} In contrast to the other TMLE based methods, this method allows both integer time and continuous times.}
+\item{\strong{Bounded Estimates:} Estimates are not guaranteed to be bounded in the 0 to 1 probability range.}
+\item{\strong{Monotone Function:} Estimates are not guaranteed to be monotone.}
+\item{\strong{Dependencies:} This method relies on the \code{tmle} and \code{SuperLearner} packages.}
+}
+
+# TODO: Description of this method
+
+}
+\value{
+Returns a \code{data.frame} object containing the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
+}
+\references{
+# TODO: References
+}
+\author{
+Robin Denz
+}
+
+\seealso{
+\code{\link[tmle]{tmle}}, \code{\link[SuperLearner]{SuperLearner}}
+}
+\examples{
+\dontrun{
+library(survival)
+
+# simulate some data as example
+sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat$group <- as.factor(sim_dat$group)
+
+# TODO: Add examples
+}
+}
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory (show via RShowDoc("KEYWORDS")):
+% \keyword{ ~kwd1 }
+% \keyword{ ~kwd2 }
+% Use only one keyword per line.
+% For non-standard keywords, use \concept instead of \keyword:
+% \concept{ ~cpt1 }
+% \concept{ ~cpt2 }
+% Use only one concept per line.

@@ -473,3 +473,149 @@ cif_tmle <- function(data, variable, ev_time, event, cause, conf_int,
 
   return(plotdata)
 }
+
+## Targeted Maximum Likelihood Estimator based on Pseudo-Values
+#' @export
+cif_tmle_pseudo <- function(data, variable, ev_time, event, cause,
+                            conf_int, conf_level=0.95, times,
+                            outcome_vars, treatment_vars=NULL,
+                            SL.trt=NULL, SL.ftime=NULL,
+                            treatment_model=NULL, cv_folds=5, ...) {
+
+  # estimate propensity score just once,
+  # cause it's always the same
+  if (!is.null(treatment_model)) {
+    ps_score <- treatment_model$fitted.values
+  } else if (!is.null(SL.trt)) {
+    ps_score <- get_SL_ps_score(data=data,
+                                variable=variable,
+                                treatment_vars=treatment_vars,
+                                SL.trt=SL.trt,
+                                cv_folds=cv_folds)
+  } else if (is.numeric(ps_score)){
+    if (any(ps_score >= 1) | any(ps_score <= 0)) {
+      stop("Only valid propensity scores < 1 and > 0 are allowed when",
+           " directly supplied.")
+    }
+  } else {
+    stop("Either 'treatment_model' or 'SL.trt' and 'treatment_vars' has to",
+         " be defined. See documentation.")
+  }
+
+  # estimate pseudo observations
+  hist_formula <- stats::as.formula(paste("prodlim::Hist(", ev_time, ", ",
+                                          event, ") ~ 1"))
+  pseudo <- prodlim::jackknife(prodlim::prodlim(hist_formula, data=data),
+                               times=times, cause=cause)
+
+  # some constants
+  len <- length(times)
+  n <- nrow(data)
+  group <- data[,variable]
+
+  # create long form data
+  Sdata <- data.frame(yi=c(pseudo),
+                      group=rep(group, len),
+                      vtime=factor(rep(times, rep(n, len))),
+                      id=rep(1:n, len))
+
+  # to make sure that "group" isn't included twice
+  outcome_vars <- outcome_vars[outcome_vars != variable]
+  for (col in outcome_vars) {
+    Sdata[,col] <- rep(data[,col], len)
+  }
+
+  # TODO: not good, NA removal
+  Sdata <- stats::na.omit(Sdata)
+
+  # don't use time in prediction model if there is
+  # only one point in time of interest
+  if (len==1) {
+    covars <- c(outcome_vars, "group")
+  } else {
+    covars <- c(outcome_vars, "group", "vtime")
+  }
+
+  # build prediction model
+  form <- paste0("~", paste0(covars, collapse=" + "))
+  SL_dat <- as.data.frame(stats::model.matrix(stats::as.formula(form),
+                                              data=Sdata[,covars]))
+  SL_dat$`(Intercept)` <- NULL
+  sl_fit <- SuperLearner::SuperLearner(Y=Sdata$yi, X=SL_dat, newX=NULL,
+                                       family="gaussian", SL.library=SL.ftime,
+                                       control=list(saveFitLibrary=TRUE),
+                                       cvControl=list(V=cv_folds))
+
+  # initial estimate of Q-portion of the likelihood
+  Sdata_temp <- SL_dat
+  Sdata_temp$group <- 0
+  sl_pred_0 <- SuperLearner::predict.SuperLearner(sl_fit,
+                                                  newdata=Sdata_temp,
+                                                  X=SL_dat,
+                                                  Y=Sdata$yi)$pred
+  Sdata_temp$group <- 1
+  sl_pred_1 <- SuperLearner::predict.SuperLearner(sl_fit,
+                                                  newdata=Sdata_temp,
+                                                  X=SL_dat,
+                                                  Y=Sdata$yi)$pred
+  Q <- data.frame(sl_pred_0, sl_pred_1)
+
+  # run TMLE for all time points
+  plotdata <- vector(mode="list", length=len)
+  for (i in 1:len) {
+
+    # pseudo values
+    Y <- Sdata$yi[Sdata$vtime==times[i]]
+
+    # if all the same, take that value instead
+    if (length(unique(Y))==1) {
+      est_0 <- Y[1]
+      est_1 <- Y[1]
+    } else {
+      # get TMLE object
+      tmle_t  <- tmle::tmle(Y=Y,
+                            A=Sdata$group[Sdata$vtime==times[i]],
+                            W=Sdata[,outcome_vars][Sdata$vtime==times[i],],
+                            g.SL.library=SL.trt,
+                            g1W=ps_score,
+                            Q=Q[Sdata$vtime==times[i],],
+                            ...)
+
+      # take mean of final Q predictions
+      est_0 <- mean(tmle_t$Qstar[,1])
+      est_1 <- mean(tmle_t$Qstar[,2])
+    }
+
+    temp <- data.frame(time=c(times[i], times[i]),
+                       cif=c(est_0, est_1),
+                       group=c(0, 1))
+
+    # calculate variance using an asymptotic estimator, based on the
+    # efficient influence curve
+    if (conf_int & length(unique(Y)) > 1) {
+      vars <- tmle_pseudo_var(Y=Y,
+                              A=Sdata$group[Sdata$vtime==times[i]],
+                              ps_score=ps_score,
+                              Qstar=tmle_t$Qstar,
+                              n=nrow(data))
+      temp$se <- sqrt(vars)
+
+    }
+    plotdata[[i]] <- temp
+  }
+
+  plotdata <- as.data.frame(dplyr::bind_rows(plotdata))
+
+  # calculate confidence intervals from asymptotic variance
+  if (conf_int) {
+
+    # TODO: check if this is valid
+    cif_cis <- confint_surv(surv=plotdata$cif, se=plotdata$se,
+                            conf_level=conf_level, conf_type="plain")
+    plotdata$ci_lower <- cif_cis$left
+    plotdata$ci_upper <- cif_cis$right
+
+  }
+
+  return(plotdata)
+}
