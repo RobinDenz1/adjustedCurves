@@ -1,5 +1,5 @@
-\name{surv_method_tmle_pseudo}
-\alias{surv_method_tmle_pseudo}
+\name{surv_tmle_pseudo}
+\alias{surv_tmle_pseudo}
 
 \title{
 Adjusted Survival Curves using Targeted Maximum Likelihood Estimation based on Pseudo-Values
@@ -8,11 +8,11 @@ Adjusted Survival Curves using Targeted Maximum Likelihood Estimation based on P
 Calculate confounder-adjusted survival curves using a standard targeted maximum likelihood estimator for continuous outcomes for right-censored data using pseudo-values.
 }
 \usage{
-surv_method_tmle_pseudo(data, variable, ev_time, event, conf_int,
-                        conf_level=0.95, times, outcome_vars,
-                        treatment_vars=NULL, SL.trt=NULL, SL.ftime=NULL,
-                        treatment_model=NULL, cv_folds=5, censoring_vars=NULL,
-                        ipcw_method="binder", ...)
+surv_tmle_pseudo(data, variable, ev_time, event, conf_int,
+                 conf_level=0.95, times, outcome_vars,
+                 treatment_vars=NULL, SL.trt=NULL, SL.ftime=NULL,
+                 treatment_model=NULL, cv_folds=5, censoring_vars=NULL,
+                 ipcw_method="binder", ...)
 }
 
 \arguments{
@@ -35,7 +35,7 @@ A logical variable, indicating whether the asymptotic variances and confidence i
 A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
   }
   \item{times}{
-A numeric vector of time points at which the survival probability should be estimated or.
+A numeric vector of time points at which the survival probability should be estimated.
 }
   \item{outcome_vars}{
 A character vector of column names in \code{data}, specifying the variables which should be used when modeling the outcome mechanism using \code{SuperLearner}. The columns specified by \code{variable} and \code{ev_time} are included by default and therefore do not have to be mentioned in this argument.
@@ -80,12 +80,15 @@ Further arguments passed to \code{tmle}.
 
 # TODO: Description of this method
 
+Additionally, covariate-dependent censoring can be corrected for using inverse probability of censoring weighted pseudo-values (Binder et al. 2014) instead of regular pseudo-values (specified using the \code{censoring_vars} and \code{ipcw_method} arguments).
 }
 \value{
 Returns a \code{data.frame} object containing the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
 }
 \references{
 # TODO: References
+
+Nadine Binder, Thomas A. Gerds, and Per Kragh Andersen. "Pseudo-Observations for Competing Risks with Covariate Dependent Censoring". In: Lifetime Data Analysis 20 (2014), pp. 303–315.
 }
 \author{
 Robin Denz

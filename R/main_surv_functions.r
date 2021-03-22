@@ -31,7 +31,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
   levs <- unique(data[,variable])
 
   # get relevant surv_method function
-  surv_fun <- get(paste0("surv_method_", method))
+  surv_fun <- get(paste0("surv_", method))
 
   # bootstrap the whole procedure, can be useful to get sd, p-values
   if (bootstrap) {
@@ -119,6 +119,7 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
 
   indices <- sample(x=rownames(data), size=nrow(data), replace=T)
   boot_samp <- data[indices,]
+  # IMPORTANT: keeps SL in tmle methods from failing
   row.names(boot_samp) <- 1:nrow(data)
 
   # if event specific times are used, use event specific times

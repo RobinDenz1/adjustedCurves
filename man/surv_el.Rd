@@ -1,5 +1,5 @@
-\name{surv_method_el}
-\alias{surv_method_el}
+\name{surv_el}
+\alias{surv_el}
 
 \title{
 Empirical Likelihood Estimation Survival Curves
@@ -8,8 +8,8 @@ Empirical Likelihood Estimation Survival Curves
 This method utilizes the empirical likelihood estimation methodology to calculate adjusted survival curves. Neither outcome nor treatment assignment models are required for this function to work. Since the exact form of both mechanisms are left unspecified, it is more robust to model misspecification than IPTW or direct adjustment. See details for more information.
 }
 \usage{
-surv_method_el(data, variable, ev_time, event, times, treatment_vars,
-               moment="first", standardize=F, ...)
+surv_el(data, variable, ev_time, event, times, treatment_vars,
+        moment="first", standardize=F, ...)
 }
 
 \arguments{
@@ -26,7 +26,7 @@ A character string specifying the variable indicating the time-to-event or time-
 A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
 }
   \item{times}{
-Method used in \code{WeightIt} function call. Ignored if \code{treatment_model} is not a formula object.
+A numeric vector of time points at which the survival probability should be estimated.
 }
   \item{treatment_vars}{
 A character vector of column names specifying variables to be used as covariates in the empirical likelihood estimation. See details and examples.

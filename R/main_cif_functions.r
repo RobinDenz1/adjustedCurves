@@ -31,7 +31,7 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
   levs <- unique(data[,variable])
 
   # get relevant cif_method function
-  cif_fun <- get(paste0("cif_method_", method))
+  cif_fun <- get(paste0("cif_", method))
 
   # bootstrap the whole procedure, can be useful to get sd, p-values
   if (bootstrap) {
@@ -119,6 +119,8 @@ adjustedcif_boot <- function(data, variable, ev_time, event, cause, method,
 
   indices <- sample(x=rownames(data), size=nrow(data), replace=T)
   boot_samp <- data[indices,]
+  # IMPORTANT: keeps SL in tmle methods from failing
+  row.names(boot_samp) <- 1:nrow(data)
 
   # if event specific times are used, use event specific times
   # in bootstrapping as well

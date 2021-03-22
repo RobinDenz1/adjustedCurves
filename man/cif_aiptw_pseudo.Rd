@@ -1,5 +1,5 @@
-\name{cif_method_aiptw_pseudo}
-\alias{cif_method_aiptw_pseudo}
+\name{cif_aiptw_pseudo}
+\alias{cif_aiptw_pseudo}
 
 \title{
 Augmented Inverse Probability of Treatment Weighted CIFs using Pseudo-Values
@@ -8,10 +8,9 @@ Augmented Inverse Probability of Treatment Weighted CIFs using Pseudo-Values
 Function to calculate augmented inverse probability of treatment weighted CIFs using pseudo-values in a competing risks setting. Instead of only modeling the outcome mechanism or the treatment assignment mechanism, both kind of models are required to use this method. If either of those models are correctly specified, unbiased estimates will be obtained. Both the outcome and treatment assignment part are modeled using pseudo-values. See details for more information.
 }
 \usage{
-cif_method_aiptw_pseudo(data, variable, ev_time, event, cause, conf_int,
-                        conf_level=0.95, times, outcome_vars,
-                        treatment_model, type_time="factor",
-                        spline_df=10)
+cif_aiptw_pseudo(data, variable, ev_time, event, cause, conf_int,
+                 conf_level=0.95, times, outcome_vars,
+                 treatment_model, type_time="factor", spline_df=10)
 }
 
 \arguments{
@@ -37,7 +36,7 @@ A logical variable, indicating whether the asymptotic variances and confidence i
 A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
   }
   \item{times}{
-A numeric vector of time points at which the CIFs should be estimated or \code{NULL}. If \code{NULL} the CIFs are estimated at all points in time at which an event occured.
+A numeric vector of time points at which the CIFs should be estimated.
 }
   \item{outcome_vars}{
 A character vector of column names specifying variables to be used when modeling the outcome mechanism using \code{geese}. See details and examples.
@@ -55,7 +54,7 @@ The number of degrees of freedom used for the natural-spline or B-spline functio
 \details{
 
 \itemize{
-\item{\strong{Type of Adjustment:} Requires a treatment assignment model (\code{\link{glm}} or \code{\link{multinom}}) and a character vector of variable names used to model the outcome mechanism (internally uses \code{\link[geepack]{geese}}). In contrast to the \code{\link[=cif_method_aiptw]{"aiptw"}} method this function does not allow for dependent censoring.}
+\item{\strong{Type of Adjustment:} Requires a treatment assignment model (\code{\link{glm}} or \code{\link{multinom}}) and a character vector of variable names used to model the outcome mechanism (internally uses \code{\link[geepack]{geese}}). In contrast to the \code{\link[=cif_aiptw]{"aiptw"}} method this function does not allow for dependent censoring.}
 \item{\strong{Doubly-Robust:} Estimates are Doubly-Robust.}
 \item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
 \item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
@@ -65,7 +64,7 @@ The number of degrees of freedom used for the natural-spline or B-spline functio
 \item{\strong{Dependencies:} This method relies on the \code{geepack} and \code{\link[prodlim]{prodlim}} packages.}
 }
 
-Instead of only modeling the outcome mechanism or the treatment assignment mechanism, both kind of models are required to use this method. If either of those models are correctly specified, unbiased estimates will be obtained. In contrast to the \code{\link[=cif_method_aiptw]{"aiptw"}} method, the "aiptw_pseudo" method uses a generalised estimation equation (geese) approach to model the outcome mechanism. The model is fit in the same way as described in the \code{\link[=cif_method_direct_pseudo]{"direct_pseudo"}} method. Those Direct Standardization based estimates are then transformed using the previously estimated propensity score. This results in the doubly-robust property of the method. More information on this particular method can be found in the original article by Wang (2018). The original article only deals with survival probabilities without competing risks, but the only difference to the CIF estimation with competing risks is the calculation of the pseudo-values. More information on Pseudo-Values is available in Andersen et al. (2017) and Andersen and Perme (2010).
+Instead of only modeling the outcome mechanism or the treatment assignment mechanism, both kind of models are required to use this method. If either of those models are correctly specified, unbiased estimates will be obtained. In contrast to the \code{\link[=cif_aiptw]{"aiptw"}} method, the "aiptw_pseudo" method uses a generalised estimation equation (geese) approach to model the outcome mechanism. The model is fit in the same way as described in the \code{\link[=cif_direct_pseudo]{"direct_pseudo"}} method. Those Direct Standardization based estimates are then transformed using the previously estimated propensity score. This results in the doubly-robust property of the method. More information on this particular method can be found in the original article by Wang (2018). The original article only deals with survival probabilities without competing risks, but the only difference to the CIF estimation with competing risks is the calculation of the pseudo-values. More information on Pseudo-Values is available in Andersen et al. (2017) and Andersen and Perme (2010).
 
 When estimating the \code{geese} model the \code{ev_time} variable is used as a factor by default. This results in one coefficient being estimated for each unique point in time, which can be very slow computationally if there are a lot of unique points in time and/or the dataset has many rows. In these cases it is recommended to use \code{type_time="bs"} or \code{type_time="ns"}, which results in the \code{ev_time} being modeled using B-Splines or Natural Splines. Simulation studies indicate that there is little difference in the estimates when an appropriately large number of \code{spline_df} is used.
 

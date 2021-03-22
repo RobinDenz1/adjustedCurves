@@ -1,5 +1,5 @@
-\name{surv_method_km}
-\alias{surv_method_km}
+\name{surv_km}
+\alias{surv_km}
 
 \title{
 Group-Specific Kaplan-Meier Survival Curves
@@ -9,8 +9,7 @@ Calculates standard Kaplan-Meier survival curves, stratified by the group variab
 No adjustment for any confounders is made. This function is included only for reference and should not be used when confounder adjusted survival curves are desired.
 }
 \usage{
-surv_method_km(data, variable, ev_time, event, conf_int,
-               conf_level=0.95, ...)
+surv_km(data, variable, ev_time, event, conf_int, conf_level=0.95, ...)
 }
 
 \arguments{

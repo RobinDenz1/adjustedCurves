@@ -3,8 +3,8 @@ utils::globalVariables(c("gaussian", "id"))
 
 ## simple Kaplan-Meier estimate
 #' @export
-surv_method_km <- function(data, variable, ev_time, event, conf_int,
-                           conf_level=0.95, ...) {
+surv_km <- function(data, variable, ev_time, event, conf_int,
+                    conf_level=0.95, ...) {
 
   form <- paste0("survival::Surv(", ev_time, ", ", event, ") ~ ", variable)
 
@@ -34,9 +34,9 @@ surv_method_km <- function(data, variable, ev_time, event, conf_int,
 # TODO: - standard deviation calculation is a little off,
 #       - CI seem fine for group==1 but way too small otherwise
 #' @export
-surv_method_iptw_km <- function(data, variable, ev_time, event, conf_int,
-                                conf_level=0.95, treatment_model,
-                                weight_method="ps", stabilize=T, ...) {
+surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
+                         conf_level=0.95, treatment_model,
+                         weight_method="ps", stabilize=T, ...) {
 
   # get weights
   if (is.numeric(treatment_model)) {
@@ -127,9 +127,9 @@ surv_method_iptw_km <- function(data, variable, ev_time, event, conf_int,
 
 ## IPTW with univariate cox-model
 #' @export
-surv_method_iptw_cox <- function(data, variable, ev_time, event, conf_int,
-                                 conf_level=0.95, treatment_model,
-                                 weight_method="ps", stabilize=T, ...) {
+surv_iptw_cox <- function(data, variable, ev_time, event, conf_int,
+                          conf_level=0.95, treatment_model,
+                          weight_method="ps", stabilize=T, ...) {
 
   # get weights
   if (is.numeric(treatment_model)) {
@@ -169,11 +169,11 @@ surv_method_iptw_cox <- function(data, variable, ev_time, event, conf_int,
 
 ## Using Pseudo-Observations and IPTW
 #' @export
-surv_method_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
-                                    conf_level=0.95, times, treatment_model,
-                                    weight_method="ps", stabilize=T,
-                                    se_method="cochrane", censoring_vars=NULL,
-                                    ipcw_method="binder", ...) {
+surv_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
+                             conf_level=0.95, times, treatment_model,
+                             weight_method="ps", stabilize=T,
+                             se_method="cochrane", censoring_vars=NULL,
+                             ipcw_method="binder", ...) {
   # get weights
   if (is.numeric(treatment_model)) {
     weights <- treatment_model
@@ -229,9 +229,9 @@ surv_method_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
 
 ## Direct Adjustment
 #' @export
-surv_method_direct <- function(data, variable, ev_time, event, conf_int,
-                               conf_level=0.95, times, outcome_model,
-                               verbose=F, ...) {
+surv_direct <- function(data, variable, ev_time, event, conf_int,
+                        conf_level=0.95, times, outcome_model,
+                        verbose=F, ...) {
 
   surv <- riskRegression::ate(event=outcome_model, treatment=variable,
                               data=data, estimator="Gformula",
@@ -256,9 +256,9 @@ surv_method_direct <- function(data, variable, ev_time, event, conf_int,
 ## Using propensity score matching
 # TODO: variance calculation is off
 #' @export
-surv_method_matching <- function(data, variable, ev_time, event, conf_int,
-                                 conf_level=0.95, treatment_model,
-                                 stabilize=T, ...) {
+surv_matching <- function(data, variable, ev_time, event, conf_int,
+                          conf_level=0.95, treatment_model,
+                          stabilize=T, ...) {
 
   if (is.numeric(treatment_model)) {
     ps_score <- treatment_model
@@ -298,10 +298,10 @@ surv_method_matching <- function(data, variable, ev_time, event, conf_int,
 
 ## Using Augmented Inverse Probability of Treatment Weighting
 #' @export
-surv_method_aiptw <- function(data, variable, ev_time, event, conf_int,
-                              conf_level=0.95, times, outcome_model=NULL,
-                              treatment_model=NULL, censoring_model=NULL,
-                              verbose=F, ...) {
+surv_aiptw <- function(data, variable, ev_time, event, conf_int,
+                       conf_level=0.95, times, outcome_model=NULL,
+                       treatment_model=NULL, censoring_model=NULL,
+                       verbose=F, ...) {
 
   # defaults for input models
   if (is.null(censoring_model)) {
@@ -346,10 +346,10 @@ surv_method_aiptw <- function(data, variable, ev_time, event, conf_int,
 
 ## Using Pseudo Observations and Direct Adjustment
 #' @export
-surv_method_direct_pseudo <- function(data, variable, ev_time, event, times,
-                                      outcome_vars, type_time="factor",
-                                      spline_df=10, censoring_vars=NULL,
-                                      ipcw_method="binder") {
+surv_direct_pseudo <- function(data, variable, ev_time, event, times,
+                               outcome_vars, type_time="factor",
+                               spline_df=10, censoring_vars=NULL,
+                               ipcw_method="binder") {
   # some constants
   len <- length(times)
   n <- nrow(data)
@@ -416,11 +416,11 @@ surv_method_direct_pseudo <- function(data, variable, ev_time, event, times,
 
 ## Using Pseudo Observations Doubly-Robust, Wang (2018)
 #' @export
-surv_method_aiptw_pseudo <- function(data, variable, ev_time, event, conf_int,
-                                     conf_level=0.95, times, outcome_vars,
-                                     treatment_model, type_time="factor",
-                                     spline_df=10, censoring_vars=NULL,
-                                     ipcw_method="binder") {
+surv_aiptw_pseudo <- function(data, variable, ev_time, event, conf_int,
+                              conf_level=0.95, times, outcome_vars,
+                              treatment_model, type_time="factor",
+                              spline_df=10, censoring_vars=NULL,
+                              ipcw_method="binder") {
   # some constants
   len <- length(times)
   n <- nrow(data)
@@ -528,9 +528,9 @@ surv_method_aiptw_pseudo <- function(data, variable, ev_time, event, conf_int,
 
 ## Using Empirical Likelihood Estimation
 #' @export
-surv_method_el <- function(data, variable, ev_time, event,
-                           times, treatment_vars, moment="first",
-                           standardize=F, ...) {
+surv_el <- function(data, variable, ev_time, event,
+                    times, treatment_vars, moment="first",
+                    standardize=F, ...) {
 
   el_0 <- adjKMtest::el.est(y=data[, ev_time],
                             delta=data[, event],
@@ -563,11 +563,11 @@ surv_method_el <- function(data, variable, ev_time, event,
 
 ## Targeted Maximum Likelihood Estimation
 #' @export
-surv_method_tmle <- function(data, variable, ev_time, event, conf_int,
-                             conf_level=0.95, times, adjust_vars=NULL,
-                             SL.ftime=NULL, SL.ctime=NULL, SL.trt=NULL,
-                             glm.ftime=NULL, glm.ctime=NULL, glm.trt=NULL,
-                             ...) {
+surv_tmle <- function(data, variable, ev_time, event, conf_int,
+                      conf_level=0.95, times, adjust_vars=NULL,
+                      SL.ftime=NULL, SL.ctime=NULL, SL.trt=NULL,
+                      glm.ftime=NULL, glm.ctime=NULL, glm.trt=NULL,
+                      ...) {
   if (is.null(adjust_vars)) {
     all_covars <- colnames(data)
     all_covars <- all_covars[!all_covars %in% c(variable, ev_time, event)]
@@ -635,12 +635,12 @@ surv_method_tmle <- function(data, variable, ev_time, event, conf_int,
 
 ## One-Step Targeted Maximum Likelihood Estimation
 #' @export
-surv_method_ostmle <- function(data, variable, ev_time, event, conf_int,
-                               conf_level=0.95, times, adjust_vars=NULL,
-                               SL.ftime=NULL, SL.ctime=NULL, SL.trt=NULL,
-                               epsilon=1, max_num_iteration=100,
-                               psi_moss_method="l2", tmle_tolerance=NULL,
-                               gtol=1e-3) {
+surv_ostmle <- function(data, variable, ev_time, event, conf_int,
+                        conf_level=0.95, times, adjust_vars=NULL,
+                        SL.ftime=NULL, SL.ctime=NULL, SL.trt=NULL,
+                        epsilon=1, max_num_iteration=100,
+                        psi_moss_method="l2", tmle_tolerance=NULL,
+                        gtol=1e-3) {
   if (is.null(adjust_vars)) {
     all_covars <- colnames(data)
     all_covars <- all_covars[!all_covars %in% c(variable, ev_time, event)]
@@ -765,13 +765,13 @@ surv_method_ostmle <- function(data, variable, ev_time, event, conf_int,
 }
 
 ## Targeted Maximum Likelihood Estimator based on Pseudo-Values
-surv_method_tmle_pseudo <- function(data, variable, ev_time, event,
-                                    conf_int, conf_level=0.95, times,
-                                    outcome_vars, treatment_vars=NULL,
-                                    SL.trt=NULL, SL.ftime=NULL,
-                                    treatment_model=NULL, cv_folds=5,
-                                    censoring_vars=NULL, ipcw_method="binder",
-                                    ...) {
+surv_tmle_pseudo <- function(data, variable, ev_time, event,
+                             conf_int, conf_level=0.95, times,
+                             outcome_vars, treatment_vars=NULL,
+                             SL.trt=NULL, SL.ftime=NULL,
+                             treatment_model=NULL, cv_folds=5,
+                             censoring_vars=NULL, ipcw_method="binder",
+                             ...) {
 
   # estimate propensity score just once,
   # cause it's always the same
@@ -783,6 +783,11 @@ surv_method_tmle_pseudo <- function(data, variable, ev_time, event,
                                 treatment_vars=treatment_vars,
                                 SL.trt=SL.trt,
                                 cv_folds=cv_folds)
+  } else if (is.numeric(ps_score)){
+    if (any(ps_score >= 1) | any(ps_score <= 0)) {
+      stop("Only valid propensity scores < 1 and > 0 are allowed when",
+           " directly supplied.")
+    }
   } else {
     stop("Either 'treatment_model' or 'SL.trt' and 'treatment_vars' has to",
          " be defined. See documentation.")
@@ -886,7 +891,7 @@ surv_method_tmle_pseudo <- function(data, variable, ev_time, event,
                               ps_score=ps_score,
                               Qstar=tmle_t$Qstar,
                               n=nrow(data))
-      temp$se <- vars
+      temp$se <- sqrt(vars)
 
     }
     plotdata[[i]] <- temp
@@ -898,7 +903,7 @@ surv_method_tmle_pseudo <- function(data, variable, ev_time, event,
   if (conf_int) {
 
     # TODO: check if this is valid
-    surv_cis <- confint_surv(surv=plotdata$surv, se=sqrt(plotdata$se),
+    surv_cis <- confint_surv(surv=plotdata$surv, se=plotdata$se,
                              conf_level=conf_level, conf_type="plain")
     plotdata$ci_lower <- surv_cis$left
     plotdata$ci_upper <- surv_cis$right

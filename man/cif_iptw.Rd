@@ -1,5 +1,5 @@
-\name{cif_method_iptw}
-\alias{cif_method_iptw}
+\name{cif_iptw}
+\alias{cif_iptw}
 
 \title{
 Inverse Probability of Treatment Weighted CIFs
@@ -8,9 +8,9 @@ Inverse Probability of Treatment Weighted CIFs
 This method works by modelling the treatment assignment mechanism. The individual observations are weighted using inverse probability of treatment weights or other balancing weights (see details). If the model is correctly specified, unbiased results will be obtained. See details for more information.
 }
 \usage{
-cif_method_iptw(data, variable, ev_time, event, cause, conf_int,
-                conf_level=0.95, times, treatment_model,
-                censoring_model=NULL, verbose=F, ...)
+cif_iptw(data, variable, ev_time, event, cause, conf_int,
+         conf_level=0.95, times, treatment_model,
+         censoring_model=NULL, verbose=F, ...)
 }
 
 \arguments{
@@ -36,7 +36,7 @@ A logical variable, indicating whether the asymptotic variances and confidence i
 A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
   }
   \item{times}{
-A numeric vector of time points at which the cumulative incidences should be estimated or \code{NULL}. If \code{NULL} the cumulative incidence is estimated at all points in time at which an event occured. Only relevant for some methods, ignored otherwise. See details.
+A numeric vector of time points at which the cumulative incidences should be estimated.
   }
   \item{treatment_model}{
 Must be a \code{glm} or \code{multinom} model object with \code{variable} as response variable.

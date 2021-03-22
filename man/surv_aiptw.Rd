@@ -1,5 +1,5 @@
-\name{surv_method_aiptw}
-\alias{surv_method_aiptw}
+\name{surv_aiptw}
+\alias{surv_aiptw}
 
 \title{
 Augmented Inverse Probability of Treatment Weighted Survival Curves
@@ -8,10 +8,10 @@ Augmented Inverse Probability of Treatment Weighted Survival Curves
 Function to calculate augmented inverse probability of treatment weighted survival curves.
 }
 \usage{
-surv_method_aiptw(data, variable, ev_time, event, conf_int,
-                  conf_level=0.95, times, outcome_model=NULL,
-                  treatment_model=NULL, censoring_model=NULL,
-                  verbose=F, ...)
+surv_aiptw(data, variable, ev_time, event, conf_int,
+           conf_level=0.95, times, outcome_model=NULL,
+           treatment_model=NULL, censoring_model=NULL,
+           verbose=F, ...)
 }
 
 \arguments{
@@ -34,7 +34,7 @@ A logical variable, indicating whether the asymptotic variances and confidence i
 A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
   }
   \item{times}{
-A numeric vector of time points at which the survival probability should be estimated or \code{NULL}. If \code{NULL} the survival is estimated at all points in time at which an event occured.
+A numeric vector of time points at which the survival probability should be estimated.
 }
   \item{outcome_model}{
 Must be a \code{coxph} model object, modeling the time-to-event mechanism. See details and examples.

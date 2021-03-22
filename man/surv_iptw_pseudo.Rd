@@ -1,18 +1,18 @@
-\name{surv_method_iptw_pseudo}
-\alias{surv_method_iptw_pseudo}
+\name{surv_iptw_pseudo}
+\alias{surv_iptw_pseudo}
 
 \title{
 Inverse Probability of Treatment Weighted Survival Estimates using Pseudo-Values
 }
 \description{
-This method works by modelling the treatment assignment mechanism. The individual observations are weighted using inverse probability of treatment weights or other balancing weights (see details) and pseudo-values. If the model is correctly specified, unbiased results will be obtained. The main difference to the \code{surv_method_iptw_cox} and \code{surv_method_iptw_km} functions is the use of pseudo-values. See details for more information.
+This method works by modelling the treatment assignment mechanism. The individual observations are weighted using inverse probability of treatment weights or other balancing weights (see details) and pseudo-values. If the model is correctly specified, unbiased results will be obtained. The main difference to the \code{surv_iptw_cox} and \code{surv_iptw_km} functions is the use of pseudo-values. See details for more information.
 }
 \usage{
-surv_method_iptw_pseudo(data, variable, ev_time, event, conf_int,
-                        conf_level=0.95, times, treatment_model,
-                        weight_method="ps", stabilize=T,
-                        se_method="cochrane", censoring_vars=NULL,
-                        ipcw_method="binder", ...)
+surv_iptw_pseudo(data, variable, ev_time, event, conf_int,
+                 conf_level=0.95, times, treatment_model,
+                 weight_method="ps", stabilize=T,
+                 se_method="cochrane", censoring_vars=NULL,
+                 ipcw_method="binder", ...)
 }
 
 \arguments{
@@ -35,7 +35,7 @@ A logical variable, indicating whether the asymptotic variances and confidence i
 A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
   }
   \item{times}{
-A numeric vector of time points at which the survival probability should be estimated or \code{NULL}. If \code{NULL} the survival is estimated at all points in time at which an event occured.
+A numeric vector of time points at which the survival probability should be estimated.
 }
   \item{treatment_model}{
 Must be either a model object with \code{variable} as response variable, a vector of weights or a formula which can be passed to \code{WeightIt}.
@@ -76,6 +76,7 @@ Adjusted survival curves are calculated by first estimating appropriate case-wei
 
 The standard error of this estimator can be approximated by calculation a weighted version of the standard error estimator. Interestingly, no exact method exists in the weighted case. Four approximations are implemented which can be choosen using the \code{se_method} argument. The equations for \code{"miller"}, \code{"galloway"} and \code{"cochrane"} are described and compared in Gatz and Smith (1995). \code{"simple"} is just the standard equation with a weight term added and should only be used with stabilized weightd (\code{stabilize=TRUE}). The resulting estimates are conservative in nature, because they ignore the variation introduced by the pseudo-value calculation (Zeng et al. 2021). It is generally recommended to use bootstrap estimates instead.
 
+Additionally, covariate-dependent censoring can be corrected for using inverse probability of censoring weighted pseudo-values (Binder et al. 2014) instead of regular pseudo-values (specified using the \code{censoring_vars} and \code{ipcw_method} arguments).
 }
 \value{
 Returns a \code{data.frame} object containing the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
@@ -93,14 +94,14 @@ J. N. Galloway, G. E. Likens, and M. E. Hawley. "Acid Precipitation: Natural Ver
 
 J. M. Miller. A Statistical Evaluation of the U.S. Precipitation Chemistry Network. Precipitation Scavenging (edited by Semonin R. G. and Beadle R. W.) pp. 639-659. Available as CONF 74100 from National Technical Information Service, U.S. Dept. of Commerce, Springfiel, VA. 1977.
 
-ZENG PAPER
+Nadine Binder, Thomas A. Gerds, and Per Kragh Andersen. "Pseudo-Observations for Competing Risks with Covariate Dependent Censoring". In: Lifetime Data Analysis 20 (2014), pp. 303–315.
 }
 \author{
 Robin Denz
 }
 
 \seealso{
-\code{\link[WeightIt]{WeightIt}}, \code{\link[prodlim]{prodlim}}
+\code{\link[WeightIt]{weightit}}, \code{\link[prodlim]{prodlim}}
 }
 \examples{
 \dontrun{

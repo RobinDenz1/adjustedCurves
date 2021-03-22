@@ -5,7 +5,7 @@
 Calculate Cause-Specific Confounder-Adjusted Cumulative Incidence Functions
 }
 \description{
-This is one of two main functions of this R-Package. It allows the user to calculate cause-specific confounder-adjusted cumulative incidence functions using a variety of different methods. It is basically a wrapper for each \code{cif_method_} function with some additional functionality, such as bootstrapping. Some of these methods require additional packages to be installed and depending on the specified method there might be additional required arguments in the function call. Documentation on that can be found in the respective \code{cif_method_} function. See details and examples.
+This is one of two main functions of this R-Package. It allows the user to calculate cause-specific confounder-adjusted cumulative incidence functions using a variety of different methods. It is basically a wrapper for each \code{cif_} function with some additional functionality, such as bootstrapping. Some of these methods require additional packages to be installed and depending on the specified method there might be additional required arguments in the function call. Documentation on that can be found in the respective \code{cif_} function. See details and examples.
 }
 \usage{
 adjustedcif(data, variable, ev_time, event, cause, method, conf_int=F,
@@ -58,18 +58,18 @@ Further arguments passed to the respective \code{cif_method}. See details.
 The primary purpose of the \code{adjustedcif} function is to provide a convenient way to calculate confounder-adjusted cumulative incidence functions using any of the methods provided in the literature. A \code{\link[=plot.adjustedcif]{plot}} method is provided to graphically display the estimated cumulative incidence functions as well. Currently the following methods can be used:
 
 \itemize{
-  \item{"\link[=cif_method_direct]{direct}": Direct Standardization based on a Cause-Specific Cox-Regression model.}
-  \item{"\link[=cif_method_direct_pseudo]{direct_pseudo}": Direct Standardization based on Pseudo-Values.}
-  \item{"\link[=cif_method_iptw]{iptw}": A weighted Nelson-Aalen estimator.}
-  \item{"\link[=cif_method_iptw_pseudo]{iptw_pseudo}": A weighted estimator based on Pseudo-Values.}
-  \item{"\link[=cif_method_matching]{matching}": Using propensity score matching to estimate the adjusted CIFs.}
-  \item{"\link[=cif_method_aiptw]{aiptw}": An Augmented Inverse Probability of Treatment Weighting estimator.}
-  \item{"\link[=cif_method_aiptw_pseudo]{aiptw_pseudo}": An Augmented Inverse Probability of Treatment Weighting estimator using Pseudo-Values.}
-  \item{"\link[=cif_method_tmle]{tmle}": Targeted Maximum Likelihood Estimation for CIFs.}
-  \item{"\link[=cif_method_aalen_johansen]{aalen_johansen}": A simple stratified Nelson-Aalen estimator without any form of adjustment.}
+  \item{"\link[=cif_direct]{direct}": Direct Standardization based on a Cause-Specific Cox-Regression model.}
+  \item{"\link[=cif_direct_pseudo]{direct_pseudo}": Direct Standardization based on Pseudo-Values.}
+  \item{"\link[=cif_iptw]{iptw}": A weighted Nelson-Aalen estimator.}
+  \item{"\link[=cif_iptw_pseudo]{iptw_pseudo}": A weighted estimator based on Pseudo-Values.}
+  \item{"\link[=cif_matching]{matching}": Using propensity score matching to estimate the adjusted CIFs.}
+  \item{"\link[=cif_aiptw]{aiptw}": An Augmented Inverse Probability of Treatment Weighting estimator.}
+  \item{"\link[=cif_aiptw_pseudo]{aiptw_pseudo}": An Augmented Inverse Probability of Treatment Weighting estimator using Pseudo-Values.}
+  \item{"\link[=cif_tmle]{tmle}": Targeted Maximum Likelihood Estimation for CIFs.}
+  \item{"\link[=cif_aalen_johansen]{aalen_johansen}": A simple stratified Nelson-Aalen estimator without any form of adjustment.}
 }
 
-An overview over all of these methods can be found in PAPER. A shorter overview can be gained using the documentation of the respective \code{cif_method} function.
+An overview over all of these methods can be found in PAPER. A shorter overview can be gained using the documentation of the respective \code{cif_} function.
 
 For most methods approximations for the asymptotic variance of point estimates of the CIF have been proposed in the literature. Where available, those can be calculated and added to the output object using \code{conf_int=TRUE}. It is however recommended to use bootstrapping to estimate the variance instead, which can be done by setting \code{bootstrap=TRUE}. The \code{n_boot} argument is set to 500 by default. This number was choosen because it worked well in simulations but it does not guarantee convergence in practice. Users are recommended to inspect the bootstrapped estimates and adjust the number of replications accordingly.
 
@@ -79,7 +79,7 @@ To allow faster bootstrapping the user can choose to run the function on multipl
 \value{
 Returns an \code{adjustedcif} object containing the following objects:
 
-\item{adjcif}{A \code{data.frame} of estimated cumulative incidences for \code{cause} at some points in time for each level of \code{variable}. Depending on the arguments used also includes standard deviations and confidence intervals at points in time.
+\item{adjcif}{A \code{data.frame} of estimated cumulative incidences for \code{cause} at some points in time for each level of \code{variable}. Depending on the arguments used also includes standard errors and confidence intervals at points in time.
 }
 \item{method}{
 The method used to adjust the CIFs.
@@ -109,8 +109,8 @@ The function itself was written by Robin Denz, but it includes wrappers for func
 }
 
 \seealso{
-\code{\link{cif_method_aiptw}}, \code{\link{cif_method_aiptw_pseudo}}, \code{\link{cif_method_direct}}, \code{\link{cif_method_direct_pseudo}},
-\code{\link{cif_method_iptw}}, \code{\link{cif_method_iptw_pseudo}}, \code{\link{cif_method_matching}}, \code{\link{cif_method_tmle}}, \code{\link{cif_method_aalen_johansen}}
+\code{\link{cif_aiptw}}, \code{\link{cif_aiptw_pseudo}}, \code{\link{cif_direct}}, \code{\link{cif_direct_pseudo}},
+\code{\link{cif_iptw}}, \code{\link{cif_iptw_pseudo}}, \code{\link{cif_matching}}, \code{\link{cif_tmle}}, \code{\link{cif_aalen_johansen}}
 }
 \examples{
 \dontrun{

@@ -1,5 +1,5 @@
-\name{cif_method_aiptw}
-\alias{cif_method_aiptw}
+\name{cif_aiptw}
+\alias{cif_aiptw}
 
 \title{
 Augmented Inverse Probability of Treatment Weighted CIFs
@@ -8,10 +8,10 @@ Augmented Inverse Probability of Treatment Weighted CIFs
 Function to calculate augmented inverse probability of treatment weighted cumulative incidence functions for competing risks data.
 }
 \usage{
-cif_method_aiptw(data, variable, ev_time, event, cause, conf_int,
-                 conf_level=0.95, times, outcome_model=NULL,
-                 treatment_model=NULL, censoring_model=NULL,
-                 verbose=F, ...)
+cif_aiptw(data, variable, ev_time, event, cause, conf_int,
+          conf_level=0.95, times, outcome_model=NULL,
+          treatment_model=NULL, censoring_model=NULL,
+          verbose=F, ...)
 }
 
 \arguments{
@@ -37,7 +37,7 @@ A logical variable, indicating whether the asymptotic variances and confidence i
 A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
   }
   \item{times}{
-A numeric vector of time points at which the CIFs should be estimated or \code{NULL}. If \code{NULL} the CIFs are estimated at all points in time at which an event occured.
+A numeric vector of time points at which the CIFs should be estimated.
 }
   \item{outcome_model}{
 Must be a \code{CauseSpecificCox} model object, modeling the time-to-event mechanism. See details and examples.

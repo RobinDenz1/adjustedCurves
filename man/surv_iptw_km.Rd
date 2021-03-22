@@ -1,16 +1,16 @@
-\name{surv_method_iptw_km}
-\alias{surv_method_iptw_km}
+\name{surv_iptw_km}
+\alias{surv_iptw_km}
 
 \title{
 Inverse Probability of Treatment Weighted Kaplan-Meier estimates
 }
 \description{
-This method works by modelling the treatment assignment mechanism. The individual observations are weighted using inverse probability of treatment weights or other balancing weights (see details) and a modified Kaplan-Meier estimator. If the model is correctly specified, unbiased results will be obtained. The only difference to the \code{\link[=surv_method_iptw_cox]{"iptw_cox"}} is a slightly different weighting approach. They are essentially equal in large samples. See details for more information.
+This method works by modelling the treatment assignment mechanism. The individual observations are weighted using inverse probability of treatment weights or other balancing weights (see details) and a modified Kaplan-Meier estimator. If the model is correctly specified, unbiased results will be obtained. The only difference to the \code{\link[=surv_iptw_cox]{"iptw_cox"}} is a slightly different weighting approach. They are essentially equal in large samples. See details for more information.
 }
 \usage{
-surv_method_iptw_km(data, variable, ev_time, event, conf_int,
-                    conf_level=0.95, treatment_model, weight_method="ps",
-                    stabilize=T, ...)
+surv_iptw_km(data, variable, ev_time, event, conf_int,
+             conf_level=0.95, treatment_model, weight_method="ps",
+             stabilize=T, ...)
 }
 
 \arguments{
@@ -76,7 +76,7 @@ Robin Denz
 }
 
 \seealso{
-\code{\link[WeightIt]{WeightIt}}
+\code{\link[WeightIt]{weightit}}
 }
 \examples{
 \dontrun{

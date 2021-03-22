@@ -1,5 +1,5 @@
-\name{surv_method_aiptw_pseudo}
-\alias{surv_method_aiptw_pseudo}
+\name{surv_aiptw_pseudo}
+\alias{surv_aiptw_pseudo}
 
 \title{
 Augmented Inverse Probability of Treatment Weighted Survival Curves using Pseudo-Values
@@ -8,11 +8,11 @@ Augmented Inverse Probability of Treatment Weighted Survival Curves using Pseudo
 Function to calculate augmented inverse probability of treatment weighted survival curves using pseudo-values. Instead of only modeling the outcome mechanism or the treatment assignment mechanism, both kind of models are required to use this method. If either of those models are correctly specified, unbiased estimates will be obtained. Both the outcome and treatment assignment part are modeled using pseudo-values. See details for more information.
 }
 \usage{
-surv_method_aiptw_pseudo(data, variable, ev_time, event, conf_int,
-                         conf_level=0.95, times, outcome_vars,
-                         treatment_model, type_time="factor",
-                         spline_df=10, censoring_vars=NULL,
-                         ipcw_method="binder")
+surv_aiptw_pseudo(data, variable, ev_time, event, conf_int,
+                  conf_level=0.95, times, outcome_vars,
+                  treatment_model, type_time="factor",
+                  spline_df=10, censoring_vars=NULL,
+                  ipcw_method="binder")
 }
 
 \arguments{
@@ -35,7 +35,7 @@ A logical variable, indicating whether the asymptotic variances and confidence i
 A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
   }
   \item{times}{
-A numeric vector of time points at which the survival probability should be estimated or \code{NULL}. If \code{NULL} the survival is estimated at all points in time at which an event occured.
+A numeric vector of time points at which the survival probability should be estimated.
 }
   \item{outcome_vars}{
 A character vector of column names specifying variables to be used when modeling the outcome mechanism using \code{geese}. See details and examples.
@@ -59,7 +59,7 @@ The specific method used in the calculation of inverse probability of censoring 
 \details{
 
 \itemize{
-\item{\strong{Type of Adjustment:} Requires a treatment assignment model (\code{\link{glm}} or \code{\link[nnet]{multinom}}) and a character vector of variable names used to model the outcome mechanism (internally uses \code{\link[geepack]{geese}}). In contrast to the \code{\link[=surv_method_aiptw]{"aiptw"}} method this function does not allow for dependent censoring.}
+\item{\strong{Type of Adjustment:} Requires a treatment assignment model (\code{\link{glm}} or \code{\link[nnet]{multinom}}) and a character vector of variable names used to model the outcome mechanism (internally uses \code{\link[geepack]{geese}}). Covariate-Dependent censoring can be corrrected for using inverse probability of censoring weighted pseudo-values (Binder et al. 2014)}
 \item{\strong{Doubly-Robust:} Estimates are Doubly-Robust.}
 \item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
 \item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
@@ -69,7 +69,7 @@ The specific method used in the calculation of inverse probability of censoring 
 \item{\strong{Dependencies:} This method relies on the \code{geepack} and \code{\link[prodlim]{prodlim}} packages.}
 }
 
-Instead of only modeling the outcome mechanism or the treatment assignment mechanism, both kind of models are required to use this method. If either of those models are correctly specified, unbiased estimates will be obtained. In contrast to the \code{\link[=surv_method_aiptw]{"aiptw"}} method, the "aiptw_pseudo" method uses a generalised estimation equation (geese) approach to model the outcome mechanism. The model is fit in the same way as described in the \code{\link[=surv_method_direct_pseudo]{"direct_pseudo"}} method. Those Direct Standardization based estimates are then transformed using the previously estimated propensity score. This results in the doubly-robust property of the method. More information on this particular method can be found in the original article by Wang (2018), more information on Pseudo-Values is available in Andersen et al. (2017) and Andersen and Perme (2010).
+Instead of only modeling the outcome mechanism or the treatment assignment mechanism, both kind of models are required to use this method. If either of those models are correctly specified, unbiased estimates will be obtained. In contrast to the \code{\link[=surv_aiptw]{"aiptw"}} method, the "aiptw_pseudo" method uses a generalised estimation equation (geese) approach to model the outcome mechanism. The model is fit in the same way as described in the \code{\link[=surv_direct_pseudo]{"direct_pseudo"}} method. Those Direct Standardization based estimates are then transformed using the previously estimated propensity score. This results in the doubly-robust property of the method. More information on this particular method can be found in the original article by Wang (2018), more information on Pseudo-Values is available in Andersen et al. (2017) and Andersen and Perme (2010).
 
 When estimating the \code{geese} model the \code{ev_time} variable is used as a factor by default. This results in one coefficient being estimated for each unique point in time, which can be very slow computationally if there are a lot of unique points in time and/or the dataset has many rows. In these cases it is recommended to use \code{type_time="bs"} or \code{type_time="ns"}, which results in the \code{ev_time} being modeled using B-Splines or Natural Splines. Simulation studies indicate that there is little difference in the estimates when an appropriately large number of \code{spline_df} is used.
 
@@ -88,6 +88,8 @@ Per K. Andersen, Elisavet Syriopoulou, and Erik T. Parner. "Causal Inference in 
 Per K. Andersen and Maja Pohar Perme. "Pseudo-Observations in Survival Analysis". In: Statistical Methods in Medical Research 19 (2010), pp. 71-99.
 
 Aris Perperoglou, Willi Sauerbrei, Michal Abrahamowicz, and Matthias Schmid. "A Review of Spline Function Procedures in R". In: BMC Medical Research Methodology 19 (2019), pp. 1-16
+
+Nadine Binder, Thomas A. Gerds, and Per Kragh Andersen. "Pseudo-Observations for Competing Risks with Covariate Dependent Censoring". In: Lifetime Data Analysis 20 (2014), pp. 303–315.
 }
 \author{
 Robin Denz

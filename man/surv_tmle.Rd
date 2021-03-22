@@ -1,16 +1,16 @@
-\name{cif_method_tmle}
-\alias{cif_method_tmle}
+\name{surv_tmle}
+\alias{surv_tmle}
 
 \title{
-Targeted Maximum Likelihood Estimation for CIFs
+Targeted Maximum Likelihood Estimation for Adjusted Survival Curves
 }
 \description{
-This method utilizes the targeted maximum likelihood methodology to estimate cause-specific CIFs. Similar to the AIPTW methods it posseses the doubly-robust property and can also be used to adjust for dependent censoring. It is however important to note that this method should only be used when the time variable is truly discrete and only a few distinct points in time are observed. See details for more information.
+This method utilizes the targeted maximum likelihood methodology to estimate adjusted survival curves. Similar to the AIPTW methods it posseses the doubly-robust property and can also be used to adjust for dependent censoring. It is however important to note that this method should only be used when the time variable is truly discrete and only a few distinct points in time are observed. See details for more information.
 }
 \usage{
-cif_method_tmle(data, variable, ev_time, event, cause, conf_int, conf_level=0.95,
-                times, adjust_vars=NULL, SL.ftime=NULL, SL.ctime=NULL,
-                SL.trt=NULL, glm.ftime=NULL, glm.ctime=NULL, glm.trt=NULL, ...)
+surv_tmle(data, variable, ev_time, event, conf_int, conf_level=0.95,
+          times, adjust_vars=NULL, SL.ftime=NULL, SL.ctime=NULL,
+          SL.trt=NULL, glm.ftime=NULL, glm.ctime=NULL, glm.trt=NULL, ...)
 }
 
 \arguments{
@@ -18,25 +18,22 @@ cif_method_tmle(data, variable, ev_time, event, cause, conf_int, conf_level=0.95
 A \code{data.frame} object containing the needed time-to-event data in standard format.
   }
   \item{variable}{
-A character string specifying the variable by which the CIFs should be grouped. Must be a valid columname of \code{data}.
+A character string specifying the variable by which the survival curves should be grouped. Must be a valid columname of \code{data}.
   }
   \item{ev_time}{
 A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid columname of \code{data}.
   }
   \item{event}{
-A character string specifying the numeric event indicator. The censoring indicator should be coded as 0 and all other events of interest as 1, 2, etc. Must be a valid columname of \code{data}.
-  }
-  \item{cause}{
-The cause of interest for which the cumulative incidence functions should be calculated. Should be a number that appears in the \code{event} column of \code{data}.
+A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
   }
   \item{conf_int}{
-A logical variable, indicating whether the asymptotic variances and confidence intervals of the CIFs should be calculated.
+A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated.
   }
   \item{conf_level}{
 A number specifying the confidence level of asymptotic confidence intervals.
   }
   \item{times}{
-A numeric vector of time points at which the CIFs should be estimated or \code{NULL}. If \code{NULL} the CIFs are estimated at all points in time at which an event occured. Only relevant for some methods, ignored otherwise. See details.
+A numeric vector of time points at which the survival probability should be estimated.
   }
   \item{adjust_vars}{
 A character vector of column names specifying variables to be used when modeling the outcome, treatment and censoring mechanism. See details and examples.
@@ -71,19 +68,19 @@ Additional arguments passed to \code{survtmle}.
 \item{\strong{Categorical groups:} Currently only two groups in \code{variable} are allowed. Must be an integer variable only containing 0 and 1.}
 \item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
 \item{\strong{Allowed Time Values:} Allows only integer time.}
-\item{\strong{Bounded Estimates:} Estimates are not guaranteed to be bounded in the 0 to 1 probability range.}
+\item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are not guaranteed to be monotone.}
 \item{\strong{Dependencies:} This method relies on the \code{survtmle} and \code{SuperLearner} packages.}
 }
 
 }
 \value{
-Returns a \code{data.frame} object containing the estimated adjusted CIFs for \code{cause} at some points in time for each level of \code{variable}.
+Returns a \code{data.frame} object containing the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
 }
 \references{
 Megan S. Schuler and Sherri Rose. "Targeted Maximum Likelihood Estimation for Causal Inference in Observational Studies". In: American Journal of Epidemiology 186.1 (2017), pp. 65-73.
 
-David Benkeser, Marco Carone, and Peter B. Gilbert. "Improved Estimation of the Cumulative Incidence of Rare Outcomes". In: Statistics in Medicine 37.2 (2018), pp. 280–293.
+
 }
 \author{
 The wrapper function was written by Robin Denz, the \code{survtmle} package (which this wrapper is based on) was written by David Benkeser and Nima Hejazi. See \code{?survtmle} for more details.

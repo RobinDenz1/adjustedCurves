@@ -1,5 +1,5 @@
-\name{surv_method_ostmle}
-\alias{surv_method_ostmle}
+\name{surv_ostmle}
+\alias{surv_ostmle}
 
 \title{
 One-Step Targeted Maximum Likelihood Estimation Survival Curves
@@ -8,12 +8,12 @@ One-Step Targeted Maximum Likelihood Estimation Survival Curves
 This method utilizes the one-step targeted maximum likelihood methodology to estimate adjusted survival curves. It is very similar to \code{surv_method_tmle}, with some difference in the estimation techniques. Similar to the AIPTW methods it posseses the doubly-robust property and can also be used to adjust for dependent censoring. It is however important to note that this method should only be used when the time variable is truly discrete and only a few distinct points in time are observed. See details for more information.
 }
 \usage{
-surv_method_ostmle(data, variable, ev_time, event, conf_int,
-                   conf_level=0.95, times, adjust_vars=NULL,
-                   SL.ftime=NULL, SL.ctime=NULL, SL.trt=NULL,
-                   epsilon=1, max_num_iteration=100,
-                   psi_moss_method="l2", tmle_tolerance=NULL,
-                   gtol=1e-3)
+surv_ostmle(data, variable, ev_time, event, conf_int,
+            conf_level=0.95, times, adjust_vars=NULL,
+            SL.ftime=NULL, SL.ctime=NULL, SL.trt=NULL,
+            epsilon=1, max_num_iteration=100,
+            psi_moss_method="l2", tmle_tolerance=NULL,
+            gtol=1e-3)
 }
 
 \arguments{
@@ -36,7 +36,7 @@ A logical variable, indicating whether the asymptotic variances and confidence i
 A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
   }
   \item{times}{
-A numeric vector of time points at which the survival probability should be estimated or \code{NULL}. If \code{NULL} the survival is estimated at all points in time at which an event occured.
+A numeric vector of time points at which the survival probability should be estimated.
 }
   \item{adjust_vars}{
 A character vector of column names specifying variables to be used when modeling the outcome, treatment and censoring mechanism. See details and examples.
@@ -51,19 +51,19 @@ A character vector or list specification to be passed to the \code{SL.library} a
 A character vector or list specification to be passed to the \code{SL.library} argument in the call to \code{SuperLearner} for the estimate of the conditional probability oftreatment. It is expected that the wrappers used in the library will play nicely with the input variables, which will be \code{names(adjust_vars)}.
   }
   \item{epsilon}{
-
+The size of the updating step. See \code{MOSS} for more details.
 }
   \item{max_num_iteration}{
-
+The maximum number of iterations used in the updating step of the One-Step estimator.
 }
   \item{psi_moss_method}{
-
+Specifies the method used to make the pooled updating step. Can be either \code{"l1"} (Ridge Regression), \code{"l2"} (LASSO) or \code{"glm"}. For more information see documentation of \code{MOSS}.
 }
   \item{tmle_tolerance}{
-
+The tolerance used to determine whether the TMLE estimator converged or not. See \code{MOSS} for more details.
 }
   \item{gtol}{
-
+Tolerance at which estimated treatment assignment probabilities are truncated.
 }
 }
 \details{

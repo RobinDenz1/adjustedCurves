@@ -1,5 +1,5 @@
-\name{cif_method_aalen_johansen}
-\alias{cif_method_aalen_johansen}
+\name{cif_aalen_johansen}
+\alias{cif_aalen_johansen}
 
 \title{
 Group-Specific Aalen-Johansen CIFs
@@ -9,8 +9,8 @@ Calculates standard Aalen-Johansen cumulative incidence functions, stratified by
 No adjustment for any confounders is made. This function is included only for reference and should not be used when confounder adjusted CIFs are desired.
 }
 \usage{
-cif_method_aalen_johansen(data, variable, ev_time, event, cause, conf_int,
-                          conf_level=0.95, ...)
+cif_aalen_johansen(data, variable, ev_time, event, cause, conf_int,
+                   conf_level=0.95, ...)
 }
 
 \arguments{

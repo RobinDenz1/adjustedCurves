@@ -9,8 +9,8 @@
 ## Aalen-Johansen estimator
 # TODO: confidence intervals are off
 #' @export
-cif_method_aalen_johansen <- function(data, variable, ev_time, event, cause,
-                                      conf_int, conf_level=0.95, ...) {
+cif_aalen_johansen <- function(data, variable, ev_time, event, cause,
+                               conf_int, conf_level=0.95, ...) {
 
   cif <- cmprsk::cuminc(ftime=data[,ev_time],
                         fstatus=data[,event],
@@ -40,9 +40,9 @@ cif_method_aalen_johansen <- function(data, variable, ev_time, event, cause,
 
 ## IPTW
 #' @export
-cif_method_iptw <- function(data, variable, ev_time, event, cause, conf_int,
-                            conf_level=0.95, times, treatment_model,
-                            censoring_model=NULL, verbose=F, ...) {
+cif_iptw <- function(data, variable, ev_time, event, cause, conf_int,
+                     conf_level=0.95, times, treatment_model,
+                     censoring_model=NULL, verbose=F, ...) {
   # empty censoring model if not specified
   if (is.null(censoring_model)) {
     form <- paste0("survival::Surv(", ev_time, ", ", event, "==0) ~ 1")
@@ -73,10 +73,10 @@ cif_method_iptw <- function(data, variable, ev_time, event, cause, conf_int,
 
 # IPTW pseudo
 #' @export
-cif_method_iptw_pseudo <- function(data, variable, ev_time, event, cause,
-                                   conf_int, conf_level=0.95, times,
-                                   treatment_model, weight_method="ps",
-                                   stabilize=T, se_method="cochrane", ...) {
+cif_iptw_pseudo <- function(data, variable, ev_time, event, cause,
+                            conf_int, conf_level=0.95, times,
+                            treatment_model, weight_method="ps",
+                            stabilize=T, se_method="cochrane", ...) {
   # get weights
   if (is.numeric(treatment_model)) {
     weights <- treatment_model
@@ -130,9 +130,9 @@ cif_method_iptw_pseudo <- function(data, variable, ev_time, event, cause,
 
 ## Direct Adjustment
 #' @export
-cif_method_direct <- function(data, variable, ev_time, event, cause, conf_int,
-                              conf_level=0.95, times, outcome_model,
-                              verbose=F, ...) {
+cif_direct <- function(data, variable, ev_time, event, cause, conf_int,
+                       conf_level=0.95, times, outcome_model,
+                       verbose=F, ...) {
 
   cif <- riskRegression::ate(event=outcome_model, treatment=variable,
                              data=data, estimator="Gformula",
@@ -158,8 +158,8 @@ cif_method_direct <- function(data, variable, ev_time, event, cause, conf_int,
 ## Matching
 # TODO: variance calculation is off
 #' @export
-cif_method_matching <- function(data, variable, ev_time, event, cause, conf_int,
-                                conf_level=0.95, treatment_model, ...) {
+cif_matching <- function(data, variable, ev_time, event, cause, conf_int,
+                         conf_level=0.95, treatment_model, ...) {
 
   if (is.numeric(treatment_model)) {
     ps_score <- treatment_model
@@ -172,20 +172,20 @@ cif_method_matching <- function(data, variable, ev_time, event, cause, conf_int,
   m_dat <- rbind(data[rr$index.treated,], data[rr$index.control,])
 
   # estimate cif
-  plotdata <- cif_method_aalen_johansen(data=m_dat, variable=variable,
-                                        ev_time=ev_time, event=event,
-                                        cause=cause, conf_int=conf_int,
-                                        conf_level=conf_level)
+  plotdata <- cif_aalen_johansen(data=m_dat, variable=variable,
+                                 ev_time=ev_time, event=event,
+                                 cause=cause, conf_int=conf_int,
+                                 conf_level=conf_level)
 
   return(plotdata)
 }
 
 ## Using Augmented Inverse Probability of Treatment Weighting
 #' @export
-cif_method_aiptw <- function(data, variable, ev_time, event, cause, conf_int,
-                             conf_level=0.95, times, outcome_model=NULL,
-                             treatment_model=NULL, censoring_model=NULL,
-                             verbose=F, ...) {
+cif_aiptw <- function(data, variable, ev_time, event, cause, conf_int,
+                      conf_level=0.95, times, outcome_model=NULL,
+                      treatment_model=NULL, censoring_model=NULL,
+                      verbose=F, ...) {
 
   # defaults for input models
   if (is.null(censoring_model)) {
@@ -234,9 +234,9 @@ cif_method_aiptw <- function(data, variable, ev_time, event, cause, conf_int,
 ## Using Pseudo Observations and Direct Adjustment
 # TODO: fails when len==1: either add linear regression or stop()
 #' @export
-cif_method_direct_pseudo <- function(data, variable, ev_time, event, cause,
-                                     times, outcome_vars, type_time="factor",
-                                     spline_df=10) {
+cif_direct_pseudo <- function(data, variable, ev_time, event, cause,
+                              times, outcome_vars, type_time="factor",
+                              spline_df=10) {
   # some constants
   len <- length(times)
   n <- nrow(data)
@@ -297,10 +297,10 @@ cif_method_direct_pseudo <- function(data, variable, ev_time, event, cause,
 
 ## Using AIPTW with Pseudo Observations
 #' @export
-cif_method_aiptw_pseudo <- function(data, variable, ev_time, event, cause,
-                                    conf_int, conf_level=0.95, times,
-                                    outcome_vars, treatment_model,
-                                    type_time="factor", spline_df=10) {
+cif_aiptw_pseudo <- function(data, variable, ev_time, event, cause,
+                             conf_int, conf_level=0.95, times,
+                             outcome_vars, treatment_model,
+                             type_time="factor", spline_df=10) {
   # some constants
   len <- length(times)
   n <- nrow(data)
@@ -404,10 +404,10 @@ cif_method_aiptw_pseudo <- function(data, variable, ev_time, event, cause,
 ## Targeted Maximum Likelihood Estimation
 # TODO: Fails with multiple time points cause of weird evaluation in "timepoints"
 #' @export
-cif_method_tmle <- function(data, variable, ev_time, event, cause, conf_int,
-                            conf_level=0.95, times, adjust_vars=NULL,
-                            SL.ftime=NULL, SL.ctime=NULL, SL.trt=NULL,
-                            glm.ftime=NULL, glm.ctime=NULL, glm.trt=NULL,
+cif_tmle <- function(data, variable, ev_time, event, cause, conf_int,
+                     conf_level=0.95, times, adjust_vars=NULL,
+                     SL.ftime=NULL, SL.ctime=NULL, SL.trt=NULL,
+                     glm.ftime=NULL, glm.ctime=NULL, glm.trt=NULL,
                             ...) {
   if (is.null(adjust_vars)) {
     all_covars <- colnames(data)
@@ -438,7 +438,9 @@ cif_method_tmle <- function(data, variable, ev_time, event, cause, conf_int,
   )
   # extract cumulative incidence at each timepoint overall
   tpfit <- withCallingHandlers({
-    survtmle::timepoints(fit, times=times)
+    survtmle.timepoints(fit, times=times, SL.trt=SL.trt, SL.ctime=SL.ctime,
+                        SL.ftime=SL.ftime, glm.trt=glm.trt, glm.ctime=glm.ctime,
+                        glm.ftime=glm.ftime)
   }, warning=function(w) {
     if (startsWith(conditionMessage(w), "Using formula(x) is deprecated"))
       invokeRestart("muffleWarning")

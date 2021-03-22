@@ -1,5 +1,5 @@
-\name{cif_method_matching}
-\alias{cif_method_matching}
+\name{cif_matching}
+\alias{cif_matching}
 
 \title{
 Using Matching to Calculate Adjusted CIFs
@@ -8,8 +8,8 @@ Using Matching to Calculate Adjusted CIFs
 This method works by first matching controls and treated patients using a previously estimated propensity score. Using this new matched population, a simple Aalen-Johansen estimator is used to calculate the adjusted CIFs.
 }
 \usage{
-cif_method_matching(data, variable, ev_time, event, cause, conf_int,
-                    conf_level=0.95, treatment_model, ...)
+cif_matching(data, variable, ev_time, event, cause, conf_int,
+             conf_level=0.95, treatment_model, ...)
 }
 
 \arguments{

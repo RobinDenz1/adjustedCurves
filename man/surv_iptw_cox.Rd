@@ -1,16 +1,16 @@
-\name{surv_method_iptw_cox}
-\alias{surv_method_iptw_cox}
+\name{surv_iptw_cox}
+\alias{surv_iptw_cox}
 
 \title{
 Inverse Probability of Treatment Weighted Survival using Cox-Regression
 }
 \description{
-This method works by modelling the treatment assignment mechanism. The individual observations are weighted using inverse probability of treatment weights or other balancing weights (see details) and a univariate cox-regression model. If the model is correctly specified, unbiased results will be obtained. The only difference to the \code{surv_method_iptw_km} is a slightly different weighting approach. They are essentially equal in large samples. See details for more information.
+This method works by modelling the treatment assignment mechanism. The individual observations are weighted using inverse probability of treatment weights or other balancing weights (see details) and a univariate cox-regression model. If the model is correctly specified, unbiased results will be obtained. The only difference to the \code{surv_iptw_km} is a slightly different weighting approach. They are essentially equal in large samples. See details for more information.
 }
 \usage{
-surv_method_iptw_cox(data, variable, ev_time, event, conf_int,
-                     conf_level=0.95, treatment_model, weight_method="ps",
-                     stabilize=T, ...)
+surv_iptw_cox(data, variable, ev_time, event, conf_int,
+              conf_level=0.95, treatment_model, weight_method="ps",
+              stabilize=T, ...)
 }
 
 \arguments{
@@ -77,7 +77,7 @@ Robin Denz
 }
 
 \seealso{
-\code{\link[WeightIt]{WeightIt}}, \code{\link[survival]{coxph}}, \code{\link{survfit.coxph}}
+\code{\link[WeightIt]{weightit}}, \code{\link[survival]{coxph}}, \code{\link{survfit.coxph}}
 }
 \examples{
 \dontrun{

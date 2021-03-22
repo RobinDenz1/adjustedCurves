@@ -1,5 +1,5 @@
-\name{surv_method_matching}
-\alias{surv_method_matching}
+\name{surv_matching}
+\alias{surv_matching}
 
 \title{
 Using Matching to Calculate Adjusted Survival Curves
@@ -8,8 +8,8 @@ Using Matching to Calculate Adjusted Survival Curves
 This method works by first matching controls and treated patients using a previously estimated propensity score. Using this new matched population, a simple Kaplan-Meier or Nelson-Aalen estimator is used to calculate the adjusted survival curves. Simulation studies have shown that this method, while unbiased if used appropriately, is significantly less efficient than other methods. See details.
 }
 \usage{
-surv_method_matching(data, variable, ev_time, event, conf_int,
-                     conf_level=0.95, treatment_model, stabilize=T, ...)
+surv_matching(data, variable, ev_time, event, conf_int,
+              conf_level=0.95, treatment_model, stabilize=T, ...)
 }
 
 \arguments{

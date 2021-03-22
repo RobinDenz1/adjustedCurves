@@ -443,7 +443,7 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
     }
 
     if ("treatment_model" %in% names(obj)) {
-      if (method=="aiptw_pseudo" | method=="iptw_pseudo") {
+      if (method=="aiptw_pseudo") {
         if (!(is.numeric(obj$treatment_model) |
               inherits(obj$treatment_model, "glm") |
               inherits(obj$treatment_model, "multinom"))) {
@@ -451,16 +451,22 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
                " numeric vector of propensity scores.")
         }
       }
-    } else {
-      stop("Argument 'treatment_model' is missing with no standard value.")
     }
 
-    if (method=="aiptw") {
-      if ((!"censoring_model" %in% names(obj)) &
-          (!"treatment_model" %in% names(obj)) &
-          (!"outcome_model" %in% names(obj))) {
-        stop("At least one of 'treatment_model', 'outcome_model' and ",
-             "'censoring_model' needs to be specified, see details.")
+    if (method %in% c("aiptw_pseudo", "direct_pseudo") & !is.null(times)) {
+      if (length(times)==1) {
+        stop("'geese' models require at least two distinct time points. ",
+             "Add more points in time to 'times' and run again.")
+      }
+      if (!is.null(obj$spline_df)) {
+        if (obj$spline_df > length(times)) {
+          warning("'spline_df' > len(times) might lead to problems.")
+        }
+      } else if (!is.null(obj$type_time)) {
+        if (10 > length(times) & obj$type_time!="factor") {
+          warning("'spline_df' > len(times) might lead to problems when",
+                  " type_time!='factor'.")
+        }
       }
     }
 

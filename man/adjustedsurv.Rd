@@ -5,7 +5,7 @@
 Calculate Confounder-Adjusted Survival Curves
 }
 \description{
-This is one of the two main functions of this R-Package. It allows the user to calculate confounder-adjusted survival curves using a variety of different methods. It is basically a wrapper for each \code{surv_method_} function with some additional functionality, such as bootstrapping. Some of these methods require additional packages to be installed and depending on the specified method there might be additional required arguments in the function call. Documentation on that can be found in the respective \code{surv_method_} function. See details and examples.
+This is one of the two main functions of this R-Package. It allows the user to calculate confounder-adjusted survival curves using a variety of different methods. It is basically a wrapper for each \code{surv_} function with some additional functionality, such as bootstrapping. Some of these methods require additional packages to be installed and depending on the specified method there might be additional required arguments in the function call. Documentation on that can be found in the respective \code{surv_} function. See details and examples.
 }
 \usage{
 adjustedsurv(data, variable, ev_time, event, method, conf_int=F,
@@ -55,21 +55,22 @@ Further arguments passed to the respective \code{surv_method}. See details.
 The primary purpose of the \code{adjustedsurv} function is to provide a convenient way to calculate confounder-adjusted survival curves using any of the methods provided in the literature. A \code{\link[=plot.adjustedsurv]{plot}} method is provided to graphically display the estimated survival curves as well. Currently the following methods can be used:
 
 \itemize{
-  \item{"\link[=surv_method_direct]{direct}": Direct Standardization based on a Cox-Regression model with or without stratification.}
-  \item{"\link[=surv_method_direct_pseudo]{direct_pseudo}": Direct Standardization based on Pseudo-Values.}
-  \item{"\link[=surv_method_iptw_km]{iptw_km}": A weighted Kaplan-Meier estimator.}
-  \item{"\link[=surv_method_iptw_cox]{iptw_cox}": A weighted estimator based on a univariate weighted Cox-Regression model.}
-  \item{"\link[=surv_method_iptw_pseudo]{iptw_pseudo}": A weighted estimator based on Pseudo-Values.}
-  \item{"\link[=surv_method_matching]{matching}": Using propensity score matching to estimate the adjusted survival curves.}
-  \item{"\link[=surv_method_el]{el}": Empirical Likelihood based estimator of the survival function.}
-  \item{"\link[=surv_method_aiptw]{aiptw}": An Augmented Inverse Probability of Treatment Weighting estimator.}
-  \item{"\link[=surv_method_aiptw_pseudo]{aiptw_pseudo}": An Augmented Inverse Probability of Treatment Weighting estimator using Pseudo-Values.}
-  \item{"\link[=surv_method_tmle]{tmle}": Targeted Maximum Likelihood Estimation for survival curves.}
-  \item{"\link[=surv_method_ostmle]{ostmle}": One-Step Targeted Maximum Likelihood Estimation for survival curves.}
-  \item{"\link[=surv_method_km]{km}": A simple stratified Kaplan-Meier estimator without any form of adjustment.}
+  \item{"\link[=surv_direct]{direct}": Direct Standardization based on a Cox-Regression model with or without stratification.}
+  \item{"\link[=surv_direct_pseudo]{direct_pseudo}": Direct Standardization based on Pseudo-Values.}
+  \item{"\link[=surv_iptw_km]{iptw_km}": A weighted Kaplan-Meier estimator.}
+  \item{"\link[=surv_iptw_cox]{iptw_cox}": A weighted estimator based on a univariate weighted Cox-Regression model.}
+  \item{"\link[=surv_iptw_pseudo]{iptw_pseudo}": A weighted estimator based on Pseudo-Values.}
+  \item{"\link[=surv_matching]{matching}": Using propensity score matching to estimate the adjusted survival curves.}
+  \item{"\link[=surv_el]{el}": Empirical Likelihood based estimator of the survival function.}
+  \item{"\link[=surv_aiptw]{aiptw}": An Augmented Inverse Probability of Treatment Weighting estimator.}
+  \item{"\link[=surv_aiptw_pseudo]{aiptw_pseudo}": An Augmented Inverse Probability of Treatment Weighting estimator using Pseudo-Values.}
+  \item{"\link[=surv_tmle]{tmle}": Targeted Maximum Likelihood Estimation for survival curves.}
+  \item{"\link[=surv_ostmle]{ostmle}": One-Step Targeted Maximum Likelihood Estimation for survival curves.}
+  \item{"\link[=surv_tmle_pseudo]{tmle_pseudo}": Targeted Maximum Likelihood Estimation for survival curves using Pseudo-Values.}
+  \item{"\link[=surv_km]{km}": A simple stratified Kaplan-Meier estimator without any form of adjustment.}
 }
 
-An overview over all of these methods can be found in PAPER. A shorter overview can be gained using the documentation of the respective \code{surv_method} function.
+An overview over all of these methods can be found in PAPER. A shorter overview can be gained using the documentation of the respective \code{surv_} function.
 
 For most methods approximations for the asymptotic variance of point estimates of the survival function have been proposed in the literature. Where available, those can be calculated and added to the output object using \code{conf_int=TRUE}. It is however recommended to use bootstrapping to estimate the variance instead, which can be done by setting \code{bootstrap=TRUE}. The \code{n_boot} argument is set to 500 by default. This number was choosen because it worked well in simulations but it does not guarantee convergence in practice. Users are recommended to inspect the bootstrapped estimates and adjust the number of replications accordingly.
 
@@ -79,7 +80,7 @@ To allow faster bootstrapping the user can choose to run the function on multipl
 \value{
 Returns an \code{adjustedsurv} object containing the following objects:
 
-\item{adjsurv}{A \code{data.frame} of estimated adjusted survival probabilities for some points in time for each level of \code{variable}. Depending on the arguments used also includes standard deviations and confidence intervals at points in time.
+\item{adjsurv}{A \code{data.frame} of estimated adjusted survival probabilities for some points in time for each level of \code{variable}. Depending on the arguments used also includes standard errors and confidence intervals at points in time.
 }
 \item{method}{
 The method used to adjust the survival curves.
@@ -109,9 +110,9 @@ The function itself was written by Robin Denz, but it includes wrappers for func
 }
 
 \seealso{
-\code{\link{surv_method_aiptw}}, \code{\link{surv_method_aiptw_pseudo}}, \code{\link{surv_method_direct}}, \code{\link{surv_method_direct_pseudo}},
-\code{\link{surv_method_iptw_km}}, \code{\link{surv_method_iptw_cox}}, \code{\link{surv_method_iptw_pseudo}}, \code{\link{surv_method_el}},
-\code{\link{surv_method_matching}}, \code{\link{surv_method_tmle}}, \code{\link{surv_method_ostmle}}
+\code{\link{surv_aiptw}}, \code{\link{surv_aiptw_pseudo}}, \code{\link{surv_direct}}, \code{\link{surv_direct_pseudo}},
+\code{\link{surv_iptw_km}}, \code{\link{surv_iptw_cox}}, \code{\link{surv_iptw_pseudo}}, \code{\link{surv_el}},
+\code{\link{surv_matching}}, \code{\link{surv_tmle}}, \code{\link{surv_ostmle}}, \code{\link{surv_tmle_pseudo}}
 }
 \examples{
 \dontrun{

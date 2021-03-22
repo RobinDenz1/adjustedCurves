@@ -1,5 +1,5 @@
-\name{cif_method_iptw_pseudo}
-\alias{cif_method_iptw_pseudo}
+\name{cif_iptw_pseudo}
+\alias{cif_iptw_pseudo}
 
 \title{
 Inverse Probability of Treatment Weighted CIFs using Pseudo-Values
@@ -8,10 +8,10 @@ Inverse Probability of Treatment Weighted CIFs using Pseudo-Values
 This method works by modelling the treatment assignment mechanism. The individual observations are weighted using inverse probability of treatment weights or other balancing weights (see details) and pseudo-values. If the model is correctly specified, unbiased results will be obtained.
 }
 \usage{
-cif_method_iptw_pseudo(data, variable, ev_time, event, cause, conf_int,
-                       conf_level=0.95, times, treatment_model,
-                       weight_method="ps", stabilize=T,
-                       se_method="cochrane", ...)
+cif_iptw_pseudo(data, variable, ev_time, event, cause, conf_int,
+                conf_level=0.95, times, treatment_model,
+                weight_method="ps", stabilize=T,
+                se_method="cochrane", ...)
 }
 
 \arguments{
@@ -37,7 +37,7 @@ A logical variable, indicating whether the asymptotic variances and confidence i
 A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
   }
   \item{times}{
-A numeric vector of time points at which the CIFs should be estimated or \code{NULL}. If \code{NULL} the CIFs are estimated at all points in time at which an event occured.
+A numeric vector of time points at which the CIFs should be estimated.
 }
   \item{treatment_model}{
 Must be either a model object with \code{variable} as response variable, a vector of weights or a formula which can be passed to \code{WeightIt}.
@@ -96,7 +96,7 @@ Robin Denz
 }
 
 \seealso{
-\code{\link[WeightIt]{WeightIt}}, \code{\link[prodlim]{prodlim}}
+\code{\link[WeightIt]{weightit}}, \code{\link[prodlim]{prodlim}}
 }
 \examples{
 \dontrun{

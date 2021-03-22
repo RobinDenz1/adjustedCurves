@@ -1,5 +1,5 @@
-\name{surv_method_direct}
-\alias{surv_method_direct}
+\name{surv_direct}
+\alias{surv_direct}
 
 \title{
 Direct Adjusted Survival Curves
@@ -8,8 +8,8 @@ Direct Adjusted Survival Curves
 Calculate confounder-adjusted survival curves using a previously fit Cox-Regression model. This is the most popular method used for adjusting survival curves. See details for more information.
 }
 \usage{
-surv_method_direct(data, variable, ev_time, event, conf_int,
-                   conf_level=0.95, times, outcome_model, verbose=F, ...)
+surv_direct(data, variable, ev_time, event, conf_int,
+            conf_level=0.95, times, outcome_model, verbose=F, ...)
 }
 
 \arguments{
@@ -35,7 +35,7 @@ A number specifying the confidence level of asymptotic and/or bootstrap confiden
 Must be a \code{coxph} model object with \code{variable} as independent variable.
 }
   \item{times}{
-A numeric vector of time points at which the survival probability should be estimated or \code{NULL}. If \code{NULL} the survival is estimated at all points in time at which an event occured.
+A numeric vector of time points at which the survival probability should be estimated.
 }
   \item{verbose}{
 Whether to print estimation information of the \code{ate} function in the \code{riskRegression} package.

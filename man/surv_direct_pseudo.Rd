@@ -1,5 +1,5 @@
-\name{surv_method_direct_pseudo}
-\alias{surv_method_direct_pseudo}
+\name{surv_direct_pseudo}
+\alias{surv_direct_pseudo}
 
 \title{
 Direct Adjusted Survival Curves using Pseudo-Values
@@ -8,9 +8,9 @@ Direct Adjusted Survival Curves using Pseudo-Values
 This function can be used to calculate direct adjusted survival curves using pseudo-values. It uses essentially the same methodology as the regular direct adjustment method, with the difference that the outcome mechanism is modeled using pseudo-values. Here, the outcome model is a generalised estimating equation model. See details for more information.
 }
 \usage{
-surv_method_direct_pseudo(data, variable, ev_time, event, times, outcome_vars,
-                          type_time="factor", spline_df=10, censoring_vars=NULL,
-                          ipcw_method="binder")
+surv_direct_pseudo(data, variable, ev_time, event, times, outcome_vars,
+                   type_time="factor", spline_df=10, censoring_vars=NULL,
+                   ipcw_method="binder")
 }
 
 \arguments{
@@ -27,7 +27,7 @@ A character string specifying the variable indicating the time-to-event or time-
 A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
 }
   \item{times}{
-A numeric vector of time points at which the survival probability should be estimated or \code{NULL}. If \code{NULL} the survival is estimated at all points in time at which an event occured.
+A numeric vector of time points at which the survival probability should be estimated.
 }
   \item{outcome_vars}{
 A character vector of column names specifying variables to be used when modeling the outcome mechanism using \code{geese}. See details and examples.
@@ -60,9 +60,11 @@ The specific method used in the calculation of inverse probability of censoring 
 
 This method works by executing the following steps: (1) First Pseudo-Values for the survival probabilities are estimated for each observation in the dataset and some points in time T. Afterwards (2) a new dataset is created in which every individual observation has multiple rows, one for each point in time of interest. (3) This dataset is used to fit a generalised estimating equations (geese) model, using the Pseudo-Values as independent variable. Next (4) multiple copies of the new dataset are created, one for each possible level of the \code{variable} of interest. (5) The \code{variable} is then set to one level for all observations in each dataset. (5) The \code{geese} model is used to predict the survival probabilities at some points in time T for each observation in all dataset copies. (6) Those estimated probabilities are averaged for each dataset at each point in time, resulting in adjusted survival probabilities for all levels of the group variable at the specified points in time.
 
-It is essentially the same procedure as desribed in \code{\link[=surv_method_direct]{"direct"}}. The only difference is that instead of relying on a \code{coxph} model, this method uses Pseudo-Values and a geese model. This can be usefull if the data does not conform to some assumptions needed to use the Cox-Regression model (for example the proportional hazards assumption).
+It is essentially the same procedure as desribed in \code{\link[=surv_direct]{"direct"}}. The only difference is that instead of relying on a \code{coxph} model, this method uses Pseudo-Values and a geese model. This can be usefull if the data does not conform to some assumptions needed to use the Cox-Regression model (for example the proportional hazards assumption).
 
 When estimating the \code{geese} model the \code{ev_time} variable is used as a factor by default. This results in one coefficient being estimated for each unique point in time, which can be very slow computationally if there are a lot of unique points in time and/or the dataset has many rows. In these cases it is recommended to use \code{type_time="bs"} or \code{type_time="ns"}, which results in the \code{ev_time} being modeled using B-Splines or Natural Splines. Simulation studies indicate that there is little difference in the estimates when an appropriately large number of \code{spline_df} is used.
+
+Additionally, covariate-dependent censoring can be corrected for using inverse probability of censoring weighted pseudo-values (Binder et al. 2014) instead of regular pseudo-values (specified using the \code{censoring_vars} and \code{ipcw_method} arguments).
 }
 \value{
 Returns a \code{data.frame} object containing the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
@@ -73,6 +75,8 @@ Per K. Andersen, Elisavet Syriopoulou, and Erik T. Parner. "Causal Inference in 
 Per K. Andersen and Maja Pohar Perme. "Pseudo-Observations in Survival Analysis". In: Statistical Methods in Medical Research 19 (2010), pp. 71-99.
 
 Aris Perperoglou, Willi Sauerbrei, Michal Abrahamowicz, and Matthias Schmid. "A Review of Spline Function Procedures in R". In: BMC Medical Research Methodology 19 (2019), pp. 1-16
+
+Nadine Binder, Thomas A. Gerds, and Per Kragh Andersen. "Pseudo-Observations for Competing Risks with Covariate Dependent Censoring". In: Lifetime Data Analysis 20 (2014), pp. 303–315.
 }
 \author{
 Robin Denz

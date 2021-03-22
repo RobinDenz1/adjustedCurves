@@ -1,5 +1,5 @@
-\name{cif_method_direct}
-\alias{cif_method_direct}
+\name{cif_direct}
+\alias{cif_direct}
 
 \title{
 Direct Adjusted Cumulative Incidence Functions
@@ -8,8 +8,8 @@ Direct Adjusted Cumulative Incidence Functions
 Calculate confounder-adjusted CIFs using a previously fit Cause-Specific Cox-Regression model in a competing risks setting.
 }
 \usage{
-cif_method_direct(data, variable, ev_time, event, cause, conf_int,
-                  conf_level=0.95, times, outcome_model, verbose=F, ...)
+cif_direct(data, variable, ev_time, event, cause, conf_int,
+           conf_level=0.95, times, outcome_model, verbose=F, ...)
 }
 
 \arguments{
@@ -38,7 +38,7 @@ A number specifying the confidence level of asymptotic and/or bootstrap confiden
 Must be a \code{CauseSpecificCox} model object with \code{variable} as independent variable.
 }
   \item{times}{
-A numeric vector of time points at which the CIFs should be estimated or \code{NULL}. If \code{NULL} the CIFs are estimated at all points in time at which an event occured.
+A numeric vector of time points at which the CIFs should be estimated.
 }
   \item{verbose}{
 Whether to print estimation information of the \code{ate} function in the \code{riskRegression} package.
