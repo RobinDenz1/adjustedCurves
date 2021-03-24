@@ -32,7 +32,7 @@ The cause of interest for which the cumulative incidence functions should be cal
 A logical variable, indicating whether the asymptotic variances and confidence intervals of the CIFs should be calculated.
   }
   \item{conf_level}{
-A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
+A number specifying the confidence level of asymptotic confidence intervals.
   }
   \item{treatment_model}{
 Must be either a model object with \code{variable} as response variable or a vector of previously estimated propensity scores.
@@ -54,7 +54,11 @@ Further arguments passed to the \code{Match} function of the \code{Matching} Pac
 \item{\strong{Dependencies:} This method relies on both the \code{Matching} and the \code{cmprsk} packages.}
 }
 
-WARUM KEIN BOOTSTRAP?
+Using the estimated propensity score, the individual observations in the dataset are matched to each other creating a new dataset in which the covariate distributions are balanced in respect to the two groups defined by \code{variable}. A simple Aalen-Johansen estimator is then used to calculate the cause-specific confounder-adjusted CIFs.
+
+Simulation results showed that this specific implementation of this method is the least efficient method contained in this R-Package. While it does produce unbiased estimates, the variation in these estimates is very high. We strongly suggest using one of the other methods implemented here.
+
+In contrast to all other methods, bootstrapped standard error and confidence intervals are generally not unbiased here and are therefore not allowed. See Abadie & Imbens (2008) for a detailed explanation.
 
 }
 \value{

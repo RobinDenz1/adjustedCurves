@@ -32,7 +32,7 @@ A character string specifying the binary event indicator. Must be a valid column
 A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated.
   }
   \item{conf_level}{
-A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
+A number specifying the confidence level of asymptotic confidence intervals.
   }
   \item{times}{
 A numeric vector of time points at which the survival probability should be estimated.
@@ -66,12 +66,14 @@ The specific method used in the calculation of inverse probability of censoring 
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are not guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are not guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on the \code{geepack} and \code{\link[prodlim]{prodlim}} packages.}
+\item{\strong{Dependencies:} This method relies on the \code{geepack} and \code{\link[prodlim]{prodlim}} packages. Additionally requires the \code{eventglm} package if \code{censoring_vars} is specified.}
 }
 
 Instead of only modeling the outcome mechanism or the treatment assignment mechanism, both kind of models are required to use this method. If either of those models are correctly specified, unbiased estimates will be obtained. In contrast to the \code{\link[=surv_aiptw]{"aiptw"}} method, the "aiptw_pseudo" method uses a generalised estimation equation (geese) approach to model the outcome mechanism. The model is fit in the same way as described in the \code{\link[=surv_direct_pseudo]{"direct_pseudo"}} method. Those Direct Standardization based estimates are then transformed using the previously estimated propensity score. This results in the doubly-robust property of the method. More information on this particular method can be found in the original article by Wang (2018), more information on Pseudo-Values is available in Andersen et al. (2017) and Andersen and Perme (2010).
 
 When estimating the \code{geese} model the \code{ev_time} variable is used as a factor by default. This results in one coefficient being estimated for each unique point in time, which can be very slow computationally if there are a lot of unique points in time and/or the dataset has many rows. In these cases it is recommended to use \code{type_time="bs"} or \code{type_time="ns"}, which results in the \code{ev_time} being modeled using B-Splines or Natural Splines. Simulation studies indicate that there is little difference in the estimates when an appropriately large number of \code{spline_df} is used.
+
+Covariate-dependent censoring can be accounted for by using inverse probability of censoring weighted pseudo-values instead of reagular pseudo values (see Binder et al. 2014).
 
 }
 \value{

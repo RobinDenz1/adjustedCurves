@@ -232,7 +232,6 @@ cif_aiptw <- function(data, variable, ev_time, event, cause, conf_int,
 
 
 ## Using Pseudo Observations and Direct Adjustment
-# TODO: fails when len==1: either add linear regression or stop()
 #' @export
 cif_direct_pseudo <- function(data, variable, ev_time, event, cause,
                               times, outcome_vars, type_time="factor",
@@ -365,7 +364,7 @@ cif_aiptw_pseudo <- function(data, variable, ev_time, event, cause,
       ps_score_lev <- ps_score[,levs[i]]
 
       dr <- (pseudo*group_ind-(group_ind-ps_score_lev)*m)/ps_score_lev
-      # if binary, use equation from the paper directly
+    # if binary, use equation from the paper directly
     } else if (i == 1) {
       group <- ifelse(data[,variable]==levs[1], 0, 1)
       dr <- (pseudo*(1-group)+(group-ps_score)*m)/(1-ps_score)
@@ -402,7 +401,6 @@ cif_aiptw_pseudo <- function(data, variable, ev_time, event, cause,
 }
 
 ## Targeted Maximum Likelihood Estimation
-# TODO: Fails with multiple time points cause of weird evaluation in "timepoints"
 #' @export
 cif_tmle <- function(data, variable, ev_time, event, cause, conf_int,
                      conf_level=0.95, times, adjust_vars=NULL,
@@ -525,8 +523,8 @@ cif_tmle_pseudo <- function(data, variable, ev_time, event, cause,
     Sdata[,col] <- rep(data[,col], len)
   }
 
-  # TODO: not good, NA removal
-  Sdata <- stats::na.omit(Sdata)
+  # remove rows where pseudo-values are NA for geese
+  Sdata <- Sdata[!is.na(Sdata$yi),]
 
   # don't use time in prediction model if there is
   # only one point in time of interest
@@ -609,7 +607,6 @@ cif_tmle_pseudo <- function(data, variable, ev_time, event, cause,
   # calculate confidence intervals from asymptotic variance
   if (conf_int) {
 
-    # TODO: check if this is valid
     cif_cis <- confint_surv(surv=plotdata$cif, se=plotdata$se,
                             conf_level=conf_level, conf_type="plain")
     plotdata$ci_lower <- cif_cis$left

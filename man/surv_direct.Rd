@@ -5,7 +5,7 @@
 Direct Adjusted Survival Curves
 }
 \description{
-Calculate confounder-adjusted survival curves using a previously fit Cox-Regression model. This is the most popular method used for adjusting survival curves. See details for more information.
+Calculate confounder-adjusted survival curves using a previously fit Cox-Regression model.
 }
 \usage{
 surv_direct(data, variable, ev_time, event, conf_int,
@@ -29,7 +29,7 @@ A character string specifying the binary event indicator. Must be a valid column
 A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated. Not available for all methods.
   }
   \item{conf_level}{
-A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
+A number specifying the confidence level of asymptotic confidence intervals.
   }
   \item{outcome_model}{
 Must be a \code{coxph} model object with \code{variable} as independent variable.

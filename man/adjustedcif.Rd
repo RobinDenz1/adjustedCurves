@@ -39,7 +39,7 @@ A logical variable, indicating whether the asymptotic variances and confidence i
 A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
   }
   \item{times}{
-A numeric vector of time points at which the cumulative incidences should be estimated or \code{NULL}. If \code{NULL} the cumulative incidence is estimated at all points in time at which an event occured. Only relevant for some methods, ignored otherwise. See details.
+A numeric vector of time points at which the cumulative incidences should be estimated or \code{NULL}. If \code{NULL} the cumulative incidence is estimated at all points in time at which an event occured.
   }
   \item{bootstrap}{
 A logical variable indicating whether bootstrapping should be performed or not. See details.
@@ -70,7 +70,7 @@ The primary purpose of the \code{adjustedcif} function is to provide a convenien
   \item{"\link[=cif_aalen_johansen]{aalen_johansen}": A simple stratified Nelson-Aalen estimator without any form of adjustment.}
 }
 
-An overview over all of these methods can be found in PAPER. A shorter overview can be gained using the documentation of the respective \code{cif_} function.
+A short description of each method is contained in the documentation of the respective \code{cif_} function. For more detailed descriptions the cited literature in that same documentation can be used.
 
 For most methods approximations for the asymptotic variance of point estimates of the CIF have been proposed in the literature. Where available, those can be calculated and added to the output object using \code{conf_int=TRUE}. It is however recommended to use bootstrapping to estimate the variance instead, which can be done by setting \code{bootstrap=TRUE}. The \code{n_boot} argument is set to 500 by default. This number was choosen because it worked well in simulations but it does not guarantee convergence in practice. Users are recommended to inspect the bootstrapped estimates and adjust the number of replications accordingly.
 

@@ -33,7 +33,7 @@ The cause of interest for which the cumulative incidence functions should be cal
 A logical variable, indicating whether the asymptotic variances and confidence intervals of the CIFs should be calculated. For the available types of confidence intervals see \code{?cuminc}.
   }
   \item{conf_level}{
-A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
+A number specifying the confidence level of asymptotic confidence intervals.
   }
   \item{...}{
 Further arguments passed to \code{\link[cmprsk]{cuminc}}.

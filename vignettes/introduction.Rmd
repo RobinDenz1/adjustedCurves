@@ -190,11 +190,78 @@ In many situations there are multiple mutually exclusive types of events instead
 
 While the computational details and the underlying theory is slightly different (ZITATE), the syntax for the R-Package stays pretty much exactly the same. The only major difference is that instead of using the **adjustedsurv** function, the **adjustedcif** function should be utilized. Additionally, the user now also has to specify which event-type is of interest (argument "cause").
 
-First we need new example data, mirroring the competing risks situation. TODO: HIER DIE ANDERE SIMULATIONSFUNKTION
+First we need new example data, mirroring the competing risks situation. We are going to use the **sim_confounded_crisk** function, which does the same thing as the **sim_confounded_surv** function, but with competing risks data:
+
+```{r echo=TRUE}
+#TODO: HIER DIE ANDERE SIMULATIONSFUNKTION
+data <- sim_confounded_surv(n=300)
+data$group <- as.factor(data$group)
+data$event[data$event==1] <- sample(c(1, 2), size=sum(data$event), replace=T)
+```
 
 ### Direct Standardization
 
 Let's again start with the *Direct Standardization* method. Instead of using a simple **coxph** method, we need to use a model for the time-to-event process which takes the multiple event-types into account. One such method is the *Cause-Specific Cox-Regression* model (ZITAT). A simple implementation of this model is contained in the **riskRegression** R-Package.
+
+```{r echo=TRUE}
+# it is important to use X=TRUE in the coxph function call
+outcome_model <- riskRegression::CSC(Hist(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
+                                     data=data)
+```
+
+This model can then be used in a call to the **adjustedcif** function, as shown below:
+
+```{r echo=TRUE, message=FALSE, fig.show=TRUE, fig.width=5}
+adjcif <- adjustedcif(data=data,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      outcome_model=outcome_model,
+                      cause=1,
+                      conf_int=T)
+plot(adjcif)
+```
+
+This shows the confounder-adjusted cumulative incidence functions for cause = 1. By setting cause to 2 we get the confounder-adjusted cumulative incidence functions for the other cause:
+
+```{r echo=TRUE, message=FALSE, fig.show=TRUE, fig.width=5}
+adjcif <- adjustedcif(data=data,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      outcome_model=outcome_model,
+                      cause=2,
+                      conf_int=T)
+plot(adjcif)
+```
+
+### Inverse Probability of Treatment Weighting
+
+The IPTW estimator can be used exactly the same way as we did with the *adjustedsurv* function:
+
+```{r echo=TRUE, fig.show=TRUE, fig.width=5}
+treatment_model <- glm(group ~ x1 + x2 + x3 + x4 + x5 + x6,
+                       data=data, family="binomial"(link="logit"))
+
+adjcif <- adjustedcif(data=data,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="iptw",
+                      treatment_model=treatment_model,
+                      cause=1,
+                      conf_int=T)
+plot(adjcif)
+```
+
+The other estimators can be used using essentially the same syntax.
+
+## Adjusted Curves with more than two treatments
+
+## Calculating the adjusted restricted mean survival time
+
 
 
 

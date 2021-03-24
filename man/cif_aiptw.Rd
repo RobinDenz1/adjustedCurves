@@ -34,19 +34,19 @@ The cause of interest for which the cumulative incidence functions should be cal
 A logical variable, indicating whether the asymptotic variances and confidence intervals of the CIFs should be calculated.
   }
   \item{conf_level}{
-A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
+A number specifying the confidence level of asymptotic confidence intervals.
   }
   \item{times}{
 A numeric vector of time points at which the CIFs should be estimated.
 }
   \item{outcome_model}{
-Must be a \code{CauseSpecificCox} model object, modeling the time-to-event mechanism. See details and examples.
+Must be a \code{CauseSpecificCox} model object created using the \code{\link[riskRegression]{CSC}} function, modeling the time-to-event mechanism. See details and examples.
 }
   \item{treatment_model}{
 Must be a \code{glm} model object with \code{variable} as response variable. See details and examples.
 }
   \item{censoring_model}{
-Must be a \code{coxph} model object, modeling the censoring mechanism. See details and examples.
+Must be a \code{coxph} model object, modeling the censoring mechanism or \code{NULL}. If \code{NULL} (default) independent censoring is assumed. See details and examples.
 }
   \item{verbose}{
 Whether to print estimation information of the \code{ate} function in the \code{riskRegression} package.
@@ -68,7 +68,7 @@ Further arguments passed to \code{\link[riskRegression]{ate}}.
 \item{\strong{Dependencies:} This method relies on the \code{\link[riskRegression]{riskRegression}} package.}
 }
 
-Instead of only modeling the outcome mechanism or the treatment assignment mechanism, both kind of models are required to use this method. If either of those models are correctly specified, unbiased estimates will be obtained. Can also be used to adjust for dependent censoring using a Cox-Regression model. An obvious advantage of this method is it's doubly robust property. This however comes at the price of some efficiency (see MY PAPER). It is also possible that some estimates fall outside the 0 and 1 probability bounds, particularly if the time is near 0 or the maximal observed event time. There is also no guarantee that the estimated CIFs will be monotonically increasing. For more information on the methods the user is referred to the literature listed in the references.
+Instead of only modeling the outcome mechanism or the treatment assignment mechanism, both kind of models are required to use this method. If either of those models are correctly specified, unbiased estimates will be obtained. Can also be used to adjust for dependent censoring using a Cox-Regression model. An obvious advantage of this method is it's doubly robust property. This however comes at the price of some efficiency. It is also possible that some estimates fall outside the 0 and 1 probability bounds, particularly if the time is near 0 or the maximal observed event time. There is also no guarantee that the estimated CIFs will be monotonically increasing. For more information on the methods the user is referred to the literature listed in the references.
 
 This function is basically just a wrapper around the \code{\link[riskRegression]{ate}} function from the \code{riskRegression} package. Additional arguments may be passed to that function using the \code{...} syntax. It is however recommended to use \code{\link[riskRegression]{ate}} directly in these cases.
 

@@ -90,12 +90,10 @@ weighted.var.se <- function(x, w, se_method, na.rm=F) {
 ## for multiple time points
 geese_predictions <- function(geese_mod, Sdata, times, n) {
 
-  current.na.action <- options('na.action')
-  options(na.action="na.pass")
   # full model matrix and betas
-  mod_mat <- stats::model.matrix(geese_mod$formula, data=Sdata)
-  options(na.action=current.na.action[[1]])
-
+  mod_mat <- stats::model.matrix(geese_mod$formula,
+                                 data=stats::model.frame(geese_mod$formula, Sdata,
+                                             na.action=stats::na.pass))
   betas <- geese_mod$beta
 
   apply_betas <- function(x, betas) {

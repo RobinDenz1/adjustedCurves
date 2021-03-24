@@ -32,7 +32,7 @@ The cause of interest for which the cumulative incidence functions should be cal
 A logical variable, indicating whether the asymptotic variances and confidence intervals of the CIFs should be calculated. Not available for all methods.
   }
   \item{conf_level}{
-A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
+A number specifying the confidence level of asymptotic confidence intervals.
   }
   \item{outcome_model}{
 Must be a \code{CauseSpecificCox} model object with \code{variable} as independent variable.

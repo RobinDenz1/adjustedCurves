@@ -819,8 +819,8 @@ surv_tmle_pseudo <- function(data, variable, ev_time, event,
     Sdata[,col] <- rep(data[,col], len)
   }
 
-  # TODO: not good, NA removal
-  Sdata <- stats::na.omit(Sdata)
+  # remove rows where pseudo-values are NA for geese
+  Sdata <- Sdata[!is.na(Sdata$yi),]
 
   # don't use time in prediction model if there is
   # only one point in time of interest
@@ -903,7 +903,6 @@ surv_tmle_pseudo <- function(data, variable, ev_time, event,
   # calculate confidence intervals from asymptotic variance
   if (conf_int) {
 
-    # TODO: check if this is valid
     surv_cis <- confint_surv(surv=plotdata$surv, se=plotdata$se,
                              conf_level=conf_level, conf_type="plain")
     plotdata$ci_lower <- surv_cis$left

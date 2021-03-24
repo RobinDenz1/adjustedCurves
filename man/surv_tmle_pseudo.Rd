@@ -32,7 +32,7 @@ A character string specifying the binary event indicator. Must be a valid column
 A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated. Not available for all methods.
   }
   \item{conf_level}{
-A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
+A number specifying the confidence level of asymptotic confidence intervals.
   }
   \item{times}{
 A numeric vector of time points at which the survival probability should be estimated.
@@ -75,7 +75,7 @@ Further arguments passed to \code{tmle}.
 \item{\strong{Allowed Time Values:} In contrast to the other TMLE based methods, this method allows both integer time and continuous times.}
 \item{\strong{Bounded Estimates:} Estimates are not guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are not guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on the \code{tmle} and \code{SuperLearner} packages.}
+\item{\strong{Dependencies:} This method relies on the \code{tmle}, \code{SuperLearner} and \code{prodlim} packages. Additionally requires the \code{eventglm} package if \code{censoring_vars} is specified.}
 }
 
 # TODO: Description of this method

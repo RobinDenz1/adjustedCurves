@@ -67,7 +67,7 @@ In the second step the generated covariates are used to estimate the probability
 
 Next, survival times are generated based on the method described in Bender et al. (2005) using the causal coefficients defined in \code{outcome_betas} and \code{group_beta}. Both the independently generated covariates and the covariate-dependent treatment variable are used in this step. This introduces confounding.
 
-Independent right-censoring is introduced by taking \code{n} independent random draws from some distribution defined by \code{cens_fun} and censoring every individual whos censoring time is smaller than its simulated survival time. The whole process is based on work from Chatton et al. (2020) and described in more detail in MY PAPER.
+Independent right-censoring is introduced by taking \code{n} independent random draws from some distribution defined by \code{cens_fun} and censoring every individual whos censoring time is smaller than its simulated survival time. The whole process is based on work from Chatton et al. (2020).
 
 Currently only supports binary treatments and does not allow dependent censoring.
 }

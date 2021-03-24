@@ -70,7 +70,7 @@ The primary purpose of the \code{adjustedsurv} function is to provide a convenie
   \item{"\link[=surv_km]{km}": A simple stratified Kaplan-Meier estimator without any form of adjustment.}
 }
 
-An overview over all of these methods can be found in PAPER. A shorter overview can be gained using the documentation of the respective \code{surv_} function.
+A short description of each method is contained in the documentation of the respective \code{surv_} function. For more detailed descriptions the cited literature in that same documentation can be used.
 
 For most methods approximations for the asymptotic variance of point estimates of the survival function have been proposed in the literature. Where available, those can be calculated and added to the output object using \code{conf_int=TRUE}. It is however recommended to use bootstrapping to estimate the variance instead, which can be done by setting \code{bootstrap=TRUE}. The \code{n_boot} argument is set to 500 by default. This number was choosen because it worked well in simulations but it does not guarantee convergence in practice. Users are recommended to inspect the bootstrapped estimates and adjust the number of replications accordingly.
 
@@ -196,7 +196,7 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         n_cores=parallel::detectCores()-1)
 
 # More specific examples can be found in the documentation of each
-# respective surv_method. See ?surv_method_ + "method" for more information.
+# respective surv_method. See ?surv_ + "method" for more information.
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

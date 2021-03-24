@@ -5,7 +5,7 @@
 Adjusted CIFs using Targeted Maximum Likelihood Estimation based on Pseudo-Values
 }
 \description{
-Calculate cause-specific confounder-adjusted CIFs using a standard targeted maximum likelihood estimator for continuous outcomes for right-censored competing-risks data using pseudo-values.
+Calculate cause-specific confounder-adjusted CIFs using a standard targeted maximum likelihood estimator for continuous outcomes with right-censored competing-risks data using pseudo-values.
 }
 \usage{
 cif_tmle_pseudo(data, variable, ev_time, event, cause, conf_int,

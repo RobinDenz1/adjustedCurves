@@ -33,7 +33,7 @@ A character string specifying the binary event indicator. Must be a valid column
 A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated.
   }
   \item{conf_level}{
-A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
+A number specifying the confidence level of asymptotic confidence intervals.
   }
   \item{times}{
 A numeric vector of time points at which the survival probability should be estimated.
@@ -78,6 +78,14 @@ Tolerance at which estimated treatment assignment probabilities are truncated.
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
 \item{\strong{Dependencies:} This method relies on the \code{survtmle}, \code{MOSS} and \code{SuperLearner} packages.}
 }
+
+Standard TMLE is a two-step procedure. First, initial estimates for the treatment-assignment and the outcome-mechanisms are made using loss-based learning. This is implemented here using the \code{SuperLearner} methodology. In the next step, the estimates obtained by using the outcome-mechanism model are fluctuated based on information from the treatment-assignment model. If the outcome model is already consistent, this fluctuation is very small and the estimates stay consistent. If the outcome model is biased, the fluctuation removes the bias whenever the treatment assignment model is consistent. This process is iterative and continues until a threshhold is hit (either the maximum number of iterations is reached or the bias is smaller than the specified tolerance, see \code{?survtmle}).
+
+In contrast to the estimator implemented in the \code{\link[=surv_tmle]{tmle}} method, the OSTMLE uses a LASSO or Ridge Regression model in the targeting step to fluctuate the initial estimates. Details can be found in Cai and van der Laan (2020).
+
+As has been shown in multiple studies by Mark J. van der Laan and colleagues, this method has some desireable mathematical properties and generally performs well in appropriate scenarios. The biggest problem is however, that it is only defined for discrete (integer-valued) survival times. Simply discretizing continuous survival times only works to a certain extent and is generally discouraged. If TMLE estimates for continuous survival data are the goal, the user should use the \code{\link[=surv_tmle_pseudo]{tmle_pseudo}} method instead.
+
+When the sample size is large or many time points are of interest, this method will also be *very* slow. While possible to run, bootstrapping would take an enormous amount of time and is therefore discouraged.
 
 }
 \value{
