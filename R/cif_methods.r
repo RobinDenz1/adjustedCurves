@@ -1,4 +1,17 @@
-##################### Similar Methods as in Survival Context ###################
+# Copyright (C) 2021  Robin Denz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # A tradeoff had to be made here. As can clearly be seen, some cif_method
 # functions are nearly identical to the surv_method equivalents. Instead
@@ -10,7 +23,7 @@
 # TODO: confidence intervals are off
 #' @export
 cif_aalen_johansen <- function(data, variable, ev_time, event, cause,
-                               conf_int, conf_level=0.95, ...) {
+                               conf_int, conf_level=0.95, times=NULL, ...) {
 
   cif <- cmprsk::cuminc(ftime=data[,ev_time],
                         fstatus=data[,event],
@@ -33,6 +46,10 @@ cif_aalen_johansen <- function(data, variable, ev_time, event, cause,
                              conf_level=conf_level, conf_type="plain")
     plotdata$ci_lower <- cif_cis$left
     plotdata$ci_upper <- cif_cis$right
+  }
+
+  if (!is.null(times)) {
+    plotdata <- specific_times(plotdata, times, cif=T)
   }
 
   return(plotdata)

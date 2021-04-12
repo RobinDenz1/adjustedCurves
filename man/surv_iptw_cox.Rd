@@ -8,9 +8,8 @@ Inverse Probability of Treatment Weighted Survival using Cox-Regression
 This method works by modelling the treatment assignment mechanism. The individual observations are weighted using inverse probability of treatment weights or other balancing weights (see details) and a univariate cox-regression model. If the model is correctly specified, unbiased results will be obtained. The only difference to the \code{surv_iptw_km} is a slightly different weighting approach. They are essentially equal in large samples. See details for more information.
 }
 \usage{
-surv_iptw_cox(data, variable, ev_time, event, conf_int,
-              conf_level=0.95, treatment_model, weight_method="ps",
-              stabilize=T, ...)
+surv_iptw_cox(data, variable, ev_time, event, conf_int, conf_level=0.95,
+              times=NULL, treatment_model, weight_method="ps", stabilize=T, ...)
 }
 
 \arguments{
@@ -32,6 +31,9 @@ A logical variable, indicating whether the asymptotic variances and confidence i
   \item{conf_level}{
 A number specifying the confidence level of asymptotic confidence intervals.
   }
+  \item{times}{
+A numeric vector of time points for which to return the survival probability estimates \code{NULL} (default). If \code{NULL} the whole curve will be estimated according to the usual Kaplan-Meier procedure. When custom time points are specified the whole curve is estimated anyways and the time specific estimates are simply read off that curve.
+}
   \item{treatment_model}{
 Must be either a model object with \code{variable} as response variable, a vector of weights or a formula which can be passed to \code{WeightIt}.
 }

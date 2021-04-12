@@ -1,28 +1,53 @@
 Package: adjustedCurves
 Title: An R-Package to Calculate Confounder-Adjusted Survival Curves and Cumulative Incidence Functions
-Version: 0.1
+Version: 1.0.0
 Authors@R: 
     person(given = "Robin",
            family = "Denz",
            role = c("aut", "cre"),
            email = "robin.denz@rub.de")
-Maintainer@R:
-	person(given = "Robin",
-           family = "Denz",
-           role = c("aut", "cre"),
-           email = "robin.denz@rub.de")
+Maintainer: Robin Denz <robin.denz@rub.de>
 BugReports: https://github.com/RobinDenz1/adjustedCurves
 Contact: <robin.denz@rub.de>
 Description: Estimates and plots confounder-adjusted survival curves using either 'Direct Adjustment', 'Direct Adjustment with Pseudo-Values', various forms of 'Inverse Probability of Treatment Weighting', two forms of 'Augmented Inverse Probability of Treatment Weighting',
  'Empirical Likelihood Estimation' and 'Targeted Maximum Likelihood Estimation'. Also includes a significance test for the equality of two adjusted survival curves and the calculation of adjusted restricted mean survival times.
  Additionally enables the user to estimate and plot cause-specific confounder-adjusted cumulative incidence functions in the competing risks setting using the same methods (with some exceptions).
-License: MIT + file LICENSE
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
-Imports: dplyr, ggplot2, R.utils, rlang, survival, stats, utils, doParallel, doRNG, foreach
+Imports: 
+	dplyr,
+	ggplot2,
+	R.utils,
+	rlang,
+	survival,
+	stats,
+	utils,
+	doParallel,
+	doRNG,
+	foreach
 Suggests: 
-    testthat (>= 3.0.0), Matching, WeightIt, prodlim, survtmle, MOSS, adjKMtest, riskRegression, geepack, nnet, splines, cmprsk, eventglm (>= 1.1.1), tmle, SuperLearner, pammtools, knitr, rmarkdown
+    testthat (>= 3.0.0),
+	Matching,
+	WeightIt,
+	prodlim,
+	survtmle,
+	R6,
+	MASS,
+	tidyr,
+	adjKMtest,
+	riskRegression,
+	geepack,
+	nnet,
+	splines,
+	cmprsk,
+	eventglm (>= 1.1.1),
+	tmle (>= 1.5.0),
+	SuperLearner (>= 2.0.0),
+	pammtools,
+	knitr,
+	rmarkdown
 Config/testthat/edition: 3
 VignetteBuilder: knitr

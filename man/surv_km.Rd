@@ -9,7 +9,8 @@ Calculates standard Kaplan-Meier survival curves, stratified by the group variab
 No adjustment for any confounders is made. This function is included only for reference and should not be used when confounder adjusted survival curves are desired.
 }
 \usage{
-surv_km(data, variable, ev_time, event, conf_int, conf_level=0.95, ...)
+surv_km(data, variable, ev_time, event, conf_int, conf_level=0.95,
+        times=NULL, ...)
 }
 
 \arguments{
@@ -31,6 +32,9 @@ A logical variable, indicating whether the asymptotic variances and confidence i
   \item{conf_level}{
 A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
   }
+  \item{times}{
+A numeric vector of time points for which to return the survival probability estimates or \code{NULL} (default). If \code{NULL} the whole curve will be estimated according to the usual Kaplan-Meier procedure. When custom time points are specified the whole curve is estimated anyways and the time specific estimates are simply read off that curve.
+}
   \item{...}{
 Further arguments passed to \code{survfit}.
   }

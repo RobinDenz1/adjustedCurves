@@ -36,7 +36,7 @@ A logical variable, indicating whether the asymptotic variances and confidence i
 A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
   }
   \item{times}{
-A numeric vector of time points at which the survival probability should be estimated or \code{NULL}. If \code{NULL} the survival is estimated at all points in time at which an event occured. Only relevant for some methods, ignored otherwise. See details.
+A numeric vector of time points at which the survival probability should be estimated or \code{NULL} (default). If \code{NULL} the survival is estimated at all points in time at which an event occured.
   }
   \item{bootstrap}{
 A logical variable indicating whether bootstrapping should be performed or not. See details.

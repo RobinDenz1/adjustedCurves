@@ -5,7 +5,7 @@
 One-Step Targeted Maximum Likelihood Estimation Survival Curves
 }
 \description{
-This method utilizes the one-step targeted maximum likelihood methodology to estimate adjusted survival curves. It is very similar to \code{surv_method_tmle}, with some difference in the estimation techniques. Similar to the AIPTW methods it posseses the doubly-robust property and can also be used to adjust for dependent censoring. It is however important to note that this method should only be used when the time variable is truly discrete and only a few distinct points in time are observed. See details for more information.
+This method utilizes the one-step targeted maximum likelihood methodology to estimate adjusted survival curves. It is very similar to the \code{\link[=surv_tmle]{tmle}} method, with some difference in the estimation techniques. Similar to the AIPTW methods it posseses the doubly-robust property and can also be used to adjust for dependent censoring. It is however important to note that this method should only be used when the time variable is truly discrete and only a few distinct points in time are observed. See details for more information.
 }
 \usage{
 surv_ostmle(data, variable, ev_time, event, conf_int,
@@ -76,7 +76,7 @@ Tolerance at which estimated treatment assignment probabilities are truncated.
 \item{\strong{Allowed Time Values:} Allows only integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on the \code{survtmle}, \code{MOSS} and \code{SuperLearner} packages.}
+\item{\strong{Dependencies:} This method relies on the \code{survtmle}, \code{MASS}, \code{SuperLearner}, \code{R6} and \code{tidyr} packages. The code was taken directly from the \code{MOSS} package, which is currently not available on CRAN. We made tiny changes to it but it's essentially the same. You do not have to install it but it can be installed using the following code: \code{devtools::install_github("wilsoncai1992/MOSS")}. If you use this method, please cite the \code{MOSS} package.}
 }
 
 Standard TMLE is a two-step procedure. First, initial estimates for the treatment-assignment and the outcome-mechanisms are made using loss-based learning. This is implemented here using the \code{SuperLearner} methodology. In the next step, the estimates obtained by using the outcome-mechanism model are fluctuated based on information from the treatment-assignment model. If the outcome model is already consistent, this fluctuation is very small and the estimates stay consistent. If the outcome model is biased, the fluctuation removes the bias whenever the treatment assignment model is consistent. This process is iterative and continues until a threshhold is hit (either the maximum number of iterations is reached or the bias is smaller than the specified tolerance, see \code{?survtmle}).
@@ -95,11 +95,11 @@ Returns a \code{data.frame} object containing the estimated adjusted survival pr
 Weixin Cai and Mark J. van der Laan. "One-Step Targeted Maximum Likelihood Estimation for Time-To-Event Outcomes". In: Biometrics 76 (2020), pp. 722-733.
 }
 \author{
-The wrapper function was written by Robin Denz, the \code{MOSS} package (which this wrapper is based on) was written by Wilson Cai. See \code{?MOSS} for more details.
+The wrapper function was written by Robin Denz, the \code{MOSS} package (which this wrapper is based on) was written by Wilson Cai. See <https://github.com/wilsoncai1992/MOSS/> for more details.
 }
 
 \seealso{
-\code{\link[survtmle]{survtmle}}, \code{\link[MOSS]{MOSS}}, \code{\link[SuperLearner]{SuperLearner}}
+\code{\link[survtmle]{survtmle}}, \code{MOSS}, \code{\link[SuperLearner]{SuperLearner}}
 }
 \examples{
 \dontrun{

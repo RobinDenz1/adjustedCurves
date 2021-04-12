@@ -1,5 +1,7 @@
 library(survival)
 
+set.seed(42)
+
 sim_dat <- sim_confounded_surv(n=200)
 sim_dat$group <- factor(sim_dat$group)
 

@@ -1,10 +1,25 @@
+# Copyright (C) 2021  Robin Denz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 # Assign to global, to get rid off devtools::check() note
 utils::globalVariables(c("gaussian", "id"))
 
 ## simple Kaplan-Meier estimate
 #' @export
 surv_km <- function(data, variable, ev_time, event, conf_int,
-                    conf_level=0.95, ...) {
+                    conf_level=0.95, times=NULL, ...) {
 
   form <- paste0("survival::Surv(", ev_time, ", ", event, ") ~ ", variable)
 
@@ -27,6 +42,10 @@ surv_km <- function(data, variable, ev_time, event, conf_int,
     plotdata$ci_upper <- surv$upper
   }
 
+  if (!is.null(times)) {
+    plotdata <- specific_times(plotdata, times)
+  }
+
   return(plotdata)
 }
 
@@ -35,7 +54,7 @@ surv_km <- function(data, variable, ev_time, event, conf_int,
 #       - CI seem fine for group==1 but way too small otherwise
 #' @export
 surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
-                         conf_level=0.95, treatment_model,
+                         conf_level=0.95, times=NULL, treatment_model,
                          weight_method="ps", stabilize=T, ...) {
 
   # get weights
@@ -46,6 +65,9 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
                                 weight_method=weight_method,
                                 variable=variable, stabilize=stabilize, ...)
   }
+
+  # for later
+  times_input <- times
 
   # weighted Kaplan-Meier estimator
   levs <- levels(data[,variable])
@@ -78,7 +100,7 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
 
   # variance, confidence interval
   if (conf_int) {
-    plotdata$sd <- NA
+    plotdata$se <- NA
     plotdata$s_j <- 1 - (plotdata$d_j / plotdata$Y_j)
 
     # get propensity scores
@@ -109,11 +131,11 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
       # calculate variance at each point in time
       iptw_km_var <- sapply(adj_km_lev$time, calc_iptw_km_var,
                             adj_km=adj_km_lev)
-      plotdata$sd[plotdata$group==levs[i]] <- sqrt(iptw_km_var)
+      plotdata$se[plotdata$group==levs[i]] <- sqrt(iptw_km_var)
     }
     plotdata$s_j <- NULL
 
-    surv_cis <- confint_surv(surv=plotdata$surv, se=plotdata$sd,
+    surv_cis <- confint_surv(surv=plotdata$surv, se=plotdata$se,
                              conf_level=conf_level, conf_type="plain")
     plotdata$ci_lower <- surv_cis$left
     plotdata$ci_upper <- surv_cis$right
@@ -122,13 +144,17 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
   plotdata$d_j <- NULL
   plotdata$Y_j <- NULL
 
+  if (!is.null(times_input)) {
+    plotdata <- specific_times(plotdata, times_input)
+  }
+
   return(plotdata)
 }
 
 ## IPTW with univariate cox-model
 #' @export
 surv_iptw_cox <- function(data, variable, ev_time, event, conf_int,
-                          conf_level=0.95, treatment_model,
+                          conf_level=0.95, times=NULL, treatment_model,
                           weight_method="ps", stabilize=T, ...) {
 
   # get weights
@@ -162,6 +188,10 @@ surv_iptw_cox <- function(data, variable, ev_time, event, conf_int,
     plotdata$se <- surv$std.err
     plotdata$ci_lower <- surv$lower
     plotdata$ci_upper <- surv$upper
+  }
+
+  if (!is.null(times)) {
+    plotdata <- specific_times(plotdata, times)
   }
 
   return(plotdata)
@@ -246,8 +276,8 @@ surv_direct <- function(data, variable, ev_time, event, conf_int,
     confint.ate <- utils::getFromNamespace("confint.ate", "riskRegression")
 
     cis <- confint.ate(surv, level=conf_level)$meanRisk
-    plotdata$ci_lower <- 1 - cis$lower
-    plotdata$ci_upper <- 1 - cis$upper
+    plotdata$ci_lower <- 1 - cis$upper
+    plotdata$ci_upper <- 1 - cis$lower
   }
 
   return(plotdata)
@@ -337,8 +367,8 @@ surv_aiptw <- function(data, variable, ev_time, event, conf_int,
     confint.ate <- utils::getFromNamespace("confint.ate", "riskRegression")
 
     cis <- confint.ate(curve, level=conf_level, ci=T)$meanRisk
-    plotdata$ci_lower <- 1 - cis$lower
-    plotdata$ci_upper <- 1 - cis$upper
+    plotdata$ci_lower <- 1 - cis$upper
+    plotdata$ci_upper <- 1 - cis$lower
   }
 
   return(plotdata)
@@ -653,7 +683,7 @@ surv_ostmle <- function(data, variable, ev_time, event, conf_int,
   k_grid <- 1:max(data[,ev_time])
 
   # create initial fit object
-  sl_fit <- MOSS::initial_sl_fit(
+  sl_fit <- initial_sl_fit(
     T_tilde=data[, ev_time],
     Delta=data[, event],
     A=data[, variable],
@@ -675,7 +705,7 @@ surv_ostmle <- function(data, variable, ev_time, event, conf_int,
   invisible(sl_fit$density_failure_0$hazard_to_survival())
 
   # for treatment == 1
-  moss_hazard_fit_1 <- MOSS::MOSS_hazard$new(
+  moss_hazard_fit_1 <- MOSS_hazard$new(
     A=data[, variable],
     T_tilde=data[, ev_time],
     Delta=data[, event],
@@ -694,7 +724,7 @@ surv_ostmle <- function(data, variable, ev_time, event, conf_int,
   )
 
   # for treatment == 0
-  moss_hazard_fit_0 <- MOSS::MOSS_hazard$new(
+  moss_hazard_fit_0 <- MOSS_hazard$new(
     A=data[, variable],
     T_tilde=data[, ev_time],
     Delta=data[, event],
@@ -724,7 +754,7 @@ surv_ostmle <- function(data, variable, ev_time, event, conf_int,
 
     # for treatment == 1
     s_1 <- as.vector(psi_moss_hazard_1)
-    eic_fit <- MOSS::eic$new(
+    eic_fit <- eic$new(
       A = data[, variable],
       T_tilde = data[, ev_time],
       Delta = data[, event],
@@ -740,7 +770,7 @@ surv_ostmle <- function(data, variable, ev_time, event, conf_int,
 
     # for treatment == 0
     s_0 <- as.vector(psi_moss_hazard_0)
-    eic_fit <- MOSS::eic$new(
+    eic_fit <- eic$new(
       A = data[, variable],
       T_tilde = data[, ev_time],
       Delta = data[, event],

@@ -10,7 +10,7 @@ No adjustment for any confounders is made. This function is included only for re
 }
 \usage{
 cif_aalen_johansen(data, variable, ev_time, event, cause, conf_int,
-                   conf_level=0.95, ...)
+                   conf_level=0.95, times=NULL, ...)
 }
 
 \arguments{
@@ -35,6 +35,9 @@ A logical variable, indicating whether the asymptotic variances and confidence i
   \item{conf_level}{
 A number specifying the confidence level of asymptotic confidence intervals.
   }
+  \item{times}{
+A numeric vector of time points for which to return the cumulative incidence estimates or \code{NULL} (default). If \code{NULL} the whole curve will be estimated according to the usual Aalen-Johansen procedure. When custom time points are specified the whole curve is estimated anyways and the time specific estimates are simply read off that curve.
+}
   \item{...}{
 Further arguments passed to \code{\link[cmprsk]{cuminc}}.
   }

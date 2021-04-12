@@ -1,3 +1,18 @@
+# Copyright (C) 2021  Robin Denz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 ## Second main function of the package. Is basically a wrapper around
 ## all cif_method functions, offering additional high level stuff
 #' @importFrom dplyr %>%
@@ -19,7 +34,9 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
 
   # get event specific times
   times_input <- times
-  if (is.null(times)) {
+  if (is.null(times) & method=="aalen_johansen") {
+    times <- NULL
+  } else if (is.null(times)) {
     times <- sort(unique(data[, ev_time][data[, event]>=1]))
 
     # add zero if not already in there
@@ -124,7 +141,9 @@ adjustedcif_boot <- function(data, variable, ev_time, event, cause, method,
 
   # if event specific times are used, use event specific times
   # in bootstrapping as well
-  if (is.null(times_input)) {
+  if (is.null(times_input) & method=="aalen_johansen") {
+
+  } else if (is.null(times_input)) {
     times_boot <- sort(unique(boot_samp[, ev_time][boot_samp[, event]>=1]))
 
     if (!0 %in% times_boot) {
@@ -162,6 +181,10 @@ adjustedcif_boot <- function(data, variable, ev_time, event, cause, method,
   # read from resulting step function at all t in times
   boot_cif <- vector(mode="list", length=length(levs))
   for (j in 1:length(levs)) {
+
+    if (method=="aalen_johansen" & is.null(times)) {
+      times <- unique(data[,ev_time][data[,variable]==levs[j]])
+    }
 
     cif_boot <- sapply(times, read_from_step_function,
                        step_data=adjcif_boot[adjcif_boot$group==levs[j],],

@@ -62,9 +62,9 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
       stop("'times' must be a numeric vector.")
     }
   } else {
-    if (!is.null(times)) {
-      warning("Object 'times' is not defined for method='",
-              method, "' and will be ignored.")
+    if (!is.numeric(times) & !is.null(times)) {
+      warning("Object 'times' must be a numeric vector or NULL if method='",
+              method, "'.")
     }
   }
   if (!is.null(times)) {
@@ -150,7 +150,6 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     }
   # OSTMLE
   } else if (method=="ostmle") {
-    requireNamespace("MOSS")
 
     if (!is.null(obj$times)) {
       if (!all(obj$times==floor(obj$times))) {
@@ -180,6 +179,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     }
      # TODO: check for dichotomous variables, warn when 0, 1
   } else if (method=="matching") {
+    requireNamespace("Matching")
 
     if (bootstrap) {
       warning("Bootstrapping generally doesn't produce unbiased variance",
@@ -481,6 +481,7 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
     }
   # Matching
   } else if (method=="matching") {
+    requireNamespace("Matching")
 
     if (bootstrap) {
       warning("Bootstrapping generally doesn't produce unbiased variance",

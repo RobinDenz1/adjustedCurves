@@ -1,4 +1,17 @@
-####################### Helper functions for R-Package #########################
+# Copyright (C) 2021  Robin Denz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## estimate iptw weights
 get_iptw_weights <- function(data, treatment_model, weight_method,
@@ -127,21 +140,6 @@ confint_surv <- function(surv, se, conf_level, conf_type="plain") {
   return(list(left=left, right=right))
 }
 
-## re-define and rename "compute_simultaneous_ci" to allow different alpha levels
-compute_se_moss <- function(eic_fit, alpha) {
-  # compute the value to +- around the Psi_n
-  n <- nrow(eic_fit)
-  sigma_squared <- stats::cov(eic_fit)
-  sigma <- stats::cor(eic_fit)
-  # impute when the variance are zero
-  sigma_squared[is.na(sigma_squared)] <- 1e-10
-  sigma[is.na(sigma)] <- 1e-10
-
-  variance_marginal <- diag(sigma_squared)
-  q <- MOSS::compute_q(corr=sigma, B=1e3, alpha=alpha)
-  return(sqrt(variance_marginal) / sqrt(n) * q)
-}
-
 ## simulate survival time according to Bender et al. (2005)
 sim_surv_time <- function(row, betas, dist, lambda, gamma) {
   U <- stats::runif(1, min=0, max=1)
@@ -258,6 +256,45 @@ exact_stepfun_integral <- function(stepfun, from, to, est="surv") {
     integral <- integral + rect_area
   }
   return(integral)
+}
+
+## function to change plotdata in iptw and standard methods when
+## custom points in time are supplied
+specific_times <- function(plotdata, times, cif=F) {
+
+  levs <- unique(plotdata$group)
+  new_plotdata <- vector(mode="list", length=length(levs))
+  for (i in 1:length(levs)) {
+
+    if (cif) {
+      new_est <- sapply(times, read_from_step_function, est="cif",
+                        step_data=plotdata[which(plotdata$group==levs[i]),])
+      new_dat <- data.frame(time=times, cif=new_est, group=levs[i])
+    } else {
+
+      new_est <- sapply(times, read_from_step_function, est="surv",
+                        step_data=plotdata[which(plotdata$group==levs[i]),])
+      new_dat <- data.frame(time=times, surv=new_est, group=levs[i])
+    }
+
+    if ("se" %in% colnames(plotdata)) {
+      # read from curve using custom function
+      new_se <- sapply(times, read_from_step_function, est="se",
+                       step_data=plotdata[which(plotdata$group==levs[i]),])
+      new_ci_lower <- sapply(times, read_from_step_function, est="ci_lower",
+                             step_data=plotdata[which(plotdata$group==levs[i]),])
+      new_ci_upper <- sapply(times, read_from_step_function, est="ci_upper",
+                             step_data=plotdata[which(plotdata$group==levs[i]),])
+      # add to output in same order
+      new_dat$se <- new_se
+      new_dat$ci_lower <- new_ci_lower
+      new_dat$ci_upper <- new_ci_upper
+
+    }
+    new_plotdata[[i]] <- new_dat
+  }
+  new_plotdata <- as.data.frame(dplyr::bind_rows(new_plotdata))
+  return(new_plotdata)
 }
 
 ## used to combine output from foreach

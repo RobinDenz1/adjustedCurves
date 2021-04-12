@@ -1,6 +1,5 @@
 library(survival)
 library(survtmle)
-library(MOSS)
 
 set.seed(35)
 

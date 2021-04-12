@@ -2,7 +2,7 @@
 
 set.seed(42)
 
-sim_dat <- adjustedCurves::sim_confounded_surv(n=300)
+sim_dat <- adjustedCurves::sim_confounded_surv(n=300, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 ## Just check if function throws any errors

@@ -89,18 +89,18 @@ head(adjsurv$adjsurv)
 
 More importantly however, we can plot the survival curves directly using the **plot** method:
 
-```{r echo=TRUE, fig.show=TRUE, fig.width=5}
+```{r echo=TRUE, fig.show=TRUE, fig.width=7, fig.height=5}
 plot(adjsurv)
 ```
 This plot function comes with many options which are listed in the documenation. To plot the pointwise confidence intervals, we can set the argument **draw_ci** to TRUE:
 
-```{r echo=TRUE, fig.show=TRUE, fig.width=5}
+```{r echo=TRUE, fig.show=TRUE, fig.width=7, fig.height=5}
 plot(adjsurv, draw_ci=TRUE)
 ```
 
 Instead of using colors to differentiate the curves we can also use different linetypes, by setting the **linetype** argument to TRUE and the **color** argument to FALSE:
 
-```{r echo=TRUE, fig.show=TRUE, fig.width=5}
+```{r echo=TRUE, fig.show=TRUE, fig.width=7, fig.height=5}
 plot(adjsurv, linetype=TRUE, color=FALSE)
 ```
 Many more custom settings are available. For more details and examples see **?plot.adjustedsurv**.
@@ -124,7 +124,7 @@ adjsurv <- adjustedsurv(data=data,
 
 The resulting curves can be plotted as before:
 
-```{r echo=TRUE, fig.show=TRUE, fig.width=5}
+```{r echo=TRUE, fig.show=TRUE, fig.width=7, fig.height=5}
 plot(adjsurv)
 ```
 
@@ -134,7 +134,7 @@ Since both methods were used correctly here, there are only slight differences i
 
 Doubly-Robust methods can be helpful in such cases (ZITATE). The standard Augmented Inverse Probability of Treatment Weighting estimator utilized both kinds of models at the same time. If either of the models is correctly specified, the resulting estimates will be unbiased. It can be used in the same way as the other methods, only that this time both models have to be supplied:
 
-```{r echo=TRUE, fig.width=5}
+```{r echo=TRUE, fig.width=7, fig.height=5}
 treatment_model <- glm(group ~ x1 + x2 + x3 + x4 + x5 + x6,
                        data=data, family="binomial"(link="logit"))
 
@@ -157,7 +157,7 @@ plot(adjsurv, draw_ci=T)
 
 Another doubly-robust method is targeted maximum likelihood estimation (ZITATE). While the theory itself is a little more complicated, it can be used just as easily using the **adjustedCurves** package. Since our data is continuous, only the **tmle_pseudo** method can be used appropriately here (ZITATE). This can be done using the following **adjustedsurv** call.
 
-```{r echo=TRUE, fig.width=5, message=FALSE, warning=FALSE}
+```{r echo=TRUE, fig.width=7, message=FALSE, warning=FALSE, fig.height=5}
 library(SuperLearner) # needed for ensemble modeling
 
 # tmle methods can only be used with binary numeric group variables
@@ -180,7 +180,7 @@ A few things should be noted here. First of all, we did not define any treatment
 
 Additionally, we defined an equally spaced grid of time points at which the survival curves should be evaluated. This is done only to keep the computation time low. The resulting curves can be plotted as before:
 
-```{r echo=TRUE, fig.show=TRUE, fig.width=5}
+```{r echo=TRUE, fig.show=TRUE, fig.width=7, fig.height=5}
 plot(adjsurv)
 ```
 
@@ -211,7 +211,7 @@ outcome_model <- riskRegression::CSC(Hist(time, event) ~ x1 + x2 + x3 + x4 + x5 
 
 This model can then be used in a call to the **adjustedcif** function, as shown below:
 
-```{r echo=TRUE, message=FALSE, fig.show=TRUE, fig.width=5}
+```{r echo=TRUE, message=FALSE, fig.show=TRUE, fig.width=7, fig.height=5}
 adjcif <- adjustedcif(data=data,
                       variable="group",
                       ev_time="time",
@@ -225,7 +225,7 @@ plot(adjcif)
 
 This shows the confounder-adjusted cumulative incidence functions for cause = 1. By setting cause to 2 we get the confounder-adjusted cumulative incidence functions for the other cause:
 
-```{r echo=TRUE, message=FALSE, fig.show=TRUE, fig.width=5}
+```{r echo=TRUE, message=FALSE, fig.show=TRUE, fig.width=7, fig.height=5}
 adjcif <- adjustedcif(data=data,
                       variable="group",
                       ev_time="time",
@@ -241,7 +241,7 @@ plot(adjcif)
 
 The IPTW estimator can be used exactly the same way as we did with the *adjustedsurv* function:
 
-```{r echo=TRUE, fig.show=TRUE, fig.width=5}
+```{r echo=TRUE, fig.show=TRUE, fig.width=7, fig.height=5}
 treatment_model <- glm(group ~ x1 + x2 + x3 + x4 + x5 + x6,
                        data=data, family="binomial"(link="logit"))
 
