@@ -11,7 +11,7 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-The main purpose of the "adjustedCurves" R-Package is to calculate and plot confounder-adjusted survival curves and cause-specific confounder-adjusted cumulative incidence functions (CIF) using a variety of methods. Group- or treatment-specific survival curves and cumulative incidence functions are often used to graphically display the treatment (or group) effect on the survival probability. When the data at hand comes from a randomized controlled trial with balanced subgroups, simple stratified estimators of the survival curves or CIFs are unbiased. When randomization fails or was not done at all however, confounding can lead to biased depictions (CITATIONS).
+The main purpose of the "adjustedCurves" R-Package is to calculate and plot confounder-adjusted survival curves and cause-specific confounder-adjusted cumulative incidence functions (CIF) using a variety of methods. Group- or treatment-specific survival curves and cumulative incidence functions are often used to graphically display the treatment (or group) effect on the survival probability. When the data at hand comes from a randomized controlled trial with balanced subgroups, simple stratified estimators of the survival curves or CIFs are unbiased. When randomization fails or was not done at all however, confounding can lead to biased depictions (see Rubin 1974; Pearl 2009).
 
 Luckily, a lot of different methods to adjust survival curves and CIFs for confounding have been proposed. With the **adjustedCurves** package, these methods can be used with little effort. For a small review and simulation study of all methods see Denz et al. (2021).
 
@@ -35,7 +35,7 @@ Further packages might have to be installed, depending on the specified method.
 
 ## Adjusted Survival Curves
 
-Let's start with the standard survival setting. Using the **sim_confounded_surv** function, we simulate some survival data:
+Let's start with the standard survival setting. Using the **sim_confounded_surv** function, we simulate some survival data (Chatton et al. 2020):
 
 ```{r echo=TRUE}
 library(survival)
@@ -59,7 +59,7 @@ Using the default arguments, this function outputs a data.frame with 6 independe
 
 ### Direct Standardization
 
-To calculate confounder-adjusted survival curves fo each group of this dataset using *Direct Standardization* (also known as *G-Computation* or *Corrected Group Prognosis method*), we first have to fit a **coxph** model:
+To calculate confounder-adjusted survival curves fo each group of this dataset using *Direct Standardization* (also known as *G-Computation* or *Corrected Group Prognosis method*, see Makuch (1982) or Chang et al. (1982)), we first have to fit a **coxph** model:
 
 ```{r echo=TRUE}
 # it is important to use X=TRUE in the coxph function call
@@ -107,7 +107,7 @@ Many more custom settings are available. For more details and examples see **?pl
 
 ### Inverse Probability of Treatment Weighting
 
-The **adjustedsurv** function essentially works the same with every available method. Since the methods are however vastly different in nature, some additional arguments have to be supplied by the user. For example, using the Inverse Probability of Treatment Weighting method (IPTW), we need to model the *treatment assignment* instead of the outcome model. This can be done using a logistic regression model as follows:
+The **adjustedsurv** function essentially works the same with every available method. Since the methods are however vastly different in nature, some additional arguments have to be supplied by the user. For example, using the Inverse Probability of Treatment Weighting method (IPTW), we need to model the *treatment assignment* instead of the outcome model (see Xie and Liu (2005)). This can be done using a logistic regression model as follows:
 
 ```{r echo=TRUE}
 treatment_model <- glm(group ~ x1 + x2 + x3 + x4 + x5 + x6,
@@ -132,7 +132,7 @@ Since both methods were used correctly here, there are only slight differences i
 
 ### Augmented Inverse Probabiltiy of Treatment Weighting
 
-Doubly-Robust methods can be helpful in such cases (ZITATE). The standard Augmented Inverse Probability of Treatment Weighting estimator utilized both kinds of models at the same time. If either of the models is correctly specified, the resulting estimates will be unbiased. It can be used in the same way as the other methods, only that this time both models have to be supplied:
+Doubly-Robust methods can be helpful in such cases (see Robins and Rotnitzky (1992) or Ozenne et al. (2020)). The standard Augmented Inverse Probability of Treatment Weighting estimator utilized both kinds of models at the same time. If either of the models is correctly specified, the resulting estimates will be unbiased. It can be used in the same way as the other methods, only that this time both models have to be supplied:
 
 ```{r echo=TRUE, fig.width=7, fig.height=5}
 treatment_model <- glm(group ~ x1 + x2 + x3 + x4 + x5 + x6,
@@ -155,7 +155,7 @@ plot(adjsurv, draw_ci=T)
 
 ### Targeted Maximum Likelihood Estimation
 
-Another doubly-robust method is targeted maximum likelihood estimation (ZITATE). While the theory itself is a little more complicated, it can be used just as easily using the **adjustedCurves** package. Since our data is continuous, only the **tmle_pseudo** method can be used appropriately here (ZITATE). This can be done using the following **adjustedsurv** call.
+Another doubly-robust method is targeted maximum likelihood estimation (see Cai and van der Laan (2020)). While the theory itself is a little more complicated, it can be used just as easily using the **adjustedCurves** package. Since our data is continuous, only the **tmle_pseudo** method can be used appropriately here. This can be done using the following **adjustedsurv** call.
 
 ```{r echo=TRUE, fig.width=7, message=FALSE, warning=FALSE, fig.height=5}
 library(SuperLearner) # needed for ensemble modeling
@@ -186,9 +186,9 @@ plot(adjsurv)
 
 ## Adjusted Cumulative Incidence Functions
 
-In many situations there are multiple mutually exclusive types of events instead of just one event. This is formally known as a competing risks situation (ZITATE). In these situations, survival curves can not be estimated anymore (ZITAT). However, the cumulative incidence function can be used instead. Without randomization, these CIFs face the same problems due to confounding as the survival curves do. Most of the methods to adjust survival curves for confounders can be used to adjust CIFs in very similar fashion.
+In many situations there are multiple mutually exclusive types of events instead of just one event. This is formally known as a competing risks situation. In these situations, survival curves can not be estimated anymore. However, the cumulative incidence function can be used instead. Without randomization, these CIFs face the same problems due to confounding as the survival curves do. Most of the methods to adjust survival curves for confounders can be used to adjust CIFs in very similar fashion.
 
-While the computational details and the underlying theory is slightly different (ZITATE), the syntax for the R-Package stays pretty much exactly the same. The only major difference is that instead of using the **adjustedsurv** function, the **adjustedcif** function should be utilized. Additionally, the user now also has to specify which event-type is of interest (argument "cause").
+While the computational details and the underlying theory is slightly different (see Ozenne et al. (2020)), the syntax for the R-Package stays pretty much exactly the same. The only major difference is that instead of using the **adjustedsurv** function, the **adjustedcif** function should be utilized. Additionally, the user now also has to specify which event-type is of interest (argument "cause").
 
 First we need new example data, mirroring the competing risks situation. We are going to use the **sim_confounded_crisk** function, which does the same thing as the **sim_confounded_surv** function, but with competing risks data:
 
@@ -201,7 +201,7 @@ data$event[data$event==1] <- sample(c(1, 2), size=sum(data$event), replace=T)
 
 ### Direct Standardization
 
-Let's again start with the *Direct Standardization* method. Instead of using a simple **coxph** method, we need to use a model for the time-to-event process which takes the multiple event-types into account. One such method is the *Cause-Specific Cox-Regression* model (ZITAT). A simple implementation of this model is contained in the **riskRegression** R-Package.
+Let's again start with the *Direct Standardization* method. Instead of using a simple **coxph** method, we need to use a model for the time-to-event process which takes the multiple event-types into account. One such method is the *Cause-Specific Cox-Regression* model. A simple implementation of this model is contained in the **riskRegression** R-Package.
 
 ```{r echo=TRUE}
 # it is important to use X=TRUE in the coxph function call
@@ -260,10 +260,88 @@ The other estimators can be used using essentially the same syntax.
 
 ## Adjusted Curves with more than two treatments
 
+In many applications there are more than two treatments. Some of the methods included in this R-Package allow calculations for an arbitrary number of treatments. In these cases the code does not change at all and can be used exactly in the same way as before. The only difference occurs when using IPTW methods. Here the user has to use a multinomial logistic regression model instead of a regular logistic regression to model the outcome. This is illustrated below.
+
+First we again create a simulated data set (for single event survival data). The function is only able to create binary treatment variables, but we can simply resample all occurences of 1 into 1 and 2, creating 3 treatments, where 1 and 2 have an identical treatment effect and selection process:
+
+```{r echo=TRUE}
+# set random number generator seed to make this reproducible
+set.seed(41)
+
+# simulate standard survival data with 300 rows
+data <- sim_confounded_surv(n=300)
+
+# add another group (NOTE: this is done only to showcase the method and does not
+# reflect what should be done in real situations)
+data$group[data$group==1] <- sample(c(1, 2), size=nrow(data[data$group==1,]),
+                                          replace=T)
+
+# code the grouping variable as a factor
+data$group <- as.factor(data$group)
+```
+
+The Direct Adjusted survival curves can be calculated exactly as before:
+
+```{r echo=TRUE, fig.show=TRUE, fig.width=7, fig.height=5}
+outcome_model <- survival::coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
+                                 data=data, x=TRUE)
+
+adjsurv <- adjustedsurv(data=data,
+                        variable="group",
+                        ev_time="time",
+                        event="event",
+                        method="direct",
+                        outcome_model=outcome_model,
+                        conf_int=T)
+plot(adjsurv)
+```
+
+For the IPTW based estimates we first fit a multinomial logistic regression model using the *multinom* function from the *nnet* R-Package and use it with the same code as before:
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, fig.show=TRUE, fig.width=7, fig.height=5}
+treatment_model <- nnet::multinom(group ~ x1 + x2 + x3 + x4 + x5 + x6, data=data)
+
+adjsurv <- adjustedsurv(data=data,
+                        variable="group",
+                        ev_time="time",
+                        event="event",
+                        method="iptw_km",
+                        treatment_model=treatment_model,
+                        conf_int=T)
+plot(adjsurv)
+```
+
 ## Calculating the adjusted restricted mean survival time
 
+An alternative measure to hazard-ratios is the restricted mean survival time, which denotes the integral of the survival curve from time 0 up to a specified point in time (see Royston et al. 2013). A confounder adjusted version of this statistic can be calculated by simply integrating the confounder adjusted survival curves instead of a normal Kaplan-Meier curve (Conner et al. 2019). The **adjustedCurves** package allows the user to do this by simply calling the *adjusted_rmst* function on a previously created *adjustedsurv* object:
 
+```{r echo=TRUE}
+adjusted_rmst(adjsurv, to=1)
+```
 
+The function returns adjusted RMST for every level of the "group" variable. When bootstrapping was performed when calling the *adjustedsurv* function, standard deviations and confidence intervals can be calculated using this function as well by setting the *use_boot* argument to TRUE.
 
+## Literature
 
+Donald B. Rubin. "Estimating Causal Effects of Treatments in Randomized and Nonrandomized Studies". In: Journal of Educational Psychology 66.5 (1974), pp. 688–701.
 
+Judea Pearl. Causality: Models, Reasoning and Inference. 2nd ed. Cambridge: Cambridge University Press, 2009.
+
+Arthur Chatton, Florent Le Borgne, Clemence Leyrat, and Yohann Foucher. G-Computation and Inverse Probability Weighting for Time-To-Event Outcomes: A
+Comparative Study. arXiv:2006.16859v1. 2020.
+
+Robert W. Makuch. "Adjusted Survival Curve Estimation Using Covariates". In: Journal of Chronic Diseases 35.6 (1982), pp. 437–443.
+
+I-Ming Chang, Rebecca Gelman, and Marcello Pagano. "Corrected Group Prognostic Curves and Summary Statistics". In: Journal of Chronic Diseases 35 (1982), pp. 669–674.
+
+Jun Xie and Chaofeng Liu. "Adjusted Kaplan-Meier Estimator and Log-Rank Test with Inverse Probability of Treatment Weighting for Survival Data". In: Statistics in Medicine 24 (2005), pp. 3089–3110.
+
+James M. Robins and Andrea Rotnitzky. "Recovery of Information and Adjustment for Dependent Censoring Using Surrogate Markers". In: AIDS Epidemiology: Methodological Issues. Ed. by Nicholas P. Jewell, Klaus Dietz, and Vernon T. Farewell. New York: Springer Science + Business Media, 1992, pp. 297–331.
+
+Brice Maxime Hugues Ozenne, Thomas Harder Scheike, and Laila Staerk. "On the Estimation of Average Treatment Effects with Right-Censored Time to Event Outcome and Competing Risks". In: Biometrical Journal 62 (2020), pp. 751–763.
+
+Weixin Cai and Mark J. van der Laan. "One-Step Targeted Maximum Likelihood Estimation for Time-To-Event Outcomes". In: Biometrics 76 (2020), pp. 722–733.
+
+Patrick Royston and Mahesh K. B. Parmar. "Restricted Mean Survival Time: An Alternative to the Hazard Ratio for the Design and Analysis of Randomized Trials with a Time-To-Event Outcome". In: BMC Medical Research Methodology 13.152 (2013).
+
+Sarah C. Conner, Lisa M. Sullivan, Emelia J. Benjamin, Michael P. LaValley, Sandro Galea, and Ludovic Trinquart. "Adjusted Restricted Mean Survival Times in Observational Studies". In: Statistics in Medicine 38 (2019), pp. 3832-3860.

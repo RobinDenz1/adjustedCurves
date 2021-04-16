@@ -34,7 +34,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
 
   # get event specific times
   times_input <- times
-  if (is.null(times) & method %in% c("km", "iptw_km", "iptw_cox")) {
+  if (is.null(times) & method %in% c("km", "iptw_km")) {
     times <- NULL
   } else if (is.null(times)) {
     times <- sort(unique(data[, ev_time][data[, event]==1]))
@@ -141,7 +141,7 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
 
   # if event specific times are used, use event specific times
   # in bootstrapping as well
-  if (is.null(times_input) & method %in% c("km", "iptw_km", "iptw_cox")) {
+  if (is.null(times_input) & method %in% c("km", "iptw_km")) {
     times <- NULL
   } else if (is.null(times_input)) {
     times_boot <- sort(unique(boot_samp[, ev_time][boot_samp[, event]==1]))
@@ -182,7 +182,7 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
   boot_surv <- vector(mode="list", length=length(levs))
   for (j in 1:length(levs)) {
 
-    if (method %in% c("km", "iptw_km", "iptw_cox") & is.null(times)) {
+    if (method %in% c("km", "iptw_km") & is.null(times)) {
       times <- unique(data[,ev_time][data[,variable]==levs[j]])
     }
 
@@ -387,7 +387,7 @@ adjusted_rmst <- function(adjsurv, to, from=0, use_boot=F, conf_level=0.95) {
 print.adjusted_rmst <- function(x, digits=5, ...) {
 
   cat("------------------------------------------------------------------\n")
-  cat("Confounder-Adjusted Restricted Mean Survival Time\n")
+  cat("       Confounder-Adjusted Restricted Mean Survival Time\n")
   cat("------------------------------------------------------------------\n")
   cat("\n")
   cat("Using the interval:", x$from, "to", x$to, "\n")
@@ -402,14 +402,16 @@ print.adjusted_rmst <- function(x, digits=5, ...) {
 
     rownames(all_data) <- c("RMST", "RMST SD", ci_lower_name, ci_upper_name,
                             "N Boot")
+    colnames(all_data) <- paste0("Group=", colnames(all_data))
+    all_data <- t(all_data)
   } else {
     all_data <- data.frame(x$rmsts)
-    rownames(all_data) <- c("RMST")
+    colnames(all_data) <- c("RMST")
+    rownames(all_data) <- paste0("Group=", rownames(all_data))
   }
 
-  colnames(all_data) <- paste0("Group=", colnames(all_data))
   all_data <- round(all_data, digits)
-  print(t(all_data))
+  print(all_data)
 
   cat("------------------------------------------------------------------\n")
 

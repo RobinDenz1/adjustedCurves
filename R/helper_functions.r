@@ -127,14 +127,22 @@ geese_predictions <- function(geese_mod, Sdata, times, n) {
 
 ## calculate CI from sd
 confint_surv <- function(surv, se, conf_level, conf_type="plain") {
+  # critical value
+  z_val <- stats::qnorm(1-((1-conf_level)/2))
+
   if (conf_type=="plain") {
-    error <- stats::qnorm(1-((1-conf_level)/2)) * se
+    error <- z_val * se
     left <- surv - error
     right <- surv + error
   } else if (conf_type=="log") {
-    error <- stats::qnorm(1-((1-conf_level)/2)) * se
+    error <- z_val * se
     left <- surv * exp(-error)
     right <- surv * exp(error)
+  } else if (conf_type=="log-log") {
+    xx <- ifelse(surv==0 | surv==1, NA, surv)
+    se2 <- z_val * se/log(xx)
+    left <- exp(-exp(log(-log(xx)) - se2))
+    right <- exp(-exp(log(-log(xx)) + se2))
   }
 
   return(list(left=left, right=right))

@@ -167,32 +167,24 @@ surv_iptw_cox <- function(data, variable, ev_time, event, conf_int,
   }
 
   # univariate, weighted cox model
-  form <- paste0("survival::Surv(", ev_time, ", ", event, ") ~ strata(",
-                 variable, ")")
-  model <- survival::coxph(stats::as.formula(form), weights=weights, data=data)
-  surv <- survival::survfit(model, se.fit=conf_int, conf.int=conf_level)
+  form <- paste0("survival::Surv(", ev_time, ", ", event, ") ~ ", variable)
+  model <- survival::coxph(stats::as.formula(form), weights=weights, data=data,
+                           x=T)
 
-  plotdata <- data.frame(time=surv$time,
-                         surv=surv$surv)
+  # avert error in predictCox
+  model$weights <- 1
+  model$naive.var <- NULL
 
-  # get grouping variable
-  group <- c()
-  for (strat in names(surv$strata)) {
-    group <- c(group, rep(strat, surv$strata[strat]))
-  }
-  group <- gsub(paste0(variable, "="), "", group)
-  plotdata$group <- group
-
-  # get se and confidence interval
-  if (conf_int) {
-    plotdata$se <- surv$std.err
-    plotdata$ci_lower <- surv$lower
-    plotdata$ci_upper <- surv$upper
-  }
-
-  if (!is.null(times)) {
-    plotdata <- specific_times(plotdata, times)
-  }
+  # use direct adjustment with this cox model
+  plotdata <- surv_direct(data=data,
+                          variable=variable,
+                          ev_time=ev_time,
+                          event=event,
+                          conf_int=conf_int,
+                          conf_level=conf_level,
+                          times=times,
+                          outcome_model=model,
+                          ...)
 
   return(plotdata)
 }

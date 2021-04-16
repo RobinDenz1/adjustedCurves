@@ -50,7 +50,8 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
 
   # Check if categorical should be allowed
   if (length(unique(data[,variable])) > 2 &
-      method %in% c("matching", "el", "tmle", "ostmle", "aiptw")) {
+      method %in% c("matching", "el", "tmle", "ostmle",
+                    "aiptw", "tmle_pseudo")) {
     stop("Categorical treatments are currently not supported for ",
          "method='", method, "'.")
   }
@@ -184,7 +185,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     if (bootstrap) {
       warning("Bootstrapping generally doesn't produce unbiased variance",
               " estimates with matching estimators. Use with caution. ",
-              "See ?surv_method_matching.")
+              "See ?surv_matching.")
     } else if (is.numeric(obj$treatment_model)) {
       if (any(obj$treatment_model > 1) | any(obj$treatment_model < 0)) {
         stop("Propensity Scores > 1 or < 0 not allowed. Perhaps you supplied ",
@@ -205,6 +206,10 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
         (!"outcome_model" %in% names(obj))) {
       stop("At least one of 'treatment_model', 'outcome_model' and ",
            "'censoring_model' needs to be specified, see details.")
+    }
+  } else if (method=="direct") {
+    if (!"outcome_model" %in% names(obj)) {
+      stop("Argument 'outcome_model' must be specified when using method='direct'.")
     }
   }
 
