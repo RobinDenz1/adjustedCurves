@@ -167,7 +167,8 @@ surv_iptw_cox <- function(data, variable, ev_time, event, conf_int,
   }
 
   # univariate, weighted cox model
-  form <- paste0("survival::Surv(", ev_time, ", ", event, ") ~ ", variable)
+  form <- paste0("survival::Surv(", ev_time, ", ", event, ") ~ strata(",
+                 variable, ")")
   model <- survival::coxph(stats::as.formula(form), weights=weights, data=data,
                            x=T)
 
