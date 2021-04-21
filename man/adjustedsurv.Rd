@@ -61,7 +61,7 @@ The primary purpose of the \code{adjustedsurv} function is to provide a convenie
   \item{"\link[=surv_iptw_cox]{iptw_cox}": A weighted estimator based on a univariate weighted Cox-Regression model.}
   \item{"\link[=surv_iptw_pseudo]{iptw_pseudo}": A weighted estimator based on Pseudo-Values.}
   \item{"\link[=surv_matching]{matching}": Using propensity score matching to estimate the adjusted survival curves.}
-  \item{"\link[=surv_el]{el}": Empirical Likelihood based estimator of the survival function.}
+  \item{"\link[=surv_emp_lik]{emp_lik}": Empirical Likelihood based estimator of the survival function.}
   \item{"\link[=surv_aiptw]{aiptw}": An Augmented Inverse Probability of Treatment Weighting estimator.}
   \item{"\link[=surv_aiptw_pseudo]{aiptw_pseudo}": An Augmented Inverse Probability of Treatment Weighting estimator using Pseudo-Values.}
   \item{"\link[=surv_tmle]{tmle}": Targeted Maximum Likelihood Estimation for survival curves.}
@@ -111,7 +111,7 @@ The function itself was written by Robin Denz, but it includes wrappers for func
 
 \seealso{
 \code{\link{surv_aiptw}}, \code{\link{surv_aiptw_pseudo}}, \code{\link{surv_direct}}, \code{\link{surv_direct_pseudo}},
-\code{\link{surv_iptw_km}}, \code{\link{surv_iptw_cox}}, \code{\link{surv_iptw_pseudo}}, \code{\link{surv_el}},
+\code{\link{surv_iptw_km}}, \code{\link{surv_iptw_cox}}, \code{\link{surv_iptw_pseudo}}, \code{\link{surv_emp_lik}},
 \code{\link{surv_matching}}, \code{\link{surv_tmle}}, \code{\link{surv_ostmle}}, \code{\link{surv_tmle_pseudo}}
 }
 \examples{

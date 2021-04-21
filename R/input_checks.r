@@ -22,7 +22,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
   # method
   } else if (!method %in% c("km", "iptw_km", "iptw_cox", "iptw_pseudo",
                             "direct", "direct_pseudo", "aiptw_pseudo",
-                            "aiptw", "tmle", "ostmle", "matching", "el",
+                            "aiptw", "tmle", "ostmle", "matching", "emp_lik",
                             "tmle_pseudo")) {
     stop("Method '", method, "' is undefined. See documentation for ",
          "details on available methods.")
@@ -36,13 +36,13 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
   }
 
   # Check if the group variable has the right format
-  if (method %in% c("matching", "el", "tmle", "ostmle", "tmle_pseudo") &
+  if (method %in% c("matching", "emp_lik", "tmle", "ostmle", "tmle_pseudo") &
       is.factor(data[,variable])) {
     stop("The column in 'data' specified by 'variable' needs to be ",
          "a dichotomous integer variable if method='", method, "'.")
   }
 
-  if (!method %in% c("matching", "el", "tmle", "ostmle", "tmle_pseudo") &
+  if (!method %in% c("matching", "emp_lik", "tmle", "ostmle", "tmle_pseudo") &
       !is.factor(data[,variable])) {
     stop("The column in 'data' specified by 'variable' needs to be ",
          "a factor variable if method='", method, "'.")
@@ -50,7 +50,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
 
   # Check if categorical should be allowed
   if (length(unique(data[,variable])) > 2 &
-      method %in% c("matching", "el", "tmle", "ostmle",
+      method %in% c("matching", "emp_lik", "tmle", "ostmle",
                     "aiptw", "tmle_pseudo")) {
     stop("Categorical treatments are currently not supported for ",
          "method='", method, "'.")
@@ -58,7 +58,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
 
   # Here: check if times input is correct if method requires it
   if (method %in% c("iptw_pseudo", "direct", "aiptw", "direct_pseudo",
-                    "aiptw_pseudo", "el", "tmle", "ostmle", "tmle_pseudo")) {
+                    "aiptw_pseudo", "emp_lik", "tmle", "ostmle", "tmle_pseudo")) {
     if (!is.numeric(times) & !is.null(times)) {
       stop("'times' must be a numeric vector.")
     }
@@ -158,7 +158,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
       }
     }
   # Empirical Likelihood
-  } else if (method=="el") {
+  } else if (method=="emp_lik") {
     requireNamespace("adjKMtest")
 
     if (!is.character(obj$treatment_vars)) {
@@ -228,7 +228,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
 
   # asymptotic variance calculations
   if (conf_int) {
-    if (method %in% c("el", "direct_pseudo", "matching")) {
+    if (method %in% c("emp_lik", "direct_pseudo", "matching")) {
       stop("Asymptotic or exact variance calculations are currently",
            " not available for method='", method, "'. Use bootstrap=TRUE",
            "to get bootstrap estimates.")
@@ -260,11 +260,11 @@ check_inputs_sim_fun <- function(n, lcovars, outcome_betas, surv_dist,
     stop("'gtol' must be a number. See details.")
   } else if (gtol > 1 | gtol < 0) {
     stop("'gtol' must be <= 1 and >= 0. See details.")
-  } else if (!is.function(cens_fun)) {
-    stop("'cens_fun' must be a function with the argument 'n'.")
-  } else if (!is.list(cens_args)) {
+  } else if (!is.function(cens_fun) & !is.null(cens_fun)) {
+    stop("'cens_fun' must be a function with the argument 'n' or NULL.")
+  } else if (!is.list(cens_args) & !is.null(cens_args)) {
     stop("'cens_args' must be a named list of arguments to be passed to",
-         " 'cens_fun'.")
+         " 'cens_fun' or NULL.")
   } else if (!is.numeric(max_t)) {
     stop("'max_t' must be a number.")
   } else if (max_t <= 0) {
@@ -342,8 +342,6 @@ check_inputs_adj_test <- function(adjsurv, from, to) {
   } else if (is.null(adjsurv$boot_data)) {
     stop("Can only perform a significance test if bootstrapping was ",
          "performed (bootstrap=TRUE in adjustedsurv/adjustedcif call).")
-  } else if (adjsurv$categorical) {
-    stop("This function currently only supports a test of two curves.")
   } else if (!is.numeric(from)) {
     stop("'from' must be a number >= 0.")
   } else if (from < 0) {

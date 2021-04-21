@@ -1,4 +1,3 @@
-#library(adjustedCurves)
 library(survival)
 library(adjKMtest)
 
@@ -15,7 +14,7 @@ test_that("2 treatments, no conf_int, no boot", {
                                             variable="group",
                                             ev_time="time",
                                             event="event",
-                                            method="el",
+                                            method="emp_lik",
                                             conf_int=F,
                                             treatment_vars=treatment_vars), NA)
 })
@@ -25,7 +24,7 @@ test_that("2 treatments, no conf_int, with boot", {
                                             variable="group",
                                             ev_time="time",
                                             event="event",
-                                            method="el",
+                                            method="emp_lik",
                                             conf_int=F,
                                             bootstrap=T,
                                             n_boot=2,
@@ -37,7 +36,7 @@ test_that("2 treatments, no conf_int, no boot, with times", {
                                             variable="group",
                                             ev_time="time",
                                             event="event",
-                                            method="el",
+                                            method="emp_lik",
                                             conf_int=F,
                                             bootstrap=F,
                                             treatment_vars=treatment_vars,

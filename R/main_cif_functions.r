@@ -101,9 +101,11 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
       dplyr::group_by(., time, group) %>%
       dplyr::summarise(cif=mean(cif_b, na.rm=T),
                        sd=stats::sd(cif_b, na.rm=T),
-                       ci_lower=stats::quantile(cif_b, probs=1-conf_level,
+                       ci_lower=stats::quantile(cif_b,
+                                                probs=(1-conf_level)/2,
                                                 na.rm=T),
-                       ci_upper=stats::quantile(cif_b, probs=conf_level,
+                       ci_upper=stats::quantile(cif_b,
+                                                probs=1-((1-conf_level)/2),
                                                 na.rm=T),
                        n_boot=sum(!is.na(cif_b)),
                        .groups="drop_last")

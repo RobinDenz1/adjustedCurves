@@ -23,8 +23,8 @@ surv_km <- function(data, variable, ev_time, event, conf_int,
 
   form <- paste0("survival::Surv(", ev_time, ", ", event, ") ~ ", variable)
 
-  surv <- survival::survfit(stats::as.formula(form), data=data, se.fit=conf_int,
-                            conf.int=conf_level, ...)
+  surv <- survival::survfit.formula(stats::as.formula(form), data=data,
+                                    se.fit=conf_int, conf.int=conf_level, ...)
   plotdata <- data.frame(time=surv$time,
                          surv=surv$surv)
   # get grouping variable
@@ -50,8 +50,7 @@ surv_km <- function(data, variable, ev_time, event, conf_int,
 }
 
 ## IPTW Kaplan-Meier estimate
-# TODO: - standard deviation calculation is a little off,
-#       - CI seem fine for group==1 but way too small otherwise
+# TODO: - standard deviation calculation is off,
 #' @export
 surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
                          conf_level=0.95, times=NULL, treatment_model,
@@ -167,8 +166,7 @@ surv_iptw_cox <- function(data, variable, ev_time, event, conf_int,
   }
 
   # univariate, weighted cox model
-  form <- paste0("survival::Surv(", ev_time, ", ", event, ") ~ strata(",
-                 variable, ")")
+  form <- paste0("survival::Surv(", ev_time, ", ", event, ") ~ ", variable)
   model <- survival::coxph(stats::as.formula(form), weights=weights, data=data,
                            x=T)
 
@@ -184,8 +182,7 @@ surv_iptw_cox <- function(data, variable, ev_time, event, conf_int,
                           conf_int=conf_int,
                           conf_level=conf_level,
                           times=times,
-                          outcome_model=model,
-                          ...)
+                          outcome_model=model)
 
   return(plotdata)
 }
@@ -551,9 +548,9 @@ surv_aiptw_pseudo <- function(data, variable, ev_time, event, conf_int,
 
 ## Using Empirical Likelihood Estimation
 #' @export
-surv_el <- function(data, variable, ev_time, event,
-                    times, treatment_vars, moment="first",
-                    standardize=F, ...) {
+surv_emp_lik <- function(data, variable, ev_time, event,
+                         times, treatment_vars, moment="first",
+                         standardize=F, ...) {
 
   el_0 <- adjKMtest::el.est(y=data[, ev_time],
                             delta=data[, event],

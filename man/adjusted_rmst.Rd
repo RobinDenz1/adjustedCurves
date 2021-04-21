@@ -25,7 +25,7 @@ A number specifying the right side of the time interval of interest. See details
 Whether bootstrap estimates should be used to calculate the standard deviation and confidence intervals of the RMST estimates. Can only be used if \code{bootstrap=TRUE} was used in the \code{\link{adjustedsurv}} call.
   }
   \item{conf_level}{
-A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
+A number specifying the confidence level of the bootstrap confidence intervals.
   }
 }
 \details{

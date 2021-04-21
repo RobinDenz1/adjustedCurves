@@ -1,5 +1,5 @@
-\name{surv_el}
-\alias{surv_el}
+\name{surv_emp_lik}
+\alias{surv_emp_lik}
 
 \title{
 Empirical Likelihood Estimation Survival Curves
@@ -8,8 +8,8 @@ Empirical Likelihood Estimation Survival Curves
 This method utilizes the empirical likelihood estimation methodology to calculate adjusted survival curves. Neither outcome nor treatment assignment models are required for this function to work. Since the exact form of both mechanisms are left unspecified, it is more robust to model misspecification than IPTW or direct adjustment. See details for more information.
 }
 \usage{
-surv_el(data, variable, ev_time, event, times, treatment_vars,
-        moment="first", standardize=F, ...)
+surv_emp_lik(data, variable, ev_time, event, times, treatment_vars,
+             moment="first", standardize=F, ...)
 }
 
 \arguments{
@@ -82,7 +82,7 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         variable="group",
                         ev_time="time",
                         event="event",
-                        method="el",
+                        method="emp_lik",
                         treatment_vars=c("x1", "x2", "x3", "x4", "x5", "x6"),
                         moment="first")
 

@@ -101,9 +101,11 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
       dplyr::group_by(., time, group) %>%
       dplyr::summarise(surv=mean(surv_b, na.rm=T),
                        sd=stats::sd(surv_b, na.rm=T),
-                       ci_lower=stats::quantile(surv_b, probs=1-conf_level,
+                       ci_lower=stats::quantile(surv_b,
+                                                probs=(1-conf_level)/2,
                                                 na.rm=T),
-                       ci_upper=stats::quantile(surv_b, probs=conf_level,
+                       ci_upper=stats::quantile(surv_b,
+                                                probs=1-((1-conf_level)/2),
                                                 na.rm=T),
                        n_boot=sum(!is.na(surv_b)),
                        .groups="drop_last")
@@ -470,8 +472,12 @@ sim_confounded_surv <- function(n=500, lcovars=NULL, outcome_betas=NULL,
   covars$id <- NULL
 
   # assign binary treatment using logistic regression
-  group_p <- intercept + rowSums(treatment_betas *
-                                 covars[,names(treatment_betas)])
+  if (length(treatment_betas)==1) {
+    group_p <- intercept + (treatment_betas * covars[,names(treatment_betas)])
+  } else {
+    group_p <- intercept + rowSums(treatment_betas *
+                                   covars[,names(treatment_betas)])
+  }
   group_p <- 1/(1 + exp(-group_p))
 
   # in order to keep the positivity assumption,

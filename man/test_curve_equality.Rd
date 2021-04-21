@@ -8,7 +8,7 @@ Test for the Equality of Two Confounder-Adjusted Survival Curves or CIFs
 This function implements a modified version of the Pepe and Flemming (1989) test for the equality of two adjusted survival curves or CIFs. In particular, the Null-Hypothesis is that the integral of the difference of the two curves in a specified time interval is not different from zero.
 }
 \usage{
-test_curve_equality(adjsurv, to, from=0)
+test_curve_equality(adjsurv, to, from=0, conf_level=0.95)
 }
 
 \arguments{
@@ -21,6 +21,9 @@ A number specifying the right side of the time interval of interest. It has to b
   \item{from}{
 A number specifying the left side of the time interval of interest. It has to be a value of time that can be read from both of the estimated survival curves or CIFs. It is set to 0 by default.
   }
+  \item{conf_level}{
+A number specifying the confidence level of the bootstrap confidence intervals.
+  }
 }
 \details{
 
@@ -30,7 +33,7 @@ This function has not been tested extensively yet and is still in the experiment
 
 }
 \value{
-Returns a \code{curve_test} object containing the following object:
+Returns a \code{curve_test} object. If there are exactly two treatments this list contains the following object:
 
 \item{diff_curves}{A \code{data.frame} containing the difference curves used for calculating the integrals.
 }
@@ -38,12 +41,29 @@ Returns a \code{curve_test} object containing the following object:
 }
 \item{observed_diff_curve}{The curve of the difference between the two non-bootstrapped adjusted survival curves or CIFs.
 }
-\item{obersved_diff_integral}{The integral of the curve in \code{observed_diff_curve}.
+\item{observed_diff_integral}{The integral of the curve in \code{observed_diff_curve}.
 }
 \item{p_value}{The P-Value for the modified Pepe-Fleming Test. See details.
 }
+\item{n_boot}{The number of bootstrap repetitions used.
+}
+\item{from}{\code{from} argument used in function call.
+}
+\item{to}{\code{to} argument used in function call.
+}
 \item{kind}{Whether survival curves or cumulative incidence functions where used.
 }
+\item{conf_int}{The percentile bootstrap confidence interval of the difference between the two curves.
+}
+\item{conf_level}{\code{conf_level} argument used in function call.
+}
+\item{categorical}{Whether there are more than two treatments/groups.
+}
+\item{treat_labs}{The labels of all treatments/groups.
+}
+
+If there are more than two treatments the object returned is a list of these objects with one list for each pairwise comparison.
+
 }
 \references{
 Margaret Sullivan Pepe and Thomas R. Fleming. "Weighted Kaplan-Meier Statistics: A Class of Distance Tests for Censored Survival Data". In: Biometrics 45.2 (1989), pp. 497-507.
