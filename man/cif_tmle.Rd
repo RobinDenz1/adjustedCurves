@@ -101,26 +101,27 @@ The wrapper function was written by Robin Denz, the \code{survtmle} package (whi
 \examples{
 \dontrun{
 # simulate some data as example (needs a binary integer "variable")
-sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat <- sim_confounded_crisk(n=200, max_t=5)
 
 # only works with integer time, only unbiased with small amounts of them
 sim_dat$time <- round(sim_dat$time*15) + 1
 
-# calculate adjusted survival curves, using SuperLearner but only
+# calculate adjusted CIFs, using SuperLearner but only
 # using the SL.glm library. In practice you would want to use more than
 # that. See ?survtmle
-adjsurv <- adjustedsurv(data=sim_dat,
-                        variable="group",
-                        ev_time="time",
-                        event="event",
-                        method="tmle",
-                        adjust_vars=c("x1", "x2", "x3", "x4", "x5", "x6"),
-                        SL.ftime=c("SL.glm"),
-                        SL.ctim=c("SL.glm"),
-                        SL.trt=c("SL.glm"))
+adjcif <- adjustedcif(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      cause=1,
+                      method="tmle",
+                      adjust_vars=c("x1", "x2", "x3", "x4", "x5", "x6"),
+                      SL.ftime=c("SL.glm"),
+                      SL.ctim=c("SL.glm"),
+                      SL.trt=c("SL.glm"))
 
 # plot the curves
-plot(adjsurv)
+plot(adjcif, iso_reg=TRUE)
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

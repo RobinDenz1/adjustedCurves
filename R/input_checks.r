@@ -523,3 +523,40 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
     }
   }
 }
+
+## for sim_confounded_crisk
+check_inputs_sim_crisk_fun <- function(n, lcovars, outcome_betas, gamma,
+                                       lambda, treatment_betas, group_beta,
+                                       intercept, gtol, cens_fun, cens_args,
+                                       max_t, max_iter) {
+
+  if (!is.numeric(n)) {
+    stop("'n' must be a positive integer.")
+  } else if (floor(n)!=n) {
+    stop("'n' must be a positive integer, not a double.")
+  } else if (!is.numeric(gamma)) {
+    stop("'gamma' must be a number. See details.")
+  } else if (!is.numeric(lambda)) {
+    stop("'lambda' must be a number. See details.")
+  } else if (!is.numeric(intercept)) {
+    stop("'intercept' must be a number. See details.")
+  } else if (!is.numeric(gtol)) {
+    stop("'gtol' must be a number. See details.")
+  } else if (gtol > 1 | gtol < 0) {
+    stop("'gtol' must be <= 1 and >= 0. See details.")
+  } else if (!is.function(cens_fun) & !is.null(cens_fun)) {
+    stop("'cens_fun' must be a function with the argument 'n' or NULL.")
+  } else if (!is.list(cens_args) & !is.null(cens_args)) {
+    stop("'cens_args' must be a named list of arguments to be passed to",
+         " 'cens_fun' or NULL.")
+  } else if (!is.numeric(max_t)) {
+    stop("'max_t' must be a number.")
+  } else if (max_t <= 0) {
+    stop("'max_t' must be bigger than zero.")
+  } else if (!is.numeric(group_beta)) {
+    stop("'group_beta' must be a number.")
+  }
+
+  # TODO: more specific checks here
+
+}

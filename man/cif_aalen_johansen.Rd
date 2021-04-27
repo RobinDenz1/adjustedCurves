@@ -76,18 +76,19 @@ The wrapper function was written by Robin Denz, the \code{cuminc} function (whic
 library(cmprsk)
 
 # simulate some data as example
-sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat <- sim_confounded_crisk(n=500, max_t=5)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # calculate un-adjusted kaplan-meier survival curves
-adjsurv <- adjustedsurv(data=sim_dat,
-                        variable="group",
-                        ev_time="time",
-                        event="event",
-                        method="km")
+adjcif <- adjustedcif(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      cause=1,
+                      method="aalen_johansen")
 
 # plot the curves
-plot(adjsurv)
+plot(adjcif)
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

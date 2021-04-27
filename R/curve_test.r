@@ -103,6 +103,7 @@ test_curve_equality <- function(adjsurv, to, from=0, conf_level=0.95) {
     for (i in 1:length(combs)) {
 
       # get first and second group
+      # TODO: this only works when each group is a single character lol
       group_0 <- substring(combs[i], 1, 1)
       group_1 <- substring(combs[i], 2, 2)
 

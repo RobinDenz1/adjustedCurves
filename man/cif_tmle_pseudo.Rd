@@ -92,13 +92,25 @@ Robin Denz
 }
 \examples{
 \dontrun{
-library(survival)
+library(tmle)
+library(SuperLearner)
 
 # simulate some data as example
-sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
-sim_dat$group <- as.factor(sim_dat$group)
+sim_dat <- sim_confounded_crisk(n=500, max_t=5)
 
-# TODO: Add examples
+# calculate adjusted CIFs
+adjcif <- adjustedcif(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      cause=1,
+                      method="tmle_pseudo",
+                      times=seq(0, 5, 0.1),
+                      outcome_vars=c("x1", "x2", "x3", "x4", "x5", "x6"),
+                      treatment_vars=c("x1", "x2", "x3", "x4", "x5", "x6"),
+                      SL.trt=c("SL.glm"),
+                      SL.ftime=c("SL.glm"))
+plot(adjcif)
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

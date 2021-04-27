@@ -161,6 +161,99 @@ sim_surv_time <- function(row, betas, dist, lambda, gamma) {
   return(surv_time)
 }
 
+## Simulate cause-specific survival time with respective event
+# NOTE: the beta coefficients of the proportional hazards
+#       modification can be recovered by: b_ph = -b_aft * gamma
+#       See Morina (2017) p. 5716
+sim_crisk_time <- function(x, outcome_betas, gamma, lambda, max_t) {
+
+  # has to be a unnamed numeric vector
+  eff <- as.numeric(x)
+
+  # to store some stuff later
+  a.ev <- vector()
+  b.ev <- vector()
+  pro <- vector()
+  cshaz <- list()
+  cause <- NA
+  nsit <- length(outcome_betas[[1]])
+
+  ## Simulates the all cause hazard
+  suma <- vector()
+  for (m2 in 1:nsit) {
+    suma[m2] <- 0
+    for (m1 in 1:length(outcome_betas)) {
+      suma[m2] <- suma[m2] + outcome_betas[[m1]][m2]*eff[m1]
+    }
+  }
+
+  # Cause-specific hazard function, based on weibull distribution
+  # equation can be found in Morina & Navarro (2017, p. 5714)
+  for (k in 1:nsit) {
+
+    a.ev[k] <- lambda[k] + suma[k]
+    b.ev[k] <- gamma[k]
+    cshaz[[k]] <- function(t, r) {
+      par1 <- eval(parse(text="a.ev[r]"))
+      par2 <- eval(parse(text="b.ev[r]"))
+      return((((1/par2)/exp(par1))^(1/par2))*t^((1/par2)-1))
+    }
+  }
+
+  # Cumulative all-cause hazard function A
+  A <- function(t, y) {
+    res <- 0
+    for (k in 1:length(cshaz)) {
+      res <- res + stats::integrate(cshaz[[k]], lower=0.001, upper=t, r=k,
+                                    subdivisions=1000)$value
+    }
+    res <- res + y
+    return(res[1])
+  }
+
+  # There was a while loop here in the original survsim code, which
+  # resampled values for u whenever the condition in the following if
+  # statement was not true. By resampling these cases that should be censored
+  # (because their survival time is greater than the maximal follow up time)
+  # were replaced with artificially small survival times. This lead to wrong
+  # observed coefficients in the sample for small max_t.
+
+  # Instead of doing that, we simply denote any observation that fails
+  # this test as censored. This works much better.
+  u <- stats::runif(1)
+  if (A(0.001, log(1-u))*A(max_t, log(1-u)) > 0) {
+    return(c(time=max_t, cause=0))
+  }
+
+  # Numeric inversion method
+  # max_t needs to be included. It defines the interval in which the root
+  # will be searched for (See Beyersmann 2012; p. 49). Not a problem
+  # anymore due to the changes above.
+  tb <- stats::uniroot(A, c(0, max_t), tol=0.0001, y=log(1-u))$root
+
+  # calculate probabilities for observing each cause, defined
+  # by equation 2 in Beyersmann et al. (2009)
+  sumprob <- 0
+  for (k in 1:length(cshaz)) {
+    sumprob <- sumprob + cshaz[[k]](tb, k)
+  }
+
+  for (k in 1:length(cshaz)) {
+    pro[k] <- cshaz[[k]](tb, k) / sumprob
+  }
+
+  # draw observed cause using multinomial distribution
+  cause1 <- stats::rmultinom(1, 1, prob=pro)
+  for (k in 1:length(cshaz)) {
+    if (cause1[k] == 1) {
+      cause <- k
+    }
+  }
+
+  # need to return both the time and the cause
+  return(c(time=tb, cause=cause))
+}
+
 ## takes a value x at which to read from the step function
 ## and step function data from which to read it
 read_from_step_function <- function(x, step_data, est="surv") {

@@ -115,11 +115,100 @@ The function itself was written by Robin Denz, but it includes wrappers for func
 }
 \examples{
 \dontrun{
+library(survival)
+library(riskRegression)
 
-# NOTHING HERE YET
+# simulate some example data
+sim_dat <- sim_confounded_crisk(n=500, max_t=5)
+sim_dat$group <- as.factor(sim_dat$group)
+
+# treatment assignment model
+glm_mod <- glm(group ~ x2 + x3 + x5 + x6, data=sim_dat, family="binomial")
+
+# outcome model
+cox_mod <- CSC(Hist(time, event) ~ x1 + x2 + x4 + x5, data=sim_dat)
+
+# using direct adjustment with asymptotic confidence intervals for cause 1
+adjcif <- adjustedcif(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      cause=1,
+                      method="direct",
+                      outcome_model=cox_mod,
+                      conf_int=TRUE,
+                      bootstrap=FALSE)
+
+# using IPTW with asymptotic confidence intervals for cause 2
+adjcif <- adjustedcif(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="iptw",
+                      cause=2,
+                      treatment_model=glm_mod,
+                      conf_int=TRUE,
+                      bootstrap=FALSE)
+
+# using AIPTW with asymptotic confidence intervals for cause 1
+adjcif <- adjustedcif(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      cause=1,
+                      method="aiptw",
+                      outcome_model=cox_mod,
+                      treatment_model=glm_mod,
+                      conf_int=TRUE,
+                      bootstrap=FALSE)
+
+# using direct adjustment at custom points in time
+custom_times <- c(0.001, 0.1, 0.2, 0.6, 1.1)
+adjcif <- adjustedcif(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      cause=1,
+                      method="direct",
+                      outcome_model=cox_mod,
+                      conf_int=TRUE,
+                      bootstrap=FALSE,
+                      times=custom_times)
+
+# using bootstrapping with direct adjustment
+# NOTE: In practice the number of bootstrap replications should be
+#       greater than 100. This is only shown here for convenience.
+adjcif <- adjustedcif(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      cause=1,
+                      method="direct",
+                      outcome_model=cox_mod,
+                      conf_int=TRUE,
+                      bootstrap=TRUE,
+                      n_boot=100)
+
+# using bootstrapping with direct adjustment, run in parallel
+# all but one availble processor cores
+library(foreach)
+library(parallel)
+library(doRNG)
+
+adjcif <- adjustedcif(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      cause=1,
+                      method="direct",
+                      outcome_model=cox_mod,
+                      conf_int=TRUE,
+                      bootstrap=TRUE,
+                      n_boot=100,
+                      n_cores=parallel::detectCores()-1)
 
 # More specific examples can be found in the documentation of each
-# respective cif_method. See ?surv_method_ + "method" for more information.
+# respective cif_method. See ?cif_ + "method" for more information.
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

@@ -94,24 +94,25 @@ Robin Denz
 \examples{
 \dontrun{
 # simulate some data as example
-sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat <- sim_confounded_crisk(n=100, max_t=5)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # estimate a treatment assignment model
 glm_mod <- glm(group ~ x1 + x3 + x5 + x6, data=sim_dat, family="binomial")
 
-# use it + pseudo values + geese model to calculate adjusted survival curves
-adjsurv <- adjustedsurv(data=sim_dat,
-                        variable="group",
-                        ev_time="time",
-                        event="event",
-                        method="aiptw_pseudo",
-                        outcome_vars=c("x1", "x2", "x3", "x4", "x5", "x6"),
-                        treatment_model=glm_mod,
-                        conf_int=TRUE)
+# use it + pseudo values + geese model to calculate adjusted CIFs
+adjcif <- adjustedcif(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      cause=1,
+                      method="aiptw_pseudo",
+                      outcome_vars=c("x1", "x2", "x3", "x4", "x5", "x6"),
+                      treatment_model=glm_mod,
+                      conf_int=FALSE)
 
 # plot the curves
-plot(adjsurv, draw_ci=TRUE)
+plot(adjcif)
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

@@ -79,18 +79,20 @@ The wrapper function was written by Robin Denz, the \code{Match} function (which
 \examples{
 \dontrun{
 # simulate some data as example (needs a binary integer "variable")
-sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat <- sim_confounded_crisk(n=300, max_t=5)
 
 # estimate treatment assignment model
 glm_mod <- glm(group ~ x1 + x2 + x4 + x6, data=sim_dat, family="binomial")
 
-# calculate adjusted survival curves
-adjsurv <- adjustedsurv(data=sim_dat,
-                        variable="group",
-                        ev_time="time",
-                        event="event",
-                        method="matching",
-                        treatment_model=glm_mod)
+# calculate adjusted CIFs
+adjcif <- adjustedcif(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      cause=1,
+                      method="matching",
+                      treatment_model=glm_mod)
+plot(adjcif)
 
 # Alternatively, supply the propensity score directly
 # Here we use the logistic regression to calculate it, so we get
@@ -98,15 +100,16 @@ adjsurv <- adjustedsurv(data=sim_dat,
 # any other way in practice, allowing flexibility
 ps_score <- glm_mod$fitted.values
 
-adjsurv <- adjustedsurv(data=sim_dat,
-                        variable="group",
-                        ev_time="time",
-                        event="event",
-                        method="matching",
-                        treatment_model=ps_score)
+adjcif <- adjustedcif(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      cause=1,
+                      method="matching",
+                      treatment_model=ps_score)
 
 # plot the curves
-plot(adjsurv)
+plot(adjcif)
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

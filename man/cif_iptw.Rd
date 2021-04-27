@@ -89,51 +89,21 @@ The wrapper function was written by Robin Denz, the \code{\link[riskRegression]{
 \examples{
 \dontrun{
 # simulate some data as example
-sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat <- sim_confounded_crisk(n=500, max_t=5)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # estimate a treatment assignment model
 glm_mod <- glm(group ~ x1 + x3 + x5 + x6, data=sim_dat, family="binomial")
 
-# use it to calculate adjusted survival curves
-adjsurv <- adjustedsurv(data=sim_dat,
-                        variable="group",
-                        ev_time="time",
-                        event="event",
-                        method="iptw_cox",
-                        treatment_model=glm_mod)
-
-# Alternatively, use custom weights
-# In this example we use weights calculated using the propensity score,
-# which is equal to using the glm model directly in the function
-ps_score <- glm_mod$fitted.values
-weights <- ifelse(sim_dat$group==1, 1/ps_score, 1/(1-ps_score))
-
-adjsurv <- adjustedsurv(data=sim_dat,
-                        variable="group",
-                        ev_time="time",
-                        event="event",
-                        method="iptw_cox",
-                        treatment_model=weights)
-
-# And a third alternative: use the WeightIt package
-# here an example with equal results to the ones above:
-adjsurv <- adjustedsurv(data=sim_dat,
-                        variable="group",
-                        ev_time="time",
-                        event="event",
-                        method="iptw_cox",
-                        treatment_model=group ~ x1 + x3 + x5 + x6,
-                        weight_method="ps")
-
-# here an example using Optimization-Based Weighting:
-adjsurv <- adjustedsurv(data=sim_dat,
-                        variable="group",
-                        ev_time="time",
-                        event="event",
-                        method="iptw_cox",
-                        treatment_model=group ~ x1 + x3 + x5 + x6,
-                        weight_method="optweight")
+# use it to calculate adjusted CIFs
+adjcif <- adjustedcif(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      cause=1,
+                      method="iptw",
+                      treatment_model=glm_mod)
+plot(adjcif)
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

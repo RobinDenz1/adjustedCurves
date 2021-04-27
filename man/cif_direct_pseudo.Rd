@@ -80,30 +80,33 @@ Robin Denz
 \examples{
 \dontrun{
 # simulate some data as example
-sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat <- sim_confounded_crisk(n=100, max_t=5)
 sim_dat$group <- as.factor(sim_dat$group)
 
-# calculate adjusted survival curves, with time as factor
-adjsurv <- adjustedsurv(data=sim_dat,
-                        variable="group",
-                        ev_time="time",
-                        event="event",
-                        method="direct_pseudo",
-                        outcome_vars=c("x1", "x2", "x3", "x4", "x5", "x6"),
-                        type_time="factor")
+# calculate adjusted CIFs, with time as factor
+adjcif <- adjustedcif(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      cause=1,
+                      method="direct_pseudo",
+                      outcome_vars=c("x1", "x2", "x3", "x4", "x5", "x6"),
+                      type_time="factor")
+plot(adjcif)
 
 # with time modelled as B-Spline using 5 degrees of freedom
-adjsurv <- adjustedsurv(data=sim_dat,
-                        variable="group",
-                        ev_time="time",
-                        event="event",
-                        method="direct_pseudo",
-                        outcome_vars=c("x1", "x2", "x3", "x4", "x5", "x6"),
-                        type_time="bs",
-                        spline_df=5)
+adjcif <- adjustedcif(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      cause=1,
+                      method="direct_pseudo",
+                      outcome_vars=c("x1", "x2", "x3", "x4", "x5", "x6"),
+                      type_time="bs",
+                      spline_df=5)
 
 # plot the curves
-plot(adjsurv)
+plot(adjcif)
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

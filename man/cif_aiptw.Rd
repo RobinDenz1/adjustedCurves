@@ -95,30 +95,32 @@ The wrapper function was written by Robin Denz, the \code{ate} function (which t
 \examples{
 \dontrun{
 library(survival)
+library(riskRegression)
 
 # simulate some data as example
-sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat <- sim_confounded_crisk(n=500, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
-# estimate a cox-regression for the outcome
-cox_mod <- coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
-                 data=sim_dat, x=TRUE)
+# estimate a cause-specific cox-regression for the outcome
+cox_mod <- CSC(Hist(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
+               data=sim_dat)
 
 # estimate a treatment assignment model
 glm_mod <- glm(group ~ x1 + x3 + x5 + x6, data=sim_dat, family="binomial")
 
 # use it to calculate adjusted survival curves
-adjsurv <- adjustedsurv(data=sim_dat,
-                        variable="group",
-                        ev_time="time",
-                        event="event",
-                        method="aiptw",
-                        outcome_model=cox_mod,
-                        treatment_model=glm_mod,
-                        conf_int=FALSE)
+adjcif <- adjustedcif(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      cause=1,
+                      method="aiptw",
+                      outcome_model=cox_mod,
+                      treatment_model=glm_mod,
+                      conf_int=FALSE)
 
 # plot the curves
-plot(adjsurv)
+plot(adjcif)
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
