@@ -126,7 +126,7 @@ sim_dat$group <- as.factor(sim_dat$group)
 glm_mod <- glm(group ~ x2 + x3 + x5 + x6, data=sim_dat, family="binomial")
 
 # outcome model
-cox_mod <- CSC(Hist(time, event) ~ x1 + x2 + x4 + x5, data=sim_dat)
+cox_mod <- CSC(Hist(time, event) ~ x1 + x2 + x4 + x5 + group, data=sim_dat)
 
 # using direct adjustment with asymptotic confidence intervals for cause 1
 adjcif <- adjustedcif(data=sim_dat,

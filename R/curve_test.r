@@ -103,9 +103,8 @@ test_curve_equality <- function(adjsurv, to, from=0, conf_level=0.95) {
     for (i in 1:length(combs)) {
 
       # get first and second group
-      # TODO: this only works when each group is a single character lol
-      group_0 <- substring(combs[i], 1, 1)
-      group_1 <- substring(combs[i], 2, 2)
+      group_0 <- strsplit(combs[i], "\t")[[1]][1]
+      group_1 <- strsplit(combs[i], "\t")[[1]][2]
 
       # create pseudo adjustedsurv, adjustedcif object
       if (class(adjsurv)=="adjustedsurv") {
@@ -184,11 +183,12 @@ all_combs_length_2 <- function(treat_labs) {
     for (j in 1:length(treat_labs)) {
 
       # no cases with the same group twice and order does not matter
-      if (i != j & !paste0(treat_labs[j], treat_labs[i]) %in% combs) {
-        combs[[length(combs)+1]] <- paste0(treat_labs[i], treat_labs[j])
+      if (i != j & !paste(treat_labs[j], treat_labs[i], sep="\t") %in% combs) {
+        combs[[length(combs)+1]] <- paste(treat_labs[i], treat_labs[j], sep="\t")
       }
     }
   }
   combs <- unlist(combs)
   return(combs)
 }
+

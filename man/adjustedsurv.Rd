@@ -126,7 +126,8 @@ sim_dat$group <- as.factor(sim_dat$group)
 glm_mod <- glm(group ~ x2 + x3 + x5 + x6, data=sim_dat, family="binomial")
 
 # outcome model
-cox_mod <- coxph(Surv(time, event) ~ x1 + x2 + x4 + x5, data=sim_dat, x=TRUE)
+cox_mod <- coxph(Surv(time, event) ~ x1 + x2 + x4 + x5 + group,
+                 data=sim_dat, x=TRUE)
 
 # using direct adjustment with asymptotic confidence intervals
 adjsurv <- adjustedsurv(data=sim_dat,

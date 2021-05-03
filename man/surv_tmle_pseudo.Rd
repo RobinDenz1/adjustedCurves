@@ -68,7 +68,7 @@ Further arguments passed to \code{tmle}.
 \details{
 
 \itemize{
-\item{\strong{Type of Adjustment:} Adjustments are made based on the treatment assignment mechanism and the outcome mechanism. No models can be suppliedfor the outcome mechanism. The adjustments are made based on \code{\link[SuperLearner]{SuperLearner}} libraries. For the treatment assignment, either a \code{glm} model or \code{\link[SuperLearner]{SuperLearner}} can be used.}
+\item{\strong{Type of Adjustment:} Adjustments are made based on the treatment assignment mechanism and the outcome mechanism. No models can be supplied for the outcome mechanism. The adjustments are made based on \code{\link[SuperLearner]{SuperLearner}} libraries. For the treatment assignment, either a \code{glm} model or \code{\link[SuperLearner]{SuperLearner}} can be used.}
 \item{\strong{Doubly-Robust:} Estimates are Doubly-Robust.}
 \item{\strong{Categorical groups:} Currently only two groups in \code{variable} are allowed. Must be an integer variable only containing 0 and 1.}
 \item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
@@ -78,7 +78,7 @@ Further arguments passed to \code{tmle}.
 \item{\strong{Dependencies:} This method relies on the \code{tmle}, \code{SuperLearner} and \code{prodlim} packages. Additionally requires the \code{eventglm} package if \code{censoring_vars} is specified.}
 }
 
-# TODO: Description of this method
+As in \link[=surv_direct_pseudo]{direct_pseudo}, \link[=surv_iptw_pseudo]{iptw_pseudo} and \link[=surv_aiptw_pseudo]{aiptw_pseudo} this method utilizes pseudo-values to enable the use of the methodology originally developed for mean outcomes. First, pseudo values are estimated for each person for a range of points in time. These pseudo values are subsequently used to estimate an outcome model with an ensemble of machine learning and other methods (using the \code{SuperLearner} package). Using an additional estimate of the propensity score, the targeted maximum likelihood estimation methodology for estimating arithmetic means is applied directly to the pseudo-values. This makes it possible to directly use continuous survival times with targeted maximum likelihood estimation. MORE FROM MY PAPER.
 
 Additionally, covariate-dependent censoring can be corrected for using inverse probability of censoring weighted pseudo-values (Binder et al. 2014) instead of regular pseudo-values (specified using the \code{censoring_vars} and \code{ipcw_method} arguments).
 }
