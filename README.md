@@ -88,7 +88,7 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         bootstrap=T,
                         n_boot=1000)
                         
- adj_test <- adjustedsurv_test(adjsurv, from=0, to=1.2)
+ adj_test <- test_curve_equality(adjsurv, from=0, to=1.2)
  print(adj_test)
 ```
 ## Citation
@@ -101,30 +101,6 @@ You should also cite the paper describing the method you used. The respective li
 
 © 2021-2021 Robin Denz
 
-The contents of this repository are distributed under the MIT license. See below for details:
-
-```
-The MIT License (MIT)
-
-Copyright (c) 2021-2021 Robin Denz
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
+The contents of this repository are distributed under the GNU General Public License. You can find the full text of this License in this github repository. Alternatively, see <http://www.gnu.org/licenses/>.
 
 
