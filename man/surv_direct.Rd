@@ -26,7 +26,7 @@ A character string specifying the variable indicating the time-to-event or time-
 A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
 }
   \item{conf_int}{
-A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated. Not available for all methods.
+A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated.
   }
   \item{conf_level}{
 A number specifying the confidence level of asymptotic confidence intervals.

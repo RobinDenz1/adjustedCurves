@@ -68,6 +68,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
               method, "'.")
     }
   }
+  # No extrapolation
   if (!is.null(times)) {
     if (max(times) > max(data[,ev_time])) {
       stop("Values in '", ev_time, "' must be smaller than max(data[,ev_time]).",
@@ -177,8 +178,14 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
       if (!is.logical(obj$standardize)) {
         stop("Argument 'standardize' must be either TRUE or FALSE.")
       }
+    } else {
+      for (col in obj$treatment_vars) {
+        if (paste0(unique(data[,col]), collapse="") %in% c("10", "01")) {
+          warning("Dichotomous variables coded with 0 and 1 found in 'treatment_vars'.",
+                  " Consider recoding to -1 and 1 to avoid estimation problems.")
+        }
+      }
     }
-     # TODO: check for dichotomous variables, warn when 0, 1
   } else if (method=="matching") {
     requireNamespace("Matching")
 
@@ -228,10 +235,15 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
 
   # asymptotic variance calculations
   if (conf_int) {
-    if (method %in% c("emp_lik", "direct_pseudo", "matching")) {
+    if (method %in% c("emp_lik", "matching")) {
       stop("Asymptotic or exact variance calculations are currently",
            " not available for method='", method, "'. Use bootstrap=TRUE",
            "to get bootstrap estimates.")
+    } else if (method=="direct_pseudo" & !is.null(obj$model_type)) {
+      if (obj$model_type != "lm") {
+        stop("Asymptotic variance calculations for method='direct_pseudo' ",
+             "can only be calculated with model_type='lm'.")
+      }
     }
   }
 }
@@ -516,10 +528,15 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
 
   # asymptotic variance calculations
   if (conf_int) {
-    if (method %in% c("direct_pseudo", "matching")) {
+    if (method %in% c("matching")) {
       stop("Asymptotic or exact variance calculations are currently",
            " not available for method='", method, "'. Use bootstrap=TRUE",
            "to get bootstrap estimates.")
+    } else if (method=="direct_pseudo" & !is.null(obj$model_type)) {
+      if (obj$model_type != "lm") {
+        stop("Asymptotic variance calculations for method='direct_pseudo'",
+             " are only available with model_type='lm'.")
+      }
     }
   }
 }

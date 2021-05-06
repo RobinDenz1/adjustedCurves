@@ -5,11 +5,12 @@
 Direct Adjusted CIFs using Pseudo-Values
 }
 \description{
-This function can be used to calculate direct adjusted cumulative incidence functions using pseudo-values in a competing risks setting. It uses essentially the same methodology as the regular direct adjustment method, with the difference that the outcome mechanism is modeled using pseudo-values. Here, the outcome model is a generalised estimating equation model. See details for more information.
+This function can be used to calculate direct adjusted cumulative incidence functions using pseudo-values in a competing risks setting. It uses essentially the same methodology as the regular direct adjustment method, with the difference that the outcome mechanism is modeled using pseudo-values.
 }
 \usage{
-cif_direct_pseudo(data, variable, ev_time, event, cause, times,
-                  outcome_vars, type_time="factor", spline_df=10)
+cif_direct_pseudo(data, variable, ev_time, event, cause, conf_int,
+                  conf_level=0.95, times, outcome_vars, model_type="lm",
+                  type_time="factor", spline_df=10)
 }
 
 \arguments{
@@ -28,17 +29,26 @@ A character string specifying the numeric event indicator. The censoring indicat
   \item{cause}{
 The cause of interest for which the cumulative incidence functions should be calculated. Should be a number that appears in the \code{event} column of \code{data}.
   }
+  \item{conf_int}{
+A logical variable, indicating whether the asymptotic variances and confidence intervals of the CIFs should be calculated. Not available for all methods.
+  }
+  \item{conf_level}{
+A number specifying the confidence level of asymptotic confidence intervals.
+  }
   \item{times}{
 A numeric vector of time points at which the CIFs should be estimated.
 }
   \item{outcome_vars}{
-A character vector of column names specifying variables to be used when modeling the outcome mechanism using \code{geese}. See details and examples.
+A character vector of column names specifying variables to be used when modeling the outcome mechanism. See details and examples.
+}
+  \item{model_type}{
+The type of modelling used to estimate the survival probabilities. Can be either \code{"lm"} (fitting one linear regression for each time point with the pseudo values as response) or \code{"geese"} (fitting a single generalised estimating equations model using the \code{geese} function).
 }
   \item{type_time}{
-A character string specifying how the time should be modeled. See details.
+A character string specifying how the time should be modeled. Only used when \code{model_type="geese"}, ignored otherwise. See details.
 }
   \item{spline_df}{
-The number of degrees of freedom used for the natural-spline or B-spline function. Ignored if \code{type_time="factor"}.
+The number of degrees of freedom used for the natural-spline or B-spline function. Only used when \code{model_type="geese"}, also ignored if \code{type_time="factor"}.
 }
 }
 \details{

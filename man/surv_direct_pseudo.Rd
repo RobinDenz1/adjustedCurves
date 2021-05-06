@@ -5,12 +5,12 @@
 Direct Adjusted Survival Curves using Pseudo-Values
 }
 \description{
-This function can be used to calculate direct adjusted survival curves using pseudo-values. It uses essentially the same methodology as the regular direct adjustment method, with the difference that the outcome mechanism is modeled using pseudo-values. Here, the outcome model is a generalised estimating equation model. See details for more information.
+This function can be used to calculate direct adjusted survival curves using pseudo-values. It uses essentially the same methodology as the regular direct adjustment method, with the difference that the outcome mechanism is modeled using pseudo-values.
 }
 \usage{
-surv_direct_pseudo(data, variable, ev_time, event, times, outcome_vars,
-                   type_time="factor", spline_df=10, censoring_vars=NULL,
-                   ipcw_method="binder")
+surv_direct_pseudo(data, variable, ev_time, event, conf_int, conf_level=0.95,
+                   times, outcome_vars, model_type="lm", censoring_vars=NULL,
+                   ipcw_method="binder", type_time="factor", spline_df=10)
 }
 
 \arguments{
@@ -26,17 +26,20 @@ A character string specifying the variable indicating the time-to-event or time-
   \item{event}{
 A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
 }
+   \item{conf_int}{
+A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated. Currently only availabe with \code{model_type='lm'}.
+  }
+  \item{conf_level}{
+A number specifying the confidence level of asymptotic confidence intervals.
+  }
   \item{times}{
 A numeric vector of time points at which the survival probability should be estimated.
 }
   \item{outcome_vars}{
-A character vector of column names specifying variables to be used when modeling the outcome mechanism using \code{geese}. See details and examples.
+A character vector of column names specifying variables to be used when modeling the outcome mechanism. See details and examples.
 }
-  \item{type_time}{
-A character string specifying how the time should be modeled. See details.
-}
-  \item{spline_df}{
-The number of degrees of freedom used for the natural-spline or B-spline function. Ignored if \code{type_time="factor"}.
+  \item{model_type}{
+The type of modelling used to estimate the survival probabilities. Can be either \code{"lm"} (fitting one linear regression for each time point with the pseudo values as response) or \code{"geese"} (fitting a single generalised estimating equations model using the \code{geese} function).
 }
   \item{censoring_vars}{
 An optional character vector specifying variables in \code{data}. Those are used in the calculation of inverse probability of censoring weighted pseudo observations. See \code{?pseudo_aareg} for more information. Set to \code{NULL} (default) to use standard pseudo-values without corrections for dependent censoring instead.
@@ -44,6 +47,13 @@ An optional character vector specifying variables in \code{data}. Those are used
   \item{ipcw_method}{
 The specific method used in the calculation of inverse probability of censoring weighted pseudo observations. Can be either \code{"binder"} (default) or \code{"hajek"}. See \code{?pseudo_aareg} for more information. Ignored if \code{censoring_vars=NULL}.
 }
+  \item{type_time}{
+A character string specifying how the time should be modeled. Only used when \code{model_type="geese"}.
+}
+  \item{spline_df}{
+The number of degrees of freedom used for the natural-spline or B-spline function. Only used when \code{model_type="geese"}. Ignored if \code{type_time="factor"}.
+}
+
 }
 \details{
 

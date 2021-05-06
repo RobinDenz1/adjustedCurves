@@ -422,6 +422,35 @@ calc_pseudo_surv <- function(data, ev_time, event, times, censoring_vars,
   return(pseudo)
 }
 
+## function to perform direct standardization using a linear model
+## given a vector of pseudo values
+lm_direct <- function(x, glm_formula, data, levs, variable,
+                      outcome_vars, conf_level) {
+
+  # fit linear regression
+  data$yi <- x
+  mod <- stats::glm(formula=glm_formula, family="gaussian", data=data)
+
+  # do direct standardization
+  # since it's a simple linear model, we can actually use
+  # the 'average of covariate' method, which also allows us to
+  # get confidence intervals for the estimate directly from the
+  # predict.lm function (uses the delta method internally)
+  newdata <- as.data.frame(t(apply(data[,outcome_vars], 2, mean)))
+  out <- list()
+  for (i in 1:length(levs)) {
+    newdata[,variable] <- levs[i]
+    pred <- stats::predict.lm(mod, newdata=newdata, se.fit=T,
+                              interval="confidence", level=conf_level)
+    pred_dat <- as.data.frame(pred$fit)
+    pred_dat$group <- levs[i]
+    pred_dat$se <- pred$se.fit
+    out[[i]] <- pred_dat
+  }
+  out <- dplyr::bind_rows(out)
+  return(out)
+}
+
 ## function to model treatment assignment using SuperLearner
 get_SL_ps_score <- function(data, variable, treatment_vars, SL.trt,
                             cv_folds) {

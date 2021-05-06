@@ -20,7 +20,6 @@
 # a little messier with unnecessary repetition.
 
 ## Aalen-Johansen estimator
-# TODO: confidence intervals are off
 #' @export
 cif_aalen_johansen <- function(data, variable, ev_time, event, cause,
                                conf_int, conf_level=0.95, times=NULL, ...) {
@@ -42,8 +41,8 @@ cif_aalen_johansen <- function(data, variable, ev_time, event, cause,
   plotdata <- as.data.frame(dplyr::bind_rows(plotdata))
 
   if (conf_int) {
-    cif_cis <- confint_surv(surv=plotdata$cif, se=plotdata$se,
-                             conf_level=conf_level, conf_type="plain")
+    cif_cis <- confint_surv(surv=plotdata$cif, se=sqrt(plotdata$se),
+                            conf_level=conf_level, conf_type="plain")
     plotdata$ci_lower <- cif_cis$left
     plotdata$ci_upper <- cif_cis$right
   }
@@ -51,6 +50,12 @@ cif_aalen_johansen <- function(data, variable, ev_time, event, cause,
   if (!is.null(times)) {
     plotdata <- specific_times(plotdata, times, cif=T)
   }
+
+  # remove weird structure in cmprsk::cuminc call
+  # TODO: is this correct?
+  ids <- seq(2, nrow(plotdata), 2)
+  ids <- ids[1:(length(ids-1))]
+  plotdata <- plotdata[ids, ]
 
   return(plotdata)
 }
@@ -251,62 +256,98 @@ cif_aiptw <- function(data, variable, ev_time, event, cause, conf_int,
 ## Using Pseudo Observations and Direct Adjustment
 #' @export
 cif_direct_pseudo <- function(data, variable, ev_time, event, cause,
-                              times, outcome_vars, type_time="factor",
-                              spline_df=10) {
-  # some constants
-  len <- length(times)
-  n <- nrow(data)
-  group <- data[,variable]
+                              conf_int, conf_level=0.95, times, outcome_vars,
+                              model_type="lm", type_time="factor", spline_df=10) {
 
   # estimate pseudo observations
   hist_formula <- stats::as.formula(paste("prodlim::Hist(", ev_time, ", ",
                                           event, ") ~ 1"))
   pseudo <- prodlim::jackknife(prodlim::prodlim(hist_formula, data=data),
                                times=times, cause=cause)
-  # create data for geese
-  Sdata <- data.frame(yi=c(pseudo),
-                      group=rep(group, len),
-                      vtime=rep(times, rep(n, len)),
-                      id=rep(1:n, len))
-  for (col in outcome_vars) {
-    Sdata[,col] <- rep(data[,col], len)
+
+  if (model_type=="lm") {
+
+    levs <- levels(data[,variable])
+    glm_formula <- stats::as.formula(paste0("yi ~ ", variable, " + ",
+                                            paste0(outcome_vars, collapse=" + ")))
+
+    # call lm_direct for each time specific pseudo values vector
+    ests <- apply(pseudo, 2, lm_direct,
+                  glm_formula=glm_formula,
+                  outcome_vars=outcome_vars,
+                  variable=variable,
+                  conf_level=conf_level,
+                  data=data,
+                  levs=levs)
+    ests <- dplyr::bind_rows(ests)
+
+    # put together
+    if (conf_int) {
+      plotdata <- data.frame(time=rep(times, each=length(levs)),
+                             cif=ests$fit,
+                             group=ests$group,
+                             se=ests$se,
+                             ci_lower=ests$lwr,
+                             ci_upper=ests$upr)
+    } else {
+      plotdata <- data.frame(time=rep(times, each=length(levs)),
+                             cif=ests$fit,
+                             group=ests$group)
+    }
+
+  } else if (model_type=="geese") {
+    # some constants
+    len <- length(times)
+    n <- nrow(data)
+    group <- data[,variable]
+
+    # create data for geese
+    Sdata <- data.frame(yi=c(pseudo),
+                        group=rep(group, len),
+                        vtime=rep(times, rep(n, len)),
+                        id=rep(1:n, len))
+    for (col in outcome_vars) {
+      Sdata[,col] <- rep(data[,col], len)
+    }
+
+    if (type_time=="factor") {
+      Sdata$vtime <- as.factor(Sdata$vtime)
+      geese_formula <- paste("yi ~ vtime + ", paste(outcome_vars, collapse=" + "),
+                             " + group")
+    } else if (type_time=="bs") {
+      geese_formula <- paste("yi ~ splines::bs(vtime, df=", spline_df, ") + ",
+                             paste(outcome_vars, collapse=" + "), " + group")
+    } else if (type_time=="ns") {
+      geese_formula <- paste("yi ~ splines::ns(vtime, df=", spline_df, ") + ",
+                             paste(outcome_vars, collapse=" + "), " + group")
+    }
+
+    # call geese
+    geese_mod <- geepack::geese(stats::as.formula(geese_formula), scale.fix=TRUE,
+                                data=Sdata, family=gaussian, id=id, jack=F,
+                                mean.link="cloglog", corstr="independence")
+
+    # initialize outcome df list
+    levs <- levels(data[,variable])
+    plotdata <- vector(mode="list", length=length(levs))
+
+    # do direct adjustment
+    for (i in 1:length(levs)) {
+
+      Sdata$group <- factor(levs[i], levels=levs)
+      pred <- geese_predictions(geese_mod, Sdata, times=times, n=n)
+
+      m <- 1 - exp(-exp(pred))
+      cif <- apply(m, 2, mean, na.rm=T)
+
+      plotdata[[i]] <- data.frame(time=times, cif=cif, group=levs[i])
+
+    }
+    plotdata <- dplyr::bind_rows(plotdata)
+    rownames(plotdata) <- NULL
+  } else {
+    stop("'model_type' must be either 'lm' or 'geese'.")
   }
-
-  if (type_time=="factor") {
-    Sdata$vtime <- as.factor(Sdata$vtime)
-    geese_formula <- paste("yi ~ vtime + ", paste(outcome_vars, collapse=" + "),
-                           " + group")
-  } else if (type_time=="bs") {
-    geese_formula <- paste("yi ~ splines::bs(vtime, df=", spline_df, ") + ",
-                           paste(outcome_vars, collapse=" + "), " + group")
-  } else if (type_time=="ns") {
-    geese_formula <- paste("yi ~ splines::ns(vtime, df=", spline_df, ") + ",
-                           paste(outcome_vars, collapse=" + "), " + group")
-  }
-
-  # call geese
-  geese_mod <- geepack::geese(stats::as.formula(geese_formula), scale.fix=TRUE,
-                              data=Sdata, family=gaussian, id=id, jack=F,
-                              mean.link="cloglog", corstr="independence")
-
-  # initialize outcome df list
-  levs <- levels(data[,variable])
-  plotdata <- vector(mode="list", length=length(levs))
-
-  # do direct adjustment
-  for (i in 1:length(levs)) {
-
-    Sdata$group <- factor(levs[i], levels=levs)
-    pred <- geese_predictions(geese_mod, Sdata, times=times, n=n)
-
-    m <- 1 - exp(-exp(pred))
-    cif <- apply(m, 2, mean, na.rm=T)
-
-    plotdata[[i]] <- data.frame(time=times, cif=cif, group=levs[i])
-
-  }
-  plotdata <- dplyr::bind_rows(plotdata)
-  rownames(plotdata) <- NULL
 
   return(plotdata)
 }

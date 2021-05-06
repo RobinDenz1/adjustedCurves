@@ -4,6 +4,11 @@ library(adjKMtest)
 set.seed(42)
 
 sim_dat <- adjustedCurves::sim_confounded_surv(n=200)
+sim_dat <- within(sim_dat, {
+  x1 <- ifelse(x1==1, 1, -1);
+  x2 <- ifelse(x2==1, 1, -1);
+  x3 <- ifelse(x3==1, 1, -1);
+})
 
 # outcome model
 treatment_vars <- c("x1", "x2", "x3", "x4", "x5")

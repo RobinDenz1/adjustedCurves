@@ -23,6 +23,7 @@ test_curve_equality <- function(adjsurv, to, from=0, conf_level=0.95) {
 
   # just two treatments, standard procedure
   if (!adjsurv$categorical) {
+
     # calculate the integral of the difference for every bootstrap sample
     stats_vec <- vector(mode="numeric", length=max(adjsurv$boot_data$boot))
     curve_list <- vector(mode="list", length=max(adjsurv$boot_data$boot))
@@ -38,12 +39,15 @@ test_curve_equality <- function(adjsurv, to, from=0, conf_level=0.95) {
       # new curve of the difference
       surv_diff <- exact_stepfun_difference(adjsurv=boot_dat, times=times,
                                             est=est)
-      curve_list[[i]] <- surv_diff
 
       # integral of that curve
       diff_integral <- exact_stepfun_integral(surv_diff, to=to, from=from,
                                               est=est)
       stats_vec[i] <- diff_integral
+
+      # also append difference curve to list
+      surv_diff$boot <- i
+      curve_list[[i]] <- surv_diff
     }
 
     diff_curves <- as.data.frame(dplyr::bind_rows(curve_list))
@@ -158,7 +162,8 @@ print.curve_test <- function(x, ...) {
     cat("------------------------------------------------------------------\n")
     cat(title)
     cat("------------------------------------------------------------------\n")
-    cat("Group =", x$treat_labs[1], "vs. Group =", x$treat_labs[2], "\n")
+    cat("Group =", toString(x$treat_labs[1]), "vs. Group =",
+        toString(x$treat_labs[2]), "\n")
     cat("The equality was tested for the time interval:", x$from, "to", x$to, "\n")
     cat("Observed Integral of the difference:", x$observed_diff_integral, "\n")
     cat("Bootstrap standard deviation:", stats::sd(x$diff_integrals), "\n")
@@ -172,6 +177,118 @@ print.curve_test <- function(x, ...) {
       print.curve_test(x=x[[i]])
     }
   }
+}
+
+## plot method for curve_test objects
+#' @export
+plot.curve_test <- function(x, type="curves", ...) {
+
+  if (x$categorical) {
+
+    comps <- names(x)
+
+    if (type=="integral") {
+
+      observed_diff_integrals <- list()
+      diff_integrals <- list()
+      for (i in 1:(length(x)-1)) {
+
+        # observed diff curves
+        obs_diff <- x[[i]]$observed_diff_integral
+        observed_diff_integrals[[i]] <- data.frame(integral=obs_diff,
+                                                   comp=comps[i])
+
+        # bootstrapped diff curves
+        diff <- x[[i]]$diff_integrals
+
+        # remove NA values
+        diff <- diff[!is.na(diff)]
+
+        # shift bootstrap distribution
+        diff <- diff - mean(diff)
+
+        diff_integrals[[i]] <- data.frame(integral=diff,
+                                          comp=comps[i])
+      }
+      observed_diff_integrals <- dplyr::bind_rows(observed_diff_integrals)
+      diff_integrals <- dplyr::bind_rows(diff_integrals)
+
+      # plot it
+      p <- ggplot(diff_integrals, aes(x=integral)) +
+        geom_density() +
+        geom_vline(xintercept=0, linetype="dashed") +
+        geom_vline(data=observed_diff_integrals, aes(xintercept=integral),
+                   color="red") +
+        theme_bw() +
+        labs(x="Integrals of the difference under H0",
+             y="Density") +
+        facet_wrap(~comp, scales="free")
+
+    } else if (type=="curves") {
+
+      ylab <- ifelse(x[[1]]$kind=="surv", "Difference in Survival",
+                     "Difference in Cumulative Incidence")
+
+      observed_diff_curves <- list()
+      diff_curves <- list()
+      for (i in 1:(length(x)-1)) {
+
+        # observed diff curves
+        obs_diff <- x[[i]]$observed_diff_curve
+        obs_diff$comp <- comps[i]
+        observed_diff_curves[[i]] <- obs_diff
+
+        # bootstrapped diff curves
+        diff <- x[[i]]$diff_curves
+        diff$comp <- comps[i]
+        diff_curves[[i]] <- diff
+      }
+      observed_diff_curves <- dplyr::bind_rows(observed_diff_curves)
+      diff_curves <- dplyr::bind_rows(diff_curves)
+
+      p <- ggplot(diff_curves, aes(x=time, y=surv)) +
+        geom_step(aes(group=boot), color="grey", alpha=0.8) +
+        geom_step(data=observed_diff_curves, aes(x=time, y=surv)) +
+        geom_hline(yintercept=0, linetype="dashed") +
+        theme_bw() +
+        labs(x="Time", y=ylab) +
+        facet_wrap(~comp, scales="free")
+    }
+
+  } else {
+
+    if (type=="integral") {
+
+      # remove NA values
+      stats_vec <- x$diff_integrals[!is.na(x$diff_integrals)]
+
+      # shift bootstrap distribution
+      diff_under_H0 <- stats_vec - mean(stats_vec)
+
+      p <- ggplot(NULL, aes(x=diff_under_H0)) +
+        geom_density() +
+        geom_vline(xintercept=0, linetype="dashed") +
+        geom_vline(xintercept=x$observed_diff_integral,
+                   color="red") +
+        theme_bw() +
+        labs(x="Integrals of the difference under H0",
+             y="Density")
+
+    } else if (type=="curves") {
+
+      ylab <- ifelse(x$kind=="surv", "Difference in Survival",
+                     "Difference in Cumulative Incidence")
+
+      p <- ggplot(x$diff_curves, aes(x=time, y=surv)) +
+        geom_step(aes(group=boot), color="grey", alpha=0.8) +
+        geom_step(data=x$observed_diff_curve, aes(x=time, y=surv)) +
+        geom_hline(yintercept=0, linetype="dashed") +
+        theme_bw() +
+        labs(x="Time", y=ylab)
+
+    }
+  }
+  return(p)
 }
 
 ## function that calculates all possible combinations
