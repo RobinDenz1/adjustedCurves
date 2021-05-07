@@ -8,14 +8,24 @@ Author: Robin Denz
 It provides an convenient wrapper around existing R-Packages on the topic and adds additional methods and functionality on top of it.
 Those additional features include the calculation of adjusted restricted mean survival time and testing the equality of two confounder-adjusted survival curves.
 
+Detailed descriptions of each method can be found in the literature cited in the documentatio. 
+
 ## Installation
 
-Currently this package is not available on CRAN, but can be installed easily using the following code:
+Currently this package is not available on CRAN, but can be installed easily using the `devtools` R-Package:
 
 ```
 library(devtools)
 
 devtools::install_github("https://github.com/RobinDenz1/adjustedCurves")
+```
+
+or the `remotes` R-Package:
+
+```
+library(remotes)
+
+remotes::install_github("https://github.com/RobinDenz1/adjustedCurves")
 ```
 
 ## Issues
@@ -48,7 +58,7 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         event="event",
                         method="direct",
                         outcome_model=cox_mod,
-                        sd=T)
+                        conf_int=T)
 
 # plot the curves
 plot(adjsurv, draw_ci=F)
@@ -70,7 +80,7 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         event="event",
                         method="iptw_km",
                         treatment_model=glm_mod,
-                        sd=T)
+                        conf_int=T)
 
 # plot the curves
 plot(adjsurv, draw_ci=F)
@@ -84,13 +94,16 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         event="event",
                         method="direct",
                         outcome_model=cox_mod,
-                        sd=T,
+                        conf_int=T,
                         bootstrap=T,
                         n_boot=1000)
                         
  adj_test <- test_curve_equality(adjsurv, from=0, to=1.2)
  print(adj_test)
 ```
+
+More examples can be found in the documentation and the vignettes.
+
 ## Citation
 Please cite this R-Package using:
 MY PAPER

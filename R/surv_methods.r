@@ -152,10 +152,10 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
 }
 
 ## IPTW with univariate cox-model
-# TODO:
-# - Confidence interval is off, because predictCox igrnores
-#   the weights when predicting stuff. Only way around this would be
-#   to write my own, weighted baseline hazard function
+# NOTE:
+# - Confidence interval cannot be calculated, because predictCox ignores
+#   the weights when predicting the survival probabilities. Only way around
+#   this would be to create a new, weighted baseline hazard function
 #' @export
 surv_iptw_cox <- function(data, variable, ev_time, event, conf_int,
                           conf_level=0.95, times=NULL, treatment_model,
