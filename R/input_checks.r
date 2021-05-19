@@ -135,7 +135,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
         }
       } else if (!is.null(obj$type_time)) {
         if (10 > length(times) & obj$type_time!="factor") {
-          warning("'spline_df' > len(times) might lead to problems when",
+          warning("'spline_df' > length(times)=10 might lead to problems when",
                   " type_time!='factor'.")
         }
       }

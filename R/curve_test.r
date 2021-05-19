@@ -181,7 +181,11 @@ print.curve_test <- function(x, ...) {
 
 ## plot method for curve_test objects
 #' @export
-plot.curve_test <- function(x, type="curves", ...) {
+plot.curve_test <- function(x, type="curves", xlab=NULL, ylab=NULL,
+                            title=NULL, ...) {
+
+  # to remove devtools::check() Notes
+  time <- surv <- boot <- integral <- NULL
 
   if (x$categorical) {
 
@@ -213,21 +217,35 @@ plot.curve_test <- function(x, type="curves", ...) {
       observed_diff_integrals <- dplyr::bind_rows(observed_diff_integrals)
       diff_integrals <- dplyr::bind_rows(diff_integrals)
 
+      if (is.null(xlab)) {
+        xlab <- "Integrals of the difference under H0"
+      }
+
+      if (is.null(ylab)) {
+        ylab <- "Density"
+      }
+
       # plot it
-      p <- ggplot(diff_integrals, aes(x=integral)) +
-        geom_density() +
-        geom_vline(xintercept=0, linetype="dashed") +
-        geom_vline(data=observed_diff_integrals, aes(xintercept=integral),
-                   color="red") +
-        theme_bw() +
-        labs(x="Integrals of the difference under H0",
-             y="Density") +
-        facet_wrap(~comp, scales="free")
+      p <- ggplot2::ggplot(diff_integrals, ggplot2::aes(x=integral)) +
+        ggplot2::geom_density() +
+        ggplot2::geom_vline(xintercept=0, linetype="dashed") +
+        ggplot2::geom_vline(data=observed_diff_integrals,
+                            ggplot2::aes(xintercept=integral),
+                            color="red") +
+        ggplot2::theme_bw() +
+        ggplot2::labs(x=xlab, y=ylab) +
+        ggplot2::facet_wrap(~comp, scales="free")
 
     } else if (type=="curves") {
 
-      ylab <- ifelse(x[[1]]$kind=="surv", "Difference in Survival",
-                     "Difference in Cumulative Incidence")
+      if (is.null(ylab)) {
+        ylab <- ifelse(x[[1]]$kind=="surv", "Difference in Survival",
+                       "Difference in Cumulative Incidence")
+      }
+
+      if (is.null(xlab)) {
+        xlab <- "Time"
+      }
 
       observed_diff_curves <- list()
       diff_curves <- list()
@@ -246,13 +264,13 @@ plot.curve_test <- function(x, type="curves", ...) {
       observed_diff_curves <- dplyr::bind_rows(observed_diff_curves)
       diff_curves <- dplyr::bind_rows(diff_curves)
 
-      p <- ggplot(diff_curves, aes(x=time, y=surv)) +
-        geom_step(aes(group=boot), color="grey", alpha=0.8) +
-        geom_step(data=observed_diff_curves, aes(x=time, y=surv)) +
-        geom_hline(yintercept=0, linetype="dashed") +
-        theme_bw() +
-        labs(x="Time", y=ylab) +
-        facet_wrap(~comp, scales="free")
+      p <- ggplot2::ggplot(diff_curves, ggplot2::aes(x=time, y=surv)) +
+        ggplot2::geom_step(ggplot2::aes(group=boot), color="grey", alpha=0.8) +
+        ggplot2::geom_step(data=observed_diff_curves, ggplot2::aes(x=time, y=surv)) +
+        ggplot2::geom_hline(yintercept=0, linetype="dashed") +
+        ggplot2::theme_bw() +
+        ggplot2::labs(x=xlab, y=ylab) +
+        ggplot2::facet_wrap(~comp, scales="free")
     }
 
   } else {
@@ -265,29 +283,47 @@ plot.curve_test <- function(x, type="curves", ...) {
       # shift bootstrap distribution
       diff_under_H0 <- stats_vec - mean(stats_vec)
 
-      p <- ggplot(NULL, aes(x=diff_under_H0)) +
-        geom_density() +
-        geom_vline(xintercept=0, linetype="dashed") +
-        geom_vline(xintercept=x$observed_diff_integral,
-                   color="red") +
-        theme_bw() +
-        labs(x="Integrals of the difference under H0",
-             y="Density")
+      if (is.null(xlab)) {
+        xlab <- "Integrals of the difference under H0"
+      }
+
+      if (is.null(ylab)) {
+        ylab <- "Density"
+      }
+
+      p <- ggplot2::ggplot(NULL, ggplot2::aes(x=diff_under_H0)) +
+        ggplot2::geom_density() +
+        ggplot2::geom_vline(xintercept=0, linetype="dashed") +
+        ggplot2::geom_vline(xintercept=x$observed_diff_integral, color="red") +
+        ggplot2::theme_bw() +
+        ggplot2::labs(x=xlab, y=ylab)
 
     } else if (type=="curves") {
 
-      ylab <- ifelse(x$kind=="surv", "Difference in Survival",
-                     "Difference in Cumulative Incidence")
+      if (is.null(ylab)) {
+        ylab <- ifelse(x$kind=="surv", "Difference in Survival",
+                       "Difference in Cumulative Incidence")
+      }
 
-      p <- ggplot(x$diff_curves, aes(x=time, y=surv)) +
-        geom_step(aes(group=boot), color="grey", alpha=0.8) +
-        geom_step(data=x$observed_diff_curve, aes(x=time, y=surv)) +
-        geom_hline(yintercept=0, linetype="dashed") +
-        theme_bw() +
-        labs(x="Time", y=ylab)
+      if (is.null(xlab)) {
+        xlab <- "Time"
+      }
+
+      p <- ggplot2::ggplot(x$diff_curves, ggplot2::aes(x=time, y=surv)) +
+        ggplot2::geom_step(ggplot2::aes(group=boot), color="grey", alpha=0.8) +
+        ggplot2::geom_step(data=x$observed_diff_curve,
+                           ggplot2::aes(x=time, y=surv)) +
+        ggplot2::geom_hline(yintercept=0, linetype="dashed") +
+        ggplot2::theme_bw() +
+        ggplot2::labs(x=xlab, y=ylab)
 
     }
   }
+
+  if (!is.null(title)) {
+    p <- p + ggplot2::geom_title(title)
+  }
+
   return(p)
 }
 

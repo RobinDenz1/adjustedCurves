@@ -193,10 +193,8 @@ While the computational details and the underlying theory is slightly different 
 First we need new example data, mirroring the competing risks situation. We are going to use the **sim_confounded_crisk** function, which does the same thing as the **sim_confounded_surv** function, but with competing risks data:
 
 ```{r echo=TRUE}
-#TODO: HIER DIE ANDERE SIMULATIONSFUNKTION
-data <- sim_confounded_surv(n=300)
+data <- sim_confounded_crisk(n=300)
 data$group <- as.factor(data$group)
-data$event[data$event==1] <- sample(c(1, 2), size=sum(data$event), replace=T)
 ```
 
 ### Direct Standardization
@@ -308,7 +306,7 @@ adjsurv <- adjustedsurv(data=data,
                         method="iptw_km",
                         treatment_model=treatment_model,
                         conf_int=T)
-plot(adjsurv)
+plot(adjsurv, draw_ci=T)
 ```
 
 ## Calculating the adjusted restricted mean survival time
@@ -319,7 +317,70 @@ An alternative measure to hazard-ratios is the restricted mean survival time, wh
 adjusted_rmst(adjsurv, to=1)
 ```
 
-The function returns adjusted RMST for every level of the "group" variable. When bootstrapping was performed when calling the *adjustedsurv* function, standard deviations and confidence intervals can be calculated using this function as well by setting the *use_boot* argument to TRUE.
+The function returns adjusted RMST for every level of the "group" variable. When bootstrapping was performed when calling the *adjustedsurv* function, standard deviations and confidence intervals can be calculated using this function as well by setting the *use_boot* argument to TRUE:
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+adjsurv <- adjustedsurv(data=data,
+                        variable="group",
+                        ev_time="time",
+                        event="event",
+                        method="iptw_km",
+                        treatment_model=treatment_model,
+                        conf_int=T,
+                        bootstrap=T,
+                        n_boot=300)
+
+adjrmst <- adjusted_rmst(adjsurv, to=1, use_boot=T)
+print(adjrmst)
+```
+The results can also be plotted easily:
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, fig.show=TRUE, fig.width=7, fig.height=5}
+plot(adjrmst)
+```
+
+## Testing the Equality of Two Survival Curves
+
+In some cases the researcher might be interested to formally test the hypothesis that two adjusted survival curves or two cumulative incidence functions are equal in a certain interval. This can be done with the *test_curve_equality* function. It calculates the integral of the difference between two curves for each bootstrap estimate, shifts that distribution to be centered around 0 and calculates a p-value based on that shifted distribution:
+
+```{r echo=TRUE}
+# set random number generator seed to make this reproducible
+set.seed(41)
+
+# simulate standard survival data with 300 rows
+data <- sim_confounded_surv(n=300)
+data$group <- as.factor(data$group)
+
+# fit cox-regression model
+outcome_model <- survival::coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
+                                 data=data, x=TRUE)
+
+# run adjustedsurv with bootstrap=TRUE
+adjsurv <- adjustedsurv(data=data,
+                        variable="group",
+                        ev_time="time",
+                        event="event",
+                        method="direct",
+                        outcome_model=outcome_model,
+                        bootstrap=T,
+                        n_boot=300)
+
+# test equality
+adjtest <- test_curve_equality(adjsurv, from=0, to=1)
+print(adjtest)
+```
+This function also offers two diagnostic plots, which can be used to graphically check the result of the test. The first simply plots all the curves of the differences in grey, with the actually observed estimate in black:
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, fig.show=TRUE, fig.width=7, fig.height=5}
+plot(adjtest, type="curves")
+```
+
+The second graphic shows a kernel-density estimate of the shifted bootstrap distribution of the integrals of the difference. The red line is the actually observed integral in the plot. The further away the red line is from the center of the distribution, the less likely it is that this value was observed by chance alone.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, fig.show=TRUE, fig.width=7, fig.height=5}
+plot(adjtest, type="integral")
+```
+This function can also be used with more than two groups. In that case it returns pairwise comparisons.
 
 ## Literature
 
