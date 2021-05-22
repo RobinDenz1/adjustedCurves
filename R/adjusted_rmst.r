@@ -148,7 +148,7 @@ plot.adjusted_rmst <- function(x, draw_ci=T, color=T, point_size=2,
   }
 
   if (!is.null(title)) {
-    p <- p + ggplot2::geom_title(title)
+    p <- p + ggplot2::ggtitle(title)
   }
 
   return(p)

@@ -9,4 +9,4 @@ bibentry(bibtype = "Article",
 		 journal = "Statistics in Medicine",
          year = 2021,
          note = note,
-         url = "https://github.com/RobinDenz1/adjustedCurves")
+         url = "https://github.com/RobinDenz1/")

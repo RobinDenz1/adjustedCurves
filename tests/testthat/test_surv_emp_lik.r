@@ -1,5 +1,4 @@
 library(survival)
-library(adjKMtest)
 
 set.seed(42)
 

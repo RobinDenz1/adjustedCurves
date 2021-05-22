@@ -404,13 +404,14 @@ calc_pseudo_surv <- function(data, ev_time, event, times, censoring_vars,
   } else {
 
     requireNamespace("eventglm")
+    pseudo_aareg <- utils::getFromNamespace("pseudo_aareg", "eventglm")
 
     cens_formula <- stats::as.formula(paste0("~ ", paste(censoring_vars,
                                                          collapse=" + ")))
     pseudo_formula <- stats::as.formula(paste0("survival::Surv(", ev_time,
                                                ", ", event, ") ~ 1"))
 
-    pseudo <- sapply(times, FUN=eventglm::pseudo_aareg,
+    pseudo <- sapply(times, FUN=pseudo_aareg,
                      formula=pseudo_formula,
                      cause=1,
                      data=data,

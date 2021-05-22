@@ -160,7 +160,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     }
   # Empirical Likelihood
   } else if (method=="emp_lik") {
-    requireNamespace("adjKMtest")
+    requireNamespace("MASS")
 
     if (!is.character(obj$treatment_vars)) {
       stop("'treatment_vars' should be a character vector of column names ",

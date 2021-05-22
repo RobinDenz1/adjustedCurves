@@ -321,7 +321,7 @@ plot.curve_test <- function(x, type="curves", xlab=NULL, ylab=NULL,
   }
 
   if (!is.null(title)) {
-    p <- p + ggplot2::geom_title(title)
+    p <- p + ggplot2::ggtitle(title)
   }
 
   return(p)

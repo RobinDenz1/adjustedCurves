@@ -10,7 +10,7 @@ Plots the adjusted restricted mean survival times next to each other.
 \usage{
 \method{plot}{adjusted_rmst}(x, draw_ci=T, color=T, point_size=2,
      ci_size=1, ci_width=0.7, xlab="",
-     ylab="Adjusted RMST", ...)
+     ylab="Adjusted RMST", title=NULL, ...)
 }
 
 \arguments{

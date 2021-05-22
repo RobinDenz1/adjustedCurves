@@ -72,10 +72,16 @@ cif_iptw <- function(data, variable, ev_time, event, cause, conf_int,
                                        x=T, y=T)
   }
 
-  cif <- riskRegression::ate(event=c(ev_time, event), treatment=treatment_model,
-                             data=data, estimator="IPTW",
-                             times=times, se=conf_int, verbose=verbose,
-                             cause=cause, censor=censoring_model, ...)
+  cif <- riskRegression::ate(event=c(ev_time, event),
+                             treatment=treatment_model,
+                             data=data,
+                             estimator="IPTW",
+                             times=times,
+                             se=conf_int,
+                             verbose=verbose,
+                             cause=cause,
+                             censor=censoring_model,
+                             ...)
   plotdata <- data.frame(time=cif$meanRisk$time,
                          cif=cif$meanRisk$estimate,
                          group=cif$meanRisk$treatment)
@@ -156,10 +162,15 @@ cif_direct <- function(data, variable, ev_time, event, cause, conf_int,
                        conf_level=0.95, times, outcome_model,
                        verbose=F, ...) {
 
-  cif <- riskRegression::ate(event=outcome_model, treatment=variable,
-                             data=data, estimator="Gformula",
-                             times=times, se=conf_int, verbose=verbose,
-                             cause=cause, ...)
+  cif <- riskRegression::ate(event=outcome_model,
+                             treatment=variable,
+                             data=data,
+                             estimator="Gformula",
+                             times=times,
+                             se=conf_int,
+                             verbose=verbose,
+                             cause=cause,
+                             ...)
   plotdata <- data.frame(time=cif$meanRisk$time,
                          cif=cif$meanRisk$estimate,
                          group=cif$meanRisk$treatment)
@@ -194,9 +205,12 @@ cif_matching <- function(data, variable, ev_time, event, cause, conf_int,
   m_dat <- rbind(data[rr$index.treated,], data[rr$index.control,])
 
   # estimate cif
-  plotdata <- cif_aalen_johansen(data=m_dat, variable=variable,
-                                 ev_time=ev_time, event=event,
-                                 cause=cause, conf_int=conf_int,
+  plotdata <- cif_aalen_johansen(data=m_dat,
+                                 variable=variable,
+                                 ev_time=ev_time,
+                                 event=event,
+                                 cause=cause,
+                                 conf_int=conf_int,
                                  conf_level=conf_level)
 
   return(plotdata)

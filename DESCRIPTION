@@ -7,14 +7,13 @@ Authors@R:
            role = c("aut", "cre"),
            email = "robin.denz@rub.de")
 Maintainer: Robin Denz <robin.denz@rub.de>
-BugReports: https://github.com/RobinDenz1/adjustedCurves
+BugReports: https://github.com/RobinDenz1/
 Contact: <robin.denz@rub.de>
 Description: Estimates and plots confounder-adjusted survival curves using either 'Direct Adjustment', 'Direct Adjustment with Pseudo-Values', various forms of 'Inverse Probability of Treatment Weighting', two forms of 'Augmented Inverse Probability of Treatment Weighting',
  'Empirical Likelihood Estimation' and 'Targeted Maximum Likelihood Estimation'. Also includes a significance test for the equality of two adjusted survival curves and the calculation of adjusted restricted mean survival times.
  Additionally enables the user to estimate and plot cause-specific confounder-adjusted cumulative incidence functions in the competing risks setting using the same methods (with some exceptions).
 License: GPL (>= 3)
 Encoding: UTF-8
-LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports: 
@@ -37,8 +36,7 @@ Suggests:
 	R6,
 	MASS,
 	tidyr,
-	adjKMtest,
-	riskRegression,
+	riskRegression (>= 2021.03.17),
 	geepack,
 	nnet,
 	splines,

@@ -593,33 +593,37 @@ surv_aiptw_pseudo <- function(data, variable, ev_time, event, conf_int,
 #' @export
 surv_emp_lik <- function(data, variable, ev_time, event,
                          times, treatment_vars, moment="first",
-                         standardize=F, ...) {
+                         standardize=F, gtol=0.00001,
+                         max_iter=100, newton_tol=1.0e-06) {
 
-  el_0 <- adjKMtest::el.est(y=data[, ev_time],
-                            delta=data[, event],
-                            treat=data[, variable],
-                            x=as.matrix(data[, treatment_vars]),
-                            treat.select=0,
-                            t=times,
-                            psix_moment=moment,
-                            standardize=standardize,
-                            get.sd=F,
-                            ...)
-  el_1 <- adjKMtest::el.est(y=data[, ev_time],
-                            delta=data[, event],
-                            treat=data[, variable],
-                            x=as.matrix(data[, treatment_vars]),
-                            treat.select=1,
-                            t=times,
-                            psix_moment=moment,
-                            standardize=standardize,
-                            get.sd=F,
-                            ...)
+  el_0 <- el.est(y=data[, ev_time],
+                 delta=data[, event],
+                 treat=data[, variable],
+                 x=as.matrix(data[, treatment_vars]),
+                 treat.select=0,
+                 t=times,
+                 psix_moment=moment,
+                 standardize=standardize,
+                 gtol=gtol,
+                 max_iter=max_iter,
+                 newton_tol=newton_tol)
+
+  el_1 <- el.est(y=data[, ev_time],
+                 delta=data[, event],
+                 treat=data[, variable],
+                 x=as.matrix(data[, treatment_vars]),
+                 treat.select=1,
+                 t=times,
+                 psix_moment=moment,
+                 standardize=standardize,
+                 gtol=gtol,
+                 max_iter=max_iter,
+                 newton_tol=newton_tol)
 
   plotdata <- data.frame(time=c(times, times),
-                         surv=c(el_0$St, el_1$St),
-                         group=c(rep(0, length(el_0$St)),
-                                 rep(1, length(el_0$St))))
+                         surv=c(el_0, el_1),
+                         group=c(rep(0, length(el_0)),
+                                 rep(1, length(el_0))))
 
   return(plotdata)
 }
