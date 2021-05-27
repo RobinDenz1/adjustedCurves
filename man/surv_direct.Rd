@@ -5,7 +5,9 @@
 Direct Adjusted Survival Curves
 }
 \description{
-Calculate confounder-adjusted survival curves using a previously fit Cox-Regression model.
+
+This page explains the details of estimating confounder-adjusted survival curves using a previously fit Cox-Regression model for single event time-to-event data using Direct Standardization. The function is called internally when using \code{method="direct"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function.
+
 }
 \usage{
 surv_direct(data, variable, ev_time, event, conf_int,
@@ -59,7 +61,7 @@ Further arguments passed to \code{ate}.
 
 This method works by executing the following steps: (1) First a model is fitted which describes the outcome mechanism (time-to-event). Next (2) multiple copies of the original dataset are created, one for each possible level of the \code{variable} of interest. (3) The \code{variable} is then set to one level for all observations in each dataset. (4) The model is used to predict the survival probabilities at some points in time T for each observation in all dataset copies. (5) Those estimated probabilities are averaged for each dataset at each point in time, resulting in adjusted survival probabilities for all levels of the group variable at the specified points in time.
 
-In the literature this method is sometimes also called "Corrected Group-Prognosis", "G-Computation" or "G-Formula". If the model in step (1) is correct this method will produce unbiased estimates of the causal survival curves. It is also one of the most efficient methods. Technically any type of model could be used. Currently only \code{\link[survival]{coxph}} models are supported however. More information can be found in the literature listed in the references.
+In the literature this method is sometimes called "Direct Standardization", "Corrected Group-Prognosis", "G-Computation" or "G-Formula". If the model in step (1) is correct this method will produce unbiased estimates of the causal survival curves. It is also one of the most efficient methods. Technically any type of model could be used. Currently only \code{\link[survival]{coxph}} models are supported however. More information can be found in the literature listed in the references.
 
 }
 \value{

@@ -1,5 +1,5 @@
 Package: adjustedCurves
-Title: An R-Package to Calculate Confounder-Adjusted Survival Curves and Cumulative Incidence Functions
+Title: Calculate Confounder-Adjusted Survival Curves and Cumulative Incidence Functions
 Version: 1.0.0
 Authors@R: 
     person(given = "Robin",

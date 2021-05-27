@@ -5,7 +5,9 @@
 Adjusted Survival Curves using Targeted Maximum Likelihood Estimation based on Pseudo-Values
 }
 \description{
-Calculate confounder-adjusted survival curves using a standard targeted maximum likelihood estimator for continuous outcomes for right-censored data using pseudo-values.
+
+This page explains the details of estimating adjusted survival curves using a standard targeted maximum likelihood estimator for continuous outcomes using pseudo-values for single event time-to-event data. The function is called internally when using \code{method="tmle_pseudo"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function.
+
 }
 \usage{
 surv_tmle_pseudo(data, variable, ev_time, event, conf_int,

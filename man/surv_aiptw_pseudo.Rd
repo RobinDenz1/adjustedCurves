@@ -5,7 +5,9 @@
 Augmented Inverse Probability of Treatment Weighted Survival Curves using Pseudo-Values
 }
 \description{
-Function to calculate augmented inverse probability of treatment weighted survival curves using pseudo-values. Instead of only modeling the outcome mechanism or the treatment assignment mechanism, both kind of models are required to use this method. If either of those models are correctly specified, unbiased estimates will be obtained. Both the outcome and treatment assignment part are modeled using pseudo-values. See details for more information.
+
+This page explains the details of estimating augmented inverse probability of treatment weighted survival curves using Pseudo-Values for single event time-to-event data. The function is called internally when using \code{method="aiptw_pseudo"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function.
+
 }
 \usage{
 surv_aiptw_pseudo(data, variable, ev_time, event, conf_int,
@@ -94,7 +96,9 @@ Aris Perperoglou, Willi Sauerbrei, Michal Abrahamowicz, and Matthias Schmid. "A 
 Nadine Binder, Thomas A. Gerds, and Per Kragh Andersen. "Pseudo-Observations for Competing Risks with Covariate Dependent Censoring". In: Lifetime Data Analysis 20 (2014), pp. 303–315.
 }
 \author{
-Robin Denz
+
+Jixian Wang supplied the R source code used in the original article, which was used by Robin Denz to create a generalized version of this method with additional functionality and improved performance.
+
 }
 
 \seealso{

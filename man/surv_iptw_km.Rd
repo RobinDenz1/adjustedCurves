@@ -5,7 +5,11 @@
 Inverse Probability of Treatment Weighted Kaplan-Meier estimates
 }
 \description{
-This method works by modelling the treatment assignment mechanism. The individual observations are weighted using inverse probability of treatment weights or other balancing weights (see details) and a modified Kaplan-Meier estimator. If the model is correctly specified, unbiased results will be obtained. The only difference to the \code{\link[=surv_iptw_cox]{"iptw_cox"}} is a slightly different weighting approach. They are essentially equal in large samples. See details for more information.
+
+This page explains the details of estimating inverse probability of treatment weighted survival curves using a weighted version of the Kaplan-Meier estimator for single event time-to-event data. The function is called internally when using \code{method="iptw_km"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function.
+
+This method works by modelling the treatment assignment mechanism. The individual observations are weighted using inverse probability of treatment weights or other balancing weights (see details) and a modified Kaplan-Meier estimator. If the model is correctly specified, unbiased results will be obtained. The only difference to the \code{\link[=surv_iptw_cox]{iptw_cox}} method is a slightly different weighting approach.
+
 }
 \usage{
 surv_iptw_km(data, variable, ev_time, event, conf_int, conf_level=0.95,

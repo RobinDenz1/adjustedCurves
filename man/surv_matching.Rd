@@ -5,7 +5,11 @@
 Using Matching to Calculate Adjusted Survival Curves
 }
 \description{
-This method works by first matching controls and treated patients using a previously estimated propensity score. Using this new matched population, a simple Kaplan-Meier or Nelson-Aalen estimator is used to calculate the adjusted survival curves. Simulation studies have shown that this method, while unbiased if used appropriately, is significantly less efficient than other methods. See details.
+
+This page explains the details of estimating adjusted survival curves using propensity-score matching for single event time-to-event data. The function is called internally when using \code{method="matching"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function.
+
+This method works by first matching controls and treated patients using a previously estimated propensity score. Using this new matched population, a simple Kaplan-Meier estimator is used to calculate the adjusted survival curves. Simulation studies have shown that this method, while unbiased if used appropriately, is significantly less efficient than other methods.
+
 }
 \usage{
 surv_matching(data, variable, ev_time, event, conf_int,

@@ -57,7 +57,7 @@ If \code{use_boot} is set to \code{TRUE} and \code{bootstrap} was also set to \c
 }
 \item{n_boot}{The numbers of bootstrap iterations actually used to calculate the bootstrap estimates.
 }
-\item{booted_rmsts}{A \code{datal.frame} containing the adjusted restricted mean survival time estimates for each bootstrap sample.
+\item{booted_rmsts}{A \code{data.frame} containing the adjusted restricted mean survival time estimates for each bootstrap sample.
 }
 \item{rmsts_sd}{A named vector containing the bootstrapped standard deviations of the restricted mean survival times.
 }

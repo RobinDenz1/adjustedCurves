@@ -5,7 +5,11 @@
 Direct Adjusted CIFs using Pseudo-Values
 }
 \description{
-This function can be used to calculate direct adjusted cumulative incidence functions using pseudo-values in a competing risks setting. It uses essentially the same methodology as the regular direct adjustment method, with the difference that the outcome mechanism is modeled using pseudo-values.
+
+This page explains the details of estimating direct adjusted cumulative incidence functions using pseudo-values in a competing risks setting. The function is called internally when using \code{method="direct_pseudo"} in the \code{\link[=adjustedcif]{adjustedcif}} function.
+
+It uses essentially the same methodology as the regular direct adjustment method, with the difference that the outcome mechanism is modeled using pseudo-values.
+
 }
 \usage{
 cif_direct_pseudo(data, variable, ev_time, event, cause, conf_int,

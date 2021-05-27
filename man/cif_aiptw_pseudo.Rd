@@ -5,7 +5,9 @@
 Augmented Inverse Probability of Treatment Weighted CIFs using Pseudo-Values
 }
 \description{
-Function to calculate augmented inverse probability of treatment weighted CIFs using pseudo-values in a competing risks setting. Instead of only modeling the outcome mechanism or the treatment assignment mechanism, both kind of models are required to use this method. If either of those models are correctly specified, unbiased estimates will be obtained. Both the outcome and treatment assignment part are modeled using pseudo-values. See details for more information.
+
+This page explains the details of estimating augmented inverse probability of treatment weighted CIFs using pseudo-values in a competing risks setting. The function is called internally when using \code{method="aiptw_pseudo"} in the \code{\link[=adjustedcif]{adjustedcif}} function.
+
 }
 \usage{
 cif_aiptw_pseudo(data, variable, ev_time, event, cause, conf_int,
@@ -85,7 +87,9 @@ Per K. Andersen and Maja Pohar Perme. "Pseudo-Observations in Survival Analysis"
 Aris Perperoglou, Willi Sauerbrei, Michal Abrahamowicz, and Matthias Schmid. "A Review of Spline Function Procedures in R". In: BMC Medical Research Methodology 19 (2019), pp. 1-16
 }
 \author{
-Robin Denz
+
+Jixian Wang supplied the R source code used in the original article, which was used by Robin Denz to create a generalized version of this method with additional functionality and improved performance.
+
 }
 
 \seealso{

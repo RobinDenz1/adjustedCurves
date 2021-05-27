@@ -5,7 +5,9 @@
 Augmented Inverse Probability of Treatment Weighted Survival Curves
 }
 \description{
-Function to calculate augmented inverse probability of treatment weighted survival curves.
+
+This page explains the details of estimating augmented inverse probability of treatment weighted survival curves for single event time-to-event data. The function is called internally when using \code{method="aiptw"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function.
+
 }
 \usage{
 surv_aiptw(data, variable, ev_time, event, conf_int,

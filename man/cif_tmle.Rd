@@ -5,7 +5,11 @@
 Targeted Maximum Likelihood Estimation for CIFs
 }
 \description{
-This method utilizes the targeted maximum likelihood methodology to estimate cause-specific CIFs. Similar to the AIPTW methods it posseses the doubly-robust property and can also be used to adjust for dependent censoring. It is however important to note that this method should only be used when the time variable is truly discrete and only a few distinct points in time are observed. See details for more information.
+
+This page explains the details of estimating adjusted cumulative incidence functions using the targeted maximum likelihood methodology in a competing risks setting. The function is called internally when using \code{method="tmle"} in the \code{\link[=adjustedcif]{adjustedcif}} function.
+
+Similar to the AIPTW methods it posseses the doubly-robust property and can also be used to adjust for dependent censoring. It is however important to note that this method should only be used when the time variable is truly discrete and only a few distinct points in time are observed. See details for more information.
+
 }
 \usage{
 cif_tmle(data, variable, ev_time, event, cause, conf_int, conf_level=0.95,

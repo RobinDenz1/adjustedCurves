@@ -5,8 +5,12 @@
 Group-Specific Kaplan-Meier Survival Curves
 }
 \description{
+
+This page explains the details of estimating group-specific Kaplan-Meier curves for single event time-to-event data. The function is called internally when using \code{method="km"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function.
+
 Calculates standard Kaplan-Meier survival curves, stratified by the group variable.
-No adjustment for any confounders is made. This function is included only for reference and should not be used when confounder adjusted survival curves are desired.
+NO adjustment for any confounders is made. This function is included only for reference and should not be used when confounder adjusted survival curves are desired.
+
 }
 \usage{
 surv_km(data, variable, ev_time, event, conf_int, conf_level=0.95,

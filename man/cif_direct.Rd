@@ -5,7 +5,9 @@
 Direct Adjusted Cumulative Incidence Functions
 }
 \description{
-Calculate confounder-adjusted CIFs using a previously fit Cause-Specific Cox-Regression model in a competing risks setting.
+
+This page explains the details of estimating confounder-adjusted CIFs using a previously fit Cause-Specific Cox-Regression model in a competing risks setting. The function is called internally when using \code{method="direct"} in the \code{\link[=adjustedcif]{adjustedcif}} function.
+
 }
 \usage{
 cif_direct(data, variable, ev_time, event, cause, conf_int,
@@ -62,7 +64,7 @@ Further arguments passed to \code{\link[riskRegression]{ate}}.
 
 This method works by executing the following steps: (1) First a model is fitted which describes the outcome mechanism (time-to-event). Next (2) multiple copies of the original dataset are created, one for each possible level of the \code{variable} of interest. (3) The \code{variable} is then set to one level for all observations in each dataset. (4) The model is used to predict the CIF at some points in time T for each observation in all dataset copies. (5) Those estimated probabilities are averaged for each dataset at each point in time, resulting in adjusted CIFs for all levels of the group variable at the specified points in time.
 
-In the literature this method is sometimes also called "Corrected Group-Prognosis", "G-Computation" or "G-Formula". If the model in step (1) is correct this method will produce unbiased estimates of the causal CIFs. It is also one of the most efficient methods. Technically any type of model could be used. Currently only \code{\link[riskRegression]{CSC}} models are supported however. More information can be found in the literature listed in the references.
+In the literature this method is sometimes called "Direct Standardization", "Corrected Group-Prognosis", "G-Computation" or "G-Formula". If the model in step (1) is correct this method will produce unbiased estimates of the causal CIFs. It is also one of the most efficient methods. Technically any type of model could be used. Currently only \code{\link[riskRegression]{CSC}} models are supported however. More information can be found in the literature listed in the references.
 
 }
 \value{

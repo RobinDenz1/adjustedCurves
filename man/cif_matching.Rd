@@ -5,7 +5,11 @@
 Using Matching to Calculate Adjusted CIFs
 }
 \description{
+
+This page explains the details of estimating adjusted cumulative incidence functions using propensity-score matching in a competing risks setting. The function is called internally when using \code{method="matching"} in the \code{\link[=adjustedcif]{adjustedcif}} function.
+
 This method works by first matching controls and treated patients using a previously estimated propensity score. Using this new matched population, a simple Aalen-Johansen estimator is used to calculate the adjusted CIFs.
+
 }
 \usage{
 cif_matching(data, variable, ev_time, event, cause, conf_int,
