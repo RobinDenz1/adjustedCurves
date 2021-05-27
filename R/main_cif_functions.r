@@ -45,7 +45,12 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
     }
   }
 
-  levs <- unique(data[,variable])
+  # levels of the group variable
+  if (is.numeric(data[,variable])) {
+    levs <- unique(data[,variable])
+  } else {
+    levs <- levels(data[,variable])
+  }
 
   # get relevant cif_method function
   cif_fun <- get(paste0("cif_", method))
@@ -96,6 +101,10 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
     boot_data <- as.data.frame(dplyr::bind_rows(boot_data))
     boot_data_same_t <- as.data.frame(dplyr::bind_rows(boot_data_same_t))
 
+    # keep factor ordering the same
+    boot_data$group <- factor(boot_data$group, levels=levs)
+    boot_data_same_t$group <- factor(boot_data_same_t$group, levels=levs)
+
     # calculate some statistics
     boot_stats <- boot_data_same_t %>%
       dplyr::group_by(., time, group) %>%
@@ -109,6 +118,7 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
                                                 na.rm=T),
                        n_boot=sum(!is.na(cif_b)),
                        .groups="drop_last")
+    boot_stats$group <- factor(boot_stats$group, levels=levs)
   }
 
   # core of the function
@@ -117,9 +127,12 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
                times=times, cause=cause, ...)
   plotdata <- R.utils::doCall(cif_fun, args=args)
 
+  # keep factor ordering the same
+  plotdata$group <- factor(plotdata$group, levels=levs)
+
   out <- list(adjcif=plotdata,
               method=method,
-              categorical=ifelse(length(unique(data[,variable]))>2, T, F),
+              categorical=ifelse(length(levs)>2, T, F),
               call=match.call())
 
   if (bootstrap) {

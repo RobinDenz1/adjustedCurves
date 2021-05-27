@@ -45,7 +45,13 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
     }
   }
 
-  levs <- unique(data[,variable])
+  # levels of the group variable
+  if (is.numeric(data[,variable])) {
+    levs <- unique(data[,variable])
+  } else {
+    levs <- levels(data[,variable])
+  }
+
 
   # get relevant surv_method function
   surv_fun <- get(paste0("surv_", method))
@@ -96,6 +102,10 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
     boot_data <- as.data.frame(dplyr::bind_rows(boot_data))
     boot_data_same_t <- as.data.frame(dplyr::bind_rows(boot_data_same_t))
 
+    # keep factor ordering the same
+    boot_data$group <- factor(boot_data$group, levels=levs)
+    boot_data_same_t$group <- factor(boot_data_same_t$group, levels=levs)
+
     # calculate some statistics
     boot_stats <- boot_data_same_t %>%
       dplyr::group_by(., time, group) %>%
@@ -109,6 +119,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
                                                 na.rm=T),
                        n_boot=sum(!is.na(surv_b)),
                        .groups="drop_last")
+    boot_stats$group <- factor(boot_stats$group, levels=levs)
   }
 
   # core of the function
@@ -117,9 +128,12 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
                times=times, ...)
   plotdata <- R.utils::doCall(surv_fun, args=args)
 
+  # keep factor levels in same order as data
+  plotdata$group <- factor(plotdata$group, levels=levs)
+
   out <- list(adjsurv=plotdata,
               method=method,
-              categorical=ifelse(length(unique(data[,variable]))>2, T, F),
+              categorical=ifelse(length(levs)>2, T, F),
               call=match.call())
 
   if (bootstrap) {

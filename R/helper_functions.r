@@ -453,6 +453,7 @@ lm_direct <- function(x, glm_formula, data, levs, variable,
 }
 
 ## function to model treatment assignment using SuperLearner
+# TODO: this can predict anything. 0 / 1 range?
 get_SL_ps_score <- function(data, variable, treatment_vars, SL.trt,
                             cv_folds) {
 
