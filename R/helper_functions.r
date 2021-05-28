@@ -15,7 +15,7 @@
 
 ## estimate iptw weights
 get_iptw_weights <- function(data, treatment_model, weight_method,
-                             variable, stabilize=T, ...) {
+                             variable, stabilize=T, trim, ...) {
 
   # using WeightIt
   if (inherits(treatment_model, "formula")) {
@@ -41,11 +41,25 @@ get_iptw_weights <- function(data, treatment_model, weight_method,
     stop("Unsuported input: '", class(treatment_model), "'. See documentation.")
   }
 
+  weights <- trim_weights(weights=weights, trim=trim)
+
   if (stabilize) {
     weights <- weights * length(weights) / sum(weights)
   }
 
   return(weights)
+}
+
+## trim weights that are above a certain value
+trim_weights <- function(weights, trim) {
+
+  if (!trim) {
+    return(weights)
+  } else {
+    weights[weights > trim] <- trim
+    return(weights)
+  }
+
 }
 
 ## a stat needed to calculate the variance of the iptw_km method

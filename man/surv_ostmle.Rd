@@ -67,7 +67,7 @@ Specifies the method used to make the pooled updating step. Can be either \code{
 The tolerance used to determine whether the TMLE estimator converged or not. See \code{MOSS} for more details.
 }
   \item{gtol}{
-Tolerance at which estimated treatment assignment probabilities are truncated.
+Tolerance at which estimated treatment assignment probabilities are truncated. Every propensity score bigger than 1 - \code{gtol} is set to 1 - \code{gtol} and every propensity score smaller than \code{gtol} is set to \code{gtol}. Useful when there are extreme propensity scores close to 0 or 1.
 }
 }
 \details{

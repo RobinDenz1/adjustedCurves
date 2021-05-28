@@ -13,7 +13,8 @@ This method works by first matching controls and treated patients using a previo
 }
 \usage{
 surv_matching(data, variable, ev_time, event, conf_int,
-              conf_level=0.95, treatment_model, stabilize=T, ...)
+              conf_level=0.95, treatment_model, stabilize=T,
+              gtol=0.001, ...)
 }
 
 \arguments{
@@ -40,6 +41,9 @@ Must be either a model object with \code{variable} as response variable or a vec
 }
   \item{stabilize}{
 Whether to stabilize the weights or not. Is set to \code{TRUE} by default. Stabilizing has no effect on the estimates, only on the asymptotic variance calculations and confidence intervals. Without stabilizing, those estimates are biased downward.
+  }
+  \item{gtol}{
+Tolerance at which estimated treatment assignment probabilities are truncated. Every propensity score bigger than 1 - \code{gtol} is set to 1 - \code{gtol} and every propensity score smaller than \code{gtol} is set to \code{gtol}. Useful when there are extreme propensity scores close to 0 or 1.
   }
   \item{...}{
 Further arguments passed to the \code{Match} function of the \code{Matching} Package.

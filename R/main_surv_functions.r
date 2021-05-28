@@ -326,3 +326,58 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
   }
   return(p)
 }
+
+## S3 print method for adjustedsurv objects
+#' @export
+print.adjustedsurv <- function(x, ...) {
+
+  if (x$method=="direct") {
+    method_name <- "Direct Standardization"
+  } else if (x$method=="direct_pseudo") {
+    method_name <- "Direct Standardization: Pseudo-Values"
+  } else if (x$method=="iptw_km") {
+    method_name <- "Inverse Probability of Treatment Weighting: Kaplan-Meier"
+  } else if (x$method=="iptw_cox") {
+    method_name <- "Inverse Probability of Treatment Weighting: Cox-Regression"
+  } else if (x$method=="iptw_pseudo") {
+    method_name <- "Inverse Probability of Treatment Weighting: Pseudo-Values"
+  } else if (x$method=="matching") {
+    method_name <- "Propensity Score Matching"
+  } else if (x$method=="emp_lik") {
+    method_name <- "Empirical Likelihood Estimation"
+  } else if (x$method=="aiptw") {
+    method_name <- "Augmented Inverse Probability of Treatment Weighting"
+  } else if (x$method=="aiptw_pseudo") {
+    method_name <- paste0("Augmented Inverse Probability of Treatment",
+                          " Weighting: Pseudo-Values")
+  } else if (x$method=="tmle") {
+    method_name <- "Targeted Maximum Likelihood Estimation"
+  } else if (x$method=="ostmle") {
+    method_name <- "One-Step Targeted Maximum Likelihood Estimation"
+  } else if (x$method=="tmle_pseudo") {
+    method_name <- "Targeted Maximum Likelihood Estimation: Pseudo-Values"
+  }
+
+  times_str <- ifelse(is.null(x$call$times), "Event-Specific Times",
+                      "User-Supplied Points in Time")
+
+  cat("Confounder Adjusted Survival Probabilities \n")
+  cat("   - Method: ", method_name, "\n", sep="")
+  cat("   - Times: ", times_str, "\n", sep="")
+
+  if (!is.null(x$boot_data)) {
+    cat("   - Bootstrapping: Performed with ", max(x$boot_data$boot),
+        " Replications\n", sep="")
+  } else {
+    cat("   - Bootstrapping: Not Done\n", sep="")
+  }
+
+  if (is.null(x$call$conf_int) | !as.logical(as.character(x$call$conf_int))) {
+    cat("   - Approximate CI: Not Calculated\n", sep="")
+  } else {
+    conf_level <- ifelse(is.null(x$call$conf_level), 0.95, x$call$conf_level)
+    cat("   - Approximate CI: Calculated with a Confidence level of ",
+        conf_level, "\n", sep="")
+  }
+
+}

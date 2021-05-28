@@ -14,7 +14,7 @@ This method works by modelling the treatment assignment mechanism. The individua
 \usage{
 cif_iptw_pseudo(data, variable, ev_time, event, cause, conf_int,
                 conf_level=0.95, times, treatment_model,
-                weight_method="ps", stabilize=T,
+                weight_method="ps", stabilize=T, trim=F,
                 se_method="cochrane", ...)
 }
 
@@ -51,6 +51,9 @@ Method used in \code{WeightIt} function call. Ignored if \code{treatment_model} 
 }
   \item{stabilize}{
 Whether to stabilize the weights or not. Is set to \code{TRUE} by default. Stabilizing has no effect on the estimates, only on the asymptotic variance calculations and confidence intervals. Without stabilizing, those estimates are biased downward.
+  }
+  \item{trim}{
+Can be either \code{FALSE} (default) or a numeric value at which to trim the weights. If \code{FALSE}, weights are used as calculated or supplied. If a numeric value is supplied, all weights that are bigger than \code{trim} are set to \code{trim} before the analysis is carried out. Useful when some weights are extremly large.
   }
   \item{se_method}{
 One of \code{"miller"}, \code{"galloway"}, \code{"cochrane"} and \code{"simple"}. Specifies which kind of standard error to calculate. Defaults to \code{"cochrane"}. See details.

@@ -13,7 +13,7 @@ This method works by first matching controls and treated patients using a previo
 }
 \usage{
 cif_matching(data, variable, ev_time, event, cause, conf_int,
-             conf_level=0.95, treatment_model, ...)
+             conf_level=0.95, treatment_model, gtol=0.001, ...)
 }
 
 \arguments{
@@ -41,6 +41,9 @@ A number specifying the confidence level of asymptotic confidence intervals.
   \item{treatment_model}{
 Must be either a model object with \code{variable} as response variable or a vector of previously estimated propensity scores.
 }
+  \item{gtol}{
+Tolerance at which estimated treatment assignment probabilities are truncated. Every propensity score bigger than 1 - \code{gtol} is set to 1 - \code{gtol} and every propensity score smaller than \code{gtol} is set to \code{gtol}. Useful when there are extreme propensity scores close to 0 or 1.
+  }
   \item{...}{
 Further arguments passed to the \code{Match} function of the \code{Matching} Package.
   }

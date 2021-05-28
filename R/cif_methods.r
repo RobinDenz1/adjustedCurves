@@ -104,14 +104,18 @@ cif_iptw <- function(data, variable, ev_time, event, cause, conf_int,
 cif_iptw_pseudo <- function(data, variable, ev_time, event, cause,
                             conf_int, conf_level=0.95, times,
                             treatment_model, weight_method="ps",
-                            stabilize=T, se_method="cochrane", ...) {
+                            stabilize=T, trim=F, se_method="cochrane", ...) {
   # get weights
   if (is.numeric(treatment_model)) {
+
     weights <- treatment_model
+    weights <- trim_weights(weights=weights, trim=trim)
+
   } else {
     weights <- get_iptw_weights(data=data, treatment_model=treatment_model,
                                 weight_method=weight_method,
-                                variable=variable, stabilize=stabilize, ...)
+                                variable=variable, stabilize=stabilize,
+                                trim=trim, ...)
   }
 
   # estimate pseudo observations
@@ -192,7 +196,7 @@ cif_direct <- function(data, variable, ev_time, event, cause, conf_int,
 # TODO: variance calculation is off
 #' @export
 cif_matching <- function(data, variable, ev_time, event, cause, conf_int,
-                         conf_level=0.95, treatment_model, ...) {
+                         conf_level=0.95, treatment_model, gtol=0.001, ...) {
 
   if (is.numeric(treatment_model)) {
     ps_score <- treatment_model
@@ -201,6 +205,11 @@ cif_matching <- function(data, variable, ev_time, event, cause, conf_int,
                                    type="response")
   }
 
+  # trim extreme propensity score according to gtol
+  ps_score[ps_score < gtol] <- gtol
+  ps_score[ps_score > (1 - gtol)] <- 1 - gtol
+
+  # perform matching
   rr <- Matching::Match(Tr=data[, variable], X=ps_score, estimand="ATE", ...)
   m_dat <- rbind(data[rr$index.treated,], data[rr$index.control,])
 
