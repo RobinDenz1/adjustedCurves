@@ -390,6 +390,7 @@ surv_aiptw <- function(data, variable, ev_time, event, conf_int,
 }
 
 ## Using Pseudo Observations and Direct Adjustment
+# TODO: checken das outcome variables nicht "variable" enthält o.ä.
 #' @export
 surv_direct_pseudo <- function(data, variable, ev_time, event,
                                conf_int, conf_level=0.95, times,
@@ -443,7 +444,7 @@ surv_direct_pseudo <- function(data, variable, ev_time, event,
     group <- data[,variable]
 
     # create data for geese
-    Sdata <- data.frame(yi=c(pseudo),
+    Sdata <- data.frame(yi=1 - c(pseudo),
                         group=rep(group, len),
                         vtime=rep(times, rep(n, len)),
                         id=rep(1:n, len))
@@ -481,7 +482,7 @@ surv_direct_pseudo <- function(data, variable, ev_time, event,
       Sdata$group <- factor(levs[i], levels=levs)
       pred <- geese_predictions(geese_mod, Sdata, times=times, n=n)
 
-      m <- 1 - exp(-exp(pred))
+      m <- exp(-exp(pred))
       surv <- apply(m, 2, mean, na.rm=T)
 
       plotdata[[i]] <- data.frame(time=times, surv=surv, group=levs[i])
