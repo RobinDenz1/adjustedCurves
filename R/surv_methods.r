@@ -158,9 +158,9 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
 
 ## IPTW with univariate cox-model
 # NOTE:
-# - Confidence interval cannot be calculated, because predictCox ignores
-#   the weights when predicting the survival probabilities. Only way around
-#   this would be to create a new, weighted baseline hazard function
+# - using the G-Formula directly on the iptw cox model does not work,
+#   probably because all predict() functions ignore the weights when
+#   calculating the baseline hazard. Only this version is actually unbiased
 #' @export
 surv_iptw_cox <- function(data, variable, ev_time, event, conf_int,
                           conf_level=0.95, times=NULL, treatment_model,
@@ -168,12 +168,8 @@ surv_iptw_cox <- function(data, variable, ev_time, event, conf_int,
 
   # get weights
   if (is.numeric(treatment_model)) {
-
     weights <- treatment_model
-    weights <- trim_weights(weights=weights, trim=trim)
-
   } else {
-
     weights <- get_iptw_weights(data=data, treatment_model=treatment_model,
                                 weight_method=weight_method,
                                 variable=variable, stabilize=stabilize,
@@ -181,23 +177,32 @@ surv_iptw_cox <- function(data, variable, ev_time, event, conf_int,
   }
 
   # univariate, weighted cox model
-  form <- paste0("survival::Surv(", ev_time, ", ", event, ") ~ ", variable)
-  model <- survival::coxph(stats::as.formula(form), weights=weights, data=data,
-                           x=T)
+  form <- paste0("survival::Surv(", ev_time, ", ", event, ") ~ strata(",
+                 variable, ")")
+  model <- survival::coxph(stats::as.formula(form), weights=weights, data=data)
+  surv <- survival::survfit(model, se.fit=conf_int, conf.int=conf_level)
 
-  # avert error in predictCox
-  model$weights <- 1
-  model$naive.var <- NULL
+  plotdata <- data.frame(time=surv$time,
+                         surv=surv$surv)
 
-  # use direct adjustment with this cox model
-  plotdata <- surv_direct(data=data,
-                          variable=variable,
-                          ev_time=ev_time,
-                          event=event,
-                          conf_int=conf_int,
-                          conf_level=conf_level,
-                          times=times,
-                          outcome_model=model)
+  # get grouping variable
+  group <- c()
+  for (strat in names(surv$strata)) {
+    group <- c(group, rep(strat, surv$strata[strat]))
+  }
+  group <- gsub(paste0(variable, "="), "", group)
+  plotdata$group <- group
+
+  # get se and confidence interval
+  if (conf_int) {
+    plotdata$se <- surv$std.err
+    plotdata$ci_lower <- surv$lower
+    plotdata$ci_upper <- surv$upper
+  }
+
+  if (!is.null(times)) {
+    plotdata <- specific_times(plotdata, times)
+  }
 
   return(plotdata)
 }
