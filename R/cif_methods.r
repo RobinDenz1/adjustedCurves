@@ -196,7 +196,8 @@ cif_direct <- function(data, variable, ev_time, event, cause, conf_int,
 # TODO: variance calculation is off
 #' @export
 cif_matching <- function(data, variable, ev_time, event, cause, conf_int,
-                         conf_level=0.95, treatment_model, gtol=0.001, ...) {
+                         conf_level=0.95, times, treatment_model,
+                         gtol=0.001, ...) {
 
   if (is.numeric(treatment_model)) {
     ps_score <- treatment_model
@@ -221,6 +222,11 @@ cif_matching <- function(data, variable, ev_time, event, cause, conf_int,
                                  cause=cause,
                                  conf_int=conf_int,
                                  conf_level=conf_level)
+
+  if (!is.null(times)) {
+    plotdata$se <- NULL
+    plotdata <- specific_times(plotdata, times, cif=T)
+  }
 
   return(plotdata)
 }
@@ -288,6 +294,9 @@ cif_direct_pseudo <- function(data, variable, ev_time, event, cause,
   pseudo <- prodlim::jackknife(prodlim::prodlim(hist_formula, data=data),
                                times=times, cause=cause)
 
+  # remove "variable" from outcome_vars because it is always included
+  outcome_vars <- outcome_vars[outcome_vars!=variable]
+
   if (model_type=="lm") {
 
     levs <- levels(data[,variable])
@@ -325,7 +334,7 @@ cif_direct_pseudo <- function(data, variable, ev_time, event, cause,
     group <- data[,variable]
 
     # create data for geese
-    Sdata <- data.frame(yi=c(pseudo),
+    Sdata <- data.frame(yi=1-c(pseudo),
                         group=rep(group, len),
                         vtime=rep(times, rep(n, len)),
                         id=rep(1:n, len))
@@ -335,8 +344,16 @@ cif_direct_pseudo <- function(data, variable, ev_time, event, cause,
 
     if (type_time=="factor") {
       Sdata$vtime <- as.factor(Sdata$vtime)
-      geese_formula <- paste("yi ~ vtime + ", paste(outcome_vars, collapse=" + "),
-                             " + group")
+
+      if (length(times)==1) {
+        geese_formula <- paste("yi ~ ", paste(outcome_vars, collapse=" + "),
+                               " + group")
+      } else {
+        geese_formula <- paste("yi ~ vtime + ", paste(outcome_vars,
+                                                      collapse=" + "),
+                               " + group")
+      }
+
     } else if (type_time=="bs") {
       geese_formula <- paste("yi ~ splines::bs(vtime, df=", spline_df, ") + ",
                              paste(outcome_vars, collapse=" + "), " + group")
@@ -360,7 +377,7 @@ cif_direct_pseudo <- function(data, variable, ev_time, event, cause,
       Sdata$group <- factor(levs[i], levels=levs)
       pred <- geese_predictions(geese_mod, Sdata, times=times, n=n)
 
-      m <- 1 - exp(-exp(pred))
+      m <- exp(-exp(pred))
       cif <- apply(m, 2, mean, na.rm=T)
 
       plotdata[[i]] <- data.frame(time=times, cif=cif, group=levs[i])

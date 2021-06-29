@@ -13,7 +13,7 @@ This method works by first matching controls and treated patients using a previo
 }
 \usage{
 cif_matching(data, variable, ev_time, event, cause, conf_int,
-             conf_level=0.95, treatment_model, gtol=0.001, ...)
+             conf_level=0.95, times, treatment_model, gtol=0.001, ...)
 }
 
 \arguments{
@@ -38,6 +38,9 @@ A logical variable, indicating whether the asymptotic variances and confidence i
   \item{conf_level}{
 A number specifying the confidence level of asymptotic confidence intervals.
   }
+  \item{times}{
+A numeric vector of time points for which to return the cumulative incidence estimates or \code{NULL} (default). If \code{NULL} the whole curve will be estimated according to the usual procedure. When custom time points are specified the whole curve is estimated anyways and the time specific estimates are simply read off that curve.
+}
   \item{treatment_model}{
 Must be either a model object with \code{variable} as response variable or a vector of previously estimated propensity scores.
 }

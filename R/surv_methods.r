@@ -302,7 +302,7 @@ surv_direct <- function(data, variable, ev_time, event, conf_int,
 # TODO: variance calculation is off
 #' @export
 surv_matching <- function(data, variable, ev_time, event, conf_int,
-                          conf_level=0.95, treatment_model,
+                          conf_level=0.95, times, treatment_model,
                           stabilize=T, gtol=0.001, ...) {
 
   if (is.numeric(treatment_model)) {
@@ -341,6 +341,10 @@ surv_matching <- function(data, variable, ev_time, event, conf_int,
     plotdata$se <- surv$std.err
     plotdata$ci_lower <- surv$lower
     plotdata$ci_upper <- surv$upper
+  }
+
+  if (!is.null(times)) {
+    plotdata <- specific_times(plotdata, times)
   }
 
   return(plotdata)
@@ -411,6 +415,9 @@ surv_direct_pseudo <- function(data, variable, ev_time, event,
                              censoring_vars=censoring_vars,
                              ipcw.method=ipcw_method)
 
+  # remove "variable" from outcome_vars because it is always included
+  outcome_vars <- outcome_vars[outcome_vars!=variable]
+
   if (model_type=="lm") {
 
     levs <- levels(data[,variable])
@@ -459,8 +466,15 @@ surv_direct_pseudo <- function(data, variable, ev_time, event,
 
     if (type_time=="factor") {
       Sdata$vtime <- as.factor(Sdata$vtime)
-      geese_formula <- paste("yi ~ vtime + ", paste(outcome_vars, collapse=" + "),
-                             " + group")
+
+      if (length(times)==1) {
+        geese_formula <- paste("yi ~ ", paste(outcome_vars, collapse=" + "),
+                               " + group")
+      } else {
+        geese_formula <- paste("yi ~ vtime + ", paste(outcome_vars, collapse=" + "),
+                               " + group")
+      }
+
     } else if (type_time=="bs") {
       geese_formula <- paste("yi ~ splines::bs(vtime, df=", spline_df, ") + ",
                              paste(outcome_vars, collapse=" + "), " + group")
