@@ -22,8 +22,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
   # method
   } else if (!method %in% c("km", "iptw_km", "iptw_cox", "iptw_pseudo",
                             "direct", "direct_pseudo", "aiptw_pseudo",
-                            "aiptw", "tmle", "ostmle", "matching", "emp_lik",
-                            "tmle_pseudo")) {
+                            "aiptw", "tmle", "ostmle", "matching", "emp_lik")) {
     stop("Method '", method, "' is undefined. See documentation for ",
          "details on available methods.")
   # conf_int
@@ -36,13 +35,13 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
   }
 
   # Check if the group variable has the right format
-  if (method %in% c("matching", "emp_lik", "tmle", "ostmle", "tmle_pseudo") &
+  if (method %in% c("matching", "emp_lik", "tmle", "ostmle") &
       is.factor(data[,variable])) {
     stop("The column in 'data' specified by 'variable' needs to be ",
          "a dichotomous integer variable if method='", method, "'.")
   }
 
-  if (!method %in% c("matching", "emp_lik", "tmle", "ostmle", "tmle_pseudo") &
+  if (!method %in% c("matching", "emp_lik", "tmle", "ostmle") &
       !is.factor(data[,variable])) {
     stop("The column in 'data' specified by 'variable' needs to be ",
          "a factor variable if method='", method, "'.")
@@ -51,14 +50,14 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
   # Check if categorical should be allowed
   if (length(unique(data[,variable])) > 2 &
       method %in% c("matching", "emp_lik", "tmle", "ostmle",
-                    "aiptw", "tmle_pseudo")) {
+                    "aiptw")) {
     stop("Categorical treatments are currently not supported for ",
          "method='", method, "'.")
   }
 
   # Here: check if times input is correct if method requires it
   if (method %in% c("iptw_pseudo", "direct", "aiptw", "direct_pseudo",
-                    "aiptw_pseudo", "emp_lik", "tmle", "ostmle", "tmle_pseudo")) {
+                    "aiptw_pseudo", "emp_lik", "tmle", "ostmle")) {
     if (!is.numeric(times) & !is.null(times)) {
       stop("'times' must be a numeric vector.")
     }
@@ -400,7 +399,7 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
   # method
   } else if (!method %in% c("aalen_johansen", "iptw", "iptw_pseudo", "direct",
                             "direct_pseudo", "aiptw_pseudo",
-                            "aiptw", "tmle", "matching", "tmle_pseudo")) {
+                            "aiptw", "tmle", "matching")) {
     stop("Method '", method, "' is undefined. See documentation for ",
          "details on available methods.")
   # conf_int
@@ -420,13 +419,13 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
   }
 
   # Check if the group variable has the right format
-  if (method %in% c("matching", "tmle", "tmle_pseudo") &
+  if (method %in% c("matching", "tmle") &
       is.factor(data[,variable])) {
     stop("The column in 'data' specified by 'variable' needs to be ",
          "a dichotomous integer variable if method='", method, "'.")
   }
 
-  if (!method %in% c("matching", "tmle", "tmle_pseudo") &
+  if (!method %in% c("matching", "tmle") &
       !is.factor(data[,variable])) {
     stop("The column in 'data' specified by 'variable' needs to be ",
          "a factor variable if method='", method, "'.")

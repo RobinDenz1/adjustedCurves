@@ -66,7 +66,6 @@ The primary purpose of the \code{adjustedsurv} function is to provide a convenie
   \item{"\link[=surv_aiptw_pseudo]{aiptw_pseudo}": An Augmented Inverse Probability of Treatment Weighting estimator using Pseudo-Values.}
   \item{"\link[=surv_tmle]{tmle}": Targeted Maximum Likelihood Estimation for survival curves.}
   \item{"\link[=surv_ostmle]{ostmle}": One-Step Targeted Maximum Likelihood Estimation for survival curves.}
-  \item{"\link[=surv_tmle_pseudo]{tmle_pseudo}": Targeted Maximum Likelihood Estimation for survival curves using Pseudo-Values.}
   \item{"\link[=surv_km]{km}": A simple stratified Kaplan-Meier estimator without any form of adjustment.}
 }
 
@@ -112,7 +111,7 @@ The function itself was written by Robin Denz, but it includes wrappers for func
 \seealso{
 \code{\link{surv_aiptw}}, \code{\link{surv_aiptw_pseudo}}, \code{\link{surv_direct}}, \code{\link{surv_direct_pseudo}},
 \code{\link{surv_iptw_km}}, \code{\link{surv_iptw_cox}}, \code{\link{surv_iptw_pseudo}}, \code{\link{surv_emp_lik}},
-\code{\link{surv_matching}}, \code{\link{surv_tmle}}, \code{\link{surv_ostmle}}, \code{\link{surv_tmle_pseudo}}
+\code{\link{surv_matching}}, \code{\link{surv_tmle}}, \code{\link{surv_ostmle}}
 }
 \examples{
 \dontrun{

@@ -52,7 +52,6 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
     levs <- levels(data[,variable])
   }
 
-
   # get relevant surv_method function
   surv_fun <- get(paste0("surv_", method))
 
@@ -231,8 +230,8 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
                               color=T, linetype=F, facet=F,
                               line_size=1, xlab="Time",
                               ylab="Adjusted Survival Probability",
-                              title=NULL, legend_title="Group",
-                              legend_position="right",
+                              title=NULL, legend.title="Group",
+                              legend.position="right",
                               ylim=NULL, custom_colors=NULL,
                               custom_linetypes=NULL,
                               ci_draw_alpha=0.4, ...) {
@@ -288,9 +287,9 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
   p <- ggplot2::ggplot(plotdata, mapping) +
     ggplot2::geom_step(size=line_size) +
     ggplot2::theme_bw() +
-    ggplot2::labs(x=xlab, y=ylab, color=legend_title,
-                  linetype=legend_title, fill=legend_title) +
-    ggplot2::theme(legend.position=legend_position)
+    ggplot2::labs(x=xlab, y=ylab, color=legend.title,
+                  linetype=legend.title, fill=legend.title) +
+    ggplot2::theme(legend.position=legend.position)
 
   if (facet) {
     p <- p + ggplot2::facet_wrap(~group)

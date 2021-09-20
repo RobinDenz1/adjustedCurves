@@ -13,8 +13,8 @@ It uses essentially the same methodology as the regular direct adjustment method
 }
 \usage{
 cif_direct_pseudo(data, variable, ev_time, event, cause, conf_int,
-                  conf_level=0.95, times, outcome_vars, model_type="lm",
-                  type_time="factor", spline_df=10)
+                  conf_level=0.95, times, outcome_vars, type_time="factor",
+                  spline_df=10)
 }
 
 \arguments{
@@ -45,14 +45,11 @@ A numeric vector of time points at which the CIFs should be estimated.
   \item{outcome_vars}{
 A character vector of column names specifying variables to be used when modeling the outcome mechanism. See details and examples.
 }
-  \item{model_type}{
-The type of modelling used to estimate the survival probabilities. Can be either \code{"lm"} (fitting one linear regression for each time point with the pseudo values as response) or \code{"geese"} (fitting a single generalised estimating equations model using the \code{geese} function).
-}
   \item{type_time}{
-A character string specifying how the time should be modeled. Only used when \code{model_type="geese"}, ignored otherwise. See details.
+A character string specifying how the time should be modeled. See details.
 }
   \item{spline_df}{
-The number of degrees of freedom used for the natural-spline or B-spline function. Only used when \code{model_type="geese"}, also ignored if \code{type_time="factor"}.
+The number of degrees of freedom used for the natural-spline or B-spline function. Ignored if \code{type_time="factor"}.
 }
 }
 \details{

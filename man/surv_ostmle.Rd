@@ -87,7 +87,7 @@ Standard TMLE is a two-step procedure. First, initial estimates for the treatmen
 
 In contrast to the estimator implemented in the \code{\link[=surv_tmle]{tmle}} method, the OSTMLE uses a LASSO or Ridge Regression model in the targeting step to fluctuate the initial estimates. Details can be found in Cai and van der Laan (2020).
 
-As has been shown in multiple studies by Mark J. van der Laan and colleagues, this method has some desireable mathematical properties and generally performs well in appropriate scenarios. The biggest problem is however, that it is only defined for discrete (integer-valued) survival times. Simply discretizing continuous survival times only works to a certain extent and is generally discouraged. If TMLE estimates for continuous survival data are the goal, the user should use the \code{\link[=surv_tmle_pseudo]{tmle_pseudo}} method instead.
+As has been shown in multiple studies by Mark J. van der Laan and colleagues, this method has some desireable mathematical properties and generally performs well in appropriate scenarios. The biggest problem is however, that it is only defined for discrete (integer-valued) survival times. Simply discretizing continuous survival times only works to a certain extent and is generally discouraged.
 
 When the sample size is large or many time points are of interest, this method will also be *very* slow. While possible to run, bootstrapping would take an enormous amount of time and is therefore discouraged.
 

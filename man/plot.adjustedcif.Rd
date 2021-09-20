@@ -13,8 +13,8 @@ A function to graphically display confounder-adjusted cumulative incidence funct
      color=T, linetype=F, facet=F,
      line_size=1, xlab="Time",
      ylab="Adjusted Cumulative Incidence",
-     title=NULL, legend_title="Group",
-     legend_position="right",
+     title=NULL, legend.title="Group",
+     legend.position="right",
      ylim=NULL, custom_colors=NULL,
      custom_linetypes=NULL,
      ci_draw_alpha=0.4, ...)
@@ -60,10 +60,10 @@ A character string to be used as the Y-Axis label of the plot.
   \item{title}{
 A character string to be used as the title of the plot. Set to \code{NULL} if no title should be used.
   }
-  \item{legend_title}{
+  \item{legend.title}{
 A character string to be used as the title of the legend. Set to \code{NULL} if no legend should be included.
   }
-  \item{legend_position}{
+  \item{legend.position}{
 A character string specifying the position of the legend. Ignored if \code{legend_title=NULL}.
   }
   \item{ylim}{
@@ -144,8 +144,8 @@ plot(adjsurv, linetype=FALSE, color=FALSE, facet=TRUE)
 plot(adjsurv, linetype=TRUE, color=TRUE, facet=FALSE)
 
 # plot with some custom characteristics
-plot(adjsurv, legend_position="bottom", linetype=TRUE,
-     custom_colors=c("green", "blue"), legend_title="Custom",
+plot(adjsurv, legend.position="bottom", linetype=TRUE,
+     custom_colors=c("green", "blue"), legend.title="Custom",
      title="Custom Plot", draw_ci=TRUE, linesize=0.5)
 
 # plot with not directly included ggplot2 functionality

@@ -399,13 +399,12 @@ surv_aiptw <- function(data, variable, ev_time, event, conf_int,
 }
 
 ## Using Pseudo Observations and Direct Adjustment
-# TODO: checken das outcome variables nicht "variable" enthält o.ä.
 #' @export
 surv_direct_pseudo <- function(data, variable, ev_time, event,
                                conf_int, conf_level=0.95, times,
-                               outcome_vars, model_type="lm",
-                               censoring_vars=NULL, ipcw_method="binder",
-                               type_time="factor", spline_df=10) {
+                               outcome_vars, censoring_vars=NULL,
+                               ipcw_method="binder", type_time="factor",
+                               spline_df=10) {
 
   # estimate pseudo observations
   pseudo <- calc_pseudo_surv(data=data,
@@ -418,101 +417,65 @@ surv_direct_pseudo <- function(data, variable, ev_time, event,
   # remove "variable" from outcome_vars because it is always included
   outcome_vars <- outcome_vars[outcome_vars!=variable]
 
-  if (model_type=="lm") {
+  # some constants
+  len <- length(times)
+  n <- nrow(data)
+  group <- data[,variable]
 
-    levs <- levels(data[,variable])
-    glm_formula <- stats::as.formula(paste0("yi ~ ", variable, " + ",
-                                            paste0(outcome_vars, collapse=" + ")))
+  # create data for geese
+  Sdata <- data.frame(yi=1 - c(pseudo),
+                      group=rep(group, len),
+                      vtime=rep(times, rep(n, len)),
+                      id=rep(1:n, len))
+  for (col in outcome_vars) {
+    Sdata[,col] <- rep(data[,col], len)
+  }
 
-    # call lm_direct for each time specific pseudo values vector
-    ests <- apply(pseudo, 2, lm_direct,
-                  glm_formula=glm_formula,
-                  outcome_vars=outcome_vars,
-                  variable=variable,
-                  conf_level=conf_level,
-                  data=data,
-                  levs=levs)
-    ests <- dplyr::bind_rows(ests)
+  if (type_time=="factor") {
+    Sdata$vtime <- as.factor(Sdata$vtime)
 
-    # put together
-    if (conf_int) {
-      plotdata <- data.frame(time=rep(times, each=length(levs)),
-                             surv=ests$fit,
-                             group=ests$group,
-                             se=ests$se,
-                             ci_lower=ests$lwr,
-                             ci_upper=ests$upr)
+    if (length(times)==1) {
+      geese_formula <- paste("yi ~ ", paste(outcome_vars, collapse=" + "),
+                             " + group")
     } else {
-      plotdata <- data.frame(time=rep(times, each=length(levs)),
-                             surv=ests$fit,
-                             group=ests$group)
+      geese_formula <- paste("yi ~ vtime + ", paste(outcome_vars, collapse=" + "),
+                             " + group")
     }
 
-  } else if (model_type=="geese") {
+  } else if (type_time=="bs") {
+    geese_formula <- paste("yi ~ splines::bs(vtime, df=", spline_df, ") + ",
+                           paste(outcome_vars, collapse=" + "), " + group")
+  } else if (type_time=="ns") {
+    geese_formula <- paste("yi ~ splines::ns(vtime, df=", spline_df, ") + ",
+                           paste(outcome_vars, collapse=" + "), " + group")
+  }
 
-    # some constants
-    len <- length(times)
-    n <- nrow(data)
-    group <- data[,variable]
+  # remove rows where pseudo-values are NA for geese
+  Sdata_fit <- Sdata[!is.na(Sdata$yi),]
 
-    # create data for geese
-    Sdata <- data.frame(yi=1 - c(pseudo),
-                        group=rep(group, len),
-                        vtime=rep(times, rep(n, len)),
-                        id=rep(1:n, len))
-    for (col in outcome_vars) {
-      Sdata[,col] <- rep(data[,col], len)
-    }
-
-    if (type_time=="factor") {
-      Sdata$vtime <- as.factor(Sdata$vtime)
-
-      if (length(times)==1) {
-        geese_formula <- paste("yi ~ ", paste(outcome_vars, collapse=" + "),
-                               " + group")
-      } else {
-        geese_formula <- paste("yi ~ vtime + ", paste(outcome_vars, collapse=" + "),
-                               " + group")
-      }
-
-    } else if (type_time=="bs") {
-      geese_formula <- paste("yi ~ splines::bs(vtime, df=", spline_df, ") + ",
-                             paste(outcome_vars, collapse=" + "), " + group")
-    } else if (type_time=="ns") {
-      geese_formula <- paste("yi ~ splines::ns(vtime, df=", spline_df, ") + ",
-                             paste(outcome_vars, collapse=" + "), " + group")
-    }
-
-    # remove rows where pseudo-values are NA for geese
-    Sdata_fit <- Sdata[!is.na(Sdata$yi),]
-
-    # call geese
-    geese_mod <- geepack::geese(stats::as.formula(geese_formula), scale.fix=TRUE,
+  # call geese
+  geese_mod <- geepack::geese(stats::as.formula(geese_formula), scale.fix=TRUE,
                                 data=Sdata_fit, family=gaussian, id=id, jack=F,
                                 mean.link="cloglog", corstr="independence")
 
-    # initialize outcome df list
-    levs <- levels(data[,variable])
-    plotdata <- vector(mode="list", length=length(levs))
+  # initialize outcome df list
+  levs <- levels(data[,variable])
+  plotdata <- vector(mode="list", length=length(levs))
 
-    # do direct adjustment
-    for (i in 1:length(levs)) {
+  # do direct adjustment
+  for (i in 1:length(levs)) {
 
-      Sdata$group <- factor(levs[i], levels=levs)
-      pred <- geese_predictions(geese_mod, Sdata, times=times, n=n)
+    Sdata$group <- factor(levs[i], levels=levs)
+    pred <- geese_predictions(geese_mod, Sdata, times=times, n=n)
 
-      m <- exp(-exp(pred))
-      surv <- apply(m, 2, mean, na.rm=T)
+    m <- exp(-exp(pred))
+    surv <- apply(m, 2, mean, na.rm=T)
 
-      plotdata[[i]] <- data.frame(time=times, surv=surv, group=levs[i])
+    plotdata[[i]] <- data.frame(time=times, surv=surv, group=levs[i])
 
-    }
-    plotdata <- dplyr::bind_rows(plotdata)
-    rownames(plotdata) <- NULL
-
-  } else {
-    stop("'model_type' must be either 'lm' or 'geese'.")
   }
+  plotdata <- dplyr::bind_rows(plotdata)
+  rownames(plotdata) <- NULL
 
   return(plotdata)
 }
@@ -865,156 +828,6 @@ surv_ostmle <- function(data, variable, ev_time, event, conf_int,
     crit <- stats::qnorm(1-((1-conf_level)/2))
     plotdata$ci_lower <- plotdata$surv - crit * plotdata$se
     plotdata$ci_upper <- plotdata$surv + crit * plotdata$se
-
-  }
-
-  return(plotdata)
-}
-
-## Targeted Maximum Likelihood Estimator based on Pseudo-Values
-# TODO: Allow both stacked SL and single SLs for each point in time?
-#' @export
-surv_tmle_pseudo <- function(data, variable, ev_time, event,
-                             conf_int, conf_level=0.95, times,
-                             outcome_vars, treatment_vars=NULL,
-                             SL.trt=NULL, SL.ftime=NULL,
-                             treatment_model=NULL, cv_folds=5,
-                             censoring_vars=NULL, ipcw_method="binder",
-                             ...) {
-
-  # estimate propensity score just once,
-  # cause it's always the same
-  if (!is.null(treatment_model)) {
-    ps_score <- treatment_model$fitted.values
-  } else if (!is.null(SL.trt)) {
-    ps_score <- get_SL_ps_score(data=data,
-                                variable=variable,
-                                treatment_vars=treatment_vars,
-                                SL.trt=SL.trt,
-                                cv_folds=cv_folds)
-  } else if (is.numeric(ps_score)){
-    if (any(ps_score >= 1) | any(ps_score <= 0)) {
-      stop("Only valid propensity scores < 1 and > 0 are allowed when",
-           " directly supplied.")
-    }
-  } else {
-    stop("Either 'treatment_model' or 'SL.trt' and 'treatment_vars' has to",
-         " be defined. See documentation.")
-  }
-
-  # estimate pseudo observations
-  pseudo <- calc_pseudo_surv(data=data,
-                             ev_time=ev_time,
-                             event=event,
-                             times=times,
-                             censoring_vars=censoring_vars,
-                             ipcw.method=ipcw_method)
-
-  # some constants
-  len <- length(times)
-  n <- nrow(data)
-  group <- data[,variable]
-
-  # create long form data
-  Sdata <- data.frame(yi=c(pseudo),
-                      group=rep(group, len),
-                      vtime=factor(rep(times, rep(n, len))),
-                      id=rep(1:n, len))
-
-  # to make sure that "group" isn't included twice
-  outcome_vars <- outcome_vars[outcome_vars != variable]
-  for (col in outcome_vars) {
-    Sdata[,col] <- rep(data[,col], len)
-  }
-
-  # remove rows where pseudo-values are NA for geese
-  Sdata <- Sdata[!is.na(Sdata$yi),]
-
-  # don't use time in prediction model if there is
-  # only one point in time of interest
-  if (len==1) {
-    covars <- c(outcome_vars, "group")
-  } else {
-    covars <- c(outcome_vars, "group", "vtime")
-  }
-
-  # build prediction model
-  form <- paste0("~", paste0(covars, collapse=" + "))
-  SL_dat <- as.data.frame(stats::model.matrix(stats::as.formula(form),
-                                              data=Sdata[,covars]))
-  SL_dat$`(Intercept)` <- NULL
-  sl_fit <- SuperLearner::SuperLearner(Y=Sdata$yi, X=SL_dat, newX=NULL,
-                                       family="gaussian", SL.library=SL.ftime,
-                                       control=list(saveFitLibrary=TRUE),
-                                       cvControl=list(V=cv_folds))
-
-  # initial estimate of Q-portion of the likelihood
-  Sdata_temp <- SL_dat
-  Sdata_temp$group <- 0
-  sl_pred_0 <- SuperLearner::predict.SuperLearner(sl_fit,
-                                                  newdata=Sdata_temp,
-                                                  X=SL_dat,
-                                                  Y=Sdata$yi)$pred
-  Sdata_temp$group <- 1
-  sl_pred_1 <- SuperLearner::predict.SuperLearner(sl_fit,
-                                                  newdata=Sdata_temp,
-                                                  X=SL_dat,
-                                                  Y=Sdata$yi)$pred
-  Q <- data.frame(sl_pred_0, sl_pred_1)
-
-  # run TMLE for all time points
-  plotdata <- vector(mode="list", length=len)
-  for (i in 1:len) {
-
-    # pseudo values
-    Y <- Sdata$yi[Sdata$vtime==times[i]]
-
-    # if all the same, take that value instead
-    if (length(unique(Y))==1) {
-      est_0 <- Y[1]
-      est_1 <- Y[1]
-    } else {
-      # get TMLE object
-      tmle_t  <- tmle::tmle(Y=Y,
-                            A=Sdata$group[Sdata$vtime==times[i]],
-                            W=Sdata[,outcome_vars][Sdata$vtime==times[i],],
-                            g.SL.library=SL.trt,
-                            g1W=ps_score,
-                            Q=Q[Sdata$vtime==times[i],],
-                            ...)
-
-      # take mean of final Q predictions
-      est_0 <- mean(tmle_t$Qstar[,1])
-      est_1 <- mean(tmle_t$Qstar[,2])
-    }
-
-    temp <- data.frame(time=c(times[i], times[i]),
-                       surv=c(est_0, est_1),
-                       group=c(0, 1))
-
-    # calculate variance using an asymptotic estimator, based on the
-    # efficient influence curve
-    if (conf_int & length(unique(Y)) > 1) {
-      vars <- tmle_pseudo_var(Y=Y,
-                              A=Sdata$group[Sdata$vtime==times[i]],
-                              ps_score=ps_score,
-                              Qstar=tmle_t$Qstar,
-                              n=nrow(data))
-      temp$se <- sqrt(vars)
-
-    }
-    plotdata[[i]] <- temp
-  }
-
-  plotdata <- as.data.frame(dplyr::bind_rows(plotdata))
-
-  # calculate confidence intervals from asymptotic variance
-  if (conf_int) {
-
-    surv_cis <- confint_surv(surv=plotdata$surv, se=plotdata$se,
-                             conf_level=conf_level, conf_type="plain")
-    plotdata$ci_lower <- surv_cis$left
-    plotdata$ci_upper <- surv_cis$right
 
   }
 

@@ -22,8 +22,6 @@ Imports:
 	R.utils,
 	rlang,
 	survival,
-	stats,
-	utils,
 	doParallel,
 	doRNG,
 	foreach
@@ -42,7 +40,6 @@ Suggests:
 	splines,
 	cmprsk,
 	eventglm (>= 1.1.1),
-	tmle (>= 1.5.0),
 	SuperLearner (>= 2.0.0),
 	pammtools,
 	knitr,
