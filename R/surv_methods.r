@@ -280,7 +280,8 @@ surv_direct <- function(data, variable, ev_time, event, conf_int,
 
   surv <- riskRegression::ate(event=outcome_model, treatment=variable,
                               data=data, estimator="Gformula",
-                              times=times, se=conf_int, verbose=verbose, ...)
+                              times=times, se=conf_int, verbose=verbose,
+                              cause=1, ...)
   plotdata <- data.frame(time=surv$meanRisk$time,
                          surv=1 - surv$meanRisk$estimate,
                          group=surv$meanRisk$treatment)
@@ -380,7 +381,8 @@ surv_aiptw <- function(data, variable, ev_time, event, conf_int,
                                times=times,
                                se=conf_int,
                                verbose=verbose,
-                               estimator="AIPTW,AIPCW")
+                               estimator="AIPTW,AIPCW",
+                               cause=1)
   # calculate survival estimates
   plotdata <- data.frame(time=curve$meanRisk$time,
                          surv=1 - curve$meanRisk$estimate,

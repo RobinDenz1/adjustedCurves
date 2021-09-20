@@ -1,7 +1,7 @@
 ## for adjustedsurv function
 check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
                                       conf_int, conf_level, times, bootstrap,
-                                      n_boot, ...) {
+                                      n_boot, na.action, ...) {
   requireNamespace("survival")
 
   obj <- list(...)
@@ -72,25 +72,6 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     if (max(times) > max(data[,ev_time])) {
       stop("Values in '", ev_time, "' must be smaller than max(data[,ev_time]).",
            " No extrapolation allowed.")
-    }
-  }
-  # Check for missing values
-  if (anyNA(data[,variable]) | anyNA(data[,ev_time]) | anyNA(data[,event])) {
-    stop("Missing values in 'variable', 'ev_time' or 'event' are not allowed.")
-  }
-  if (!is.null(obj$treatment_vars)) {
-    if (anyNA(data[,obj$treatment_vars])) {
-      stop("Missing values in columns specified by 'treatment_vars' are not allowed.")
-    }
-  }
-  if (!is.null(obj$outcome_vars)) {
-    if (anyNA(data[,obj$outcome_vars])) {
-      stop("Missing values in columns specified by 'outcome_vars' are not allowed.")
-    }
-  }
-  if (!is.null(obj$adjust_vars)) {
-    if (anyNA(data[,obj$adjust_vars])) {
-      stop("Missing values in columns specified by 'adjust_vars' are not allowed.")
     }
   }
 
@@ -378,7 +359,7 @@ check_inputs_adj_test <- function(adjsurv, from, to) {
 ## for adjustedcif
 check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
                                      conf_int, conf_level, times, bootstrap,
-                                     n_boot, cause=cause, ...) {
+                                     n_boot, cause=cause, na.action, ...) {
   requireNamespace("survival")
 
   obj <- list(...)

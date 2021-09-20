@@ -21,13 +21,22 @@
 #' @export
 adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
                          conf_level=0.95, times=NULL, bootstrap=F,
-                         n_boot=500, n_cores=1, ...) {
+                         n_boot=500, n_cores=1, na.action=options("na.action")[[1]],
+                         ...) {
 
   check_inputs_adjustedsurv(data=data, variable=variable,
                             ev_time=ev_time, event=event, method=method,
                             conf_int=conf_int, conf_level=conf_level,
                             times=times, bootstrap=bootstrap,
-                            n_boot=n_boot, ...)
+                            n_boot=n_boot, na.action=na.action, ...)
+
+  # perform na.action
+  if (is.function(na.action)) {
+    data <- na.action(data)
+  } else {
+    na.action <- get(na.action)
+    data <- na.action(data)
+  }
 
   # define those to remove Notes in devtools::check()
   . <- i <- time <- group <- surv_b <- NULL
@@ -78,7 +87,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
       adjustedsurv_boot(data=data, variable=variable, ev_time=ev_time,
                         event=event, method=method, times_input=times_input,
                         times=times, i=i, surv_fun=surv_fun,
-                        levs=levs, ...)
+                        levs=levs, na.action=na.action, ...)
       }
       parallel::stopCluster(cl)
 
@@ -90,7 +99,8 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
                                            ev_time=ev_time, event=event,
                                            method=method, times_input=times_input,
                                            times=times, i=i,
-                                           surv_fun=surv_fun, levs=levs, ...)
+                                           surv_fun=surv_fun, levs=levs,
+                                           na.action=na.action, ...)
       }
     }
 
@@ -147,10 +157,20 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
 
 ## perform one bootstrap iteration
 adjustedsurv_boot <- function(data, variable, ev_time, event, method,
-                              times_input, times, i, surv_fun, levs, ...) {
+                              times_input, times, i, surv_fun, levs,
+                              na.action, ...) {
 
   indices <- sample(x=rownames(data), size=nrow(data), replace=T)
   boot_samp <- data[indices,]
+
+  # perform na.action
+  if (is.function(na.action)) {
+    boot_samp <- na.action(boot_samp)
+  } else {
+    na.action <- get(na.action)
+    boot_samp <- na.action(boot_samp)
+  }
+
   # IMPORTANT: keeps SL in tmle methods from failing
   row.names(boot_samp) <- 1:nrow(data)
 
