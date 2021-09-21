@@ -17,7 +17,7 @@ A function to graphically display confounder-adjusted survival curves which wher
      legend.position="right",
      ylim=NULL, custom_colors=NULL,
      custom_linetypes=NULL,
-     ci_draw_alpha=0.4, ...)
+     ci_draw_alpha=0.4, steps=T, ...)
 }
 
 \arguments{
@@ -77,6 +77,9 @@ A (named) vector to specify the linetype of each adjusted survival curve. Set to
   }
   \item{ci_draw_alpha}{
 A number indicating the level of transparency that should be used when drawing the confidence regions.
+  }
+  \item{steps}{
+A logical variable indicating whether the survival curves should be plotted as a step function or using straight lines. Straight lines should not be used with a simple Aalen-Joahnsen estimator. It is recommended to only use straight lines when a sufficiently fine grid of time points was used in the estimation step.
   }
   \item{...}{
 Currently not used.

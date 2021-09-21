@@ -256,7 +256,7 @@ plot.adjustedcif <- function(x, draw_ci=F, max_t=Inf,
                              legend.position="right",
                              ylim=NULL, custom_colors=NULL,
                              custom_linetypes=NULL,
-                             ci_draw_alpha=0.4, ...) {
+                             ci_draw_alpha=0.4, steps=T, ...) {
 
   if (!color & !linetype & !facet) {
     stop("Groups must be distinguished with at least one of 'color',",
@@ -306,9 +306,15 @@ plot.adjustedcif <- function(x, draw_ci=F, max_t=Inf,
     mapping$colour <- NULL
   }
 
-  p <- ggplot2::ggplot(plotdata, mapping) +
-    ggplot2::geom_step(size=line_size) +
-    ggplot2::theme_bw() +
+  p <- ggplot2::ggplot(plotdata, mapping)
+
+  if (steps) {
+    p <- p + ggplot2::geom_step(size=line_size)
+  } else {
+    p <- p + ggplot2::geom_line(size=line_size)
+  }
+
+  p <- p + ggplot2::theme_bw() +
     ggplot2::labs(x=xlab, y=ylab, color=legend.title,
                   linetype=legend.title, fill=legend.title) +
     ggplot2::theme(legend.position=legend.position)
@@ -337,13 +343,20 @@ plot.adjustedcif <- function(x, draw_ci=F, max_t=Inf,
             " 'adjustedcif()' call or use bootstrap estimates.")
   }
 
-  if (draw_ci & "ci_lower" %in% colnames(plotdata)) {
+  if ((draw_ci & "ci_lower" %in% colnames(plotdata)) & steps) {
     p <- p + pammtools::geom_stepribbon(ggplot2::aes(ymin=.data$ci_lower,
                                                      ymax=.data$ci_upper,
                                                      fill=.data$group,
                                                      x=.data$time,
                                                      y=.data$cif),
                                         alpha=ci_draw_alpha, inherit.aes=F)
+  } else if (draw_ci & "ci_lower" %in% colnames(plotdata)) {
+    p <- p + ggplot2::geom_ribbon(ggplot2::aes(ymin=.data$ci_lower,
+                                               ymax=.data$ci_upper,
+                                               fill=.data$group,
+                                               x=.data$time,
+                                               y=.data$surv),
+                                  alpha=ci_draw_alpha, inherit.aes=F)
   }
   return(p)
 }
