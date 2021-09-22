@@ -14,7 +14,7 @@ A function to graphically display confounder-adjusted cumulative incidence funct
      line_size=1, xlab="Time",
      ylab="Adjusted Cumulative Incidence",
      title=NULL, legend.title="Group",
-     legend.position="right",
+     legend.position="right", gg_theme=ggplot2::theme_bw(),
      ylim=NULL, custom_colors=NULL,
      custom_linetypes=NULL,
      ci_draw_alpha=0.4, steps=T, ...)
@@ -65,6 +65,9 @@ A character string to be used as the title of the legend. Set to \code{NULL} if 
   }
   \item{legend.position}{
 A character string specifying the position of the legend. Ignored if \code{legend_title=NULL}.
+  }
+  \item{gg_theme}{
+A \code{ggplot2} theme object which will be used for the plot.
   }
   \item{ylim}{
 A numeric vector of length two, specifying the limits of the Y-Axis. Set to \code{NULL} to use the \code{ggplot2} default values.

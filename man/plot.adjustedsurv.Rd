@@ -14,10 +14,12 @@ A function to graphically display confounder-adjusted survival curves which wher
      line_size=1, xlab="Time",
      ylab="Adjusted Survival Probability",
      title=NULL, legend.title="Group",
-     legend.position="right",
+     legend.position="right", gg_theme=ggplot2::theme_bw(),
      ylim=NULL, custom_colors=NULL,
      custom_linetypes=NULL,
-     ci_draw_alpha=0.4, steps=T, ...)
+     ci_draw_alpha=0.4, steps=T, median_surv_lines=F,
+     median_surv_size=0.5, median_surv_linetype="dashed",
+     median_surv_color="black", ...)
 }
 
 \arguments{
@@ -66,6 +68,9 @@ A character string to be used as the title of the legend. Set to \code{NULL} if 
   \item{legend.position}{
 A character string specifying the position of the legend. Ignored if \code{legend_title=NULL}.
   }
+  \item{gg_theme}{
+A \code{ggplot2} theme object which will be used for the plot.
+  }
   \item{ylim}{
 A numeric vector of length two, specifying the limits of the Y-Axis. Set to \code{NULL} to use the \code{ggplot2} default values.
   }
@@ -79,7 +84,19 @@ A (named) vector to specify the linetype of each adjusted survival curve. Set to
 A number indicating the level of transparency that should be used when drawing the confidence regions.
   }
   \item{steps}{
-A logical variable indicating whether the survival curves should be plotted as a step function or using straight lines. Straight lines should not be used with a simple Aalen-Joahnsen estimator. It is recommended to only use straight lines when a sufficiently fine grid of time points was used in the estimation step.
+A logical variable indicating whether the survival curves should be plotted as a step function or using straight lines. Straight lines should not be used with a simple Kaplan-Meier estimator. It is recommended to only use straight lines when a sufficiently fine grid of time points was used in the estimation step.
+  }
+  \item{median_surv_lines}{
+Whether to draw indicator lines for the median survival times, which makes it easier to read those off the curves. Survival curves with undefined median survival times receive no lines.
+  }
+  \item{median_surv_size}{
+The size of the median survival indicator lines. Ignored if \code{median_surv_lines=FALSE}.
+  }
+  \item{median_surv_linetype}{
+The linetype of the median survival indicator lines. Ignored if \code{median_surv_lines=FALSE}.
+  }
+  \item{median_surv_color}{
+The color of the median survival indicator lines. Ignored if \code{median_surv_lines=FALSE}.
   }
   \item{...}{
 Currently not used.

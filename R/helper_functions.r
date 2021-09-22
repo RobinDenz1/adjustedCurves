@@ -436,3 +436,75 @@ calc_pseudo_surv <- function(data, ev_time, event, times, censoring_vars,
   }
   return(pseudo)
 }
+
+## keep only the covariates needed for the analysis
+## this has to be done in order to correctly use na.action
+remove_unnecessary_covars <- function(data, method, variable, ev_time,
+                                      event, ...) {
+
+  args <- list(...)
+
+  # extract variables from treatment model
+  if (inherits(args$treatment_model, "multinom")) {
+    treatment_vars <- args$treatment_model$coefnames
+    treatment_vars <- treatment_vars[treatment_vars!="(Intercept)"]
+  } else if (inherits(args$treatment_model, c("glm", "lm"))) {
+    treatment_vars <- all.vars(args$treatment_model$formula)
+  } else if (inherits(args$treatment_model, "formula")) {
+    treatment_vars <- all.vars(args$treatment_model)
+  } else {
+    treatment_vars <- NULL
+  }
+
+  # extract variables from outcome model
+  if (inherits(args$outcome_model, "coxph")) {
+    outcome_vars <- all.vars(args$outcome_model$formula)
+  } else if (inherits(args$outcome_model, "CauseSpecificCox")) {
+    outcome_vars <- all.vars(args$outcome_model$call$formula)
+  } else {
+    outcome_vars <- NULL
+  }
+
+  # extract variables from censoring model
+  if (inherits(args$censoring_model, "coxph")) {
+    censoring_vars <- all.vars(args$censoring_model$formula)
+  } else {
+    censoring_vars <- NULL
+  }
+
+  # covariates that are always needed
+  needed_covars <- c(variable, ev_time, event)
+
+  # method specific covariate needs
+  if (method=="direct") {
+    needed_covars <- c(needed_covars, outcome_vars)
+  } else if (method=="direct_pseudo") {
+    needed_covars <- c(needed_covars, args$outcome_vars, args$censoring_vars)
+  } else if (method %in% c("iptw", "iptw_km", "iptw_cox", "iptw_pseudo",
+                           "matching")) {
+    needed_covars <- c(needed_covars, treatment_vars)
+  } else if (method=="emp_lik") {
+    needed_covars <- c(needed_covars, args$treatment_vars)
+  } else if (method=="aiptw") {
+    needed_covars <- c(needed_covars, treatment_vars, outcome_vars,
+                       censoring_vars)
+  } else if (method=="aiptw_pseudo") {
+    needed_covars <- c(needed_covars, args$outcome_vars, args$censoring_vars,
+                       treatment_vars)
+  } else if (method=="tmle" | method=="ostmle") {
+    if (!is.null(args$adjust_vars)) {
+      needed_covars <- c(needed_covars, args$adjust_vars)
+    } else {
+      needed_covars <- colnames(data)
+    }
+  }
+
+  # remove duplicates
+  needed_covars <- unique(needed_covars)
+
+  # filter data
+  data <- dplyr::select(data, dplyr::all_of(needed_covars))
+
+  return(data)
+
+}

@@ -30,6 +30,11 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
                             times=times, bootstrap=bootstrap,
                             n_boot=n_boot, na.action=na.action, ...)
 
+  # only keep needed covariates
+  data <- remove_unnecessary_covars(data=data, variable=variable,
+                                    method=method, ev_time=ev_time,
+                                    event=event, ...)
+
   # perform na.action
   if (is.function(na.action)) {
     data <- na.action(data)
@@ -252,9 +257,13 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
                               ylab="Adjusted Survival Probability",
                               title=NULL, legend.title="Group",
                               legend.position="right",
+                              gg_theme=ggplot2::theme_bw(),
                               ylim=NULL, custom_colors=NULL,
                               custom_linetypes=NULL,
-                              ci_draw_alpha=0.4, steps=T, ...) {
+                              ci_draw_alpha=0.4, steps=T,
+                              median_surv_lines=F, median_surv_size=0.5,
+                              median_surv_linetype="dashed",
+                              median_surv_color="black", ...) {
 
   if (!color & !linetype & !facet) {
     stop("Groups must be distinguished with at least one of 'color',",
@@ -312,7 +321,7 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
     p <- p + ggplot2::geom_line(size=line_size)
   }
 
-  p <- p + ggplot2::theme_bw() +
+  p <- p + gg_theme +
     ggplot2::labs(x=xlab, y=ylab, color=legend.title,
                   linetype=legend.title, fill=legend.title) +
     ggplot2::theme(legend.position=legend.position)
@@ -356,6 +365,44 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
                                                y=.data$surv),
                                    alpha=ci_draw_alpha, inherit.aes=F)
   }
+
+  if (median_surv_lines) {
+
+    # calculate median survival and add other needed values
+    median_surv <- adjusted_median_survival(x, verbose=F, use_boot=F)
+    median_surv$y <- 0.5
+
+    if (is.null(ylim)) {
+      median_surv$yend <- ggplot2::layer_scales(p)$y$range$range[1]
+    } else {
+      median_surv$yend <- ylim[1]
+    }
+
+    # remove if missing
+    median_surv <- median_surv[!is.na(median_surv$median_surv),]
+
+    # draw line on surv_p = 0.5 until it hits the last curve
+    p <- p + ggplot2::geom_segment(ggplot2::aes(x=0,
+                                                xend=max(median_surv$median_surv),
+                                                y=0.5,
+                                                yend=0.5),
+                                   inherit.aes=F,
+                                   linetype=median_surv_linetype,
+                                   size=median_surv_size,
+                                   color=median_surv_color)
+    # draw indicator lines from middle to bottom
+    p <- p + ggplot2::geom_segment(ggplot2::aes(x=.data$median_surv,
+                                                xend=.data$median_surv,
+                                                y=0.5,
+                                                yend=.data$yend),
+                                   inherit.aes=F,
+                                   linetype=median_surv_linetype,
+                                   size=median_surv_size,
+                                   color=median_surv_color,
+                                   data=median_surv)
+
+  }
+
   return(p)
 }
 

@@ -51,7 +51,7 @@ Number of bootstrap replications to perform. Ignored if \code{bootstrap} is \cod
 The number of cores to use when calculating bootstrap estimates. Ignored if \code{bootstrap=FALSE}. Is set to 1 by default, resulting in single threaded processing. Internally uses the \code{doParallel} package if \code{n_cores > 1}. In that case it also uses the \code{doRNG} package to make the results replicable. See \code{?doRNG} and \code{?doParallel} for more details. Using multiple cores will speed up the calculation considerably in most cases.
   }
   \item{na.action}{
-How missing values should be handled. Can be one of: na.fail, na.omit, na.pass or na.exclude. Also accepts strings of the function names. See \code{?na.action} for more details. By default it uses the na.action which is set in the global options by the respective user. The respective na.action is called on the whole data.frame supplied in the \code{data} argument. Using \code{na.omit} or \code{na.exclude} can therefore lead to unwanted results if additional unused covariates are present in the data set. By only supplying the needed data this problem can be fixed.
+How missing values should be handled. Can be one of: na.fail, na.omit, na.pass or na.exclude. Also accepts strings of the function names. See \code{?na.action} for more details. By default it uses the na.action which is set in the global options by the respective user.
   }
   \item{...}{
 Further arguments passed to the respective \code{cif_method}. See details.

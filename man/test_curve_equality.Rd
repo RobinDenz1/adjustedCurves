@@ -27,7 +27,9 @@ A number specifying the confidence level of the bootstrap confidence intervals.
 }
 \details{
 
-To \code{adjustedsurv} and \code{adjustedcif} functions with \code{bootstrap=TRUE} draws \code{n_boot} bootstrap samples and estimates the adjusted curves for each one. This function uses those estimates and calculates the integral of the difference between two curves (just the two when there are two curves and pairwise comparisons if there are > 2 curves) in the interval defined by \code{to} and \code{from}. If the curves are approximately equal, this quantity should be close to zero. The direct variance calculation of this is quantity is quite involved even in the non-adjusted case and has not been proposed for adjusted survival curves or adjusted CIFs yet. We can however use the distribution of the integrals over all bootstrap samples to approximate the variation. By shifting the bootstrap distribution to be centered around 0 we approximate the distribution of the integral under the Null-Hypothesis. The P-Value can then be calculated by taking the proportion of cases where the absolute of the integral observed in the actual curves is smaller or equal to the shifted bootstrap values.
+The \code{adjustedsurv} and \code{adjustedcif} functions with \code{bootstrap=TRUE} draw \code{n_boot} bootstrap samples and estimate the adjusted curves for each one. This function uses those estimates and calculates the integral of the difference between two curves (just the two when there are two curves and pairwise comparisons if there are > 2 curves) in the interval defined by \code{to} and \code{from}. If the curves are approximately equal, this quantity should be close to zero. The direct variance calculation of this is quantity is quite involved even in the non-adjusted case and has not been proposed for adjusted survival curves or adjusted CIFs yet. We can however use the distribution of the integrals over all bootstrap samples to approximate the variation. By shifting the bootstrap distribution to be centered around 0 we approximate the distribution of the integral under the Null-Hypothesis. The P-Value can then be calculated by taking the proportion of cases where the absolute of the integral observed in the actual curves is smaller or equal to the shifted bootstrap values.
+
+Instead of relying on numerical integration, this function uses step-function interpolation, treating all supplied curves as step functions. The integral is then calculated using a simple sum of the squares defined by each step.
 
 This function has not been tested extensively yet and is still in the experimental stage. Use with caution.
 
@@ -47,22 +49,18 @@ Returns a \code{curve_test} object. If there are exactly two treatments this lis
 }
 \item{n_boot}{The number of bootstrap repetitions used.
 }
-\item{from}{\code{from} argument used in function call.
-}
-\item{to}{\code{to} argument used in function call.
-}
 \item{kind}{Whether survival curves or cumulative incidence functions where used.
 }
 \item{conf_int}{The percentile bootstrap confidence interval of the difference between the two curves.
-}
-\item{conf_level}{\code{conf_level} argument used in function call.
 }
 \item{categorical}{Whether there are more than two treatments/groups.
 }
 \item{treat_labs}{The labels of all treatments/groups.
 }
+\item{call}{The original function call.
+}
 
-If there are more than two treatments the object returned is a list of these objects with one list for each pairwise comparison.
+If there are more than two treatment groups the object returned is a list of these objects with one list for each pairwise comparison.
 
 }
 \references{

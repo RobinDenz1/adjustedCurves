@@ -91,13 +91,11 @@ test_curve_equality <- function(adjsurv, to, from=0, conf_level=0.95) {
                 observed_diff_integral=observed_diff_integral,
                 p_value=p_value,
                 n_boot=length(stats_vec),
-                from=from,
-                to=to,
                 kind=est,
                 conf_int=conf_int,
-                conf_level=conf_level,
                 categorical=F,
-                treat_labs=unique(adjsurv$adjsurv$group))
+                treat_labs=unique(adjsurv$adjsurv$group),
+                call=match.call())
 
   ## more than one treatments -> perform pairwise comparisons
   } else {
@@ -164,10 +162,11 @@ print.curve_test <- function(x, ...) {
     cat("------------------------------------------------------------------\n")
     cat("Group =", toString(x$treat_labs[1]), "vs. Group =",
         toString(x$treat_labs[2]), "\n")
-    cat("The equality was tested for the time interval:", x$from, "to", x$to, "\n")
+    cat("The equality was tested for the time interval:", x$call$from, "to",
+        x$call$to, "\n")
     cat("Observed Integral of the difference:", x$observed_diff_integral, "\n")
     cat("Bootstrap standard deviation:", stats::sd(x$diff_integrals), "\n")
-    cat(x$conf_level*100, "% bootstrap confidence interval: [",
+    cat(x$call$conf_level*100, "% bootstrap confidence interval: [",
         x$conf_int["ci_lower"], ", ", x$conf_int["ci_upper"], "]\n", sep="")
     cat("P-Value:", x$p_value, "\n\n")
     cat("Calculated using", x$n_boot, "bootstrap replications.\n")

@@ -30,6 +30,11 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
                            times=times, bootstrap=bootstrap,
                            n_boot=n_boot, na.action=na.action, ...)
 
+  # only keep needed covariates
+  data <- remove_unnecessary_covars(data=data, variable=variable,
+                                    method=method, ev_time=ev_time,
+                                    event=event, ...)
+
   # perform na.action
   if (is.function(na.action)) {
     data <- na.action(data)
@@ -254,6 +259,7 @@ plot.adjustedcif <- function(x, draw_ci=F, max_t=Inf,
                              ylab="Adjusted Cumulative Incidence",
                              title=NULL, legend.title="Group",
                              legend.position="right",
+                             gg_theme=ggplot2::theme_bw(),
                              ylim=NULL, custom_colors=NULL,
                              custom_linetypes=NULL,
                              ci_draw_alpha=0.4, steps=T, ...) {
@@ -314,7 +320,7 @@ plot.adjustedcif <- function(x, draw_ci=F, max_t=Inf,
     p <- p + ggplot2::geom_line(size=line_size)
   }
 
-  p <- p + ggplot2::theme_bw() +
+  p <- p + gg_theme +
     ggplot2::labs(x=xlab, y=ylab, color=legend.title,
                   linetype=legend.title, fill=legend.title) +
     ggplot2::theme(legend.position=legend.position)
