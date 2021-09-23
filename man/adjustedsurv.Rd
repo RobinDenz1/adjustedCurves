@@ -84,6 +84,8 @@ Returns an \code{adjustedsurv} object containing the following objects:
 
 \item{adjsurv}{A \code{data.frame} of estimated adjusted survival probabilities for some points in time for each level of \code{variable}. Depending on the arguments used also includes standard errors and confidence intervals at points in time.
 }
+\item{data}{The \code{data.frame} used in the original function call.
+}
 \item{method}{
 The method used to adjust the survival curves.
 }

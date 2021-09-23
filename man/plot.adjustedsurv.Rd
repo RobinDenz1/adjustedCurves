@@ -14,12 +14,13 @@ A function to graphically display confounder-adjusted survival curves which wher
      line_size=1, xlab="Time",
      ylab="Adjusted Survival Probability",
      title=NULL, legend.title="Group",
-     legend.position="right", gg_theme=ggplot2::theme_bw(),
+     legend.position="right", gg_theme=ggplot2::theme_classic(),
      ylim=NULL, custom_colors=NULL,
      custom_linetypes=NULL,
      ci_draw_alpha=0.4, steps=T, median_surv_lines=F,
      median_surv_size=0.5, median_surv_linetype="dashed",
-     median_surv_color="black", ...)
+     median_surv_color="black", censoring_ind=F,
+     censoring_ind_width=NULL, censoring_ind_size=0.5, ...)
 }
 
 \arguments{
@@ -97,6 +98,15 @@ The linetype of the median survival indicator lines. Ignored if \code{median_sur
   }
   \item{median_surv_color}{
 The color of the median survival indicator lines. Ignored if \code{median_surv_lines=FALSE}.
+  }
+  \item{censoring_ind}{
+Whether to draw small lines indicating censored individuals on the survival curves. Those will be affected by \code{linetype} and \code{color} as well.
+  }
+  \item{censoring_ind_width}{
+A numeric value specifying the width of the censoring indicators. Ignored if \code{censoring_ind=FALSE}. By default (\code{censoring_ind_width=NULL}) the width of the censoring indicators is equal to 5 percent of the plot height.
+  }
+  \item{censoring_ind_size}{
+A numeric value specifying the size of the censoring indicators. Ignored if \code{censoring_ind=FALSE}.
   }
   \item{...}{
 Currently not used.

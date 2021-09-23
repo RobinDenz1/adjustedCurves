@@ -146,6 +146,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
   plotdata$group <- factor(plotdata$group, levels=levs)
 
   out <- list(adjsurv=plotdata,
+              data=data,
               method=method,
               categorical=ifelse(length(levs)>2, T, F),
               call=match.call())
@@ -257,13 +258,15 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
                               ylab="Adjusted Survival Probability",
                               title=NULL, legend.title="Group",
                               legend.position="right",
-                              gg_theme=ggplot2::theme_bw(),
+                              gg_theme=ggplot2::theme_classic(),
                               ylim=NULL, custom_colors=NULL,
                               custom_linetypes=NULL,
                               ci_draw_alpha=0.4, steps=T,
                               median_surv_lines=F, median_surv_size=0.5,
                               median_surv_linetype="dashed",
-                              median_surv_color="black", ...) {
+                              median_surv_color="black",
+                              censoring_ind=F, censoring_ind_width=NULL,
+                              censoring_ind_size=0.5, ...) {
 
   if (!color & !linetype & !facet) {
     stop("Groups must be distinguished with at least one of 'color',",
@@ -303,6 +306,7 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
     }
   }
 
+  ## The main plot
   mapping <- ggplot2::aes(x=.data$time, y=.data$surv, color=.data$group,
                           linetype=.data$group)
 
@@ -345,6 +349,64 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
     p <- p + ggplot2::scale_fill_manual(values=custom_colors)
   }
 
+  ## Censoring indicators
+  if (censoring_ind) {
+
+    if (is.null(censoring_ind_width)) {
+
+      if (is.null(ylim)) {
+        ystart <- 1 - ggplot2::layer_scales(p)$y$range$range[1]
+      } else {
+        ystart <- 1 - ylim[1]
+      }
+
+      censoring_ind_width <- ystart * 0.05
+
+    }
+
+    if (is.factor(plotdata$group)) {
+      levs <- levels(plotdata$group)
+    } else {
+      levs <- unique(plotdata$group)
+    }
+
+    # calculate needed data
+    cens_dat <- vector(mode="list", length=length(levs))
+    for (i in 1:length(levs)) {
+
+      x$data <- x$data[which(x$data$time <= max_t),]
+      cens_times <- sort(unique(x$data[, x$call$ev_time][
+        x$data[, x$call$event]==0 & x$data[, x$call$variable]==levs[i]]))
+      adjsurv_temp <- plotdata[plotdata$group==levs[i], ]
+      cens_surv <- sapply(cens_times, read_from_step_function,
+                          step_data=adjsurv_temp)
+      cens_dat[[i]] <- data.frame(time=cens_times, surv=cens_surv,
+                                  group=levs[i])
+
+    }
+    cens_dat <- dplyr::bind_rows(cens_dat)
+    cens_dat <- cens_dat[!is.na(cens_dat$surv) ,]
+
+    cens_map <- ggplot2::aes(x=.data$time,
+                             y=.data$surv-(censoring_ind_width/2),
+                             xend=.data$time,
+                             yend=.data$surv+(censoring_ind_width/2),
+                             group=.data$group,
+                             color=.data$group,
+                             linetype=.data$group)
+    if (!color) {
+      cens_map$colour <- NULL
+    }
+    if (!linetype) {
+      cens_map$linetype <- NULL
+    }
+
+    p <- p + ggplot2::geom_segment(data=cens_dat, cens_map,
+                                   size=censoring_ind_size)
+
+  }
+
+  ## Confidence intervals
   if (draw_ci & !"ci_lower" %in% colnames(plotdata)) {
     warning("Cannot draw confidence intervals. Either set 'conf_int=TRUE' in",
             " 'adjustedsurv()' call or use bootstrap estimates.")
@@ -366,6 +428,7 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
                                    alpha=ci_draw_alpha, inherit.aes=F)
   }
 
+  ## Median Survival indicators
   if (median_surv_lines) {
 
     # calculate median survival and add other needed values
