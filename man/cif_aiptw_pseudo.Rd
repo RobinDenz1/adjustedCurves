@@ -12,7 +12,7 @@ This page explains the details of estimating augmented inverse probability of tr
 \usage{
 cif_aiptw_pseudo(data, variable, ev_time, event, cause, conf_int,
                  conf_level=0.95, times, outcome_vars,
-                 treatment_model, type_time="factor", spline_df=10)
+                 treatment_model, type_time="factor", spline_df=5)
 }
 
 \arguments{

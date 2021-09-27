@@ -13,7 +13,7 @@ This page explains the details of estimating augmented inverse probability of tr
 surv_aiptw_pseudo(data, variable, ev_time, event, conf_int,
                   conf_level=0.95, times, outcome_vars,
                   treatment_model, type_time="factor",
-                  spline_df=10, censoring_vars=NULL,
+                  spline_df=5, censoring_vars=NULL,
                   ipcw_method="binder")
 }
 

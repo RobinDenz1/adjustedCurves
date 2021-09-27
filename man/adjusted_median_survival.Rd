@@ -8,7 +8,7 @@ Calculate Confounder-Adjusted Median Survival Times
 This function can be utilized to calculate the confounder-adjusted median survival time, given previously estimated adjusted survival curves.
 }
 \usage{
-adjusted_median_survival(adjsurv, use_boot=F, conf_level=0.95, verbose=T)
+adjusted_median_survival(adjsurv, use_boot=F, verbose=T)
 }
 
 \arguments{
@@ -16,10 +16,7 @@ adjusted_median_survival(adjsurv, use_boot=F, conf_level=0.95, verbose=T)
 An \code{adjustedsurv} object created using the \code{adjustedsurv} function.
   }
   \item{use_boot}{
-Whether bootstrap estimates should be used to calculate the confidence intervals of the estimates. Can only be used if \code{bootstrap=TRUE} was used in the \code{\link{adjustedsurv}} call.
-  }
-  \item{conf_level}{
-A number specifying the confidence level of the bootstrap confidence intervals.
+Whether to use the survival curves calculated using bootstrapping or not.
   }
   \item{verbose}{
 Whether to print the output or not.
@@ -27,14 +24,14 @@ Whether to print the output or not.
 }
 \details{
 
-The median survival time is simply the time when half the patients are expected to be alive. The chance of surviving beyond that time is 50 percent. It can be read directly from the respective survival curve by drawing a straight line from the 0.5 point on the Y-Axis and reading the Y-Axis value where this line intersects with the survival curve. If the survival probability never drops below 50 percent, the median survival time cannot be calculated.
+The median survival time is simply the time when half the patients are expected to be alive. The chance of surviving beyond that time is 50 percent. It can be read directly from the respective survival curve by drawing a straight line from the 0.5 point on the Y-Axis and reading the X-Axis value where this line intersects with the survival curve. If the survival probability never drops below 50 percent, the median survival time cannot be calculated.
 
-This function calculates this quantity automatically. Confidence intervals can be estimated using bootstrapping.
+This function calculates this quantity automatically. When multiple imputation was used in the original function call, the median survival times are read off the final pooled survival curves directly.
 
 }
 \value{
 
-Silently returns the \code{data.frame} object which can be seen when \code{verbose=TRUE}. The column \code{median_surv} includes the confounder-adjusted median survival times, the columns \code{ci_lower} and \code{ci_upper} include the lower and upper end of the bootstrap confidence intervals, if estimated. The column \code{n} shows the number of times the median survival time could be calculated. This might be smaller than \code{n_boot} in the original \code{adjustedsurv} call. In this case the estimates should be treated with caution.
+Silently returns the \code{data.frame} object which can be seen when \code{verbose=TRUE}. The column \code{median_surv} includes the confounder-adjusted median survival times.
 
 }
 

@@ -30,134 +30,288 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
                            times=times, bootstrap=bootstrap,
                            n_boot=n_boot, na.action=na.action, ...)
 
-  # only keep needed covariates
-  data <- remove_unnecessary_covars(data=data, variable=variable,
-                                    method=method, ev_time=ev_time,
-                                    event=event, ...)
 
-  # perform na.action
-  if (is.function(na.action)) {
-    data <- na.action(data)
-  } else {
-    na.action <- get(na.action)
-    data <- na.action(data)
-  }
+  if (inherits(data, "mids")) {
 
-  # define those to remove Notes in devtools::check()
-  . <- i <- time <- group <- cif_b <- NULL
+    # get event specific times
+    times_input <- times
+    if (is.null(times)) {
+      times <- sort(unique(data$data[, ev_time][data$data[, event]>=1]))
 
-  # get event specific times
-  times_input <- times
-  if (is.null(times) & method=="aalen_johansen") {
-    times <- NULL
-  } else if (is.null(times)) {
-    times <- sort(unique(data[, ev_time][data[, event]>=1]))
-
-    # add zero if not already in there
-    if (!0 %in% times) {
-      times <- c(0, times)
-    }
-  }
-
-  # levels of the group variable
-  if (is.numeric(data[,variable])) {
-    levs <- unique(data[,variable])
-  } else {
-    levs <- levels(data[,variable])
-  }
-
-  # get relevant cif_method function
-  cif_fun <- get(paste0("cif_", method))
-
-  # bootstrap the whole procedure, can be useful to get sd, p-values
-  if (bootstrap) {
-
-    if (n_cores > 1) {
-      # needed packages for parallel processing
-      requireNamespace("parallel")
-      requireNamespace("doRNG")
-      requireNamespace("doParallel")
-      requireNamespace("foreach")
-
-      # initialize clusters
-      cl <- parallel::makeCluster(n_cores, outfile="")
-      doParallel::registerDoParallel(cl)
-      pkgs <- c("adjustedCurves", "survival")
-      export_objs <- c("get_iptw_weights", "read_from_step_function",
-                       "multi_result_class", "adjustedcif_boot")
-
-      boot_out <- foreach::foreach(i=1:n_boot, .packages=pkgs,
-                                   .export=export_objs) %dorng% {
-
-        adjustedcif_boot(data=data, variable=variable, ev_time=ev_time,
-                         event=event, method=method, times_input=times_input,
-                         times=times, i=i, cif_fun=cif_fun,
-                         levs=levs, cause=cause, na.action=na.action, ...)
+      # add zero if not already in there
+      if (!0 %in% times) {
+        times <- c(0, times)
       }
-      parallel::stopCluster(cl)
+    }
 
+    # levels of the group variable
+    if (is.numeric(data$data[,variable])) {
+      levs <- unique(data$data[,variable])
     } else {
+      levs <- levels(data$data[,variable])
+    }
 
-      boot_out <- vector(mode="list", length=n_boot)
-      for (i in 1:n_boot) {
-        boot_out[[i]] <- adjustedcif_boot(data=data, variable=variable,
-                                          ev_time=ev_time, event=event,
-                                          method=method, times_input=times_input,
-                                          times=times, i=i, cause=cause,
-                                          cif_fun=cif_fun, levs=levs,
-                                          na.action=na.action, ...)
+    # transform to long format
+    mids <- mice::complete(data, action="long", include=F)
+
+    # get additional arguments
+    args <- list(...)
+
+    # extract outcome models
+    outcome_models <- args$outcome_model$analyses
+    args$outcome_model <- NULL
+
+    # extract treatment models
+    if (inherits(args$treatment_model$analyses[[1]], c("glm", "lm", "multinom"))) {
+      treatment_models <- args$treatment_model$analyses
+      args$treatment_model <- NULL
+    } else if (inherits(args$treatment_model, "formula")) {
+      treatment_models <- rep(list(args$treatment_model), max(mids$.imp))
+      args$treatment_model <- NULL
+    } else if (is.numeric(args$treatment_model)) {
+      stop("Supplying weights or propensity scores directly is not allowed when",
+           " using multiple imputation.")
+    } else {
+      treatment_models <- NULL
+    }
+
+    # extract censoring models
+    censoring_models <- args$censoring_model$analyses
+    args$censoring_model <- NULL
+
+    # call adjustedcif once for each multiply imputed dataset
+    out <- vector(mode="list", length=max(mids$.imp))
+    for (i in 1:max(mids$.imp)) {
+
+      imp_data <- mids[mids$.imp==i,]
+
+      # NOTE: need to add the data to the model object or ate() fails
+      if (!is.null(treatment_models) & inherits(treatment_models[[i]], "glm")) {
+        treatment_models[[i]]$data <- imp_data
+      }
+
+      args2 <- c(variable=variable, ev_time=ev_time, event=event,
+                 cause=cause, method=method, conf_int=conf_int,
+                 conf_level=conf_level, times=times,
+                 bootstrap=bootstrap, n_boot=n_boot, n_cores=n_cores,
+                 na.action="na.pass", args)
+      args2$data <- imp_data
+      args2$outcome_model <- outcome_models[[i]]
+      args2$treatment_model <- treatment_models[[i]]
+      args2$censoring_model <- censoring_models[[i]]
+
+      out[[i]] <- do.call(adjustedcif, args=args2)
+
+    }
+
+    # pool results
+    dats <- vector(mode="list", length=length(out))
+    boot_dats <- vector(mode="list", length=length(out))
+    for (i in 1:length(out)) {
+
+      # direct estimate
+      dat <- out[[i]]$adjcif
+      dat$.imp <- i
+      dats[[i]] <- dat
+
+      # bootstrap estimate
+      boot_dat <- out[[i]]$boot_adjcif
+      boot_dat$.imp <- i
+      boot_dats[[i]] <- boot_dat
+
+    }
+    dats <- dplyr::bind_rows(dats)
+    boot_dats <- dplyr::bind_rows(boot_dats)
+
+    if (conf_int) {
+      # use Rubins Rule
+      plotdata <- dats %>%
+        dplyr::group_by(., time, group) %>%
+        dplyr::summarise(cif=mean(cif),
+                         se=mean(se),
+                         .groups="drop_last")
+      plotdata <- as.data.frame(plotdata)
+
+      # re-calculate confidence intervals using pooled se
+      surv_ci <- confint_surv(surv=plotdata$cif,
+                              se=plotdata$se,
+                              conf_level=conf_level,
+                              conf_type="plain")
+      plotdata$ci_lower <- surv_ci$left
+      plotdata$ci_upper <- surv_ci$right
+    } else {
+      plotdata <- dats %>%
+        dplyr::group_by(., time, group) %>%
+        dplyr::summarise(cif=mean(cif),
+                         .groups="drop_last")
+      plotdata <- as.data.frame(plotdata)
+    }
+
+    # output object
+    out_obj <- list(mids_analyses=out,
+                    adjcif=plotdata,
+                    data=data$data,
+                    method=method,
+                    categorical=ifelse(length(levs)>2, T, F),
+                    call=match.call())
+
+    if (bootstrap) {
+
+      plotdata_boot <- boot_dats %>%
+        dplyr::group_by(., time, group) %>%
+        dplyr::summarise(cif=mean(cif),
+                         se=mean(se),
+                         .groups="drop_last")
+      plotdata_boot <- as.data.frame(plotdata_boot)
+
+      # re-calculate confidence intervals using pooled se
+      surv_ci <- confint_surv(surv=plotdata_boot$cif,
+                              se=plotdata_boot$se,
+                              conf_level=conf_level,
+                              conf_type="plain")
+      plotdata_boot$ci_lower <- surv_ci$left
+      plotdata_boot$ci_upper <- surv_ci$right
+
+      out_obj$boot_adjcif <- plotdata_boot
+
+    }
+
+    class(out_obj) <- "adjustedcif"
+    return(out_obj)
+
+
+  ## normal method using a single data.frame
+  } else {
+
+    # only keep needed covariates
+    data <- remove_unnecessary_covars(data=data, variable=variable,
+                                      method=method, ev_time=ev_time,
+                                      event=event, ...)
+
+    # perform na.action
+    if (is.function(na.action)) {
+      data <- na.action(data)
+    } else {
+      na.action <- get(na.action)
+      data <- na.action(data)
+    }
+
+    # define those to remove Notes in devtools::check()
+    . <- i <- time <- group <- cif_b <- cif <- se <- NULL
+
+    # get event specific times
+    times_input <- times
+    if (is.null(times) & method=="aalen_johansen") {
+      times <- NULL
+    } else if (is.null(times)) {
+      times <- sort(unique(data[, ev_time][data[, event]>=1]))
+
+      # add zero if not already in there
+      if (!0 %in% times) {
+        times <- c(0, times)
       }
     }
 
-    # transform into data.frames
-    boot_data <- lapply(boot_out, function(x) x$boot_data)
-    boot_data_same_t <- lapply(boot_out, function(x) x$boot_data_same_t)
+    # levels of the group variable
+    if (is.numeric(data[,variable])) {
+      levs <- unique(data[,variable])
+    } else {
+      levs <- levels(data[,variable])
+    }
 
-    boot_data <- as.data.frame(dplyr::bind_rows(boot_data))
-    boot_data_same_t <- as.data.frame(dplyr::bind_rows(boot_data_same_t))
+    # get relevant cif_method function
+    cif_fun <- get(paste0("cif_", method))
+
+    # bootstrap the whole procedure, can be useful to get sd, p-values
+    if (bootstrap) {
+
+      if (n_cores > 1) {
+        # needed packages for parallel processing
+        requireNamespace("parallel")
+        requireNamespace("doRNG")
+        requireNamespace("doParallel")
+        requireNamespace("foreach")
+
+        # initialize clusters
+        cl <- parallel::makeCluster(n_cores, outfile="")
+        doParallel::registerDoParallel(cl)
+        pkgs <- c("adjustedCurves", "survival")
+        export_objs <- c("get_iptw_weights", "read_from_step_function",
+                         "multi_result_class", "adjustedcif_boot")
+
+        boot_out <- foreach::foreach(i=1:n_boot, .packages=pkgs,
+                                    .export=export_objs) %dorng% {
+
+          adjustedcif_boot(data=data, variable=variable, ev_time=ev_time,
+                           event=event, method=method, times_input=times_input,
+                           times=times, i=i, cif_fun=cif_fun,
+                           levs=levs, cause=cause, na.action=na.action, ...)
+        }
+        parallel::stopCluster(cl)
+
+      } else {
+
+        boot_out <- vector(mode="list", length=n_boot)
+        for (i in 1:n_boot) {
+          boot_out[[i]] <- adjustedcif_boot(data=data, variable=variable,
+                                            ev_time=ev_time, event=event,
+                                            method=method, times_input=times_input,
+                                            times=times, i=i, cause=cause,
+                                            cif_fun=cif_fun, levs=levs,
+                                            na.action=na.action, ...)
+        }
+      }
+
+      # transform into data.frames
+      boot_data <- lapply(boot_out, function(x) x$boot_data)
+      boot_data_same_t <- lapply(boot_out, function(x) x$boot_data_same_t)
+
+      boot_data <- as.data.frame(dplyr::bind_rows(boot_data))
+      boot_data_same_t <- as.data.frame(dplyr::bind_rows(boot_data_same_t))
+
+      # keep factor ordering the same
+      boot_data$group <- factor(boot_data$group, levels=levs)
+      boot_data_same_t$group <- factor(boot_data_same_t$group, levels=levs)
+
+      # calculate some statistics
+      boot_stats <- boot_data_same_t %>%
+        dplyr::group_by(., time, group) %>%
+        dplyr::summarise(cif=mean(cif_b, na.rm=T),
+                         se=stats::sd(cif_b, na.rm=T),
+                         ci_lower=stats::quantile(cif_b,
+                                                  probs=(1-conf_level)/2,
+                                                  na.rm=T),
+                         ci_upper=stats::quantile(cif_b,
+                                                  probs=1-((1-conf_level)/2),
+                                                  na.rm=T),
+                         n_boot=sum(!is.na(cif_b)),
+                         .groups="drop_last")
+      boot_stats$group <- factor(boot_stats$group, levels=levs)
+    }
+
+    # core of the function
+    args <- list(data=data, variable=variable, ev_time=ev_time,
+                 event=event, conf_int=conf_int, conf_level=conf_level,
+                 times=times, cause=cause, ...)
+    plotdata <- R.utils::doCall(cif_fun, args=args)
 
     # keep factor ordering the same
-    boot_data$group <- factor(boot_data$group, levels=levs)
-    boot_data_same_t$group <- factor(boot_data_same_t$group, levels=levs)
+    plotdata$group <- factor(plotdata$group, levels=levs)
 
-    # calculate some statistics
-    boot_stats <- boot_data_same_t %>%
-      dplyr::group_by(., time, group) %>%
-      dplyr::summarise(cif=mean(cif_b, na.rm=T),
-                       sd=stats::sd(cif_b, na.rm=T),
-                       ci_lower=stats::quantile(cif_b,
-                                                probs=(1-conf_level)/2,
-                                                na.rm=T),
-                       ci_upper=stats::quantile(cif_b,
-                                                probs=1-((1-conf_level)/2),
-                                                na.rm=T),
-                       n_boot=sum(!is.na(cif_b)),
-                       .groups="drop_last")
-    boot_stats$group <- factor(boot_stats$group, levels=levs)
+    out <- list(adjcif=plotdata,
+                method=method,
+                categorical=ifelse(length(levs)>2, T, F),
+                call=match.call())
+
+    if (bootstrap) {
+      out$boot_data <- boot_data
+      out$boot_data_same_t <- boot_data_same_t
+      out$boot_adjcif <- as.data.frame(boot_stats)
+    }
+
+    class(out) <- "adjustedcif"
+    return(out)
   }
-
-  # core of the function
-  args <- list(data=data, variable=variable, ev_time=ev_time,
-               event=event, conf_int=conf_int, conf_level=conf_level,
-               times=times, cause=cause, ...)
-  plotdata <- R.utils::doCall(cif_fun, args=args)
-
-  # keep factor ordering the same
-  plotdata$group <- factor(plotdata$group, levels=levs)
-
-  out <- list(adjcif=plotdata,
-              method=method,
-              categorical=ifelse(length(levs)>2, T, F),
-              call=match.call())
-
-  if (bootstrap) {
-    out$boot_data <- boot_data
-    out$boot_data_same_t <- boot_data_same_t
-    out$boot_adjcif <- as.data.frame(boot_stats)
-  }
-
-  class(out) <- "adjustedcif"
-  return(out)
 }
 
 ## perform one bootstrap iteration

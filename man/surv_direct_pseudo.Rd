@@ -13,8 +13,8 @@ It uses essentially the same methodology as the regular direct adjustment method
 }
 \usage{
 surv_direct_pseudo(data, variable, ev_time, event, conf_int, conf_level=0.95,
-                   times, outcome_vars, censoring_vars=NULL, ipcw_method="binder",
-                   type_time="factor", spline_df=10)
+                   times, outcome_vars, type_time="factor", spline_df=5,
+                   censoring_vars=NULL, ipcw_method="binder")
 }
 
 \arguments{
@@ -42,17 +42,17 @@ A numeric vector of time points at which the survival probability should be esti
   \item{outcome_vars}{
 A character vector of column names specifying variables to be used when modeling the outcome mechanism. See details and examples.
 }
-  \item{censoring_vars}{
-An optional character vector specifying variables in \code{data}. Those are used in the calculation of inverse probability of censoring weighted pseudo observations. See \code{?pseudo_aareg} for more information. Set to \code{NULL} (default) to use standard pseudo-values without corrections for dependent censoring instead.
-}
-  \item{ipcw_method}{
-The specific method used in the calculation of inverse probability of censoring weighted pseudo observations. Can be either \code{"binder"} (default) or \code{"hajek"}. See \code{?pseudo_aareg} for more information. Ignored if \code{censoring_vars=NULL}.
-}
   \item{type_time}{
 A character string specifying how the time should be modeled.
 }
   \item{spline_df}{
 The number of degrees of freedom used for the natural-spline or B-spline function. Ignored if \code{type_time="factor"}.
+}
+  \item{censoring_vars}{
+An optional character vector specifying variables in \code{data}. Those are used in the calculation of inverse probability of censoring weighted pseudo observations. See \code{?pseudo_aareg} for more information. Set to \code{NULL} (default) to use standard pseudo-values without corrections for dependent censoring instead.
+}
+  \item{ipcw_method}{
+The specific method used in the calculation of inverse probability of censoring weighted pseudo observations. Can be either \code{"binder"} (default) or \code{"hajek"}. See \code{?pseudo_aareg} for more information. Ignored if \code{censoring_vars=NULL}.
 }
 
 }

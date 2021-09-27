@@ -14,7 +14,7 @@ It uses essentially the same methodology as the regular direct adjustment method
 \usage{
 cif_direct_pseudo(data, variable, ev_time, event, cause, conf_int,
                   conf_level=0.95, times, outcome_vars, type_time="factor",
-                  spline_df=10)
+                  spline_df=5)
 }
 
 \arguments{

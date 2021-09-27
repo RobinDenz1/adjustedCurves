@@ -30,135 +30,290 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
                             times=times, bootstrap=bootstrap,
                             n_boot=n_boot, na.action=na.action, ...)
 
-  # only keep needed covariates
-  data <- remove_unnecessary_covars(data=data, variable=variable,
-                                    method=method, ev_time=ev_time,
-                                    event=event, ...)
+  ## using multiple imputation
+  if (inherits(data, "mids")) {
 
-  # perform na.action
-  if (is.function(na.action)) {
-    data <- na.action(data)
-  } else {
-    na.action <- get(na.action)
-    data <- na.action(data)
-  }
+    # get event specific times
+    times_input <- times
+    if (is.null(times)) {
+      times <- sort(unique(data$data[, ev_time][data$data[, event]==1]))
 
-  # define those to remove Notes in devtools::check()
-  . <- i <- time <- group <- surv_b <- NULL
-
-  # get event specific times
-  times_input <- times
-  if (is.null(times) & method %in% c("km", "iptw_km")) {
-    times <- NULL
-  } else if (is.null(times)) {
-    times <- sort(unique(data[, ev_time][data[, event]==1]))
-
-    # add zero if not already in there
-    if (!0 %in% times) {
-      times <- c(0, times)
-    }
-  }
-
-  # levels of the group variable
-  if (is.numeric(data[,variable])) {
-    levs <- unique(data[,variable])
-  } else {
-    levs <- levels(data[,variable])
-  }
-
-  # get relevant surv_method function
-  surv_fun <- get(paste0("surv_", method))
-
-  # bootstrap the whole procedure, can be useful to get sd, p-values
-  if (bootstrap) {
-
-    if (n_cores > 1) {
-      # needed packages for parallel processing
-      requireNamespace("parallel")
-      requireNamespace("doRNG")
-      requireNamespace("doParallel")
-      requireNamespace("foreach")
-
-      # initialize clusters
-      cl <- parallel::makeCluster(n_cores, outfile="")
-      doParallel::registerDoParallel(cl)
-      pkgs <- c("adjustedCurves", "survival")
-      export_objs <- c("get_iptw_weights", "read_from_step_function",
-                       "multi_result_class", "adjustedsurv_boot")
-
-      boot_out <- foreach::foreach(i=1:n_boot, .packages=pkgs,
-                                   .export=export_objs) %dorng% {
-
-      adjustedsurv_boot(data=data, variable=variable, ev_time=ev_time,
-                        event=event, method=method, times_input=times_input,
-                        times=times, i=i, surv_fun=surv_fun,
-                        levs=levs, na.action=na.action, ...)
+      # add zero if not already in there
+      if (!0 %in% times) {
+        times <- c(0, times)
       }
-      parallel::stopCluster(cl)
+    }
 
+    # levels of the group variable
+    if (is.numeric(data$data[,variable])) {
+      levs <- unique(data$data[,variable])
     } else {
+      levs <- levels(data$data[,variable])
+    }
 
-      boot_out <- vector(mode="list", length=n_boot)
-      for (i in 1:n_boot) {
-        boot_out[[i]] <- adjustedsurv_boot(data=data, variable=variable,
-                                           ev_time=ev_time, event=event,
-                                           method=method, times_input=times_input,
-                                           times=times, i=i,
-                                           surv_fun=surv_fun, levs=levs,
-                                           na.action=na.action, ...)
+    # transform to long format
+    mids <- mice::complete(data, action="long", include=F)
+
+    # get additional arguments
+    args <- list(...)
+
+    # extract outcome models
+    outcome_models <- args$outcome_model$analyses
+    args$outcome_model <- NULL
+
+    # extract treatment models
+    if (inherits(args$treatment_model$analyses[[1]], c("glm", "lm", "multinom"))) {
+      treatment_models <- args$treatment_model$analyses
+      args$treatment_model <- NULL
+    } else if (inherits(args$treatment_model, "formula")) {
+      treatment_models <- rep(list(args$treatment_model), max(mids$.imp))
+      args$treatment_model <- NULL
+    } else if (is.numeric(args$treatment_model)) {
+      stop("Supplying weights or propensity scores directly is not allowed when",
+           " using multiple imputation.")
+    } else {
+      treatment_models <- NULL
+    }
+
+    # extract censoring models
+    censoring_models <- args$censoring_model$analyses
+    args$censoring_model <- NULL
+
+    # call adjustedsurv once for each multiply imputed dataset
+    out <- vector(mode="list", length=max(mids$.imp))
+    for (i in 1:max(mids$.imp)) {
+
+      imp_data <- mids[mids$.imp==i,]
+
+      # NOTE: need to add the data to the model object or ate() fails
+      if (!is.null(treatment_models) & inherits(treatment_models[[i]], "glm")) {
+        treatment_models[[i]]$data <- imp_data
+      }
+
+      args2 <- c(variable=variable, ev_time=ev_time,
+                 event=event, method=method, conf_int=conf_int,
+                 conf_level=conf_level, times=times,
+                 bootstrap=bootstrap, n_boot=n_boot, n_cores=n_cores,
+                 na.action="na.pass", args)
+      args2$data <- imp_data
+      args2$outcome_model <- outcome_models[[i]]
+      args2$treatment_model <- treatment_models[[i]]
+      args2$censoring_model <- censoring_models[[i]]
+
+      out[[i]] <- do.call(adjustedsurv, args=args2)
+
+    }
+
+    # pool results
+    dats <- vector(mode="list", length=length(out))
+    boot_dats <- vector(mode="list", length=length(out))
+    for (i in 1:length(out)) {
+
+      # direct estimate
+      dat <- out[[i]]$adjsurv
+      dat$.imp <- i
+      dats[[i]] <- dat
+
+      # bootstrap estimate
+      boot_dat <- out[[i]]$boot_adjsurv
+      boot_dat$.imp <- i
+      boot_dats[[i]] <- boot_dat
+
+    }
+    dats <- dplyr::bind_rows(dats)
+    boot_dats <- dplyr::bind_rows(boot_dats)
+
+    if (conf_int) {
+      # use Rubins Rule
+      plotdata <- dats %>%
+        dplyr::group_by(., time, group) %>%
+        dplyr::summarise(surv=mean(surv),
+                         se=mean(se),
+                         .groups="drop_last")
+      plotdata <- as.data.frame(plotdata)
+
+      # re-calculate confidence intervals using pooled se
+      surv_ci <- confint_surv(surv=plotdata$surv,
+                              se=plotdata$se,
+                              conf_level=conf_level,
+                              conf_type="plain")
+      plotdata$ci_lower <- surv_ci$left
+      plotdata$ci_upper <- surv_ci$right
+    } else {
+      plotdata <- dats %>%
+        dplyr::group_by(., time, group) %>%
+        dplyr::summarise(surv=mean(surv),
+                         .groups="drop_last")
+      plotdata <- as.data.frame(plotdata)
+    }
+
+    # output object
+    out_obj <- list(mids_analyses=out,
+                    adjsurv=plotdata,
+                    data=data$data,
+                    method=method,
+                    categorical=ifelse(length(levs)>2, T, F),
+                    call=match.call())
+
+    if (bootstrap) {
+
+      plotdata_boot <- boot_dats %>%
+        dplyr::group_by(., time, group) %>%
+        dplyr::summarise(surv=mean(surv),
+                         se=mean(se),
+                         .groups="drop_last")
+      plotdata_boot <- as.data.frame(plotdata_boot)
+
+      # re-calculate confidence intervals using pooled se
+      surv_ci <- confint_surv(surv=plotdata_boot$surv,
+                              se=plotdata_boot$se,
+                              conf_level=conf_level,
+                              conf_type="plain")
+      plotdata_boot$ci_lower <- surv_ci$left
+      plotdata_boot$ci_upper <- surv_ci$right
+
+      out_obj$boot_adjsurv <- plotdata_boot
+
+    }
+
+  class(out_obj) <- "adjustedsurv"
+  return(out_obj)
+
+
+  ## normal method using a single data.frame
+  } else {
+
+    # only keep needed covariates
+    data <- remove_unnecessary_covars(data=data, variable=variable,
+                                      method=method, ev_time=ev_time,
+                                      event=event, ...)
+
+    # perform na.action
+    if (is.function(na.action)) {
+      data <- na.action(data)
+    } else {
+      na.action <- get(na.action)
+      data <- na.action(data)
+    }
+
+    # define those to remove Notes in devtools::check()
+    . <- i <- time <- group <- surv_b <- surv <- se <- NULL
+
+    # get event specific times
+    times_input <- times
+    if (is.null(times) & method %in% c("km", "iptw_km")) {
+      times <- NULL
+    } else if (is.null(times)) {
+      times <- sort(unique(data[, ev_time][data[, event]==1]))
+
+      # add zero if not already in there
+      if (!0 %in% times) {
+        times <- c(0, times)
       }
     }
 
-    # transform into data.frames
-    boot_data <- lapply(boot_out, function(x) x$boot_data)
-    boot_data_same_t <- lapply(boot_out, function(x) x$boot_data_same_t)
+    # levels of the group variable
+    if (is.numeric(data[,variable])) {
+      levs <- unique(data[,variable])
+    } else {
+      levs <- levels(data[,variable])
+    }
 
-    boot_data <- as.data.frame(dplyr::bind_rows(boot_data))
-    boot_data_same_t <- as.data.frame(dplyr::bind_rows(boot_data_same_t))
+    # get relevant surv_method function
+    surv_fun <- get(paste0("surv_", method))
 
-    # keep factor ordering the same
-    boot_data$group <- factor(boot_data$group, levels=levs)
-    boot_data_same_t$group <- factor(boot_data_same_t$group, levels=levs)
+    # bootstrap the whole procedure, can be useful to get sd, p-values
+    if (bootstrap) {
 
-    # calculate some statistics
-    boot_stats <- boot_data_same_t %>%
-      dplyr::group_by(., time, group) %>%
-      dplyr::summarise(surv=mean(surv_b, na.rm=T),
-                       sd=stats::sd(surv_b, na.rm=T),
-                       ci_lower=stats::quantile(surv_b,
-                                                probs=(1-conf_level)/2,
-                                                na.rm=T),
-                       ci_upper=stats::quantile(surv_b,
-                                                probs=1-((1-conf_level)/2),
-                                                na.rm=T),
-                       n_boot=sum(!is.na(surv_b)),
-                       .groups="drop_last")
-    boot_stats$group <- factor(boot_stats$group, levels=levs)
+      if (n_cores > 1) {
+        # needed packages for parallel processing
+        requireNamespace("parallel")
+        requireNamespace("doRNG")
+        requireNamespace("doParallel")
+        requireNamespace("foreach")
+
+        # initialize clusters
+        cl <- parallel::makeCluster(n_cores, outfile="")
+        doParallel::registerDoParallel(cl)
+        pkgs <- c("adjustedCurves", "survival")
+        export_objs <- c("get_iptw_weights", "read_from_step_function",
+                         "multi_result_class", "adjustedsurv_boot")
+
+        boot_out <- foreach::foreach(i=1:n_boot, .packages=pkgs,
+                                     .export=export_objs) %dorng% {
+
+          adjustedsurv_boot(data=data, variable=variable, ev_time=ev_time,
+                            event=event, method=method, times_input=times_input,
+                            times=times, i=i, surv_fun=surv_fun,
+                            levs=levs, na.action=na.action, ...)
+                                     }
+        parallel::stopCluster(cl)
+
+      } else {
+
+        boot_out <- vector(mode="list", length=n_boot)
+        for (i in 1:n_boot) {
+          boot_out[[i]] <- adjustedsurv_boot(data=data, variable=variable,
+                                             ev_time=ev_time, event=event,
+                                             method=method, times_input=times_input,
+                                             times=times, i=i,
+                                             surv_fun=surv_fun, levs=levs,
+                                             na.action=na.action, ...)
+        }
+      }
+
+      # transform into data.frames
+      boot_data <- lapply(boot_out, function(x) x$boot_data)
+      boot_data_same_t <- lapply(boot_out, function(x) x$boot_data_same_t)
+
+      boot_data <- as.data.frame(dplyr::bind_rows(boot_data))
+      boot_data_same_t <- as.data.frame(dplyr::bind_rows(boot_data_same_t))
+
+      # keep factor ordering the same
+      boot_data$group <- factor(boot_data$group, levels=levs)
+      boot_data_same_t$group <- factor(boot_data_same_t$group, levels=levs)
+
+      # calculate some statistics
+      boot_stats <- boot_data_same_t %>%
+        dplyr::group_by(., time, group) %>%
+        dplyr::summarise(surv=mean(surv_b, na.rm=T),
+                         se=stats::sd(surv_b, na.rm=T),
+                         ci_lower=stats::quantile(surv_b,
+                                                  probs=(1-conf_level)/2,
+                                                  na.rm=T),
+                         ci_upper=stats::quantile(surv_b,
+                                                  probs=1-((1-conf_level)/2),
+                                                  na.rm=T),
+                         n_boot=sum(!is.na(surv_b)),
+                         .groups="drop_last")
+      boot_stats$group <- factor(boot_stats$group, levels=levs)
+    }
+
+    # core of the function
+    args <- list(data=data, variable=variable, ev_time=ev_time,
+                 event=event, conf_int=conf_int, conf_level=conf_level,
+                 times=times, ...)
+    plotdata <- R.utils::doCall(surv_fun, args=args)
+
+    # keep factor levels in same order as data
+    plotdata$group <- factor(plotdata$group, levels=levs)
+
+    out <- list(adjsurv=plotdata,
+                data=data,
+                method=method,
+                categorical=ifelse(length(levs)>2, T, F),
+                call=match.call())
+
+    if (bootstrap) {
+      out$boot_data <- boot_data
+      out$boot_data_same_t <- boot_data_same_t
+      out$boot_adjsurv <- as.data.frame(boot_stats)
+    }
+
+    class(out) <- "adjustedsurv"
+    return(out)
+
   }
-
-  # core of the function
-  args <- list(data=data, variable=variable, ev_time=ev_time,
-               event=event, conf_int=conf_int, conf_level=conf_level,
-               times=times, ...)
-  plotdata <- R.utils::doCall(surv_fun, args=args)
-
-  # keep factor levels in same order as data
-  plotdata$group <- factor(plotdata$group, levels=levs)
-
-  out <- list(adjsurv=plotdata,
-              data=data,
-              method=method,
-              categorical=ifelse(length(levs)>2, T, F),
-              call=match.call())
-
-  if (bootstrap) {
-    out$boot_data <- boot_data
-    out$boot_data_same_t <- boot_data_same_t
-    out$boot_adjsurv <- as.data.frame(boot_stats)
-  }
-
-  class(out) <- "adjustedsurv"
-  return(out)
 }
 
 ## perform one bootstrap iteration
@@ -413,27 +568,42 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
   }
 
   if ((draw_ci & "ci_lower" %in% colnames(plotdata)) & steps) {
-    p <- p + pammtools::geom_stepribbon(ggplot2::aes(ymin=.data$ci_lower,
-                                            ymax=.data$ci_upper,
-                                            fill=.data$group,
-                                            x=.data$time,
-                                            y=.data$surv),
-                                        alpha=ci_draw_alpha, inherit.aes=F)
+    ci_map <- ggplot2::aes(ymin=.data$ci_lower,
+                           ymax=.data$ci_upper,
+                           group=.data$group,
+                           fill=.data$group,
+                           x=.data$time,
+                           y=.data$surv)
+
+    if (!color) {
+      ci_map$fill <- NULL
+    }
+
+    p <- p + pammtools::geom_stepribbon(ci_map, alpha=ci_draw_alpha,
+                                        inherit.aes=F)
   } else if (draw_ci & "ci_lower" %in% colnames(plotdata)) {
-    p <- p + ggplot2::geom_ribbon(ggplot2::aes(ymin=.data$ci_lower,
-                                               ymax=.data$ci_upper,
-                                               fill=.data$group,
-                                               x=.data$time,
-                                               y=.data$surv),
-                                   alpha=ci_draw_alpha, inherit.aes=F)
+    ci_map <- ggplot2::aes(ymin=.data$ci_lower,
+                           ymax=.data$ci_upper,
+                           group=.data$group,
+                           fill=.data$group,
+                           x=.data$time,
+                           y=.data$surv)
+
+    if (!color) {
+      ci_map$fill <- NULL
+    }
+
+    p <- p + ggplot2::geom_ribbon(ci_map, alpha=ci_draw_alpha, inherit.aes=F)
   }
 
   ## Median Survival indicators
   if (median_surv_lines) {
 
     # calculate median survival and add other needed values
-    median_surv <- adjusted_median_survival(x, verbose=F, use_boot=F)
+    median_surv <- adjusted_median_survival(x, use_boot=use_boot, verbose=F)
     median_surv$y <- 0.5
+    # set to NA if not in plot
+    median_surv$median_surv[median_surv$median_surv > max_t] <- NA
 
     if (is.null(ylim)) {
       median_surv$yend <- ggplot2::layer_scales(p)$y$range$range[1]
@@ -444,28 +614,29 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
     # remove if missing
     median_surv <- median_surv[!is.na(median_surv$median_surv),]
 
-    # draw line on surv_p = 0.5 until it hits the last curve
-    p <- p + ggplot2::geom_segment(ggplot2::aes(x=0,
-                                                xend=max(median_surv$median_surv),
-                                                y=0.5,
-                                                yend=0.5),
-                                   inherit.aes=F,
-                                   linetype=median_surv_linetype,
-                                   size=median_surv_size,
-                                   color=median_surv_color)
-    # draw indicator lines from middle to bottom
-    p <- p + ggplot2::geom_segment(ggplot2::aes(x=.data$median_surv,
-                                                xend=.data$median_surv,
-                                                y=0.5,
-                                                yend=.data$yend),
-                                   inherit.aes=F,
-                                   linetype=median_surv_linetype,
-                                   size=median_surv_size,
-                                   color=median_surv_color,
-                                   data=median_surv)
+    if (sum(is.na(median_surv$median_surv)) < nrow(median_surv)) {
 
+      # draw line on surv_p = 0.5 until it hits the last curve
+      p <- p + ggplot2::geom_segment(ggplot2::aes(x=0,
+                                                  xend=max(median_surv$median_surv),
+                                                  y=0.5,
+                                                  yend=0.5),
+                                     inherit.aes=F,
+                                     linetype=median_surv_linetype,
+                                     size=median_surv_size,
+                                     color=median_surv_color)
+      # draw indicator lines from middle to bottom
+      p <- p + ggplot2::geom_segment(ggplot2::aes(x=.data$median_surv,
+                                                  xend=.data$median_surv,
+                                                  y=0.5,
+                                                  yend=.data$yend),
+                                     inherit.aes=F,
+                                     linetype=median_surv_linetype,
+                                     size=median_surv_size,
+                                     color=median_surv_color,
+                                     data=median_surv)
+    }
   }
-
   return(p)
 }
 

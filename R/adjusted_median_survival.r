@@ -16,53 +16,36 @@
 ## calculate confounder adjusted median survival times
 #' @importFrom dplyr %>%
 #' @export
-adjusted_median_survival <- function(adjsurv, use_boot=F, conf_level=0.95,
-                                     verbose=T) {
+adjusted_median_survival <- function(adjsurv, use_boot=F, verbose=T) {
 
   # define those to remove Notes in devtools::check()
   . <- i <- time <- group <- median_surv_i <- boot <- surv <- NULL
 
-  if (use_boot & is.null(adjsurv$boot_data)) {
-
-    stop("Cannot use bootstrapped estimates as they were not estimated.",
-         " Need bootstrap=TRUE in adjustedsurv() call.")
-
+  if (use_boot & is.null(adjsurv$boot_adjsurv)) {
+    warning("Cannot use bootstrapped estimates as they were not estimated.",
+            " Need bootstrap=TRUE in adjustedsurv() call.")
+    plotdata <- adjsurv$adjsurv
   } else if (use_boot) {
-
-    out <- adjsurv$boot_data %>%
-      dplyr::group_by(., boot, group) %>%
-      dplyr::summarise(median_surv_i=max(time[surv >= 0.5], na.rm=T),
-                       .groups="drop_last") %>%
-      dplyr::group_by(., group) %>%
-      dplyr::summarise(median_surv=mean(median_surv_i, na.rm=T),
-                       ci_lower=stats::quantile(median_surv_i,
-                                                probs=(1-conf_level)/2,
-                                                na.rm=T),
-                       ci_upper=stats::quantile(median_surv_i,
-                                                probs=1-((1-conf_level)/2),
-                                                na.rm=T),
-                       n=sum(!is.na(median_surv_i)),
-                       .groups="drop_last")
-    out <- as.data.frame(out)
-
+    plotdata <- adjsurv$boot_adjsurv
   } else {
-
-    out <- adjsurv$adjsurv %>%
-      dplyr::group_by(., group) %>%
-      dplyr::summarise(median_surv=max(time[surv >= 0.5], na.rm=T),
-                       .groups="drop_last")
-    out <- as.data.frame(out)
-
+    plotdata <- adjsurv$adjsurv
   }
 
+  out <- plotdata %>%
+    dplyr::group_by(., group) %>%
+    dplyr::summarise(median_surv=max(time[surv >= 0.5], na.rm=T),
+                     .groups="drop_last")
+  out <- as.data.frame(out)
+
   if (verbose) {
-    cat("---------------------------------------------------\n")
+    cat("----------------------------------\n")
     cat("Adjusted Median Survival Time\n")
-    cat("---------------------------------------------------\n")
+    cat("----------------------------------\n")
     print(out, row.names=F)
-    cat("---------------------------------------------------\n")
+    cat("----------------------------------\n")
   }
 
   # also silently return that data.frame
   return(invisible(out))
+
 }

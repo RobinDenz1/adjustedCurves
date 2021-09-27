@@ -10,7 +10,8 @@ Plots the adjusted restricted mean survival times next to each other.
 \usage{
 \method{plot}{adjusted_rmst}(x, draw_ci=T, color=T, point_size=2,
      ci_size=1, ci_width=0.7, xlab="",
-     ylab="Adjusted RMST", title=NULL, ...)
+     ylab="Adjusted RMST", title=NULL,
+     gg_theme=ggplot2::theme_classic(), ...)
 }
 
 \arguments{
@@ -40,6 +41,9 @@ The label of the Y-Axis. Defaults to "Adjusted RMST".
   }
   \item{title}{
 The title of the plot. Set to \code{NULL} to use no title.
+  }
+  \item{gg_theme}{
+A \code{ggplot2} theme object which will be used for the plot.
   }
   \item{...}{
 Currently not used.

@@ -286,7 +286,7 @@ cif_aiptw <- function(data, variable, ev_time, event, cause, conf_int,
 #' @export
 cif_direct_pseudo <- function(data, variable, ev_time, event, cause,
                               conf_int, conf_level=0.95, times, outcome_vars,
-                              type_time="factor", spline_df=10) {
+                              type_time="factor", spline_df=5) {
 
   # estimate pseudo observations
   hist_formula <- stats::as.formula(paste("prodlim::Hist(", ev_time, ", ",
@@ -363,7 +363,7 @@ cif_direct_pseudo <- function(data, variable, ev_time, event, cause,
 cif_aiptw_pseudo <- function(data, variable, ev_time, event, cause,
                              conf_int, conf_level=0.95, times,
                              outcome_vars, treatment_model,
-                             type_time="factor", spline_df=10) {
+                             type_time="factor", spline_df=5) {
   # some constants
   len <- length(times)
   n <- nrow(data)

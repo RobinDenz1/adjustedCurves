@@ -6,20 +6,13 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
 
   obj <- list(...)
 
-  if (!inherits(data, "data.frame")) {
-    stop("'data' argument must be a data.frame object.")
+  if (!inherits(data, c("data.frame", "mids"))) {
+    stop("'data' argument must be a data.frame or mids object.")
   # needed variables
   } else if (!is.character(variable) | !is.character(ev_time) |
              !is.character(event) | !is.character(method)) {
     stop("Arguments 'variable', 'ev_time', 'event' and 'method' must be ",
          "character strings, specifying variables in 'data'.")
-  } else if (!variable %in% colnames(data)) {
-    stop(variable, " is not a valid column name in 'data'.")
-  } else if (!ev_time %in% colnames(data)) {
-    stop(ev_time, " is not a valid column name in 'data'.")
-  } else if (!event %in% colnames(data)) {
-    stop(event, " is not a valid column name in 'data'.")
-  # method
   } else if (!method %in% c("km", "iptw_km", "iptw_cox", "iptw_pseudo",
                             "direct", "direct_pseudo", "aiptw_pseudo",
                             "aiptw", "tmle", "ostmle", "matching", "emp_lik")) {
@@ -34,25 +27,56 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     stop("'conf_level' must be a number < 1 and > 0.")
   }
 
-  # Check if the group variable has the right format
-  if (method %in% c("matching", "emp_lik", "tmle", "ostmle") &
-      is.factor(data[,variable])) {
-    stop("The column in 'data' specified by 'variable' needs to be ",
-         "a dichotomous integer variable if method='", method, "'.")
-  }
+  if (inherits(data, "data.frame")) {
+    if (!variable %in% colnames(data)) {
+      stop(variable, " is not a valid column name in 'data'.")
+    } else if (!ev_time %in% colnames(data)) {
+      stop(ev_time, " is not a valid column name in 'data'.")
+    } else if (!event %in% colnames(data)) {
+      stop(event, " is not a valid column name in 'data'.")
+    }
 
-  if (!method %in% c("matching", "emp_lik", "tmle", "ostmle") &
-      !is.factor(data[,variable])) {
-    stop("The column in 'data' specified by 'variable' needs to be ",
-         "a factor variable if method='", method, "'.")
-  }
+    # Check if categorical should be allowed
+    if (length(unique(data[,variable])) > 2 &
+        method %in% c("matching", "emp_lik", "tmle", "ostmle",
+                      "aiptw")) {
+      stop("Categorical treatments are currently not supported for ",
+           "method='", method, "'.")
+    }
 
-  # Check if categorical should be allowed
-  if (length(unique(data[,variable])) > 2 &
-      method %in% c("matching", "emp_lik", "tmle", "ostmle",
-                    "aiptw")) {
-    stop("Categorical treatments are currently not supported for ",
-         "method='", method, "'.")
+    # Check if the group variable has the right format
+    if (method %in% c("matching", "emp_lik", "tmle", "ostmle") &
+        is.factor(data[,variable])) {
+      stop("The column in 'data' specified by 'variable' needs to be ",
+           "a dichotomous integer variable if method='", method, "'.")
+    }
+
+    if (!method %in% c("matching", "emp_lik", "tmle", "ostmle") &
+        !is.factor(data[,variable])) {
+      stop("The column in 'data' specified by 'variable' needs to be ",
+           "a factor variable if method='", method, "'.")
+    }
+
+    # No extrapolation
+    if (!is.null(times)) {
+      if (max(times) > max(data[,ev_time])) {
+        stop("Values in '", ev_time, "' must be smaller than max(data[,ev_time]).",
+             " No extrapolation allowed.")
+      }
+    }
+  } else {
+    if (!is.null(obj$treatment_model) & !inherits(obj$treatment_model, c("mira", "formula"))) {
+      stop("When using multiple imputation, mira objects need to be supplied",
+           " to 'treatment_model' instead of single models. See documentation.")
+    }
+    if (!is.null(obj$outcome_model) & !inherits(obj$outcome_model, "mira")) {
+      stop("When using multiple imputation, mira objects need to be supplied",
+           " to 'outcome_model' instead of single models. See documentation.")
+    }
+    if (!is.null(obj$censoring_model) & !inherits(obj$censoring_model, "mira")) {
+      stop("When using multiple imputation, mira objects need to be supplied",
+           " to 'censoring_model' instead of single models. See documentation.")
+    }
   }
 
   # Here: check if times input is correct if method requires it
@@ -65,13 +89,6 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     if (!is.numeric(times) & !is.null(times)) {
       warning("Object 'times' must be a numeric vector or NULL if method='",
               method, "'.")
-    }
-  }
-  # No extrapolation
-  if (!is.null(times)) {
-    if (max(times) > max(data[,ev_time])) {
-      stop("Values in '", ev_time, "' must be smaller than max(data[,ev_time]).",
-           " No extrapolation allowed.")
     }
   }
 
@@ -96,10 +113,9 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     if ("treatment_model" %in% names(obj)) {
       if (method=="aiptw_pseudo") {
         if (!(is.numeric(obj$treatment_model) |
-              inherits(obj$treatment_model, "glm") |
-              inherits(obj$treatment_model, "multinom"))) {
-          stop("Argument 'treatment_model' must be either a glm object or a",
-               " numeric vector of propensity scores.")
+              inherits(obj$treatment_model, c("glm", "multinom", "mira")))) {
+          stop("Argument 'treatment_model' must be one of: 'glm',",
+          " 'multinom', 'mira' or a numeric vector of propensity scores.")
         }
       }
     }
@@ -107,15 +123,15 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     if (method %in% c("aiptw_pseudo", "direct_pseudo") & !is.null(times)) {
       if (length(times)==1) {
         stop("'geese' models require at least two distinct time points. ",
-             "Add more points in time to 'times' and run again.")
+             "Add more points in time to 'times' and try again.")
       }
       if (!is.null(obj$spline_df)) {
         if (obj$spline_df > length(times)) {
           warning("'spline_df' > len(times) might lead to problems.")
         }
       } else if (!is.null(obj$type_time)) {
-        if (10 > length(times) & obj$type_time!="factor") {
-          warning("'spline_df' > length(times)=10 might lead to problems when",
+        if (5 > length(times) & obj$type_time!="factor") {
+          warning("'spline_df' > length(times)=5 might lead to problems when",
                   " type_time!='factor'.")
         }
       }
@@ -145,9 +161,6 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     if (!is.character(obj$treatment_vars)) {
       stop("'treatment_vars' should be a character vector of column names ",
            "in 'data', used to model the outcome mechanism.")
-    } else if (!all(obj$treatment_vars %in% colnames(data))) {
-      stop("'treatment_vars' should be a character vector of column names ",
-           "in 'data', used to model the outcome mechanism.")
     } else if ("moment" %in% names(obj)) {
 
       if (!obj$moment %in% c("first", "second")) {
@@ -158,13 +171,20 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
       if (!is.logical(obj$standardize)) {
         stop("Argument 'standardize' must be either TRUE or FALSE.")
       }
-    } else {
+    } else if (inherits(data, "data.frame")) {
+
+      if (!all(obj$treatment_vars %in% colnames(data))) {
+        stop("'treatment_vars' should be a character vector of column names ",
+             "in 'data', used to model the outcome mechanism.")
+      }
+
       for (col in obj$treatment_vars) {
         if (paste0(unique(data[,col]), collapse="") %in% c("10", "01")) {
           warning("Dichotomous variables coded with 0 and 1 found in 'treatment_vars'.",
                   " Consider recoding to -1 and 1 to avoid estimation problems.")
         }
       }
+
     }
   } else if (method=="matching") {
     requireNamespace("Matching")
@@ -364,21 +384,49 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
 
   obj <- list(...)
 
-  if (!inherits(data, "data.frame")) {
-    stop("'data' argument must be a data.frame object.")
+  if (!inherits(data, c("data.frame", "mids"))) {
+    stop("'data' argument must be a data.frame or mids object.")
   # needed variables
   } else if (!is.character(variable) | !is.character(ev_time) |
              !is.character(event) | !is.character(method)) {
     stop("Arguments 'variable', 'ev_time', 'event' and 'method' must be ",
          "character strings, specifying variables in 'data'.")
-  } else if (!variable %in% colnames(data)) {
-    stop(variable, " is not a valid column name in 'data'.")
-  } else if (!ev_time %in% colnames(data)) {
-    stop(ev_time, " is not a valid column name in 'data'.")
-  } else if (!event %in% colnames(data)) {
-    stop(event, " is not a valid column name in 'data'.")
-  # method
-  } else if (!method %in% c("aalen_johansen", "iptw", "iptw_pseudo", "direct",
+  }
+
+  if (inherits(data, "data.frame")) {
+    # Check input variables format
+    if (!variable %in% colnames(data)) {
+      stop(variable, " is not a valid column name in 'data'.")
+    } else if (!ev_time %in% colnames(data)) {
+      stop(ev_time, " is not a valid column name in 'data'.")
+    } else if (!event %in% colnames(data)) {
+      stop(event, " is not a valid column name in 'data'.")
+    }
+
+    # Check if the group variable has the right format
+    if (method %in% c("matching", "tmle") &
+        is.factor(data[,variable])) {
+      stop("The column in 'data' specified by 'variable' needs to be ",
+           "a dichotomous integer variable if method='", method, "'.")
+    }
+
+    if (!method %in% c("matching", "tmle") &
+        !is.factor(data[,variable])) {
+      stop("The column in 'data' specified by 'variable' needs to be ",
+           "a factor variable if method='", method, "'.")
+    }
+
+    # Check if categorical should be allowed
+    if (length(unique(data[,variable])) > 2 &
+        method %in% c("matching", "tmle", "aiptw")) {
+      stop("Categorical treatments are currently not supported for ",
+           "method='", method, "'.")
+    }
+
+  }
+
+
+  if (!method %in% c("aalen_johansen", "iptw", "iptw_pseudo", "direct",
                             "direct_pseudo", "aiptw_pseudo",
                             "aiptw", "tmle", "matching")) {
     stop("Method '", method, "' is undefined. See documentation for ",
@@ -397,26 +445,6 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
   # time
   } else if (!is.numeric(times) & !is.null(times)) {
     stop("'times' must be a numeric vector or NULL.")
-  }
-
-  # Check if the group variable has the right format
-  if (method %in% c("matching", "tmle") &
-      is.factor(data[,variable])) {
-    stop("The column in 'data' specified by 'variable' needs to be ",
-         "a dichotomous integer variable if method='", method, "'.")
-  }
-
-  if (!method %in% c("matching", "tmle") &
-      !is.factor(data[,variable])) {
-    stop("The column in 'data' specified by 'variable' needs to be ",
-         "a factor variable if method='", method, "'.")
-  }
-
-  # Check if categorical should be allowed
-  if (length(unique(data[,variable])) > 2 &
-      method %in% c("matching", "tmle", "aiptw")) {
-    stop("Categorical treatments are currently not supported for ",
-         "method='", method, "'.")
   }
 
   # Direct Pseudo, AIPTW Pseudo
@@ -440,10 +468,9 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
     if ("treatment_model" %in% names(obj)) {
       if (method=="aiptw_pseudo") {
         if (!(is.numeric(obj$treatment_model) |
-              inherits(obj$treatment_model, "glm") |
-              inherits(obj$treatment_model, "multinom"))) {
-          stop("Argument 'treatment_model' must be either a glm object or a",
-               " numeric vector of propensity scores.")
+              inherits(obj$treatment_model, c("glm", "multinom", "mira")))) {
+          stop("Argument 'treatment_model' must be one of glm, multinom or mira",
+               " or a numeric vector of propensity scores.")
         }
       }
     }
@@ -458,7 +485,7 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
           warning("'spline_df' > len(times) might lead to problems.")
         }
       } else if (!is.null(obj$type_time)) {
-        if (10 > length(times) & obj$type_time!="factor") {
+        if (5 > length(times) & obj$type_time!="factor") {
           warning("'spline_df' > len(times) might lead to problems when",
                   " type_time!='factor'.")
         }
@@ -508,15 +535,10 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
 
   # asymptotic variance calculations
   if (conf_int) {
-    if (method %in% c("matching")) {
+    if (method %in% c("matching", "direct_pseudo")) {
       stop("Asymptotic or exact variance calculations are currently",
            " not available for method='", method, "'. Use bootstrap=TRUE",
            "to get bootstrap estimates.")
-    } else if (method=="direct_pseudo" & !is.null(obj$model_type)) {
-      if (obj$model_type != "lm") {
-        stop("Asymptotic variance calculations for method='direct_pseudo'",
-             " are only available with model_type='lm'.")
-      }
     }
   }
 }

@@ -43,6 +43,7 @@ Suggests:
 	SuperLearner (>= 2.0.0),
 	pammtools,
 	knitr,
-	rmarkdown
+	rmarkdown,
+	mice
 Config/testthat/edition: 3
 VignetteBuilder: knitr

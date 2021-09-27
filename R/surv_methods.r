@@ -45,6 +45,18 @@ surv_km <- function(data, variable, ev_time, event, conf_int,
 
   if (!is.null(times)) {
     plotdata <- specific_times(plotdata, times)
+  # ensure that it starts with 0
+  } else if (!0 %in% plotdata$time) {
+    if (conf_int) {
+      levs <- unique(data[,variable])
+
+      row_0 <- data.frame(time=0, group=NA, surv=1, se=0, ci_lower=1,
+                          ci_upper=1)
+      row_0 <- row_0[rep(1, each=length(levs)), ]
+      row_0$group <- levs
+      rownames(row_0) <- NULL
+      plotdata <- rbind(row_0, plotdata)
+    }
   }
 
   return(plotdata)
@@ -404,9 +416,9 @@ surv_aiptw <- function(data, variable, ev_time, event, conf_int,
 #' @export
 surv_direct_pseudo <- function(data, variable, ev_time, event,
                                conf_int, conf_level=0.95, times,
-                               outcome_vars, censoring_vars=NULL,
-                               ipcw_method="binder", type_time="factor",
-                               spline_df=10) {
+                               outcome_vars, type_time="factor",
+                               spline_df=5, censoring_vars=NULL,
+                               ipcw_method="binder") {
 
   # estimate pseudo observations
   pseudo <- calc_pseudo_surv(data=data,
@@ -487,7 +499,7 @@ surv_direct_pseudo <- function(data, variable, ev_time, event,
 surv_aiptw_pseudo <- function(data, variable, ev_time, event, conf_int,
                               conf_level=0.95, times, outcome_vars,
                               treatment_model, type_time="factor",
-                              spline_df=10, censoring_vars=NULL,
+                              spline_df=5, censoring_vars=NULL,
                               ipcw_method="binder") {
   # some constants
   len <- length(times)
