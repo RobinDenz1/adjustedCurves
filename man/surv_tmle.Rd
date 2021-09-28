@@ -85,7 +85,7 @@ When the sample size is large or many time points are of interest, this method w
 
 }
 \value{
-Returns a \code{data.frame} object containing the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
+Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable}, the object created using the \code{survtmle} function and the object created using the \code{survtmle.timepoints} function.
 }
 \references{
 Megan S. Schuler and Sherri Rose. "Targeted Maximum Likelihood Estimation for Causal Inference in Observational Studies". In: American Journal of Epidemiology 186.1 (2017), pp. 65-73.

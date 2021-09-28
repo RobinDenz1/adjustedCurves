@@ -72,7 +72,7 @@ When estimating the \code{geese} model the \code{ev_time} variable is used as a 
 
 }
 \value{
-Returns a \code{data.frame} object containing the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
+Returns a \code{list} object containing a \code{data.frame} with estimated CIFs for some points in time for each level of \code{variable}, the estimated pseudo-values and the geese model.
 }
 \references{
 

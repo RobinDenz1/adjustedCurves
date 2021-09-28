@@ -68,7 +68,7 @@ In the literature this method is sometimes called "Direct Standardization", "Cor
 
 }
 \value{
-Returns a \code{data.frame} object containing the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
+Returns a \code{list} object containing a \code{data.frame} with estimated CIFs for some points in time for each level of \code{variable} and the original object created using the \code{ate} function.
 }
 \references{
 Xu Zhang and Mei-Jie Zhang. "SAS Macros for Estimation of Direct Adjusted Cumulative Incidence Curves Under Proportional Subdistribution Hazards Models". In: Computer Methods and Programs in Biomedicine 101.1 (2011), pp. 87–93.

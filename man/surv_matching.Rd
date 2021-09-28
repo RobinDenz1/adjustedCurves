@@ -73,7 +73,7 @@ In contrast to all other methods, bootstrapped standard error and confidence int
 
 }
 \value{
-Returns a \code{data.frame} object containing the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
+Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable} and the object created using the \code{Match} function.
 }
 \references{
 Angela Winnett and Peter Sasieni. "Adjusted Nelson-Aalen Estimates with Retrospective Matching". In: Journal of the American Statistical Association 97.457 (2002), pp. 245-256.

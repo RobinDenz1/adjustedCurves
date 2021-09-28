@@ -61,7 +61,7 @@ This function is just a convenient wrapper around the \code{\link[cmprsk]{cuminc
 
 }
 \value{
-Returns a \code{data.frame} object containing the estimated CIFs for some points in time for each level of \code{variable}.
+Returns a \code{list} object containing a \code{data.frame} with estimated CIFs for some points in time for each level of \code{variable} and the original \code{cuminc} object.
 }
 \references{
 Odd O. Aalen and Søren Johansen. "An Empirical Transition Matrix for Non-Homogeneous Markov Chains Based on Censored Observations". In: Scandinavian Journal of Statistics 5.3 (1978), pp. 141–150.

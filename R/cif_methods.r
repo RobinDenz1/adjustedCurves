@@ -56,7 +56,11 @@ cif_aalen_johansen <- function(data, variable, ev_time, event, cause,
   ids <- ids[1:(length(ids-1))]
   plotdata <- plotdata[ids, ]
 
-  return(plotdata)
+  output <- list(plotdata=plotdata,
+                 cuminc_object=cif)
+  class(output) <- "adjustedcif.method"
+
+  return(output)
 }
 
 ## IPTW
@@ -95,7 +99,11 @@ cif_iptw <- function(data, variable, ev_time, event, cause, conf_int,
     plotdata$ci_upper <- cis$upper
   }
 
-  return(plotdata)
+  output <- list(plotdata=plotdata,
+                 ate_object=cif)
+  class(output) <- "adjustedcif.method"
+
+  return(output)
 }
 
 # IPTW pseudo
@@ -156,7 +164,12 @@ cif_iptw_pseudo <- function(data, variable, ev_time, event, cause,
   plotdata <- as.data.frame(dplyr::bind_rows(plotdata))
   rownames(plotdata) <- NULL
 
-  return(plotdata)
+  output <- list(plotdata=plotdata,
+                 pseudo_values=pseudo,
+                 weights=weights)
+  class(output) <- "adjustedcif.method"
+
+  return(output)
 }
 
 ## Direct Adjustment
@@ -188,7 +201,11 @@ cif_direct <- function(data, variable, ev_time, event, cause, conf_int,
     plotdata$ci_upper <- cis$upper
   }
 
-  return(plotdata)
+  output <- list(plotdata=plotdata,
+                 ate_object=cif)
+  class(output) <- "adjustedcif.method"
+
+  return(output)
 }
 
 ## Matching
@@ -220,14 +237,18 @@ cif_matching <- function(data, variable, ev_time, event, cause, conf_int,
                                  event=event,
                                  cause=cause,
                                  conf_int=conf_int,
-                                 conf_level=conf_level)
+                                 conf_level=conf_level)$plotdata
 
   if (!is.null(times)) {
     plotdata$se <- NULL
     plotdata <- specific_times(plotdata, times, cif=T)
   }
 
-  return(plotdata)
+  output <- list(plotdata=plotdata,
+                 match_object=rr)
+  class(output) <- "adjustedcif.method"
+
+  return(output)
 }
 
 ## Using Augmented Inverse Probability of Treatment Weighting
@@ -277,7 +298,11 @@ cif_aiptw <- function(data, variable, ev_time, event, cause, conf_int,
     plotdata$ci_upper <- cis$upper
   }
 
-  return(plotdata)
+  output <- list(plotdata=plotdata,
+                 ate_object=curve)
+  class(output) <- "adjustedcif.method"
+
+  return(output)
 }
 
 
@@ -354,7 +379,12 @@ cif_direct_pseudo <- function(data, variable, ev_time, event, cause,
   plotdata <- dplyr::bind_rows(plotdata)
   rownames(plotdata) <- NULL
 
-  return(plotdata)
+  output <- list(plotdata=plotdata,
+                 pseudo_values=pseudo,
+                 geese_model=geese_mod)
+  class(output) <- "adjustedcif.method"
+
+  return(output)
 }
 
 ## Using AIPTW with Pseudo Observations
@@ -460,7 +490,12 @@ cif_aiptw_pseudo <- function(data, variable, ev_time, event, cause,
   plotdata <- dplyr::bind_rows(plotdata)
   rownames(plotdata) <- NULL
 
-  return(plotdata)
+  output <- list(plotdata=plotdata,
+                 pseudo_values=pseudo,
+                 geese_model=geese_mod)
+  class(output) <- "adjustedcif.method"
+
+  return(output)
 }
 
 ## Targeted Maximum Likelihood Estimation
@@ -532,5 +567,10 @@ cif_tmle <- function(data, variable, ev_time, event, cause, conf_int,
 
   }
 
-  return(plotdata)
+  output <- list(plotdata=plotdata,
+                 survtmle_object=fit,
+                 survtmle.timepoints_object=tpfit)
+  class(output) <- "adjustedcif.method"
+
+  return(output)
 }

@@ -72,7 +72,7 @@ In contrast to all other methods, bootstrapped standard error and confidence int
 
 }
 \value{
-Returns a \code{data.frame} object containing the estimated adjusted CIFs for \code{cause} at some points in time for each level of \code{variable}.
+Returns a \code{list} object containing a \code{data.frame} with estimated CIFs for some points in time for each level of \code{variable} and the object created using the \code{Match} function.
 }
 \references{
 Peter C. Austin and Jason P. Fine. "Propensity-Score Matching with Competing Risks in Survival Analysis". In: Statistics in Medicine 38 (2019), pp. 751–777.

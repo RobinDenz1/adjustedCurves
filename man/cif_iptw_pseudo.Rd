@@ -81,7 +81,7 @@ The standard error of this estimator can be approximated by calculation a weight
 
 }
 \value{
-Returns a \code{data.frame} object containing the estimated adjusted CIFs for \code{cause} at some points in time for each level of \code{variable}.
+Returns a \code{list} object containing a \code{data.frame} with estimated CIFs for some points in time for each level of \code{variable}, the estimated pseudo-values and the weights used in the analysis.
 }
 \references{
 Per K. Andersen, Elisavet Syriopoulou, and Erik T. Parner. "Causal Inference in Survival Analysis using Pseudo-Observations". In: Statistics in Medicine 36 (2017), pp. 2669-2681.

@@ -59,7 +59,11 @@ surv_km <- function(data, variable, ev_time, event, conf_int,
     }
   }
 
-  return(plotdata)
+  output <- list(plotdata=plotdata,
+                 survfit_object=surv)
+  class(output) <- "adjustedsurv.method"
+
+  return(output)
 }
 
 ## IPTW Kaplan-Meier estimate
@@ -165,7 +169,11 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
     plotdata <- specific_times(plotdata, times_input)
   }
 
-  return(plotdata)
+  output <- list(plotdata=plotdata,
+                 weights=weights)
+  class(output) <- "adjustedsurv.method"
+
+  return(output)
 }
 
 ## IPTW with univariate cox-model
@@ -216,7 +224,13 @@ surv_iptw_cox <- function(data, variable, ev_time, event, conf_int,
     plotdata <- specific_times(plotdata, times)
   }
 
-  return(plotdata)
+  output <- list(plotdata=plotdata,
+                 cox_model=model,
+                 survfit_object=surv,
+                 weights=weights)
+  class(output) <- "adjustedsurv.method"
+
+  return(output)
 }
 
 ## Using Pseudo-Observations and IPTW
@@ -281,7 +295,12 @@ surv_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
   plotdata <- dplyr::bind_rows(plotdata)
   rownames(plotdata) <- NULL
 
-  return(plotdata)
+  output <- list(plotdata=plotdata,
+                 pseudo_values=pseudo,
+                 weights=weights)
+  class(output) <- "adjustedsurv.method"
+
+  return(output)
 }
 
 ## Direct Adjustment
@@ -308,7 +327,11 @@ surv_direct <- function(data, variable, ev_time, event, conf_int,
     plotdata$ci_upper <- 1 - cis$lower
   }
 
-  return(plotdata)
+  output <- list(plotdata=plotdata,
+                 ate_object=surv)
+  class(output) <- "adjustedsurv.method"
+
+  return(output)
 }
 
 ## Using propensity score matching
@@ -360,7 +383,12 @@ surv_matching <- function(data, variable, ev_time, event, conf_int,
     plotdata <- specific_times(plotdata, times)
   }
 
-  return(plotdata)
+  output <- list(plotdata=plotdata,
+                 match_object=rr,
+                 survfit_object=surv)
+  class(output) <- "adjustedsurv.method"
+
+  return(output)
 }
 
 ## Using Augmented Inverse Probability of Treatment Weighting
@@ -409,7 +437,11 @@ surv_aiptw <- function(data, variable, ev_time, event, conf_int,
     plotdata$ci_upper <- 1 - cis$lower
   }
 
-  return(plotdata)
+  output <- list(plotdata=plotdata,
+                 ate_object=curve)
+  class(output) <- "adjustedsurv.method"
+
+  return(output)
 }
 
 ## Using Pseudo Observations and Direct Adjustment
@@ -491,7 +523,12 @@ surv_direct_pseudo <- function(data, variable, ev_time, event,
   plotdata <- dplyr::bind_rows(plotdata)
   rownames(plotdata) <- NULL
 
-  return(plotdata)
+  output <- list(plotdata=plotdata,
+                 pseudo_values=pseudo,
+                 geese_model=geese_mod)
+  class(output) <- "adjustedsurv.method"
+
+  return(output)
 }
 
 ## Using Pseudo Observations Doubly-Robust, Wang (2018)
@@ -603,7 +640,12 @@ surv_aiptw_pseudo <- function(data, variable, ev_time, event, conf_int,
   plotdata <- dplyr::bind_rows(plotdata)
   rownames(plotdata) <- NULL
 
-  return(plotdata)
+  output <- list(plotdata=plotdata,
+                 pseudo_values=pseudo,
+                 geese_model=geese_mod)
+  class(output) <- "adjustedsurv.method"
+
+  return(output)
 }
 
 ## Using Empirical Likelihood Estimation
@@ -642,7 +684,10 @@ surv_emp_lik <- function(data, variable, ev_time, event,
                          group=c(rep(0, length(el_0)),
                                  rep(1, length(el_0))))
 
-  return(plotdata)
+  output <- list(plotdata=plotdata)
+  class(output) <- "adjustedsurv.method"
+
+  return(output)
 }
 
 ## Targeted Maximum Likelihood Estimation
@@ -714,7 +759,12 @@ surv_tmle <- function(data, variable, ev_time, event, conf_int,
 
   }
 
-  return(plotdata)
+  output <- list(plotdata=plotdata,
+                 survtmle_object=fit,
+                 survtmle.timepoints_object=tpfit)
+  class(output) <- "adjustedsurv.method"
+
+  return(output)
 }
 
 ## One-Step Targeted Maximum Likelihood Estimation
@@ -725,6 +775,7 @@ surv_ostmle <- function(data, variable, ev_time, event, conf_int,
                         epsilon=1, max_num_iteration=100,
                         psi_moss_method="l2", tmle_tolerance=NULL,
                         gtol=1e-3) {
+
   if (is.null(adjust_vars)) {
     all_covars <- colnames(data)
     all_covars <- all_covars[!all_covars %in% c(variable, ev_time, event)]
@@ -845,5 +896,10 @@ surv_ostmle <- function(data, variable, ev_time, event, conf_int,
 
   }
 
-  return(plotdata)
+  output <- list(plotdata=plotdata,
+                 psi_moss_hazard_0=psi_moss_hazard_0,
+                 psi_moss_hazard_1=psi_moss_hazard_1)
+  class(output) <- "adjustedsurv.method"
+
+  return(output)
 }

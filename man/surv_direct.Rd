@@ -65,7 +65,7 @@ In the literature this method is sometimes called "Direct Standardization", "Cor
 
 }
 \value{
-Returns a \code{data.frame} object containing the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
+Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable} and the original object created using the \code{ate} function.
 }
 \references{
 I-Ming Chang, Rebecca Gelman, and Marcello Pagano. "Corrected Group Prognostic Curves and Summary Statistics". In: Journal of Chronic Diseases 35 (1982), pp. 669-674.

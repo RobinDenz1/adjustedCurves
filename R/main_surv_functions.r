@@ -293,7 +293,8 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
     args <- list(data=data, variable=variable, ev_time=ev_time,
                  event=event, conf_int=conf_int, conf_level=conf_level,
                  times=times, ...)
-    plotdata <- R.utils::doCall(surv_fun, args=args)
+    method_results <- R.utils::doCall(surv_fun, args=args)
+    plotdata <- method_results$plotdata
 
     # keep factor levels in same order as data
     plotdata$group <- factor(plotdata$group, levels=levs)
@@ -309,6 +310,10 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
       out$boot_data_same_t <- boot_data_same_t
       out$boot_adjsurv <- as.data.frame(boot_stats)
     }
+
+    # add method-specific objects to output
+    method_results$plotdata <- NULL
+    out <- c(out, method_results)
 
     class(out) <- "adjustedsurv"
     return(out)
@@ -371,7 +376,8 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
                event=event, conf_int=F, conf_level=0.95, times=times)
   args <- c(args, pass_args)
 
-  adjsurv_boot <- R.utils::doCall(surv_fun, args=args)
+  method_results <- R.utils::doCall(surv_fun, args=args)
+  adjsurv_boot <- method_results$plotdata
   adjsurv_boot$boot <- i
 
   # read from resulting step function at all t in times

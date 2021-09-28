@@ -74,7 +74,7 @@ Internally, this function simply calls the \code{\link[riskRegression]{ate}} fun
 
 }
 \value{
-Returns a \code{data.frame} object containing the estimated adjusted CIFs for some points in time for each level of \code{variable}.
+Returns a \code{list} object containing a \code{data.frame} with estimated CIFs for some points in time for each level of \code{variable} and the original object created using the \code{ate} function.
 }
 \references{
 Anke Neumann and Cecile Billionnet. "Covariate Adjustment of Cumulative Incidence Functions for Competing Risks Data Using Inverse Probability of Treatment Weighting". In: Computer Methods and Programs in Biomedicine 129 (2016), pp. 63–70.

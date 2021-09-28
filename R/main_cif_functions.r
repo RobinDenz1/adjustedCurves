@@ -293,7 +293,8 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
     args <- list(data=data, variable=variable, ev_time=ev_time,
                  event=event, conf_int=conf_int, conf_level=conf_level,
                  times=times, cause=cause, ...)
-    plotdata <- R.utils::doCall(cif_fun, args=args)
+    method_results <- R.utils::doCall(cif_fun, args=args)
+    plotdata <- method_results$plotdata
 
     # keep factor ordering the same
     plotdata$group <- factor(plotdata$group, levels=levs)
@@ -308,6 +309,10 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
       out$boot_data_same_t <- boot_data_same_t
       out$boot_adjcif <- as.data.frame(boot_stats)
     }
+
+    # add method-specific objects to output
+    method_results$plotdata <- NULL
+    out <- c(out, method_results)
 
     class(out) <- "adjustedcif"
     return(out)
@@ -369,7 +374,8 @@ adjustedcif_boot <- function(data, variable, ev_time, event, cause, method,
                cause=cause)
   args <- c(args, pass_args)
 
-  adjcif_boot <- R.utils::doCall(cif_fun, args=args)
+  method_results <- R.utils::doCall(cif_fun, args=args)
+  adjcif_boot <- method_results$plotdata
   adjcif_boot$boot <- i
 
   # read from resulting step function at all t in times

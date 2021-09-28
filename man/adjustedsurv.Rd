@@ -108,6 +108,8 @@ When the argument \code{bootstrap} is set to \code{TRUE} it additionally contain
 
 When multiple imputation was used, the function additionally contains a \code{mids_analyses} object, containing the \code{adjustedsurv} objects for each imputed dataset.
 
+Some method specific objects might also be contained in the output.
+
 }
 
 \references{
@@ -192,7 +194,7 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         n_boot=500)
 
 # using bootstrapping with direct adjustment, run in parallel
-# all but one availble processor cores
+# all but one available processor cores
 adjsurv <- adjustedsurv(data=sim_dat,
                         variable="group",
                         ev_time="time",

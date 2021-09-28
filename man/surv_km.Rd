@@ -58,7 +58,7 @@ The type of confidence interval that should be calculated. Has to be a character
 
 }
 \value{
-Returns a \code{data.frame} object containing the estimated survival probabilities for some points in time for each level of \code{variable}.
+Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable} and the original \code{survfit} object.
 }
 \references{
 E. L. Kaplan and Paul Meier. "Nonparametric Estimation from Incomplete Observations". In: Journal of the American Statistical Association 53.282 (1958), pp. 457-481.
