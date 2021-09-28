@@ -482,7 +482,7 @@ remove_unnecessary_covars <- function(data, method, variable, ev_time,
     needed_covars <- c(needed_covars, args$outcome_vars, args$censoring_vars)
   } else if (method %in% c("iptw", "iptw_km", "iptw_cox", "iptw_pseudo",
                            "matching")) {
-    needed_covars <- c(needed_covars, treatment_vars)
+    needed_covars <- c(needed_covars, treatment_vars, args$censoring_vars)
   } else if (method=="emp_lik") {
     needed_covars <- c(needed_covars, args$treatment_vars)
   } else if (method=="aiptw") {

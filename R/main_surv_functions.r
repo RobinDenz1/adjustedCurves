@@ -423,11 +423,6 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
                               censoring_ind=F, censoring_ind_width=NULL,
                               censoring_ind_size=0.5, ...) {
 
-  if (!color & !linetype & !facet) {
-    stop("Groups must be distinguished with at least one of 'color',",
-         "'linetype' or 'facet'. Can't all be FALSE.")
-  }
-
   if (use_boot & is.null(x$boot_adjsurv)) {
     warning("Cannot use bootstrapped estimates as they were not estimated.",
             " Need bootstrap=TRUE in adjustedsurv() call.")
@@ -455,15 +450,24 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
   # apply isotonic regression if specified
   if (iso_reg) {
     for (lev in levels(plotdata$group)) {
-      surv <- plotdata$surv[plotdata$group==lev]
-      new <- rev(stats::isoreg(rev(surv))$yf)
+      temp <- plotdata[plotdata$group==lev,]
+      # to surv estimates
+      new <- rev(stats::isoreg(rev(temp$surv))$yf)
       plotdata$surv[plotdata$group==lev] <- new
+      # on confidence intervals
+      if (draw_ci & "ci_lower" %in% colnames(temp)) {
+        new <- rev(stats::isoreg(rev(temp$ci_lower))$yf)
+        plotdata$ci_lower[plotdata$group==lev] <- new
+
+        new <- rev(stats::isoreg(rev(temp$ci_upper))$yf)
+        plotdata$ci_upper[plotdata$group==lev] <- new
+      }
     }
   }
 
   ## The main plot
   mapping <- ggplot2::aes(x=.data$time, y=.data$surv, color=.data$group,
-                          linetype=.data$group)
+                          linetype=.data$group, group=.data$group)
 
   if (!linetype) {
     mapping$linetype <- NULL

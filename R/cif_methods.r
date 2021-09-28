@@ -52,7 +52,6 @@ cif_aalen_johansen <- function(data, variable, ev_time, event, cause,
   }
 
   # remove weird structure in cmprsk::cuminc call
-  # TODO: is this correct?
   ids <- seq(2, nrow(plotdata), 2)
   ids <- ids[1:(length(ids-1))]
   plotdata <- plotdata[ids, ]

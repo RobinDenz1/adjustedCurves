@@ -72,7 +72,7 @@ adjusted_rmst <- function(adjsurv, to, from=0, use_boot=F, conf_level=0.95) {
 
     check_inputs_adj_rmst(adjsurv=adjsurv, from=from, to=to, use_boot=use_boot)
 
-    if (use_boot) {
+    if (use_boot & !is.null(adjsurv$boot_adjsurv)) {
 
       n_boot <- max(adjsurv$boot_data$boot)
       booted_rmsts <- vector(mode="list", length=n_boot)
@@ -118,7 +118,7 @@ adjusted_rmst <- function(adjsurv, to, from=0, use_boot=F, conf_level=0.95) {
                 to=to)
     class(out) <- "adjusted_rmst"
 
-    if (use_boot) {
+    if (use_boot & !is.null(adjsurv$boot_adjsurv)) {
 
       n_boot_rmst <- apply(booted_rmsts, 2, function(x){sum(!is.na(x))})
       names(n_boot_rmst) <- levs

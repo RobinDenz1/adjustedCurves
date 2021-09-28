@@ -186,6 +186,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
       }
 
     }
+  # Matching
   } else if (method=="matching") {
     requireNamespace("Matching")
 

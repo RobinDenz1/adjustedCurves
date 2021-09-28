@@ -418,11 +418,6 @@ plot.adjustedcif <- function(x, draw_ci=F, max_t=Inf,
                              custom_linetypes=NULL,
                              ci_draw_alpha=0.4, steps=T, ...) {
 
-  if (!color & !linetype & !facet) {
-    stop("Groups must be distinguished with at least one of 'color',",
-         "'linetype' or 'facet'. Can't all be FALSE.")
-  }
-
   if (use_boot & is.null(x$boot_adjcif)) {
     warning("Cannot use bootstrapped estimates as they were not estimated.",
             " Need bootstrap=TRUE in adjustedcif() call.")
@@ -457,7 +452,7 @@ plot.adjustedcif <- function(x, draw_ci=F, max_t=Inf,
   }
 
   mapping <- ggplot2::aes(x=.data$time, y=.data$cif, color=.data$group,
-                          linetype=.data$group)
+                          linetype=.data$group, group=.data$group)
 
   if (!linetype) {
     mapping$linetype <- NULL
