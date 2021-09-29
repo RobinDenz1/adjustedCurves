@@ -153,37 +153,6 @@ adjsurv <- adjustedsurv(data=data,
 plot(adjsurv, draw_ci=T)
 ```
 
-### Targeted Maximum Likelihood Estimation
-
-Another doubly-robust method is targeted maximum likelihood estimation (see Cai and van der Laan (2020)). While the theory itself is a little more complicated, it can be used just as easily using the **adjustedCurves** package. Since our data is continuous, only the **tmle_pseudo** method can be used appropriately here. This can be done using the following **adjustedsurv** call.
-
-```{r echo=TRUE, fig.width=7, message=FALSE, warning=FALSE, fig.height=5}
-library(SuperLearner) # needed for ensemble modeling
-
-# tmle methods can only be used with binary numeric group variables
-data$group <- as.numeric(as.character(data$group))
-
-#adjsurv <- adjustedsurv(data=data,
-#                        variable="group",
-#                        ev_time="time",
-#                        event="event",
-#                        method="tmle_pseudo",
-#                        treatment_vars=c("x1", "x2", "x3", "x4", "x5", "x6"),
-#                        outcome_vars=c("x1", "x2", "x3", "x4", "x5", "x6"),
-#                        SL.trt=c("SL.glm", "SL.mean"),
-#                        SL.ftime=c("SL.glm", "SL.mean"),
-#                        conf_int=T,
-#                        times=seq(0, 2, 0.05))
-```
-
-A few things should be noted here. First of all, we did not define any treatment assignment model or outcome model directly. Instead, we used the **SuperLearner** framework. Here, multiple machine learning algorithms and other models are fit to the data. The ensemble of these algorithms is the basis for the survival probability predictions needed in the first step of the TMLE method (see cited literature for more details). The algorithms which should be used for the treatment assignment are defined using the **SL.trt** argument and the algorithms which should be used for the outcome mechanism are defined using the **SL.ftime** argument. In practice, this should include more arguments than just "SL.glm" and "SL.mean". See ?SuperLearner for more information on how to choose a valid SuperLearner library.
-
-Additionally, we defined an equally spaced grid of time points at which the survival curves should be evaluated. This is done only to keep the computation time low. The resulting curves can be plotted as before:
-
-```{r echo=TRUE, fig.show=TRUE, fig.width=7, fig.height=5}
-#plot(adjsurv)
-```
-
 ## Adjusted Cumulative Incidence Functions
 
 In many situations there are multiple mutually exclusive types of events instead of just one event. This is formally known as a competing risks situation. In these situations, survival curves can not be estimated anymore. However, the cumulative incidence function can be used instead. Without randomization, these CIFs face the same problems due to confounding as the survival curves do. Most of the methods to adjust survival curves for confounders can be used to adjust CIFs in very similar fashion.

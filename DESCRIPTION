@@ -17,33 +17,33 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports: 
-	dplyr,
-	ggplot2,
+	dplyr (>= 1.0.0),
+	ggplot2 (>= 3.0.0),
 	R.utils,
 	rlang,
-	survival,
+	survival (>= 3.0.0),
 	doParallel,
 	doRNG,
 	foreach
 Suggests: 
     testthat (>= 3.0.0),
 	Matching,
-	WeightIt,
+	WeightIt (>= 0.11.0),
 	prodlim,
-	survtmle,
+	survtmle (>= 1.1),
 	R6,
 	MASS,
 	tidyr,
 	riskRegression (>= 2021.03.17),
-	geepack,
+	geepack (>= 1.3),
 	nnet,
 	splines,
-	cmprsk,
+	cmprsk (>= 2.2),
 	eventglm (>= 1.1.1),
 	SuperLearner (>= 2.0.0),
-	pammtools,
+	pammtools (>= 0.5),
 	knitr,
 	rmarkdown,
-	mice
+	mice (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr

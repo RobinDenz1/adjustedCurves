@@ -2,7 +2,7 @@
 \alias{CSC_MI}
 
 \title{
-Cause-Specific Cox Regression with multiple imputation
+Cause-Specific Cox Regression with Multiple Imputation
 }
 \description{
 This function can be utilized to perform Cause-Specific Cox Regression on multiply imputed datasets.

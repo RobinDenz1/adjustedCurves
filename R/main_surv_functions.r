@@ -610,7 +610,9 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
   if (median_surv_lines) {
 
     # calculate median survival and add other needed values
-    median_surv <- adjusted_median_survival(x, use_boot=use_boot, verbose=F)
+    fake_adjsurv <- x
+    fake_adjsurv$adjsurv <- plotdata
+    median_surv <- adjusted_median_survival(fake_adjsurv, use_boot=F, verbose=F)
     median_surv$y <- 0.5
     # set to NA if not in plot
     median_surv$median_surv[median_surv$median_surv > max_t] <- NA
