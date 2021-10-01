@@ -196,8 +196,8 @@ exact_stepfun_difference <- function(adjsurv, times, est="surv") {
   if (nrow(adjsurv_0) == nrow(adjsurv_1)) {
 
     if (all(adjsurv_0$time == adjsurv_1$time)) {
-      surv_0 <- adjsurv_0$surv
-      surv_1 <- adjsurv_1$surv
+      surv_0 <- adjsurv_0[,est]
+      surv_1 <- adjsurv_1[,est]
     } else {
       surv_0 <- sapply(times, read_from_step_function, step_data=adjsurv_0,
                        est=est)

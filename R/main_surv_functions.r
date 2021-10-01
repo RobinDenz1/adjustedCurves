@@ -679,30 +679,40 @@ print.adjustedsurv <- function(x, ...) {
     method_name <- "Targeted Maximum Likelihood Estimation"
   } else if (x$method=="ostmle") {
     method_name <- "One-Step Targeted Maximum Likelihood Estimation"
-  } else if (x$method=="tmle_pseudo") {
-    method_name <- "Targeted Maximum Likelihood Estimation: Pseudo-Values"
+  } else if (x$method=="km") {
+    method_name <- "Kaplan-Meier Estimator"
   }
 
   times_str <- ifelse(is.null(x$call$times), "Event-Specific Times",
                       "User-Supplied Points in Time")
 
-  cat("Confounder Adjusted Survival Probabilities \n")
+  if (x$method=="km") {
+    cat("Unadjusted Survival Probabilities \n")
+  } else {
+    cat("Confounder Adjusted Survival Probabilities \n")
+  }
   cat("   - Method: ", method_name, "\n", sep="")
   cat("   - Times: ", times_str, "\n", sep="")
 
-  if (!is.null(x$boot_data)) {
-    cat("   - Bootstrapping: Performed with ", max(x$boot_data$boot),
+  if (as.logical(toString(x$call$bootstrap))) {
+    cat("   - Bootstrapping: Performed with ", x$call$n_boot,
         " Replications\n", sep="")
   } else {
-    cat("   - Bootstrapping: Not Done\n", sep="")
+    cat("   - Bootstrapping: Not none\n", sep="")
   }
 
-  if (is.null(x$call$conf_int) | !as.logical(as.character(x$call$conf_int))) {
-    cat("   - Approximate CI: Not Calculated\n", sep="")
+  if (is.null(x$call$conf_int) || !as.logical(as.character(x$call$conf_int))) {
+    cat("   - Approximate CI: Not calculated\n", sep="")
   } else {
     conf_level <- ifelse(is.null(x$call$conf_level), 0.95, x$call$conf_level)
-    cat("   - Approximate CI: Calculated with a Confidence level of ",
+    cat("   - Approximate CI: Calculated with a confidence level of ",
         conf_level, "\n", sep="")
+  }
+
+  if (is.null(x$mids_analyses)) {
+    cat("   - Using a single dataset")
+  } else {
+    cat("   - Using multiply imputed dataset")
   }
 
 }

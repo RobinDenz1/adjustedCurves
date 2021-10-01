@@ -328,7 +328,7 @@ test_that("MI, emp_lik, boot", {
 })
 
 ### adjusted_median_survival
-adjsurv <- adjustedCurves::adjustedsurv(data=sim_dat,
+adjsurv <- adjustedCurves::adjustedsurv(data=imp,
                                         variable="group",
                                         ev_time="time",
                                         event="event",
@@ -354,3 +354,30 @@ test_that("adjusted_rmst, boot", {
   expect_error(adjustedCurves::adjusted_rmst(adjsurv, from=0, to=1, use_boot=T), NA)
 })
 
+### test_curve_equality
+test_that("test_curve_equality, two treatments", {
+  expect_error(adjustedCurves::test_curve_equality(adjsurv, from=0, to=1), NA)
+})
+
+# create 3 treatments
+sim_dat$group2 <- 0
+sim_dat$group2[sim_dat$group==1] <- sample(c(1, 2), size=nrow(sim_dat[sim_dat$group==1,]),
+                                          replace=T)
+sim_dat$group2 <- ifelse(sim_dat$group2==1, "Placebo", ifelse(sim_dat$group2==2, "Chemo", "OP"))
+sim_dat$group2 <- factor(sim_dat$group2)
+
+imp <- mice::mice(sim_dat, m=3, method="pmm", printFlag=F)
+
+# fit adjustedsurv
+adjsurv <- adjustedCurves::adjustedsurv(data=imp,
+                                        variable="group2",
+                                        ev_time="time",
+                                        event="event",
+                                        method="km",
+                                        bootstrap=T,
+                                        n_boot=3,
+                                        na.action="na.omit")
+
+test_that("test_curve_equality, three treatments", {
+  expect_error(adjustedCurves::test_curve_equality(adjsurv, from=0, to=1), NA)
+})

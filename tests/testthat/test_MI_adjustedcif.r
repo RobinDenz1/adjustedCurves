@@ -244,3 +244,43 @@ test_that("MI, aalen_johansen, boot", {
                                            n_boot=3,
                                            cause=1), NA)
 })
+
+### test_curve_equality
+adjcif <- adjustedCurves::adjustedcif(data=imp,
+                                      variable="group",
+                                      ev_time="time",
+                                      event="event",
+                                      method="aalen_johansen",
+                                      bootstrap=T,
+                                      n_boot=3,
+                                      na.action="na.omit",
+                                      cause=1)
+
+test_that("test_curve_equality, two treatments", {
+  expect_error(adjustedCurves::test_curve_equality(adjcif, from=0, to=1), NA)
+})
+
+# create 3 treatments
+sim_dat$group2 <- 0
+sim_dat$group2[sim_dat$group==1] <- sample(c(1, 2), size=nrow(sim_dat[sim_dat$group==1,]),
+                                           replace=T)
+sim_dat$group2 <- ifelse(sim_dat$group2==1, "Placebo", ifelse(sim_dat$group2==2, "Chemo", "OP"))
+sim_dat$group2 <- factor(sim_dat$group2)
+
+imp <- mice::mice(sim_dat, m=3, method="pmm", printFlag=F)
+
+# fit adjustedsurv
+adjcif <- adjustedCurves::adjustedcif(data=imp,
+                                      variable="group2",
+                                      ev_time="time",
+                                      event="event",
+                                      method="aalen_johansen",
+                                      bootstrap=T,
+                                      n_boot=3,
+                                      na.action="na.omit",
+                                      cause=1)
+
+test_that("test_curve_equality, three treatments", {
+  expect_error(adjustedCurves::test_curve_equality(adjcif, from=0, to=1), NA)
+})
+

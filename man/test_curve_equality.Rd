@@ -31,6 +31,8 @@ The \code{adjustedsurv} and \code{adjustedcif} functions with \code{bootstrap=TR
 
 Instead of relying on numerical integration, this function uses step-function interpolation, treating all supplied curves as step functions. The integral is then calculated using a simple sum of the squares defined by each step.
 
+When the \code{adjustedsurv} or \code{adjustedcif} object was fitted using multiply imputed datasets, the tests are performed separatly for each dataset. The estimates for the integral of the difference are combined using Rubins Rule. The confidence intervals for this quantity are calculated by pooling the bootstrap standard errors and recalculating the confidence interval using the normal approximation. The P-Values are also pooled using a method described in Licht (2010). It is recommended to check if the pooled P-Value is in agreement with the pooled confidence interval.
+
 This function has not been tested extensively yet and is still in the experimental stage. Use with caution.
 
 }
@@ -62,6 +64,8 @@ Returns a \code{curve_test} object. If there are exactly two treatments this lis
 
 If there are more than two treatment groups the object returned is a list of these objects with one list for each pairwise comparison.
 
+If multiply imputed datasets where used, the object also includes a \code{mids_analyses} object, including a \code{curve_test} object for each imputed dataset. It also includes a \code{mids_p_values} object containing the separatly estimated P-Values.
+
 }
 \references{
 Margaret Sullivan Pepe and Thomas R. Fleming. "Weighted Kaplan-Meier Statistics: A Class of Distance Tests for Censored Survival Data". In: Biometrics 45.2 (1989), pp. 497-507.
@@ -71,6 +75,8 @@ Margaret Sullivan Pepe and Thomas R. Fleming. "Weighted Kaplan-Meier Statistics:
 Nicholas I. Fisher and Peter Hall. "On Bootstrap Hypothesis Testing". In: Australian Journal of Statistics 32.2 (1990), pp. 177-190.
 
 Florent Le Borgne, Bruno Giraudeau, Anne Héléne Querard, Magali Giral, and Yohann Foucher. "Comparisons of the Performance of Different Statistical Tests for Time-To-Event Analysis with Confounding Factors: Practical Illustrations in Kidney Transplantation". In: Statistics in Medicine 35 (2016), pp. 1103-1116.
+
+Licht, C. "New Methods for Generating Significance Levels from Multiply-Imputed Data", PhD Thesis, Otto-Friedrich-Universität Bamberg, Fakultät Sozial- und Wirtschaftswissenschaften, 2010
 }
 \author{
 Robin Denz
@@ -111,7 +117,33 @@ adjtest <- test_curve_equality(adjsurv, from=0, to=1)
 print(adjtest)
 
 #### Competing Risks Case with adjusted CIFs ####
-# TODO: write this part
+library(riskRegression)
+library(prodlim)
+
+# simulate some data as example
+sim_dat <- sim_confounded_crisk(n=500, max_t=1.2)
+sim_dat$group <- as.factor(sim_dat$group)
+
+# estimate a cause-specific cox-regression for the outcome
+csc_mod <- CSC(Hist(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
+                 data=sim_dat)
+
+
+# use it to calculate adjusted CIFs for cause = 1 with bootstrapping
+adjcif <- adjustedcif(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      outcome_model=csc_mod,
+                      conf_int=FALSE,
+                      bootstrap=TRUE,
+                      n_boot=500,
+                      cause=1)
+
+# test the equality of both curves in the interval 0 to 1
+adjtest <- test_curve_equality(adjcif, from=0, to=1)
+print(adjtest)
 
 }
 }

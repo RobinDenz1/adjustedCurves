@@ -16,11 +16,11 @@ adj <- adjustedsurv(data=sim_dat,
                     bootstrap=T,
                     n_boot=10)
 
-test_that("rmst, no from", {
+test_that("test_curve_equality, no from", {
   expect_error(test_curve_equality(adj, to=1.3), NA)
 })
 
-test_that("rmst, with from", {
+test_that("test_curve_equality, with from", {
   expect_error(test_curve_equality(adj, to=1.3, from=0.5), NA)
 })
 
@@ -41,10 +41,10 @@ adj <- adjustedcif(data=sim_dat,
                    bootstrap=T,
                    n_boot=10)
 
-test_that("rmst, no from", {
+test_that("test_curve_equality, no from", {
   expect_error(test_curve_equality(adj, to=1.3), NA)
 })
 
-test_that("rmst, with from", {
+test_that("test_curve_equality, with from", {
   expect_error(test_curve_equality(adj, to=1.3, from=0.5), NA)
 })

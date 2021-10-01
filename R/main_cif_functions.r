@@ -543,14 +543,18 @@ print.adjustedcif <- function(x, ...) {
                           " Weighting: Pseudo-Values")
   } else if (x$method=="tmle") {
     method_name <- "Targeted Maximum Likelihood Estimation"
-  } else if (x$method=="tmle_pseudo") {
-    method_name <- "Targeted Maximum Likelihood Estimation: Pseudo-Values"
+  } else if (x$method=="aalen_johansen") {
+    method_name <- "Aalen-Johansen Estimator"
   }
 
   times_str <- ifelse(is.null(x$call$times), "Event-Specific Times",
                       "User-Supplied Points in Time")
 
-  cat("Confounder Adjusted Cumulative Incidences \n")
+  if (x$method=="aalen_johansen") {
+    cat("Unadjusted Cumulative Incidences \n")
+  } else {
+    cat("Confounder Adjusted Cumulative Incidences \n")
+  }
   cat("   - Cause of Interest: ", x$call$cause, "\n", sep="")
   cat("   - Method: ", method_name, "\n", sep="")
   cat("   - Times: ", times_str, "\n", sep="")
@@ -562,12 +566,18 @@ print.adjustedcif <- function(x, ...) {
     cat("   - Bootstrapping: Not Done\n", sep="")
   }
 
-  if (is.null(x$call$conf_int) | !as.logical(as.character(x$call$conf_int))) {
+  if (is.null(x$call$conf_int) || !as.logical(as.character(x$call$conf_int))) {
     cat("   - Approximate CI: Not Calculated\n", sep="")
   } else {
     conf_level <- ifelse(is.null(x$call$conf_level), 0.95, x$call$conf_level)
     cat("   - Approximate CI: Calculated with a Confidence level of ",
         conf_level, "\n", sep="")
+  }
+
+  if (is.null(x$mids_analyses)) {
+    cat("   - Using a single dataset")
+  } else {
+    cat("   - Using multiply imputed dataset")
   }
 
 }
