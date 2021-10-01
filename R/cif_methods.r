@@ -215,6 +215,14 @@ cif_matching <- function(data, variable, ev_time, event, cause, conf_int,
                          conf_level=0.95, times, treatment_model,
                          gtol=0.001, ...) {
 
+  # if it's a factor, turn it into numeric
+  if (is.factor(data[,variable])) {
+    levs <- levels(data[,variable])
+    data[,variable] <- ifelse(data[,variable]==levs[1], 0, 1)
+  } else {
+    levs <- unique(data[,variable])
+  }
+
   if (is.numeric(treatment_model)) {
     ps_score <- treatment_model
   } else {
@@ -243,6 +251,10 @@ cif_matching <- function(data, variable, ev_time, event, cause, conf_int,
     plotdata$se <- NULL
     plotdata <- specific_times(plotdata, times, cif=T)
   }
+
+  # get factor levels back
+  plotdata$group[plotdata$group==0] <- levs[1]
+  plotdata$group[plotdata$group==1] <- levs[2]
 
   output <- list(plotdata=plotdata,
                  match_object=rr)
@@ -505,6 +517,15 @@ cif_tmle <- function(data, variable, ev_time, event, cause, conf_int,
                      SL.ftime=NULL, SL.ctime=NULL, SL.trt=NULL,
                      glm.ftime=NULL, glm.ctime=NULL, glm.trt=NULL,
                             ...) {
+  # if it's a factor, turn it into numeric
+  if (is.factor(data[,variable])) {
+    levs <- levels(data[,variable])
+    data[,variable] <- ifelse(data[,variable]==levs[1], 0, 1)
+  } else {
+    levs <- unique(data[,variable])
+  }
+
+  # gather needed data
   if (is.null(adjust_vars)) {
     all_covars <- colnames(data)
     all_covars <- all_covars[!all_covars %in% c(variable, ev_time, event)]
@@ -548,8 +569,8 @@ cif_tmle <- function(data, variable, ev_time, event, cause, conf_int,
   # put together
   plotdata <- data.frame(time=rep(times, 2),
                          cif=c(cif_0, cif_1),
-                         group=c(rep(0, length(times)),
-                                 rep(1, length(times))))
+                         group=c(rep(levs[1], length(times)),
+                                 rep(levs[2], length(times))))
 
   if (conf_int) {
 

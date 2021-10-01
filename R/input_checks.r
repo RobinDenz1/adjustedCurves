@@ -46,9 +46,9 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
 
     # Check if the group variable has the right format
     if (method %in% c("matching", "emp_lik", "tmle", "ostmle") &
-        is.factor(data[,variable])) {
+        !is.factor(data[,variable]) & !is.numeric(data[,variable])) {
       stop("The column in 'data' specified by 'variable' needs to be ",
-           "a dichotomous integer variable if method='", method, "'.")
+           "a factor or a dichotomous integer variable if method='", method, "'.")
     }
 
     if (!method %in% c("matching", "emp_lik", "tmle", "ostmle") &
@@ -406,9 +406,10 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
 
     # Check if the group variable has the right format
     if (method %in% c("matching", "tmle") &
-        is.factor(data[,variable])) {
+        !is.factor(data[,variable]) & !is.numeric(data[,variable])) {
       stop("The column in 'data' specified by 'variable' needs to be ",
-           "a dichotomous integer variable if method='", method, "'.")
+           "a dichotomous integer variable or a factor variable if method='",
+           method, "'.")
     }
 
     if (!method %in% c("matching", "tmle") &
@@ -425,7 +426,6 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
     }
 
   }
-
 
   if (!method %in% c("aalen_johansen", "iptw", "iptw_pseudo", "direct",
                             "direct_pseudo", "aiptw_pseudo",

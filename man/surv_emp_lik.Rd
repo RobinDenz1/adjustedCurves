@@ -22,7 +22,7 @@ surv_emp_lik(data, variable, ev_time, event, times, treatment_vars,
 A \code{data.frame} object containing the needed time-to-event data in standard format.
 }
   \item{variable}{
-A character string specifying the variable by which the survival curves should be grouped. Must be a valid columname of \code{data}.
+A character string specifying the variable by which the survival curves should be grouped. Must be a valid columname of \code{data}. The variable in question can be either a dichotomous integer variable or a factor variable with exactly two levels.
 }
   \item{ev_time}{
 A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid columname of \code{data}.
@@ -57,7 +57,7 @@ Tolerance used in the newton-raphson algorithm. Set to 1.0e-06 by default which 
 \itemize{
 \item{\strong{Type of Adjustment:} Requires a character vector of variable names used to balance the distribution of covariates (treatment assignment mechanism)}
 \item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
-\item{\strong{Categorical groups:} Only binary treatments are allowed. Column specified by \code{variable} must be an integer with only 0 and 1 as values.}
+\item{\strong{Categorical groups:} Only binary treatments are allowed. Column specified by \code{variable} must be an integer with only 0 and 1 as values or a factor variable with exactly two levels.}
 \item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are not available. The user has to use bootstrapping if those are desired.}
 \item{\strong{Allowed Time Values:} Allows both continuous and integer survival times.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}

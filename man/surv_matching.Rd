@@ -22,7 +22,7 @@ surv_matching(data, variable, ev_time, event, conf_int,
 A \code{data.frame} object containing the needed time-to-event data in standard format.
 }
   \item{variable}{
-A character string specifying the variable by which the survival curves should be grouped. Must be a valid columname of \code{data}.
+A character string specifying the variable by which the survival curves should be grouped. Must be a valid columname of \code{data}. The variable in question can be either a dichotomous integer variable or a factor variable with exactly two levels.
 }
   \item{ev_time}{
 A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid columname of \code{data}.
@@ -57,7 +57,7 @@ Further arguments passed to the \code{Match} function of the \code{Matching} Pac
 \itemize{
 \item{\strong{Type of Adjustment:} Requires a model describing the treatment assignment mechanism. This must be either a \code{\link{glm}} object.}
 \item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
-\item{\strong{Categorical groups:} Only two groups in \code{variable} are allowed. Must be an integer variable containing only 0 and 1.}
+\item{\strong{Categorical groups:} Only two groups in \code{variable} are allowed. Must be an integer variable containing only 0 and 1 or a factor variable with exactly two levels.}
 \item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are currently not available. Bootstrapping is also discouraged.}
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}

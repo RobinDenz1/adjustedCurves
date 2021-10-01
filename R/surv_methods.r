@@ -341,6 +341,14 @@ surv_matching <- function(data, variable, ev_time, event, conf_int,
                           conf_level=0.95, times, treatment_model,
                           stabilize=T, gtol=0.001, ...) {
 
+  # if it's a factor, turn it into numeric
+  if (is.factor(data[,variable])) {
+    levs <- levels(data[,variable])
+    data[,variable] <- ifelse(data[,variable]==levs[1], 0, 1)
+  } else {
+    levs <- unique(data[,variable])
+  }
+
   if (is.numeric(treatment_model)) {
     ps_score <- treatment_model
   } else {
@@ -370,8 +378,8 @@ surv_matching <- function(data, variable, ev_time, event, conf_int,
                             robust=T)
   plotdata <- data.frame(time=surv$time,
                          surv=surv$surv,
-                         group=c(rep(0, surv$strata[1]),
-                                 rep(1, surv$strata[2])))
+                         group=c(rep(levs[1], surv$strata[1]),
+                                 rep(levs[2], surv$strata[2])))
 
   if (conf_int) {
     plotdata$se <- surv$std.err
@@ -655,6 +663,14 @@ surv_emp_lik <- function(data, variable, ev_time, event,
                          standardize=F, gtol=0.00001,
                          max_iter=100, newton_tol=1.0e-06) {
 
+  # if it's a factor, turn it into numeric
+  if (is.factor(data[,variable])) {
+    levs <- levels(data[,variable])
+    data[,variable] <- ifelse(data[,variable]==levs[1], 0, 1)
+  } else {
+    levs <- unique(data[,variable])
+  }
+
   el_0 <- el.est(y=data[, ev_time],
                  delta=data[, event],
                  treat=data[, variable],
@@ -681,8 +697,8 @@ surv_emp_lik <- function(data, variable, ev_time, event,
 
   plotdata <- data.frame(time=c(times, times),
                          surv=c(el_0, el_1),
-                         group=c(rep(0, length(el_0)),
-                                 rep(1, length(el_0))))
+                         group=c(rep(levs[1], length(el_0)),
+                                 rep(levs[2], length(el_0))))
 
   output <- list(plotdata=plotdata)
   class(output) <- "adjustedsurv.method"
@@ -697,6 +713,16 @@ surv_tmle <- function(data, variable, ev_time, event, conf_int,
                       SL.ftime=NULL, SL.ctime=NULL, SL.trt=NULL,
                       glm.ftime=NULL, glm.ctime=NULL, glm.trt=NULL,
                       ...) {
+
+  # if it's a factor, turn it into numeric
+  if (is.factor(data[,variable])) {
+    levs <- levels(data[,variable])
+    data[,variable] <- ifelse(data[,variable]==levs[1], 0, 1)
+  } else {
+    levs <- unique(data[,variable])
+  }
+
+  # gather needed data
   if (is.null(adjust_vars)) {
     all_covars <- colnames(data)
     all_covars <- all_covars[!all_covars %in% c(variable, ev_time, event)]
@@ -740,8 +766,8 @@ surv_tmle <- function(data, variable, ev_time, event, conf_int,
   # put together
   plotdata <- data.frame(time=rep(times, 2),
                          surv=c(s_0, s_1),
-                         group=c(rep(0, length(times)),
-                                 rep(1, length(times))))
+                         group=c(rep(levs[1], length(times)),
+                                 rep(levs[2], length(times))))
 
   if (conf_int) {
 
@@ -776,6 +802,15 @@ surv_ostmle <- function(data, variable, ev_time, event, conf_int,
                         psi_moss_method="l2", tmle_tolerance=NULL,
                         gtol=1e-3) {
 
+  # if it's a factor, turn it into numeric
+  if (is.factor(data[,variable])) {
+    levs <- levels(data[,variable])
+    data[,variable] <- ifelse(data[,variable]==levs[1], 0, 1)
+  } else {
+    levs <- unique(data[,variable])
+  }
+
+  # gather needed data
   if (is.null(adjust_vars)) {
     all_covars <- colnames(data)
     all_covars <- all_covars[!all_covars %in% c(variable, ev_time, event)]
@@ -850,8 +885,8 @@ surv_ostmle <- function(data, variable, ev_time, event, conf_int,
   # put together
   plotdata <- data.frame(time=c(k_grid, k_grid),
                          surv=c(psi_moss_hazard_0, psi_moss_hazard_1),
-                         group=c(rep(0, length(k_grid)),
-                                 rep(1, length(k_grid))))
+                         group=c(rep(levs[1], length(k_grid)),
+                                 rep(levs[2], length(k_grid))))
   # keep only time points in times
   plotdata <- plotdata[which(plotdata$time %in% times),]
 

@@ -25,7 +25,7 @@ surv_ostmle(data, variable, ev_time, event, conf_int,
 A \code{data.frame} object containing the needed time-to-event data in standard format.
 }
   \item{variable}{
-A character string specifying the variable by which the survival curves should be grouped. Must be a valid columname of \code{data}.
+A character string specifying the variable by which the survival curves should be grouped. Must be a valid columname of \code{data}. The variable in question can be either a dichotomous integer variable or a factor variable with exactly two levels.
 }
   \item{ev_time}{
 A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid columname of \code{data}.
@@ -75,7 +75,7 @@ Tolerance at which estimated treatment assignment probabilities are truncated. E
 \itemize{
 \item{\strong{Type of Adjustment:} Adjustments are made based on the treatment assignment mechanism, the outcome mechanism and the censoring mechanism. No models can be supplied. The adjustments are made based on \code{\link[SuperLearner]{SuperLearner}}} libraries.
 \item{\strong{Doubly-Robust:} Estimates are Doubly-Robust.}
-\item{\strong{Categorical groups:} Currently only two groups in \code{variable} are allowed. Must be an integer variable only containing 0 and 1.}
+\item{\strong{Categorical groups:} Currently only two groups in \code{variable} are allowed. Must be an integer variable only containing 0 and 1 or a factor variable with exactly two levels.}
 \item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
 \item{\strong{Allowed Time Values:} Allows only integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
