@@ -203,9 +203,9 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
   # IPTW KM
   } else if (method=="iptw_km") {
     if (conf_int & inherits(obj$treatment_model, "formula")) {
-      stop("Approximate confidence intervals currently not supported in ",
-           "method='iptw_km' when 'treatment_model' is not a 'glm' or 'multinom'",
-           " object.")
+      warning("Approximate confidence intervals currently not supported in ",
+              "method='iptw_km' when 'treatment_model' is not a 'glm' or 'multinom'",
+              " object.")
     }
   # AIPTW
   } else if (method=="aiptw") {
@@ -237,13 +237,13 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
   # asymptotic variance calculations
   if (conf_int) {
     if (method %in% c("emp_lik", "matching")) {
-      stop("Asymptotic or exact variance calculations are currently",
-           " not available for method='", method, "'. Use bootstrap=TRUE",
-           "to get bootstrap estimates.")
+      warning("Asymptotic or exact variance calculations are currently",
+              " not available for method='", method, "'. Use bootstrap=TRUE",
+              "to get bootstrap estimates.")
     } else if (method=="direct_pseudo" & !is.null(obj$model_type)) {
       if (obj$model_type != "lm") {
-        stop("Asymptotic variance calculations for method='direct_pseudo' ",
-             "can only be calculated with model_type='lm'.")
+        warning("Asymptotic variance calculations for method='direct_pseudo' ",
+                "can only be calculated with model_type='lm'.")
       }
     }
   }
@@ -537,9 +537,9 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
   # asymptotic variance calculations
   if (conf_int) {
     if (method %in% c("matching", "direct_pseudo")) {
-      stop("Asymptotic or exact variance calculations are currently",
-           " not available for method='", method, "'. Use bootstrap=TRUE",
-           "to get bootstrap estimates.")
+      warning("Asymptotic or exact variance calculations are currently",
+              " not available for method='", method, "'. Use bootstrap=TRUE",
+              "to get bootstrap estimates.")
     }
   }
 }

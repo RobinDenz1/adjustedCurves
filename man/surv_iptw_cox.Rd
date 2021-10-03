@@ -12,9 +12,9 @@ This method works by modelling the treatment assignment mechanism. The individua
 
 }
 \usage{
-surv_iptw_cox(data, variable, ev_time, event, conf_int, conf_level=0.95,
-              times=NULL, treatment_model, weight_method="ps", stabilize=T,
-              trim=F, ...)
+surv_iptw_cox(data, variable, ev_time, event, conf_int,
+              conf_level=0.95, times=NULL, treatment_model,
+              weight_method="ps", stabilize=T, trim=F, ...)
 }
 
 \arguments{
@@ -22,7 +22,7 @@ surv_iptw_cox(data, variable, ev_time, event, conf_int, conf_level=0.95,
 A \code{data.frame} object containing the needed time-to-event data in standard format.
 }
   \item{variable}{
-A character string specifying the variable by which the survival curves should be grouped. Must be a valid columname of \code{data}.
+A character string specifying the variable by which the survival curves should be grouped. Must be a valid columname of \code{data}. The variable specified should be a factor variable.
 }
   \item{ev_time}{
 A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid columname of \code{data}.
@@ -31,7 +31,7 @@ A character string specifying the variable indicating the time-to-event or time-
 A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
 }
   \item{conf_int}{
-A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated. Not available for all methods.
+A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated.
   }
   \item{conf_level}{
 A number specifying the confidence level of asymptotic confidence intervals.

@@ -12,9 +12,9 @@ Neither outcome nor treatment assignment models are required for this function t
 
 }
 \usage{
-surv_emp_lik(data, variable, ev_time, event, times, treatment_vars,
-             moment="first", standardize=F, gtol=0.00001, max_iter=100,
-             newton_tol=1.0e-06)
+surv_emp_lik(data, variable, ev_time, event, conf_int=FALSE,
+             times, treatment_vars, moment="first", standardize=F,
+             gtol=0.00001, max_iter=100, newton_tol=1.0e-06)
 }
 
 \arguments{
@@ -28,7 +28,10 @@ A character string specifying the variable by which the survival curves should b
 A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid columname of \code{data}.
 }
   \item{event}{
-A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
+A character string specifying the binary event indicator. Must be a valid columname of \code{data}. Can be either a factor variable or a binary integer variable. If a factor variable is supplied, the first level is assumed to correspond to the control group.
+}
+  \item{conf_int}{
+Currently not used because asymptotic variance calculations for this estimator have not been proposed yet. Bootstrapping can still be used to estimate the confidence intervals (see \code{?adjustedsurv}).
 }
   \item{times}{
 A numeric vector of time points at which the survival probability should be estimated.

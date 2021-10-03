@@ -15,7 +15,6 @@
 
 ## function to calculate the restricted mean survival time of each
 ## adjusted survival curve previously estimated using the adjustedsurv function
-# TODO: check if print/plot functions work with MI
 #' @export
 adjusted_rmst <- function(adjsurv, to, from=0, use_boot=F, conf_level=0.95) {
 

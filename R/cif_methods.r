@@ -209,7 +209,6 @@ cif_direct <- function(data, variable, ev_time, event, cause, conf_int,
 }
 
 ## Matching
-# TODO: variance calculation is off
 #' @export
 cif_matching <- function(data, variable, ev_time, event, cause, conf_int,
                          conf_level=0.95, times, treatment_model,
@@ -244,7 +243,7 @@ cif_matching <- function(data, variable, ev_time, event, cause, conf_int,
                                  ev_time=ev_time,
                                  event=event,
                                  cause=cause,
-                                 conf_int=conf_int,
+                                 conf_int=FALSE,
                                  conf_level=conf_level)$plotdata
 
   if (!is.null(times)) {

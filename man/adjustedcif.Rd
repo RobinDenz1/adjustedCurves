@@ -15,10 +15,10 @@ adjustedcif(data, variable, ev_time, event, cause, method, conf_int=F,
 
 \arguments{
   \item{data}{
-A \code{data.frame} object containing the needed time-to-event data in standard format.
+A \code{data.frame} object containing the needed time-to-event data in standard format. Can also be a \code{mids} object created with the \code{mice} package. See details for how this works.
   }
   \item{variable}{
-A character string specifying the variable by which the cumulative incidence functions should be grouped. Must be a valid columname of \code{data}.
+A character string specifying the variable by which the cumulative incidence functions should be grouped. Must be a valid columname of \code{data}. The variable specified should ideally be a factor variable, but integers also work for some methods.
   }
   \item{ev_time}{
 A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid columname of \code{data}.
@@ -33,13 +33,13 @@ The cause of interest for which the cumulative incidence functions should be cal
 A character string specifying the adjustment method to use. See details.
   }
   \item{conf_int}{
-A logical variable, indicating whether the asymptotic variances and confidence intervals of the cumulative incidence should be calculated. Not available for all methods.
+A logical variable, indicating whether the asymptotic variances and confidence intervals of the cumulative incidence should be calculated. Not available for all methods. More information can be found in the documentation of each method. For an alternative way to get confidence intervals, see the \code{bootstrap} argument.
   }
   \item{conf_level}{
 A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
   }
   \item{times}{
-A numeric vector of time points at which the cumulative incidences should be estimated or \code{NULL}. If \code{NULL} the cumulative incidence is estimated at all points in time at which an event occured in the pooled sample.
+A numeric vector of time points at which the cumulative incidences should be estimated or \code{NULL}. If \code{NULL} the cumulative incidence is estimated at all points in time at which any event occured in the pooled sample.
   }
   \item{bootstrap}{
 A logical variable indicating whether bootstrapping should be performed or not. In bootstrapping, a number of simple random samples with replacement of size \code{nrow(data)} is drawn from \code{data}. For each sample the calculations are repeated and used to estimate standard errors and confidence intervals. This can be used to obtain confidence intervals when asymptotic variance calculations are not available.
@@ -74,9 +74,9 @@ The primary purpose of the \code{adjustedcif} function is to provide a convenien
 
 A short description of each method is contained in the documentation of the respective \code{cif_} function. For more detailed descriptions the cited literature in that same documentation can be used. The documentation for \code{method="direct"} for example can be accessed using \code{?cif_direct}.
 
-For most methods approximations for the asymptotic variance of point estimates of the CIF have been proposed in the literature. Where available, those can be calculated and added to the output object using \code{conf_int=TRUE}. It is however recommended to use bootstrapping to estimate the variance instead, which can be done by setting \code{bootstrap=TRUE}. The \code{n_boot} argument is set to 500 by default. This number was choosen because it worked well in simulations but it does not guarantee convergence in practice. Users are recommended to inspect the bootstrapped estimates and adjust the number of replications accordingly.
+For most methods approximations for the asymptotic variance of point estimates of the CIF have been proposed in the literature. Where available, those can be calculated and added to the output object using \code{conf_int=TRUE}. It is however recommended to use bootstrapping to estimate the variance instead, which can be done by setting \code{bootstrap=TRUE}. The \code{n_boot} argument is set to 500 by default. This number was choosen because it worked well in simulations but it does not guarantee convergence in practice. Users are recommended to inspect the bootstrapped estimates and adjust the number of replications accordingly. To allow faster bootstrapping the user can choose to run the function on multiple CPU cores in parallel using the \code{n_cores} argument.
 
-To allow faster bootstrapping the user can choose to run the function on multiple CPU cores in parallel using the \code{n_cores} argument.
+This function also allows multiple imputation via the \code{mice} package. Instead of supplying a single data.frame, the user should create a \code{mids} object using the \code{mice} function and directly pass this to the \code{data} argument. When methods are used which rely on previously estimated treatment or outcome models such as \code{direct} or \code{aiptw}, the user is required to supply a \code{mira} object instead of a single model. In other words: the models have to be fit on every imputed dataset before supplying them to this function. See \code{?mice} and the associated documentation for more information on how to use multiple imputation. When using \code{bootstrap=TRUE} and multiple imputation, the bootstrapping is performed on every imputed dataset separatly. Cumulative Incidences are simply averaged across the imputed datasets according to Rubins Rule. Confidence intervals are calculated by first averaging the standard errors over all imputed datasets and afterwards using this pooled value to obtain a new confidence interval with the normal approximation.
 
 }
 \value{
@@ -102,17 +102,21 @@ When the argument \code{bootstrap} is set to \code{TRUE} it additionally contain
 \item{boot_adjcif}{The mean CIFs of all bootstrap samples and corresponding standard deviations and percentile confidence intervals.
 }
 
+When multiple imputation was used, the function additionally contains a \code{mids_analyses} object, containing the \code{adjustedcif} objects for each imputed dataset.
+
+Some method specific objects might also be contained in the output.
+
 }
 
 \references{
 Hier meine eigenen Paper
 }
 \author{
-The function itself was written by Robin Denz, but it includes wrappers for functions written by other people. More information can be found in the respective \code{cif_method} documentation.
+The function itself was written by Robin Denz, but some \code{cif_method} functions include wrappers for functions written by other people. More information can be found in the respective \code{cif_method} documentation.
 }
 
 \seealso{
-\code{\link{cif_aiptw}}, \code{\link{cif_aiptw_pseudo}}, \code{\link{cif_direct}}, \code{\link{cif_direct_pseudo}},
+\code{\link{plot.adjustedcif}}, \code{\link{cif_aiptw}}, \code{\link{cif_aiptw_pseudo}}, \code{\link{cif_direct}}, \code{\link{cif_direct_pseudo}},
 \code{\link{cif_iptw}}, \code{\link{cif_iptw_pseudo}}, \code{\link{cif_matching}}, \code{\link{cif_tmle}}, \code{\link{cif_aalen_johansen}}
 }
 \examples{

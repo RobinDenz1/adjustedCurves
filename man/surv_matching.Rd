@@ -12,7 +12,7 @@ This method works by first matching controls and treated patients using a previo
 
 }
 \usage{
-surv_matching(data, variable, ev_time, event, conf_int,
+surv_matching(data, variable, ev_time, event, conf_int=FALSE,
               conf_level=0.95, times, treatment_model, stabilize=T,
               gtol=0.001, ...)
 }
@@ -28,10 +28,10 @@ A character string specifying the variable by which the survival curves should b
 A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid columname of \code{data}.
 }
   \item{event}{
-A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
+A character string specifying the binary event indicator. Must be a valid columname of \code{data}. Can be either a factor variable or a binary integer variable. If a factor variable is supplied, the first level is assumed to correspond to the control group.
 }
   \item{conf_int}{
-A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated.
+Currently not used because asymptotic variance calculations for this estimator have not been implemented.
   }
   \item{conf_level}{
 A number specifying the confidence level of asymptotic confidence intervals.

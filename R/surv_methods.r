@@ -335,9 +335,8 @@ surv_direct <- function(data, variable, ev_time, event, conf_int,
 }
 
 ## Using propensity score matching
-# TODO: variance calculation is off
 #' @export
-surv_matching <- function(data, variable, ev_time, event, conf_int,
+surv_matching <- function(data, variable, ev_time, event, conf_int=FALSE,
                           conf_level=0.95, times, treatment_model,
                           stabilize=T, gtol=0.001, ...) {
 
@@ -380,12 +379,6 @@ surv_matching <- function(data, variable, ev_time, event, conf_int,
                          surv=surv$surv,
                          group=c(rep(levs[1], surv$strata[1]),
                                  rep(levs[2], surv$strata[2])))
-
-  if (conf_int) {
-    plotdata$se <- surv$std.err
-    plotdata$ci_lower <- surv$lower
-    plotdata$ci_upper <- surv$upper
-  }
 
   if (!is.null(times)) {
     plotdata <- specific_times(plotdata, times)
@@ -658,7 +651,7 @@ surv_aiptw_pseudo <- function(data, variable, ev_time, event, conf_int,
 
 ## Using Empirical Likelihood Estimation
 #' @export
-surv_emp_lik <- function(data, variable, ev_time, event,
+surv_emp_lik <- function(data, variable, ev_time, event, conf_int=FALSE,
                          times, treatment_vars, moment="first",
                          standardize=F, gtol=0.00001,
                          max_iter=100, newton_tol=1.0e-06) {
