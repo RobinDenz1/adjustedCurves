@@ -31,7 +31,7 @@ The \code{adjustedsurv} and \code{adjustedcif} functions with \code{bootstrap=TR
 
 Instead of relying on numerical integration, this function uses step-function interpolation, treating all supplied curves as step functions. The integral is then calculated using a simple sum of the squares defined by each step.
 
-When the \code{adjustedsurv} or \code{adjustedcif} object was fitted using multiply imputed datasets, the tests are performed separatly for each dataset. The estimates for the integral of the difference are combined using Rubins Rule. The confidence intervals for this quantity are calculated by pooling the bootstrap standard errors and recalculating the confidence interval using the normal approximation. The P-Values are also pooled using a method described in Licht (2010). It is recommended to check if the pooled P-Value is in agreement with the pooled confidence interval.
+When the \code{adjustedsurv} or \code{adjustedcif} object was fitted using multiply imputed datasets, the tests are performed separately for each dataset. The estimates for the integral of the difference are combined using Rubins Rule. The confidence intervals for this quantity are calculated by pooling the bootstrap standard errors and recalculating the confidence interval using the normal approximation. The P-Values are also pooled using a method described in Licht (2010). It is recommended to check if the pooled P-Value is in agreement with the pooled confidence interval.
 
 This function has not been tested extensively yet and is still in the experimental stage. Use with caution.
 
@@ -64,7 +64,7 @@ Returns a \code{curve_test} object. If there are exactly two treatments this lis
 
 If there are more than two treatment groups the object returned is a list of these objects with one list for each pairwise comparison.
 
-If multiply imputed datasets where used, the object also includes a \code{mids_analyses} object, including a \code{curve_test} object for each imputed dataset. It also includes a \code{mids_p_values} object containing the separatly estimated P-Values.
+If multiply imputed datasets where used, the object also includes a \code{mids_analyses} object, including a \code{curve_test} object for each imputed dataset. It also includes a \code{mids_p_values} object containing the separately estimated P-Values.
 
 }
 \references{

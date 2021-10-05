@@ -15,7 +15,7 @@
 
 ## estimate iptw weights
 get_iptw_weights <- function(data, treatment_model, weight_method,
-                             variable, stabilize=T, trim, ...) {
+                             variable, stabilize=TRUE, trim, ...) {
 
   # using WeightIt
   if (inherits(treatment_model, "formula")) {
@@ -38,7 +38,8 @@ get_iptw_weights <- function(data, treatment_model, weight_method,
     }
   # nothing else allowed
   } else {
-    stop("Unsuported input: '", class(treatment_model), "'. See documentation.")
+    stop("Unsuported input: '", class(treatment_model),
+         "'. See documentation.")
   }
 
   weights <- trim_weights(weights=weights, trim=trim)
@@ -83,7 +84,7 @@ calc_iptw_km_var <- function(t, adj_km) {
 
 ## Computes the standard error of a weighted mean using one of
 ## four possible approximations
-weighted.var.se <- function(x, w, se_method, na.rm=F) {
+weighted.var.se <- function(x, w, se_method, na.rm=FALSE) {
 
   if (na.rm) {
     miss_ind <- !is.na(x)
@@ -119,7 +120,8 @@ geese_predictions <- function(geese_mod, Sdata, times, n) {
 
   # full model matrix and betas
   mod_mat <- stats::model.matrix(geese_mod$formula,
-                                 data=stats::model.frame(geese_mod$formula, Sdata,
+                                 data=stats::model.frame(geese_mod$formula,
+                                             Sdata,
                                              na.action=stats::na.pass))
   betas <- geese_mod$beta
 
@@ -128,7 +130,7 @@ geese_predictions <- function(geese_mod, Sdata, times, n) {
   }
 
   pred_mat <- matrix(nrow=n, ncol=length(times))
-  for (i in 1:length(times)) {
+  for (i in seq_len(length(times))) {
     # take only relevant portion (at time t) of model matrix
     mod_mat_t <- mod_mat[Sdata$vtime==times[i],]
     # apply coefficients
@@ -193,23 +195,23 @@ exact_stepfun_difference <- function(adjsurv, times, est="surv") {
   adjsurv_0 <- adjsurv[which(adjsurv$group==levs[1]),]
   adjsurv_1 <- adjsurv[which(adjsurv$group==levs[2]),]
 
-  if (nrow(adjsurv_0) == nrow(adjsurv_1)) {
+  if (nrow(adjsurv_0)==nrow(adjsurv_1)) {
 
-    if (all(adjsurv_0$time == adjsurv_1$time)) {
+    if (all(adjsurv_0$time==adjsurv_1$time)) {
       surv_0 <- adjsurv_0[,est]
       surv_1 <- adjsurv_1[,est]
     } else {
-      surv_0 <- sapply(times, read_from_step_function, step_data=adjsurv_0,
-                       est=est)
-      surv_1 <- sapply(times, read_from_step_function, step_data=adjsurv_1,
-                       est=est)
+      surv_0 <- vapply(times, read_from_step_function, step_data=adjsurv_0,
+                       est=est, FUN.VALUE=numeric(1))
+      surv_1 <- vapply(times, read_from_step_function, step_data=adjsurv_1,
+                       est=est, FUN.VALUE=numeric(1))
     }
 
   } else {
-    surv_0 <- sapply(times, read_from_step_function, step_data=adjsurv_0,
-                     est=est)
-    surv_1 <- sapply(times, read_from_step_function, step_data=adjsurv_1,
-                     est=est)
+    surv_0 <- vapply(times, read_from_step_function, step_data=adjsurv_0,
+                     est=est, FUN.VALUE=numeric(1))
+    surv_1 <- vapply(times, read_from_step_function, step_data=adjsurv_1,
+                     est=est, FUN.VALUE=numeric(1))
   }
 
   surv_diff <- surv_1 - surv_0
@@ -257,7 +259,7 @@ exact_stepfun_integral <- function(stepfun, from, to, est="surv") {
 
   # calculate exact integral
   integral <- 0
-  for (i in 1:(length(stepfun$time)-1)) {
+  for (i in seq_len((length(stepfun$time)-1))) {
     x1 <- stepfun$time[i]
     x2 <- stepfun$time[i+1]
     y <- stepfun[,est][i]
@@ -269,31 +271,36 @@ exact_stepfun_integral <- function(stepfun, from, to, est="surv") {
 
 ## function to change plotdata in iptw and standard methods when
 ## custom points in time are supplied
-specific_times <- function(plotdata, times, cif=F) {
+specific_times <- function(plotdata, times, cif=FALSE) {
 
   levs <- unique(plotdata$group)
   new_plotdata <- vector(mode="list", length=length(levs))
-  for (i in 1:length(levs)) {
+  for (i in seq_len(length(levs))) {
 
     if (cif) {
-      new_est <- sapply(times, read_from_step_function, est="cif",
-                        step_data=plotdata[which(plotdata$group==levs[i]),])
+      new_est <- vapply(times, read_from_step_function, est="cif",
+                        step_data=plotdata[which(plotdata$group==levs[i]),],
+                        FUN.VALUE=numeric(1))
       new_dat <- data.frame(time=times, cif=new_est, group=levs[i])
     } else {
 
-      new_est <- sapply(times, read_from_step_function, est="surv",
-                        step_data=plotdata[which(plotdata$group==levs[i]),])
+      new_est <- vapply(times, read_from_step_function, est="surv",
+                        step_data=plotdata[which(plotdata$group==levs[i]),],
+                        FUN.VALUE=numeric(1))
       new_dat <- data.frame(time=times, surv=new_est, group=levs[i])
     }
 
     if ("se" %in% colnames(plotdata)) {
       # read from curve using custom function
-      new_se <- sapply(times, read_from_step_function, est="se",
-                       step_data=plotdata[which(plotdata$group==levs[i]),])
-      new_ci_lower <- sapply(times, read_from_step_function, est="ci_lower",
-                             step_data=plotdata[which(plotdata$group==levs[i]),])
-      new_ci_upper <- sapply(times, read_from_step_function, est="ci_upper",
-                             step_data=plotdata[which(plotdata$group==levs[i]),])
+      new_se <- vapply(times, read_from_step_function, est="se",
+                       step_data=plotdata[which(plotdata$group==levs[i]),],
+                       FUN.VALUE=numeric(1))
+      new_ci_lower <- vapply(times, read_from_step_function, est="ci_lower",
+                            step_data=plotdata[which(plotdata$group==levs[i]),],
+                            FUN.VALUE=numeric(1))
+      new_ci_upper <- vapply(times, read_from_step_function, est="ci_upper",
+                            step_data=plotdata[which(plotdata$group==levs[i]),],
+                            FUN.VALUE=numeric(1))
       # add to output in same order
       new_dat$se <- new_se
       new_dat$ci_lower <- new_ci_lower
@@ -425,13 +432,14 @@ calc_pseudo_surv <- function(data, ev_time, event, times, censoring_vars,
     pseudo_formula <- stats::as.formula(paste0("survival::Surv(", ev_time,
                                                ", ", event, ") ~ 1"))
 
-    pseudo <- sapply(times, FUN=pseudo_aareg,
+    pseudo <- vapply(times, FUN=pseudo_aareg,
                      formula=pseudo_formula,
                      cause=1,
                      data=data,
                      type="survival",
                      formula.censoring=cens_formula,
-                     ipcw.method=ipcw.method)
+                     ipcw.method=ipcw.method,
+                     FUN.VALUE=numeric(1))
 
   }
   return(pseudo)

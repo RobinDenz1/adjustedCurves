@@ -8,7 +8,8 @@ Calculate Confounder-Adjusted Median Survival Times
 This function can be utilized to calculate the confounder-adjusted median survival time, given previously estimated adjusted survival curves.
 }
 \usage{
-adjusted_median_survival(adjsurv, use_boot=F, verbose=T)
+adjusted_median_survival(adjsurv, use_boot=FALSE,
+                         verbose=TRUE)
 }
 
 \arguments{

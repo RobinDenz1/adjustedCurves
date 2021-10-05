@@ -32,7 +32,7 @@ cif_aalen_johansen <- function(data, variable, ev_time, event, cause,
   levs <- unique(data[,variable])
   cif_names <- paste(levs, cause)
   plotdata <- vector(mode="list", length=length(cif_names))
-  for (i in 1:length(cif_names)) {
+  for (i in seq_len(length(cif_names))) {
     plotdata[[i]] <- data.frame(time=cif[[cif_names[i]]]$time,
                                 cif=cif[[cif_names[i]]]$est,
                                 group=levs[i],
@@ -48,7 +48,7 @@ cif_aalen_johansen <- function(data, variable, ev_time, event, cause,
   }
 
   if (!is.null(times)) {
-    plotdata <- specific_times(plotdata, times, cif=T)
+    plotdata <- specific_times(plotdata, times, cif=TRUE)
   }
 
   # remove weird structure in cmprsk::cuminc call
@@ -67,12 +67,12 @@ cif_aalen_johansen <- function(data, variable, ev_time, event, cause,
 #' @export
 cif_iptw <- function(data, variable, ev_time, event, cause, conf_int,
                      conf_level=0.95, times, treatment_model,
-                     censoring_model=NULL, verbose=F, ...) {
+                     censoring_model=NULL, verbose=FALSE, ...) {
   # empty censoring model if not specified
   if (is.null(censoring_model)) {
     form <- paste0("survival::Surv(", ev_time, ", ", event, "==0) ~ 1")
     censoring_model <- survival::coxph(stats::as.formula(form), data=data,
-                                       x=T, y=T)
+                                       x=TRUE, y=TRUE)
   }
 
   cif <- riskRegression::ate(event=c(ev_time, event),
@@ -111,7 +111,8 @@ cif_iptw <- function(data, variable, ev_time, event, cause, conf_int,
 cif_iptw_pseudo <- function(data, variable, ev_time, event, cause,
                             conf_int, conf_level=0.95, times,
                             treatment_model, weight_method="ps",
-                            stabilize=T, trim=F, se_method="cochrane", ...) {
+                            stabilize=TRUE, trim=FALSE,
+                            se_method="cochrane", ...) {
   # get weights
   if (is.numeric(treatment_model)) {
 
@@ -134,11 +135,11 @@ cif_iptw_pseudo <- function(data, variable, ev_time, event, cause,
   # take weighted mean
   levs <- levels(data[,variable])
   plotdata <- vector(mode="list", length=length(levs))
-  for (i in 1:length(levs)) {
+  for (i in seq_len(length(levs))) {
     cif_lev <- pseudo[data[,variable]==levs[i],]
     cif_lev <- apply(cif_lev, 2, stats::weighted.mean,
                      w=weights[data[,variable]==levs[i]],
-                     na.rm=T)
+                     na.rm=TRUE)
 
     data_temp <- data.frame(time=times, cif=cif_lev, group=levs[i])
 
@@ -149,7 +150,7 @@ cif_iptw_pseudo <- function(data, variable, ev_time, event, cause,
 
       cif_sd <- apply(cif_lev, 2, weighted.var.se,
                       w=weights[data[,variable]==levs[i]],
-                      na.rm=T, se_method=se_method)
+                      na.rm=TRUE, se_method=se_method)
       data_temp$se <- sqrt(cif_sd)
 
       cif_cis <- confint_surv(surv=data_temp$cif, se=data_temp$se,
@@ -176,7 +177,7 @@ cif_iptw_pseudo <- function(data, variable, ev_time, event, cause,
 #' @export
 cif_direct <- function(data, variable, ev_time, event, cause, conf_int,
                        conf_level=0.95, times, outcome_model,
-                       verbose=F, ...) {
+                       verbose=FALSE, ...) {
 
   cif <- riskRegression::ate(event=outcome_model,
                              treatment=variable,
@@ -248,7 +249,7 @@ cif_matching <- function(data, variable, ev_time, event, cause, conf_int,
 
   if (!is.null(times)) {
     plotdata$se <- NULL
-    plotdata <- specific_times(plotdata, times, cif=T)
+    plotdata <- specific_times(plotdata, times, cif=TRUE)
   }
 
   # get factor levels back
@@ -267,13 +268,13 @@ cif_matching <- function(data, variable, ev_time, event, cause, conf_int,
 cif_aiptw <- function(data, variable, ev_time, event, cause, conf_int,
                       conf_level=0.95, times, outcome_model=NULL,
                       treatment_model=NULL, censoring_model=NULL,
-                      verbose=F, ...) {
+                      verbose=FALSE, ...) {
 
   # defaults for input models
   if (is.null(censoring_model)) {
     form <- paste0("survival::Surv(", ev_time, ", ", event, "==0) ~ 1")
     censoring_model <- survival::coxph(stats::as.formula(form), data=data,
-                                       x=T, y=T)
+                                       x=TRUE, y=TRUE)
   }
   if (is.null(treatment_model)) {
     form <- paste0(variable, " ~ 1")
@@ -282,7 +283,8 @@ cif_aiptw <- function(data, variable, ev_time, event, cause, conf_int,
   }
   if (is.null(outcome_model)) {
     form <- paste0("prodlim::Hist(", ev_time, ", ", event, ") ~ 1")
-    outcome_model <- riskRegression::CSC(stats::as.formula(form), data=data, x=T)
+    outcome_model <- riskRegression::CSC(stats::as.formula(form),
+                                         data=data, x=TRUE)
   }
 
   # estimate AIPTW cumulative incidence
@@ -304,7 +306,7 @@ cif_aiptw <- function(data, variable, ev_time, event, cause, conf_int,
 
     confint.ate <- utils::getFromNamespace("confint.ate", "riskRegression")
 
-    cis <- confint.ate(curve, level=conf_level, ci=T)$meanRisk
+    cis <- confint.ate(curve, level=conf_level, ci=TRUE)$meanRisk
     plotdata$ci_lower <- cis$lower
     plotdata$ci_upper <- cis$upper
   }
@@ -368,7 +370,7 @@ cif_direct_pseudo <- function(data, variable, ev_time, event, cause,
 
   # call geese
   geese_mod <- geepack::geese(stats::as.formula(geese_formula), scale.fix=TRUE,
-                              data=Sdata, family=gaussian, id=id, jack=F,
+                              data=Sdata, family=gaussian, id=id, jack=FALSE,
                               mean.link="cloglog", corstr="independence")
 
   # initialize outcome df list
@@ -376,13 +378,13 @@ cif_direct_pseudo <- function(data, variable, ev_time, event, cause,
   plotdata <- vector(mode="list", length=length(levs))
 
   # do direct adjustment
-  for (i in 1:length(levs)) {
+  for (i in seq_len(length(levs))) {
 
     Sdata$group <- factor(levs[i], levels=levs)
     pred <- geese_predictions(geese_mod, Sdata, times=times, n=n)
 
     m <- exp(-exp(pred))
-    cif <- apply(m, 2, mean, na.rm=T)
+    cif <- apply(m, 2, mean, na.rm=TRUE)
 
     plotdata[[i]] <- data.frame(time=times, cif=cif, group=levs[i])
 
@@ -448,14 +450,14 @@ cif_aiptw_pseudo <- function(data, variable, ev_time, event, cause,
 
   # call geese
   geese_mod <- geepack::geese(stats::as.formula(geese_formula), scale.fix=TRUE,
-                              data=Sdata, family=gaussian, id=id, jack=F,
+                              data=Sdata, family=gaussian, id=id, jack=FALSE,
                               mean.link="cloglog", corstr="independence")
 
   # get direct adjustment estimates
   levs <- levels(data[,variable])
   plotdata <- vector(mode="list", length=length(levs))
 
-  for (i in 1:length(levs)) {
+  for (i in seq_len(length(levs))) {
 
     Sdata$group <- factor(levs[i], levels=levs)
     pred <- geese_predictions(geese_mod, Sdata, times=times, n=n)
@@ -477,14 +479,14 @@ cif_aiptw_pseudo <- function(data, variable, ev_time, event, cause,
       dr <- (pseudo*group-(group-ps_score)*m)/ps_score
     }
 
-    cif <- apply(dr, 2, mean, na.rm=T)
+    cif <- apply(dr, 2, mean, na.rm=TRUE)
 
     if (conf_int) {
 
       pseudo_dr_se <- function(x, n, na.rm) {
         sqrt(stats::var(x, na.rm=na.rm) / n)
       }
-      cif_se <- apply(dr, 2, pseudo_dr_se, n=n, na.rm=T)
+      cif_se <- apply(dr, 2, pseudo_dr_se, n=n, na.rm=TRUE)
 
       cif_ci <- confint_surv(surv=cif, se=cif_se, conf_level=conf_level,
                              conf_type="plain")
@@ -555,8 +557,8 @@ cif_tmle <- function(data, variable, ev_time, event, cause, conf_int,
   # extract cumulative incidence at each timepoint overall
   tpfit <- withCallingHandlers({
     survtmle.timepoints(fit, times=times, SL.trt=SL.trt, SL.ctime=SL.ctime,
-                        SL.ftime=SL.ftime, glm.trt=glm.trt, glm.ctime=glm.ctime,
-                        glm.ftime=glm.ftime)
+                        SL.ftime=SL.ftime, glm.trt=glm.trt,
+                        glm.ctime=glm.ctime, glm.ftime=glm.ftime)
   }, warning=function(w) {
     if (startsWith(conditionMessage(w), "Using formula(x) is deprecated"))
       invokeRestart("muffleWarning")

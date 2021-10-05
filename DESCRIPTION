@@ -7,6 +7,7 @@ Authors@R:
            role = c("aut", "cre"),
            email = "robin.denz@rub.de")
 Maintainer: Robin Denz <robin.denz@rub.de>
+URL: https://github.com/RobinDenz1/
 BugReports: https://github.com/RobinDenz1/
 Contact: <robin.denz@rub.de>
 Description: Estimates and plots confounder-adjusted survival curves using either 'Direct Adjustment', 'Direct Adjustment with Pseudo-Values', various forms of 'Inverse Probability of Treatment Weighting', two forms of 'Augmented Inverse Probability of Treatment Weighting',
@@ -34,7 +35,7 @@ Suggests:
 	R6,
 	MASS,
 	tidyr,
-	riskRegression (>= 2021.03.17),
+	riskRegression (>= 2020.12.08),
 	geepack (>= 1.3),
 	nnet,
 	cmprsk (>= 2.2),

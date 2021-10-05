@@ -22,11 +22,11 @@ test_that("2 treatments, using glm", {
 
 test_that("2 treatments, using weightit", {
   expect_error(adjustedCurves:::get_iptw_weights(data=sim_dat,
-                                                 treatment_model=group ~ x2 + x3,
-                                                 weight_method="ps",
-                                                 variable="group",
-                                                 stabilize=T,
-                                                 trim=F), NA)
+                                                treatment_model=group ~ x2 + x3,
+                                                weight_method="ps",
+                                                variable="group",
+                                                stabilize=T,
+                                                trim=F), NA)
 })
 
 test_that("2 treatments, using glm + trim", {
@@ -40,11 +40,11 @@ test_that("2 treatments, using glm + trim", {
 
 test_that("2 treatments, using weightit + trim", {
   expect_error(adjustedCurves:::get_iptw_weights(data=sim_dat,
-                                                 treatment_model=group ~ x2 + x3,
-                                                 weight_method="ps",
-                                                 variable="group",
-                                                 stabilize=T,
-                                                 trim=3), NA)
+                                                treatment_model=group ~ x2 + x3,
+                                                weight_method="ps",
+                                                variable="group",
+                                                stabilize=T,
+                                                trim=3), NA)
 })
 
 test_that("2 treatments, not using stabilize", {
@@ -58,9 +58,10 @@ test_that("2 treatments, not using stabilize", {
 
 ## 3 treatments
 sim_dat$group2 <- 0
-sim_dat$group2[sim_dat$group_num==1] <- sample(c(1, 2), size=nrow(sim_dat[sim_dat$group_num==1,]),
-                                            replace=T)
-sim_dat$group2 <- ifelse(sim_dat$group2==1, "Placebo", ifelse(sim_dat$group2==2, "Chemo", "OP"))
+sim_dat$group2[sim_dat$group_num==1] <-
+  sample(c(1, 2), size=nrow(sim_dat[sim_dat$group_num==1,]), replace=T)
+sim_dat$group2 <- ifelse(sim_dat$group2==1, "Placebo",
+                         ifelse(sim_dat$group2==2, "Chemo", "OP"))
 sim_dat$group2 <- factor(sim_dat$group2)
 
 treat_mod <- nnet::multinom(group2 ~ x1 + x2 + x4, data=sim_dat)
@@ -77,11 +78,11 @@ test_that("3 treatments, using multinom", {
 
 test_that("3 treatments, using weightit", {
   expect_error(adjustedCurves:::get_iptw_weights(data=sim_dat,
-                                                 treatment_model=group ~ x2 + x3,
-                                                 weight_method="ps",
-                                                 variable="group2",
-                                                 stabilize=T,
-                                                 trim=F), NA)
+                                                treatment_model=group ~ x2 + x3,
+                                                weight_method="ps",
+                                                variable="group2",
+                                                stabilize=T,
+                                                trim=F), NA)
 })
 
 test_that("3 treatments, using multinom + trim", {
@@ -95,11 +96,11 @@ test_that("3 treatments, using multinom + trim", {
 
 test_that("3 treatments, using weightit + trim", {
   expect_error(adjustedCurves:::get_iptw_weights(data=sim_dat,
-                                                 treatment_model=group ~ x2 + x3,
-                                                 weight_method="ps",
-                                                 variable="group2",
-                                                 stabilize=T,
-                                                 trim=3), NA)
+                                                treatment_model=group ~ x2 + x3,
+                                                weight_method="ps",
+                                                variable="group2",
+                                                stabilize=T,
+                                                trim=3), NA)
 })
 
 test_that("3 treatments, not using stabilize", {

@@ -8,16 +8,18 @@ Plot Confounder-Adjusted Cumulative Incidence Functions
 A function to graphically display confounder-adjusted cumulative incidence functions which where previously estimated using the \code{adjustedcif} function. The user can customize the plot using a variety of options. Internally it uses the \code{ggplot2} package, so additional not implemented features can be added using the standard \code{ggplot2} syntax. This function also includes the option to use isotonic regression on the CIFs, which is of benefit if the estimated curves are not monotone.
 }
 \usage{
-\method{plot}{adjustedcif}(x, draw_ci=F, max_t=Inf,
-     iso_reg=F, force_bounds=F, use_boot=F,
-     color=T, linetype=F, facet=F,
+\method{plot}{adjustedcif}(x, draw_ci=FALSE, max_t=Inf,
+     iso_reg=FALSE, force_bounds=FALSE,
+     use_boot=FALSE, color=TRUE,
+     linetype=FALSE, facet=FALSE,
      line_size=1, xlab="Time",
      ylab="Adjusted Cumulative Incidence",
      title=NULL, legend.title="Group",
-     legend.position="right", gg_theme=ggplot2::theme_bw(),
+     legend.position="right",
+     gg_theme=ggplot2::theme_bw(),
      ylim=NULL, custom_colors=NULL,
      custom_linetypes=NULL,
-     ci_draw_alpha=0.4, steps=T, ...)
+     ci_draw_alpha=0.4, steps=TRUE, ...)
 }
 
 \arguments{

@@ -81,7 +81,7 @@ adjsurv <- adjustedsurv(data=data,
 
 The argument **data** simply refers to our data.frame, the argument **variable** specifies our grouping variable of interest and the **ev_time** and **event** variable specify the time-to-event variables in our data.frame. Setting the **method** to "direct" will result in G-Computation estimates, based on the previously fit cox-regression model supplied using the **outcome_model** argument.
 
-Doing this returns a list with some needed output objects. Most important however is the **adjsurv** object in there, containing the adjusted survival curves and correspongind confidence intervals (because **conf_int=TRUE** in the original function call). We can take a look at this object using the following code:
+Doing this returns a list with some needed output objects. Most important however is the **adjsurv** object in there, containing the adjusted survival curves and corresponding confidence intervals (because **conf_int=TRUE** in the original function call). We can take a look at this object using the following code:
 
 ```{r echo=TRUE}
 head(adjsurv$adjsurv)
@@ -92,7 +92,7 @@ More importantly however, we can plot the survival curves directly using the **p
 ```{r echo=TRUE, fig.show=TRUE, fig.width=7, fig.height=5}
 plot(adjsurv)
 ```
-This plot function comes with many options which are listed in the documenation. To plot the pointwise confidence intervals, we can set the argument **draw_ci** to TRUE:
+This plot function comes with many options which are listed in the documentation. To plot the pointwise confidence intervals, we can set the argument **draw_ci** to TRUE:
 
 ```{r echo=TRUE, fig.show=TRUE, fig.width=7, fig.height=5}
 plot(adjsurv, draw_ci=TRUE)
@@ -130,7 +130,7 @@ plot(adjsurv)
 
 Since both methods were used correctly here, there are only slight differences in the results. Big differences between the two methods usually indicate that either the cox-regression model or the logistic regression model are incorrectly specified.
 
-### Augmented Inverse Probabiltiy of Treatment Weighting
+### Augmented Inverse Probability of Treatment Weighting
 
 Doubly-Robust methods can be helpful in such cases (see Robins and Rotnitzky (1992) or Ozenne et al. (2020)). The standard Augmented Inverse Probability of Treatment Weighting estimator utilized both kinds of models at the same time. If either of the models is correctly specified, the resulting estimates will be unbiased. It can be used in the same way as the other methods, only that this time both models have to be supplied:
 
@@ -229,7 +229,7 @@ The other estimators can be used using essentially the same syntax.
 
 In many applications there are more than two treatments. Some of the methods included in this R-Package allow calculations for an arbitrary number of treatments. In these cases the code does not change at all and can be used exactly in the same way as before. The only difference occurs when using IPTW methods. Here the user has to use a multinomial logistic regression model instead of a regular logistic regression to model the outcome. This is illustrated below.
 
-First we again create a simulated data set (for single event survival data). The function is only able to create binary treatment variables, but we can simply resample all occurences of 1 into 1 and 2, creating 3 treatments, where 1 and 2 have an identical treatment effect and selection process:
+First we again create a simulated data set (for single event survival data). The function is only able to create binary treatment variables, but we can simply resample all occurrences of 1 into 1 and 2, creating 3 treatments, where 1 and 2 have an identical treatment effect and selection process:
 
 ```{r echo=TRUE}
 # set random number generator seed to make this reproducible

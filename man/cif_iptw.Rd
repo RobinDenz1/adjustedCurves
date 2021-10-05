@@ -12,9 +12,10 @@ This method works by modelling the treatment assignment mechanism. The individua
 
 }
 \usage{
-cif_iptw(data, variable, ev_time, event, cause, conf_int,
-         conf_level=0.95, times, treatment_model,
-         censoring_model=NULL, verbose=F, ...)
+cif_iptw(data, variable, ev_time, event, cause,
+         conf_int, conf_level=0.95, times,
+         treatment_model, censoring_model=NULL,
+         verbose=FALSE, ...)
 }
 
 \arguments{
@@ -22,13 +23,13 @@ cif_iptw(data, variable, ev_time, event, cause, conf_int,
 A \code{data.frame} object containing the needed time-to-event data in standard format.
 }
   \item{variable}{
-A character string specifying the variable by which the CIFs should be grouped. Must be a valid columname of \code{data}. The variable specified should be a factor variable.
+A character string specifying the variable by which the CIFs should be grouped. Must be a valid column name of \code{data}. The variable specified should be a factor variable.
 }
   \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid columname of \code{data}.
+A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
 }
   \item{event}{
-A character string specifying the numeric event indicator. The censoring indicator should be coded as 0 and all other events of interest as 1, 2, etc. Must be a valid columname of \code{data}.
+A character string specifying the numeric event indicator. The censoring indicator should be coded as 0 and all other events of interest as 1, 2, etc. Must be a valid column name of \code{data}.
   }
   \item{cause}{
 The cause of interest for which the cumulative incidence functions should be calculated. Should be a number that appears in the \code{event} column of \code{data}.
@@ -70,7 +71,7 @@ Further arguments passed to \code{\link[riskRegression]{ate}}.
 
 Adjusted CIFs are calculated by first estimating appropriate case-weights for each observation in \code{data}. Those weights are used in a weighted version of the Aalen-Johansen estimator. If the weights are correctly estimated the resulting estimates will be unbiased. A more detailed description can be found in Neumann et al. (2016) and Choi et al. (2019). By utilizing another set of weights, this function can also correct the estimates for covariate-dependent censoring (Ozenne et al. 2020). Asymptotic variance calculations are based on the efficient influence curve.
 
-Internally, this function simply calls the \code{\link[riskRegression]{ate}} function with appropriate arguments. The three-dot syntax can be used to pass further arguments to that function. It is however recommened to use the \code{\link[riskRegression]{ate}} function directly when specific settings are required.
+Internally, this function simply calls the \code{\link[riskRegression]{ate}} function with appropriate arguments. The three-dot syntax can be used to pass further arguments to that function. It is however recommended to use the \code{\link[riskRegression]{ate}} function directly when specific settings are required.
 
 }
 \value{

@@ -23,13 +23,13 @@ surv_direct_pseudo(data, variable, ev_time, event, conf_int=FALSE,
 A \code{data.frame} object containing the needed time-to-event data in standard format.
 }
   \item{variable}{
-A character string specifying the variable by which the survival curves should be grouped. Must be a valid columname of \code{data}. The variable specified should be a factor variable.
+A character string specifying the variable by which the survival curves should be grouped. Must be a valid column name of \code{data}. The variable specified should be a factor variable.
 }
   \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid columname of \code{data}.
+A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
 }
   \item{event}{
-A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
+A character string specifying the binary event indicator. Must be a valid column name of \code{data}.
 }
    \item{conf_int}{
 Currently not used because asymptotic variance calculations for this estimator have not been proposed yet. Bootstrapping can still be used to estimate the confidence intervals (see \code{?adjustedsurv}).
@@ -72,7 +72,7 @@ The specific method used in the calculation of inverse probability of censoring 
 
 This method works by executing the following steps: (1) First Pseudo-Values for the survival probabilities are estimated for each observation in the dataset and some points in time T. Afterwards (2) a new dataset is created in which every individual observation has multiple rows, one for each point in time of interest. (3) This dataset is used to fit a generalised estimating equations (geese) model, using the Pseudo-Values as independent variable. Next (4) multiple copies of the new dataset are created, one for each possible level of the \code{variable} of interest. (5) The \code{variable} is then set to one level for all observations in each dataset. (5) The \code{geese} model is used to predict the survival probabilities at some points in time T for each observation in all dataset copies. (6) Those estimated probabilities are averaged for each dataset at each point in time, resulting in adjusted survival probabilities for all levels of the group variable at the specified points in time.
 
-It is essentially the same procedure as desribed in \code{\link[=surv_direct]{"direct"}}. The only difference is that instead of relying on a \code{coxph} model, this method uses Pseudo-Values and a geese model. This can be usefull if the data does not conform to some assumptions needed to use the Cox-Regression model (for example the proportional hazards assumption).
+It is essentially the same procedure as described in \code{\link[=surv_direct]{"direct"}}. The only difference is that instead of relying on a \code{coxph} model, this method uses Pseudo-Values and a geese model. This can be useful if the data does not conform to some assumptions needed to use the Cox-Regression model (for example the proportional hazards assumption).
 
 When estimating the \code{geese} model the \code{ev_time} variable is used as a factor by default. This results in one coefficient being estimated for each unique point in time, which can be very slow computationally if there are a lot of unique points in time and/or the dataset has many rows. In these cases it is recommended to use \code{type_time="bs"} or \code{type_time="ns"}, which results in the \code{ev_time} being modeled using B-Splines or Natural Splines. Simulation studies indicate that there is little difference in the estimates when an appropriately large number of \code{spline_df} is used.
 

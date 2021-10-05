@@ -16,7 +16,8 @@
 ## calculate confounder adjusted median survival times
 #' @importFrom dplyr %>%
 #' @export
-adjusted_median_survival <- function(adjsurv, use_boot=F, verbose=T) {
+adjusted_median_survival <- function(adjsurv, use_boot=FALSE,
+                                     verbose=TRUE) {
 
   # define those to remove Notes in devtools::check()
   . <- i <- time <- group <- median_surv_i <- boot <- surv <- NULL
@@ -33,7 +34,7 @@ adjusted_median_survival <- function(adjsurv, use_boot=F, verbose=T) {
 
   out <- plotdata %>%
     dplyr::group_by(., group) %>%
-    dplyr::summarise(median_surv=max(time[surv >= 0.5], na.rm=T),
+    dplyr::summarise(median_surv=max(time[surv >= 0.5], na.rm=TRUE),
                      .groups="drop_last")
   out <- as.data.frame(out)
 
@@ -41,7 +42,7 @@ adjusted_median_survival <- function(adjsurv, use_boot=F, verbose=T) {
     cat("----------------------------------\n")
     cat("Adjusted Median Survival Time\n")
     cat("----------------------------------\n")
-    print(out, row.names=F)
+    print(out, row.names=FALSE)
     cat("----------------------------------\n")
   }
 

@@ -13,8 +13,8 @@ NO adjustment for any confounders is made. This function is included only for re
 
 }
 \usage{
-surv_km(data, variable, ev_time, event, conf_int, conf_level=0.95,
-        times=NULL, conf_type="log")
+surv_km(data, variable, ev_time, event, conf_int,
+        conf_level=0.95, times=NULL, conf_type="log")
 }
 
 \arguments{
@@ -22,13 +22,13 @@ surv_km(data, variable, ev_time, event, conf_int, conf_level=0.95,
 A \code{data.frame} object containing the needed time-to-event data in standard format.
 }
   \item{variable}{
-A character string specifying the variable by which the survival curves should be grouped. Must be a valid columname of \code{data}. The variable specified should be a factor variable.
+A character string specifying the variable by which the survival curves should be grouped. Must be a valid column name of \code{data}. The variable specified should be a factor variable.
 }
   \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid columname of \code{data}.
+A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
 }
   \item{event}{
-A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
+A character string specifying the binary event indicator. Must be a valid column name of \code{data}.
 }
   \item{conf_int}{
 A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated. For the available types of confidence intervals see \code{?survfit}.

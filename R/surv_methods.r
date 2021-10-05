@@ -67,11 +67,11 @@ surv_km <- function(data, variable, ev_time, event, conf_int,
 }
 
 ## IPTW Kaplan-Meier estimate
-# TODO: - standard deviation calculation is off,
 #' @export
 surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
                          conf_level=0.95, times=NULL, treatment_model,
-                         weight_method="ps", stabilize=T, trim=F, ...) {
+                         weight_method="ps", stabilize=TRUE,
+                         trim=FALSE, ...) {
 
   # get weights
   if (is.numeric(treatment_model)) {
@@ -94,7 +94,7 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
   levs <- levels(data[,variable])
   plotdata <- vector(mode="list", length=length(levs))
 
-  for (i in 1:length(levs)) {
+  for (i in seq_len(length(levs))) {
 
     data_lev <- data[data[,variable]==levs[i],]
     weights_lev <- weights[data[,variable]==levs[i]]
@@ -109,9 +109,11 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
       times <- c(times, max_t)
     }
 
-    d_j <- sapply(times, function(x){sum(weights_lev[data_lev[,ev_time]==x &
-                                                   data_lev[,event]==1])})
-    Y_j <- sapply(times, function(x){sum(weights_lev[data_lev[,ev_time]>=x])})
+    d_j <- vapply(times, function(x){sum(weights_lev[data_lev[,ev_time]==x &
+                                                   data_lev[,event]==1])},
+                  FUN.VALUE=numeric(1))
+    Y_j <- vapply(times, function(x){sum(weights_lev[data_lev[,ev_time]>=x])},
+                  FUN.VALUE=numeric(1))
     S_t <- cumprod((Y_j-d_j)/Y_j)
 
     plotdata[[i]] <- data.frame(time=times, surv=S_t, group=levs[i],
@@ -132,7 +134,7 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
       ps_score <- predict.multinom(treatment_model, newdata=data, type="probs")
     }
 
-    for (i in 1:length(levs)) {
+    for (i in seq_len(length(levs))) {
 
       # relevant propensity scores
       if (length(levs) > 2) {
@@ -146,12 +148,13 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
       adj_km_lev <- plotdata[plotdata$group==levs[i],]
 
       # calculate Mj for every relevant point in time
-      adj_km_lev$Mj <- sapply(adj_km_lev$time, calc_Mj, data=data,
-                              ev_time=ev_time, ps_score=ps_score_lev)
+      adj_km_lev$Mj <- vapply(adj_km_lev$time, calc_Mj, data=data,
+                              ev_time=ev_time, ps_score=ps_score_lev,
+                              FUN.VALUE=numeric(1))
 
       # calculate variance at each point in time
-      iptw_km_var <- sapply(adj_km_lev$time, calc_iptw_km_var,
-                            adj_km=adj_km_lev)
+      iptw_km_var <- vapply(adj_km_lev$time, calc_iptw_km_var,
+                            adj_km=adj_km_lev, FUN.VALUE=numeric(1))
       plotdata$se[plotdata$group==levs[i]] <- sqrt(iptw_km_var)
     }
     plotdata$s_j <- NULL
@@ -184,7 +187,8 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
 #' @export
 surv_iptw_cox <- function(data, variable, ev_time, event, conf_int,
                           conf_level=0.95, times=NULL, treatment_model,
-                          weight_method="ps", stabilize=T, trim=F, ...) {
+                          weight_method="ps", stabilize=TRUE,
+                          trim=FALSE, ...) {
 
   # get weights
   if (is.numeric(treatment_model)) {
@@ -237,9 +241,9 @@ surv_iptw_cox <- function(data, variable, ev_time, event, conf_int,
 #' @export
 surv_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
                              conf_level=0.95, times, treatment_model,
-                             weight_method="ps", stabilize=T, trim=F,
-                             se_method="cochrane", censoring_vars=NULL,
-                             ipcw_method="binder", ...) {
+                             weight_method="ps", stabilize=TRUE,
+                             trim=FALSE, se_method="cochrane",
+                             censoring_vars=NULL, ipcw_method="binder", ...) {
   # get weights
   if (is.numeric(treatment_model)) {
 
@@ -265,11 +269,11 @@ surv_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
   # take weighted mean
   levs <- levels(data[,variable])
   plotdata <- vector(mode="list", length=length(levs))
-  for (i in 1:length(levs)) {
+  for (i in seq_len(length(levs))) {
     surv_lev <- pseudo[data[,variable]==levs[i],]
     surv_lev <- apply(surv_lev, 2, stats::weighted.mean,
                       w=weights[data[,variable]==levs[i]],
-                      na.rm=T)
+                      na.rm=TRUE)
 
     data_temp <- data.frame(time=times, surv=surv_lev, group=levs[i])
 
@@ -280,7 +284,7 @@ surv_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
 
       surv_sd <- apply(surv_lev, 2, weighted.var.se,
                        w=weights[data[,variable]==levs[i]],
-                       na.rm=T, se_method=se_method)
+                       na.rm=TRUE, se_method=se_method)
       data_temp$se <- sqrt(surv_sd)
 
       surv_cis <- confint_surv(surv=data_temp$surv, se=data_temp$se,
@@ -307,7 +311,7 @@ surv_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
 #' @export
 surv_direct <- function(data, variable, ev_time, event, conf_int,
                         conf_level=0.95, times, outcome_model,
-                        verbose=F, ...) {
+                        verbose=FALSE, ...) {
 
   surv <- riskRegression::ate(event=outcome_model, treatment=variable,
                               data=data, estimator="Gformula",
@@ -338,7 +342,7 @@ surv_direct <- function(data, variable, ev_time, event, conf_int,
 #' @export
 surv_matching <- function(data, variable, ev_time, event, conf_int=FALSE,
                           conf_level=0.95, times, treatment_model,
-                          stabilize=T, gtol=0.001, ...) {
+                          stabilize=TRUE, gtol=0.001, ...) {
 
   # if it's a factor, turn it into numeric
   if (is.factor(data[,variable])) {
@@ -372,9 +376,10 @@ surv_matching <- function(data, variable, ev_time, event, conf_int=FALSE,
 
   # estimate survival curve
   form <- paste0("survival::Surv(", ev_time, ", ", event, ") ~ ", variable)
-  surv <- survival::survfit(stats::as.formula(form), data=m_dat, se.fit=conf_int,
-                            conf.int=conf_level, weights=m_dat$match_weights,
-                            robust=T)
+  surv <- survival::survfit(stats::as.formula(form), data=m_dat,
+                            se.fit=conf_int, conf.int=conf_level,
+                            weights=m_dat$match_weights,
+                            robust=TRUE)
   plotdata <- data.frame(time=surv$time,
                          surv=surv$surv,
                          group=c(rep(levs[1], surv$strata[1]),
@@ -397,12 +402,13 @@ surv_matching <- function(data, variable, ev_time, event, conf_int=FALSE,
 surv_aiptw <- function(data, variable, ev_time, event, conf_int,
                        conf_level=0.95, times, outcome_model=NULL,
                        treatment_model=NULL, censoring_model=NULL,
-                       verbose=F, ...) {
+                       verbose=FALSE, ...) {
 
   # defaults for input models
   if (is.null(censoring_model)) {
     form <- paste0("survival::Surv(", ev_time, ", ", event, "==0) ~ 1")
-    censoring_model <- survival::coxph(stats::as.formula(form), data=data, x=T)
+    censoring_model <- survival::coxph(stats::as.formula(form), data=data,
+                                       x=TRUE)
   }
   if (is.null(treatment_model)) {
     form <- paste0(variable, " ~ 1")
@@ -411,7 +417,8 @@ surv_aiptw <- function(data, variable, ev_time, event, conf_int,
   }
   if (is.null(outcome_model)) {
     form <- paste0("survival::Surv(", ev_time, ", ", event, ") ~ 1")
-    outcome_model <- survival::coxph(stats::as.formula(form), data=data, x=T)
+    outcome_model <- survival::coxph(stats::as.formula(form), data=data,
+                                     x=TRUE)
   }
 
   # estimate AIPTW cumulative incidence
@@ -433,7 +440,7 @@ surv_aiptw <- function(data, variable, ev_time, event, conf_int,
 
     confint.ate <- utils::getFromNamespace("confint.ate", "riskRegression")
 
-    cis <- confint.ate(curve, level=conf_level, ci=T)$meanRisk
+    cis <- confint.ate(curve, level=conf_level, ci=TRUE)$meanRisk
     plotdata$ci_lower <- 1 - cis$upper
     plotdata$ci_upper <- 1 - cis$lower
   }
@@ -485,7 +492,8 @@ surv_direct_pseudo <- function(data, variable, ev_time, event,
       geese_formula <- paste("yi ~ ", paste(outcome_vars, collapse=" + "),
                              " + group")
     } else {
-      geese_formula <- paste("yi ~ vtime + ", paste(outcome_vars, collapse=" + "),
+      geese_formula <- paste("yi ~ vtime + ",
+                             paste(outcome_vars, collapse=" + "),
                              " + group")
     }
 
@@ -502,21 +510,22 @@ surv_direct_pseudo <- function(data, variable, ev_time, event,
 
   # call geese
   geese_mod <- geepack::geese(stats::as.formula(geese_formula), scale.fix=TRUE,
-                                data=Sdata_fit, family=gaussian, id=id, jack=F,
-                                mean.link="cloglog", corstr="independence")
+                              data=Sdata_fit, family=gaussian, id=id,
+                              jack=FALSE, mean.link="cloglog",
+                              corstr="independence")
 
   # initialize outcome df list
   levs <- levels(data[,variable])
   plotdata <- vector(mode="list", length=length(levs))
 
   # do direct adjustment
-  for (i in 1:length(levs)) {
+  for (i in seq_len(length(levs))) {
 
     Sdata$group <- factor(levs[i], levels=levs)
     pred <- geese_predictions(geese_mod, Sdata, times=times, n=n)
 
     m <- exp(-exp(pred))
-    surv <- apply(m, 2, mean, na.rm=T)
+    surv <- apply(m, 2, mean, na.rm=TRUE)
 
     plotdata[[i]] <- data.frame(time=times, surv=surv, group=levs[i])
 
@@ -588,14 +597,15 @@ surv_aiptw_pseudo <- function(data, variable, ev_time, event, conf_int,
 
   # call geese
   geese_mod <- geepack::geese(stats::as.formula(geese_formula), scale.fix=TRUE,
-                              data=Sdata_fit, family=gaussian, id=id, jack=F,
-                              mean.link="cloglog", corstr="independence")
+                              data=Sdata_fit, family=gaussian, id=id,
+                              jack=FALSE, mean.link="cloglog",
+                              corstr="independence")
 
   # get direct adjustment estimates
   levs <- levels(data[,variable])
   plotdata <- vector(mode="list", length=length(levs))
 
-  for (i in 1:length(levs)) {
+  for (i in seq_len(length(levs))) {
 
     Sdata$group <- factor(levs[i], levels=levs)
     pred <- geese_predictions(geese_mod, Sdata, times=times, n=n)
@@ -617,14 +627,14 @@ surv_aiptw_pseudo <- function(data, variable, ev_time, event, conf_int,
       dr <- (pseudo*group-(group-ps_score)*m)/ps_score
     }
 
-    surv <- apply(dr, 2, mean, na.rm=T)
+    surv <- apply(dr, 2, mean, na.rm=TRUE)
 
     if (conf_int) {
 
       pseudo_dr_se <- function(x, n, na.rm) {
         sqrt(stats::var(x, na.rm=na.rm) / n)
       }
-      surv_se <- apply(dr, 2, pseudo_dr_se, n=n, na.rm=T)
+      surv_se <- apply(dr, 2, pseudo_dr_se, n=n, na.rm=TRUE)
 
       surv_ci <- confint_surv(surv=surv, se=surv_se, conf_level=conf_level,
                               conf_type="plain")
@@ -653,7 +663,7 @@ surv_aiptw_pseudo <- function(data, variable, ev_time, event, conf_int,
 #' @export
 surv_emp_lik <- function(data, variable, ev_time, event, conf_int=FALSE,
                          times, treatment_vars, moment="first",
-                         standardize=F, gtol=0.00001,
+                         standardize=FALSE, gtol=0.00001,
                          max_iter=100, newton_tol=1.0e-06) {
 
   # if it's a factor, turn it into numeric
@@ -746,8 +756,8 @@ surv_tmle <- function(data, variable, ev_time, event, conf_int,
   # extract cumulative incidence at each timepoint overall
   tpfit <- withCallingHandlers({
     survtmle.timepoints(fit, times=times, SL.trt=SL.trt, SL.ctime=SL.ctime,
-                        SL.ftime=SL.ftime, glm.trt=glm.trt, glm.ctime=glm.ctime,
-                        glm.ftime=glm.ftime)
+                        SL.ftime=SL.ftime, glm.trt=glm.trt,
+                        glm.ctime=glm.ctime, glm.ftime=glm.ftime)
   }, warning=function(w) {
     if (startsWith(conditionMessage(w), "Using formula(x) is deprecated"))
       invokeRestart("muffleWarning")

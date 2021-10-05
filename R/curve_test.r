@@ -37,7 +37,7 @@ test_curve_equality <- function(adjsurv, to, from=0, conf_level=0.95) {
       # call function once on every adjsurv object, extract values
       len <- length(adjsurv$mids_analyses)
       mids_out <- dat <- vector(mode="list", length=len)
-      for (i in 1:len) {
+      for (i in seq_len(len)) {
 
         results_imp <- test_curve_equality(adjsurv$mids_analyses[[i]],
                                            to=to, from=from,
@@ -46,7 +46,7 @@ test_curve_equality <- function(adjsurv, to, from=0, conf_level=0.95) {
         comp_names <- names(results_imp)
 
         # for each pairwise comparison, extract values
-        for (j in 1:(length(results_imp)-1)) {
+        for (j in seq_len((length(results_imp)-1))) {
 
           row <- data.frame(area_est=results_imp[[j]]$observed_diff_integral,
                             area_se=results_imp[[j]]$integral_se,
@@ -69,7 +69,7 @@ test_curve_equality <- function(adjsurv, to, from=0, conf_level=0.95) {
 
       # create one curve_test object for each comparison
       output <- list(mids_analyses=mids_out)
-      for (i in 1:nrow(pooled_dat)) {
+      for (i in seq_len(nrow(pooled_dat))) {
 
         pooled_ci <- confint_surv(surv=dat$area_est[i],
                                   se=dat$area_se[i],
@@ -90,14 +90,14 @@ test_curve_equality <- function(adjsurv, to, from=0, conf_level=0.95) {
                     kind=est,
                     integral_se=dat$area_se[i],
                     conf_int=pooled_ci,
-                    categorical=F,
+                    categorical=FALSE,
                     treat_labs=mids_out[[1]][[i]]$treat_labs,
                     call=fun_call)
         class(out) <- "curve_test"
         output[[dat$comparison[i]]] <- out
 
       }
-      output$categorical <- T
+      output$categorical <- TRUE
       class(output) <- "curve_test"
 
       return(output)
@@ -108,7 +108,7 @@ test_curve_equality <- function(adjsurv, to, from=0, conf_level=0.95) {
       mids_out <- vector(mode="list", length=len)
       area_ests <- area_se <- p_vals <- n_boots <- vector(mode="numeric",
                                                           length=len)
-      for (i in 1:len) {
+      for (i in seq_len(len)) {
 
         results_imp <- test_curve_equality(adjsurv$mids_analyses[[i]],
                                            to=to, from=from,
@@ -146,7 +146,7 @@ test_curve_equality <- function(adjsurv, to, from=0, conf_level=0.95) {
                   kind=est,
                   integral_se=pooled_se,
                   conf_int=pooled_ci,
-                  categorical=F,
+                  categorical=FALSE,
                   treat_labs=treat_labs,
                   call=fun_call)
       class(out) <- "curve_test"
@@ -167,7 +167,7 @@ test_curve_equality <- function(adjsurv, to, from=0, conf_level=0.95) {
       stats_vec <- vector(mode="numeric", length=max(adjsurv$boot_data$boot))
       curve_list <- vector(mode="list", length=max(adjsurv$boot_data$boot))
 
-      for (i in 1:max(adjsurv$boot_data$boot)) {
+      for (i in seq_len(max(adjsurv$boot_data$boot))) {
 
         # select one bootstrap data set each
         boot_dat <- adjsurv$boot_data[adjsurv$boot_data$boot==i,]
@@ -219,8 +219,9 @@ test_curve_equality <- function(adjsurv, to, from=0, conf_level=0.95) {
 
       # bootstrap confidence interval
       conf_int <- stats::quantile(stats_vec,
-                                  probs=c((1-conf_level)/2, 1-((1-conf_level)/2)),
-                                  na.rm=T)
+                                  probs=c((1-conf_level)/2,
+                                          1-((1-conf_level)/2)),
+                                  na.rm=TRUE)
       names(conf_int) <- c("ci_lower", "ci_upper")
 
       # put together output
@@ -233,7 +234,7 @@ test_curve_equality <- function(adjsurv, to, from=0, conf_level=0.95) {
                   n_boot=length(stats_vec),
                   kind=est,
                   conf_int=conf_int,
-                  categorical=F,
+                  categorical=FALSE,
                   treat_labs=treat_labs,
                   call=match.call())
 
@@ -248,7 +249,7 @@ test_curve_equality <- function(adjsurv, to, from=0, conf_level=0.95) {
 
 
       out <- list()
-      for (i in 1:length(combs)) {
+      for (i in seq_len(length(combs))) {
 
         # get first and second group
         group_0 <- strsplit(combs[i], "\t")[[1]][1]
@@ -263,7 +264,7 @@ test_curve_equality <- function(adjsurv, to, from=0, conf_level=0.95) {
                                                 c(group_0, group_1)),]
           fake_adjsurv <- list(adjsurv=observed_dat,
                                boot_data=boot_dat,
-                               categorical=F)
+                               categorical=FALSE)
           class(fake_adjsurv) <- "adjustedsurv"
 
         } else {
@@ -274,7 +275,7 @@ test_curve_equality <- function(adjsurv, to, from=0, conf_level=0.95) {
                                                 c(group_0, group_1)),]
           fake_adjsurv <- list(adjcif=observed_dat,
                                boot_data=boot_dat,
-                               categorical=F)
+                               categorical=FALSE)
           class(fake_adjsurv) <- "adjustedcif"
         }
 
@@ -285,7 +286,7 @@ test_curve_equality <- function(adjsurv, to, from=0, conf_level=0.95) {
                                     conf_level=conf_level)
         out[[paste(group_0, group_1)]] <- pair
       }
-      out$categorical <- T
+      out$categorical <- TRUE
     }
     class(out) <- "curve_test"
 
@@ -301,15 +302,15 @@ print.curve_test <- function(x, ...) {
 
   if (!is.null(x$mids_analyses) & x$categorical) {
 
-    for (i in 2:(length(x)-1))  {
+    for (i in seq(2, (length(x)-1)))  {
       print.curve_test(x=x[[i]])
     }
 
   } else if (!x$categorical) {
     if(x$kind=="surv") {
-      title <- "Pepe-Flemming Test of Equality of Two Adjusted Survival Curves \n"
+     title <- "Pepe-Flemming Test of Equality of Two Adjusted Survival Curves\n"
     } else {
-      title <- "Pepe-Flemming Test of Equality of Two Adjusted CIFs \n"
+     title <- "Pepe-Flemming Test of Equality of Two Adjusted CIFs \n"
     }
 
     call_conf <- x$call$conf_level
@@ -334,7 +335,7 @@ print.curve_test <- function(x, ...) {
     cat("Calculated using", x$n_boot, "bootstrap replications.\n")
     cat("------------------------------------------------------------------\n")
   } else {
-    for (i in 1:(length(x)-1))  {
+    for (i in seq_len((length(x)-1)))  {
       print.curve_test(x=x[[i]])
     }
   }
@@ -361,7 +362,7 @@ plot.curve_test <- function(x, type="curves", xlab=NULL, ylab=NULL,
 
       observed_diff_integrals <- list()
       diff_integrals <- list()
-      for (i in 1:(length(x)-1)) {
+      for (i in seq_len((length(x)-1))) {
 
         # observed diff curves
         obs_diff <- x[[i]]$observed_diff_integral
@@ -415,7 +416,7 @@ plot.curve_test <- function(x, type="curves", xlab=NULL, ylab=NULL,
 
       observed_diff_curves <- list()
       diff_curves <- list()
-      for (i in 1:(length(x)-1)) {
+      for (i in seq_len((length(x)-1))) {
 
         # observed diff curves
         obs_diff <- x[[i]]$observed_diff_curve
@@ -432,7 +433,8 @@ plot.curve_test <- function(x, type="curves", xlab=NULL, ylab=NULL,
 
       p <- ggplot2::ggplot(diff_curves, ggplot2::aes(x=time, y=surv)) +
         ggplot2::geom_step(ggplot2::aes(group=boot), color="grey", alpha=0.8) +
-        ggplot2::geom_step(data=observed_diff_curves, ggplot2::aes(x=time, y=surv)) +
+        ggplot2::geom_step(data=observed_diff_curves,
+                           ggplot2::aes(x=time, y=surv)) +
         ggplot2::geom_hline(yintercept=0, linetype="dashed") +
         ggplot2::theme_bw() +
         ggplot2::labs(x=xlab, y=ylab) +
@@ -498,12 +500,13 @@ plot.curve_test <- function(x, type="curves", xlab=NULL, ylab=NULL,
 all_combs_length_2 <- function(treat_labs) {
 
   combs <- list()
-  for (i in 1:length(treat_labs)) {
-    for (j in 1:length(treat_labs)) {
+  for (i in seq_len(length(treat_labs))) {
+    for (j in seq_len(length(treat_labs))) {
 
       # no cases with the same group twice and order does not matter
       if (i != j & !paste(treat_labs[j], treat_labs[i], sep="\t") %in% combs) {
-        combs[[length(combs)+1]] <- paste(treat_labs[i], treat_labs[j], sep="\t")
+        combs[[length(combs)+1]] <- paste(treat_labs[i],
+                                          treat_labs[j], sep="\t")
       }
     }
   }

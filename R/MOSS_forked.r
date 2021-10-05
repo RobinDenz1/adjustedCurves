@@ -63,7 +63,7 @@ MOSS_hazard <- R6::R6Class("MOSS_hazard",
     },
     create_dNt = function() {
       dNt <- matrix(0, nrow = length(self$A), ncol = max(self$T_tilde))
-      for (i in 1:length(self$A)) {
+      for (i in seq_len(length(self$A))) {
         if (self$Delta[i] == 1) {
           dNt[i, self$T_tilde[i]] <- 1
         }
@@ -121,10 +121,12 @@ MOSS_hazard <- R6::R6Class("MOSS_hazard",
       }
       if (method %in% c("l2", "l1")) {
         epsilon_n <- tryCatch({
-          if (method == "l2") {alpha <- 0; norm_func <- norm_l2;
-                               lambda.min.ratio = 1e-2}
-          if (method == "l1") {alpha <- 1; norm_func <- norm_l1;
-                               lambda.min.ratio = 9e-1}
+          if (method == "l2") {alpha <- 0
+                               norm_func <- norm_l2
+                               lambda.min.ratio <- 1e-2}
+          if (method == "l1") {alpha <- 1
+                               norm_func <- norm_l1
+                               lambda.min.ratio <- 9e-1}
           ind <- 1
           while (ind == 1) {
             enet_fit <- glmnet::glmnet(
@@ -216,7 +218,8 @@ MOSS_hazard <- R6::R6Class("MOSS_hazard",
       mean_eic_inner_prod_best <- sqrt(sum(mean_eic ^ 2))
       self$q_best <- self$density_failure$clone(deep = TRUE)
       to_iterate <- TRUE
-      if (is.infinite(mean_eic_inner_prod_current) | is.na(mean_eic_inner_prod_current)) {
+      if (is.infinite(mean_eic_inner_prod_current) |
+          is.na(mean_eic_inner_prod_current)) {
         to_iterate <- FALSE
       }
 
@@ -225,7 +228,9 @@ MOSS_hazard <- R6::R6Class("MOSS_hazard",
         to_iterate
       ) {
         if (verbose) {
-          df_debug <- data.frame(num_iteration, sqrt(sum(mean_eic ^ 2)), mean(psi_n))
+          df_debug <- data.frame(num_iteration,
+                                 sqrt(sum(mean_eic ^ 2)),
+                                 mean(psi_n))
           colnames(df_debug) <- NULL
           print(df_debug)
         }
@@ -240,7 +245,8 @@ MOSS_hazard <- R6::R6Class("MOSS_hazard",
         mean_eic_inner_prod_prev <- mean_eic_inner_prod_current
         mean_eic_inner_prod_current <- abs(sqrt(sum(mean_eic ^ 2)))
         num_iteration <- num_iteration + 1
-        if (is.infinite(mean_eic_inner_prod_current) | is.na(mean_eic_inner_prod_current)) {
+        if (is.infinite(mean_eic_inner_prod_current) |
+            is.na(mean_eic_inner_prod_current)) {
           warning("stopping criteria diverged. Reporting best result so far.")
           break
         }
@@ -279,7 +285,8 @@ compute_q <- function(corr, B = 1e3, alpha = 0.05) {
   return(as.numeric(stats::quantile(z, 1 - alpha)))
 }
 
-## re-define and rename "compute_simultaneous_ci" to allow different alpha levels
+## re-define and rename "compute_simultaneous_ci" to allow different
+# alpha levels
 compute_se_moss <- function(eic_fit, alpha) {
   # compute the value to +- around the Psi_n
   n <- nrow(eic_fit)
@@ -347,7 +354,8 @@ initial_sl_fit <- function(
 
   # make long version of data sets needed for estimation and prediction
   dataList <- survtmle::makeDataList(
-    dat = dat, J = allJ, ntrt = ntrt, uniqtrt = uniqtrt, t0 = t_0, bounds = NULL
+    dat = dat, J = allJ, ntrt = ntrt, uniqtrt = uniqtrt, t0 = t_0,
+    bounds = NULL
   )
   # estimate censoring
   # when there is almost no censoring, the classification will fail;
@@ -479,7 +487,8 @@ survival_curve <- R6::R6Class("survival_curve",
       if (from_survival) {
         # message("construct from survival")
         if ("data.frame" %in% class(survival)) survival <- as.matrix(survival)
-        if ("numeric" %in% class(survival)) survival <- matrix(survival, nrow = 1)
+        if ("numeric" %in% class(survival)) survival <- matrix(survival,
+                                                               nrow = 1)
         self$survival <- survival
       }
       if (from_pdf) {
@@ -535,7 +544,6 @@ survival_curve <- R6::R6Class("survival_curve",
       return(self)
     },
     display = function(type, W = NULL) {
-      library("ggplot2")
       if (is.null(W)) {
         df <- data.frame(t = rep(self$t, self$n()))
       } else {
@@ -653,7 +661,8 @@ eic <- R6::R6Class("eic",
       for (t in 1:k) {
         h <- -as.numeric(self$A == self$A_intervene) / g /
           self$density_censor$survival[, t] *
-          self$density_failure$survival[, k] / self$density_failure$survival[, t]
+          self$density_failure$survival[, k] /
+          self$density_failure$survival[, t]
         part1 <-  h * (
           as.numeric(self$T_tilde == t & self$Delta == 1) -
             as.numeric(self$T_tilde >= t) * self$density_failure$hazard[, t]
@@ -682,7 +691,8 @@ eic <- R6::R6Class("eic",
         } else {
           h <- -as.numeric(self$A == self$A_intervene) / g /
             self$density_censor$survival[, t] *
-            self$density_failure$survival[, k] / self$density_failure$survival[, t]
+            self$density_failure$survival[, k] /
+            self$density_failure$survival[, t]
         }
         h_list <- c(h_list, list(h))
       }

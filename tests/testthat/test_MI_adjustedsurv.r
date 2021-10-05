@@ -13,10 +13,12 @@ sim_dat$x1 <- ifelse(runif(n=100) <= 0.4, sim_dat$x1, NA)
 imp <- mice::mice(sim_dat, m=3, method="pmm", printFlag=F)
 
 # outcome model
-outc_mod <- with(imp, coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6, x=T))
+outc_mod <- with(imp, coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6,
+                            x=T))
 
 # treatment model
-treat_mod <- with(imp, glm(group ~ x1 + x2 + x3 + x4 + x5 + x6, family="binomial"))
+treat_mod <- with(imp, glm(group ~ x1 + x2 + x3 + x4 + x5 + x6,
+                           family="binomial"))
 
 # censoring model
 cens_mod <- with(imp, coxph(Surv(time, event==0) ~ x1 + x2, x=T))
@@ -99,24 +101,26 @@ test_that("MI, iptw_km, boot, glm", {
 # use formula object treatment model
 test_that("MI, iptw_km, no boot, weightit", {
   expect_error(adjustedCurves::adjustedsurv(data=imp,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="iptw_km",
-                                            conf_int=F,
-                                            treatment_model=group ~ x1 + x2 + x3), NA)
+                                          variable="group",
+                                          ev_time="time",
+                                          event="event",
+                                          method="iptw_km",
+                                          conf_int=F,
+                                          treatment_model=group ~ x1 + x2 + x3),
+               NA)
 })
 
 test_that("MI, iptw_km, boot, weightit", {
   expect_error(adjustedCurves::adjustedsurv(data=imp,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="iptw_km",
-                                            conf_int=F,
-                                            bootstrap=T,
-                                            n_boot=3,
-                                            treatment_model=group ~ x1 + x2 + x3), NA)
+                                          variable="group",
+                                          ev_time="time",
+                                          event="event",
+                                          method="iptw_km",
+                                          conf_int=F,
+                                          bootstrap=T,
+                                          n_boot=3,
+                                          treatment_model=group ~ x1 + x2 + x3),
+               NA)
 })
 
 
@@ -147,24 +151,26 @@ test_that("MI, iptw_cox, boot", {
 # use formula object treatment model
 test_that("MI, iptw_cox, no boot, weightit", {
   expect_error(adjustedCurves::adjustedsurv(data=imp,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="iptw_cox",
-                                            conf_int=F,
-                                            treatment_model=group ~ x1 + x2 + x3), NA)
+                                          variable="group",
+                                          ev_time="time",
+                                          event="event",
+                                          method="iptw_cox",
+                                          conf_int=F,
+                                          treatment_model=group ~ x1 + x2 + x3),
+               NA)
 })
 
 test_that("MI, iptw_cox, boot, weightit", {
   expect_error(adjustedCurves::adjustedsurv(data=imp,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="iptw_cox",
-                                            conf_int=F,
-                                            bootstrap=T,
-                                            n_boot=3,
-                                            treatment_model=group ~ x1 + x2 + x3), NA)
+                                          variable="group",
+                                          ev_time="time",
+                                          event="event",
+                                          method="iptw_cox",
+                                          conf_int=F,
+                                          bootstrap=T,
+                                          n_boot=3,
+                                          treatment_model=group ~ x1 + x2 + x3),
+               NA)
 })
 
 ### iptw_pseudo
@@ -194,24 +200,26 @@ test_that("MI, iptw_pseudo, boot", {
 # use formula object treatment model
 test_that("MI, iptw_pseudo, no boot, weightit", {
   expect_error(adjustedCurves::adjustedsurv(data=imp,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="iptw_pseudo",
-                                            conf_int=F,
-                                            treatment_model=group ~ x1 + x2 + x3), NA)
+                                          variable="group",
+                                          ev_time="time",
+                                          event="event",
+                                          method="iptw_pseudo",
+                                          conf_int=F,
+                                          treatment_model=group ~ x1 + x2 + x3),
+               NA)
 })
 
 test_that("MI, iptw_pseudo, boot, weightit", {
   expect_error(adjustedCurves::adjustedsurv(data=imp,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="iptw_pseudo",
-                                            conf_int=F,
-                                            bootstrap=T,
-                                            n_boot=3,
-                                            treatment_model=group ~ x1 + x2 + x3), NA)
+                                          variable="group",
+                                          ev_time="time",
+                                          event="event",
+                                          method="iptw_pseudo",
+                                          conf_int=F,
+                                          bootstrap=T,
+                                          n_boot=3,
+                                          treatment_model=group ~ x1 + x2 + x3),
+               NA)
 })
 
 ### matching
@@ -338,20 +346,24 @@ adjsurv <- adjustedCurves::adjustedsurv(data=imp,
                                         na.action="na.omit")
 
 test_that("adjusted_median_survival, no boot", {
-  expect_error(adjustedCurves::adjusted_median_survival(adjsurv, use_boot=F), NA)
+  expect_error(adjustedCurves::adjusted_median_survival(adjsurv, use_boot=F),
+               NA)
 })
 
 test_that("adjusted_median_survival, boot", {
-  expect_error(adjustedCurves::adjusted_median_survival(adjsurv, use_boot=T), NA)
+  expect_error(adjustedCurves::adjusted_median_survival(adjsurv, use_boot=T),
+               NA)
 })
 
 ### adjusted_rmst
 test_that("adjusted_rmst, no boot", {
-  expect_error(adjustedCurves::adjusted_rmst(adjsurv, from=0, to=1, use_boot=F), NA)
+  expect_error(adjustedCurves::adjusted_rmst(adjsurv, from=0, to=1, use_boot=F),
+               NA)
 })
 
 test_that("adjusted_rmst, boot", {
-  expect_error(adjustedCurves::adjusted_rmst(adjsurv, from=0, to=1, use_boot=T), NA)
+  expect_error(adjustedCurves::adjusted_rmst(adjsurv, from=0, to=1, use_boot=T),
+               NA)
 })
 
 ### test_curve_equality
@@ -361,9 +373,10 @@ test_that("test_curve_equality, two treatments", {
 
 # create 3 treatments
 sim_dat$group2 <- 0
-sim_dat$group2[sim_dat$group==1] <- sample(c(1, 2), size=nrow(sim_dat[sim_dat$group==1,]),
-                                          replace=T)
-sim_dat$group2 <- ifelse(sim_dat$group2==1, "Placebo", ifelse(sim_dat$group2==2, "Chemo", "OP"))
+sim_dat$group2[sim_dat$group==1] <-
+  sample(c(1, 2), size=nrow(sim_dat[sim_dat$group==1,]), replace=T)
+sim_dat$group2 <- ifelse(sim_dat$group2==1, "Placebo",
+                         ifelse(sim_dat$group2==2, "Chemo", "OP"))
 sim_dat$group2 <- factor(sim_dat$group2)
 
 imp <- mice::mice(sim_dat, m=3, method="pmm", printFlag=F)

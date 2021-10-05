@@ -10,10 +10,10 @@ This page explains the details of estimating augmented inverse probability of tr
 
 }
 \usage{
-cif_aiptw(data, variable, ev_time, event, cause, conf_int,
-          conf_level=0.95, times, outcome_model=NULL,
-          treatment_model=NULL, censoring_model=NULL,
-          verbose=F, ...)
+cif_aiptw(data, variable, ev_time, event, cause,
+          conf_int, conf_level=0.95, times,
+          outcome_model=NULL, treatment_model=NULL,
+          censoring_model=NULL, verbose=FALSE, ...)
 }
 
 \arguments{
@@ -21,13 +21,13 @@ cif_aiptw(data, variable, ev_time, event, cause, conf_int,
 A \code{data.frame} object containing the needed time-to-event data in standard format.
 }
   \item{variable}{
-A character string specifying the variable by which the CIFs should be grouped. Must be a valid columname of \code{data}. The variable specified should be a factor variable.
+A character string specifying the variable by which the CIFs should be grouped. Must be a valid column name of \code{data}. The variable specified should be a factor variable.
 }
   \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid columname of \code{data}.
+A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
 }
   \item{event}{
-A character string specifying the numeric event indicator. The censoring indicator should be coded as 0 and all other events of interest as 1, 2, etc. Must be a valid columname of \code{data}.
+A character string specifying the numeric event indicator. The censoring indicator should be coded as 0 and all other events of interest as 1, 2, etc. Must be a valid column name of \code{data}.
   }
   \item{cause}{
 The cause of interest for which the cumulative incidence functions should be calculated. Should be a number that appears in the \code{event} column of \code{data}.

@@ -8,7 +8,7 @@ Author: Robin Denz
 It provides an convenient wrapper around existing R-Packages on the topic and adds additional methods and functionality on top of it.
 Those additional features include the calculation of adjusted restricted mean survival time and testing the equality of two confounder-adjusted survival curves.
 
-Detailed descriptions of each method can be found in the literature cited in the documentatio. 
+Detailed descriptions of each method can be found in the literature cited in the documentation. 
 
 ## Installation
 

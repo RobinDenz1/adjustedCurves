@@ -23,7 +23,7 @@ CSC_MI <- function(mids, formula, ...) {
          "'mids' argument.")
   }
 
-  imp_long <- mice::complete(mids, action="long", include=F)
+  imp_long <- mice::complete(mids, action="long", include=FALSE)
   outc_mod <- list()
   for (i in 1:max(imp_long$.imp)) {
     mod <- riskRegression::CSC(formula,

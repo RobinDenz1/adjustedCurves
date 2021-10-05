@@ -45,16 +45,16 @@ sim_crisk_time <- function(x, outcome_betas, gamma, lambda, max_t) {
 
   ## Simulates the all cause hazard
   suma <- vector()
-  for (m2 in 1:nsit) {
+  for (m2 in seq_len(nsit)) {
     suma[m2] <- 0
-    for (m1 in 1:length(outcome_betas)) {
+    for (m1 in seq_len(length(outcome_betas))) {
       suma[m2] <- suma[m2] + outcome_betas[[m1]][m2]*eff[m1]
     }
   }
 
   # Cause-specific hazard function, based on weibull distribution
   # equation can be found in Morina & Navarro (2017, p. 5714)
-  for (k in 1:nsit) {
+  for (k in seq_len(nsit)) {
 
     a.ev[k] <- lambda[k] + suma[k]
     b.ev[k] <- gamma[k]
@@ -68,7 +68,7 @@ sim_crisk_time <- function(x, outcome_betas, gamma, lambda, max_t) {
   # Cumulative all-cause hazard function A
   A <- function(t, y) {
     res <- 0
-    for (k in 1:length(cshaz)) {
+    for (k in seq_len(length(cshaz))) {
       res <- res + stats::integrate(cshaz[[k]], lower=0.001, upper=t, r=k,
                                     subdivisions=1000)$value
     }
@@ -99,17 +99,17 @@ sim_crisk_time <- function(x, outcome_betas, gamma, lambda, max_t) {
   # calculate probabilities for observing each cause, defined
   # by equation 2 in Beyersmann et al. (2009)
   sumprob <- 0
-  for (k in 1:length(cshaz)) {
+  for (k in seq_len(length(cshaz))) {
     sumprob <- sumprob + cshaz[[k]](tb, k)
   }
 
-  for (k in 1:length(cshaz)) {
+  for (k in seq_len(length(cshaz))) {
     pro[k] <- cshaz[[k]](tb, k) / sumprob
   }
 
   # draw observed cause using multinomial distribution
   cause1 <- stats::rmultinom(1, 1, prob=pro)
-  for (k in 1:length(cshaz)) {
+  for (k in seq_len(length(cshaz))) {
     if (cause1[k] == 1) {
       cause <- k
     }
@@ -196,14 +196,14 @@ sim_confounded_surv <- function(n=500, lcovars=NULL, outcome_betas=NULL,
     cens_time <- do.call(cens_fun, args=c(n=n, cens_args))
 
     covars <- within(covars, {
-      event <- ifelse(time < cens_time, 1, 0);
-      time <- ifelse(time < cens_time, time, cens_time);
+      event <- ifelse(time < cens_time, 1, 0)
+      time <- ifelse(time < cens_time, time, cens_time)
     })
   }
   # also add administrative censoring if specified
   covars <- within(covars, {
-    event <- ifelse(time <= max_t, event, 0);
-    time <- ifelse(time <= max_t, time, max_t);
+    event <- ifelse(time <= max_t, event, 0)
+    time <- ifelse(time <= max_t, time, max_t)
   })
 
   return(covars)
@@ -296,8 +296,8 @@ sim_confounded_crisk <- function(n=500, lcovars=NULL, outcome_betas=NULL,
     cens_time <- do.call(cens_fun, args=c(n=n, cens_args))
 
     covars <- within(covars, {
-      event <- ifelse(time < cens_time, event, 0);
-      time <- ifelse(time < cens_time, time, cens_time);
+      event <- ifelse(time < cens_time, event, 0)
+      time <- ifelse(time < cens_time, time, cens_time)
     })
   }
 

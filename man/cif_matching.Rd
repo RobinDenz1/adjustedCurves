@@ -12,8 +12,9 @@ This method works by first matching controls and treated patients using a previo
 
 }
 \usage{
-cif_matching(data, variable, ev_time, event, cause, conf_int,
-             conf_level=0.95, times, treatment_model, gtol=0.001, ...)
+cif_matching(data, variable, ev_time, event, cause,
+             conf_int, conf_level=0.95, times,
+             treatment_model, gtol=0.001, ...)
 }
 
 \arguments{
@@ -21,13 +22,13 @@ cif_matching(data, variable, ev_time, event, cause, conf_int,
 A \code{data.frame} object containing the needed time-to-event data in standard format.
 }
   \item{variable}{
-A character string specifying the variable by which the CIFs should be grouped. Must be a valid columname of \code{data}. The variable in question can be either a dichotomous integer variable or a factor variable with exactly two levels.
+A character string specifying the variable by which the CIFs should be grouped. Must be a valid column name of \code{data}. The variable in question can be either a dichotomous integer variable or a factor variable with exactly two levels.
 }
   \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid columname of \code{data}.
+A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
 }
   \item{event}{
-A character string specifying the numeric event indicator. The censoring indicator should be coded as 0 and all other events of interest as 1, 2, etc. Must be a valid columname of \code{data}.
+A character string specifying the numeric event indicator. The censoring indicator should be coded as 0 and all other events of interest as 1, 2, etc. Must be a valid column name of \code{data}.
   }
   \item{cause}{
 The cause of interest for which the cumulative incidence functions should be calculated. Should be a number that appears in the \code{event} column of \code{data}.

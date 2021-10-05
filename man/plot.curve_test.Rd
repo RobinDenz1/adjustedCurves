@@ -8,7 +8,8 @@ Plot Method for \code{curve_test} Objects
 Produces either a spaghetti-plot of the bootstrapped difference curves (\code{type="curves"}) or a kernel-density plot of the shifted bootstrap distribution of the difference curve integrals (\code{type="integral"}).
 }
 \usage{
-\method{plot}{curve_test}(x, type="curves", xlab=NULL, ylab=NULL, title=NULL, ...)
+\method{plot}{curve_test}(x, type="curves", xlab=NULL,
+     ylab=NULL, title=NULL, ...)
 }
 
 \arguments{

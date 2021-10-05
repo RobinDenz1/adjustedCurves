@@ -14,7 +14,8 @@ This method works by modelling the treatment assignment mechanism. The individua
 \usage{
 surv_iptw_cox(data, variable, ev_time, event, conf_int,
               conf_level=0.95, times=NULL, treatment_model,
-              weight_method="ps", stabilize=T, trim=F, ...)
+              weight_method="ps", stabilize=TRUE,
+              trim=FALSE, ...)
 }
 
 \arguments{
@@ -22,13 +23,13 @@ surv_iptw_cox(data, variable, ev_time, event, conf_int,
 A \code{data.frame} object containing the needed time-to-event data in standard format.
 }
   \item{variable}{
-A character string specifying the variable by which the survival curves should be grouped. Must be a valid columname of \code{data}. The variable specified should be a factor variable.
+A character string specifying the variable by which the survival curves should be grouped. Must be a valid column name of \code{data}. The variable specified should be a factor variable.
 }
   \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid columname of \code{data}.
+A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
 }
   \item{event}{
-A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
+A character string specifying the binary event indicator. Must be a valid column name of \code{data}.
 }
   \item{conf_int}{
 A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated.
@@ -49,7 +50,7 @@ Method used in \code{WeightIt} function call. Ignored if \code{treatment_model} 
 Whether to stabilize the weights or not. Is set to \code{TRUE} by default. Stabilizing has no effect on the estimates, only on the asymptotic variance calculations and confidence intervals. Without stabilizing, those estimates are biased downward.
   }
   \item{trim}{
-Can be either \code{FALSE} (default) or a numeric value at which to trim the weights. If \code{FALSE}, weights are used as calculated or supplied. If a numeric value is supplied, all weights that are bigger than \code{trim} are set to \code{trim} before the analysis is carried out. Useful when some weights are extremly large.
+Can be either \code{FALSE} (default) or a numeric value at which to trim the weights. If \code{FALSE}, weights are used as calculated or supplied. If a numeric value is supplied, all weights that are bigger than \code{trim} are set to \code{trim} before the analysis is carried out. Useful when some weights are extremely large.
   }
   \item{...}{
 Further arguments passed to \code{WeightIt}.
@@ -78,9 +79,9 @@ Returns a \code{list} object containing a \code{data.frame} with the estimated a
 \references{
 Stephen R. Cole and Miguel A. Hernan. "Adjusted Survival Curves with Inverse Probability Weights". In: Computer Methods and Programs in Biomedicine 2003.75 (2004), pp. 45-49.
 
-Peter C. Austin. "Variance Estimation when Using Inverse Probabiltiy of Treatment Weighting (IPTW) with Survival Analysis". In: Statistics in Medicine 35 (2016), pp. 5642-5655.
+Peter C. Austin. "Variance Estimation when Using Inverse Probability of Treatment Weighting (IPTW) with Survival Analysis". In: Statistics in Medicine 35 (2016), pp. 5642-5655.
 
-Stanley Xu, Colleen Ross abd Marsha A. Raebel, Susan Shetterly, Christopher Blanchette, and David Smith. "Use of Stabilized Inverse Propensity Scores as Weights to Directly Estimate Relative Risk and Its Confidence Intervals". In: Value in Health 13.2 (2010), pp. 273-277.
+Stanley Xu, Colleen Ross and Marsha A. Raebel, Susan Shetterly, Christopher Blanchette, and David Smith. "Use of Stabilized Inverse Propensity Scores as Weights to Directly Estimate Relative Risk and Its Confidence Intervals". In: Value in Health 13.2 (2010), pp. 273-277.
 }
 \author{
 Robin Denz

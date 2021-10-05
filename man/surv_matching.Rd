@@ -13,8 +13,8 @@ This method works by first matching controls and treated patients using a previo
 }
 \usage{
 surv_matching(data, variable, ev_time, event, conf_int=FALSE,
-              conf_level=0.95, times, treatment_model, stabilize=T,
-              gtol=0.001, ...)
+              conf_level=0.95, times, treatment_model,
+              stabilize=TRUE, gtol=0.001, ...)
 }
 
 \arguments{
@@ -22,13 +22,13 @@ surv_matching(data, variable, ev_time, event, conf_int=FALSE,
 A \code{data.frame} object containing the needed time-to-event data in standard format.
 }
   \item{variable}{
-A character string specifying the variable by which the survival curves should be grouped. Must be a valid columname of \code{data}. The variable in question can be either a dichotomous integer variable or a factor variable with exactly two levels.
+A character string specifying the variable by which the survival curves should be grouped. Must be a valid column name of \code{data}. The variable in question can be either a dichotomous integer variable or a factor variable with exactly two levels.
 }
   \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid columname of \code{data}.
+A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
 }
   \item{event}{
-A character string specifying the binary event indicator. Must be a valid columname of \code{data}. Can be either a factor variable or a binary integer variable. If a factor variable is supplied, the first level is assumed to correspond to the control group.
+A character string specifying the binary event indicator. Must be a valid column name of \code{data}. Can be either a factor variable or a binary integer variable. If a factor variable is supplied, the first level is assumed to correspond to the control group.
 }
   \item{conf_int}{
 Currently not used because asymptotic variance calculations for this estimator have not been implemented.

@@ -8,7 +8,8 @@ Calculate Confounder-Adjusted Restricted Mean Survival Times
 This function can be utilized to calculate the confounder-adjusted restricted mean survival time, given previously estimated adjusted survival curves.
 }
 \usage{
-adjusted_rmst(adjsurv, to, from=0, use_boot=F, conf_level=0.95)
+adjusted_rmst(adjsurv, to, from=0, use_boot=FALSE,
+              conf_level=0.95)
 }
 
 \arguments{
@@ -34,7 +35,7 @@ The adjusted restricted mean survival times (RMST) are calculated by integrating
 
 \deqn{RMST_{z} = \int_{from}^{to} \hat{S}(T = t | Z = z, X)}
 
-It can be interpreted as the mean survival time of individuals in group \eqn{Z = z}. Note however that simply substracting the estimates from each other does not give a correct estimate of the area between the survival curves if the respective curves cross at some point. The \code{\link{test_curve_equality}} function can be used to calculate the actual area between the curves instead. See \code{?test_curve_equality} for more information.
+It can be interpreted as the mean survival time of individuals in group \eqn{Z = z}. Note however that simply subtracting the estimates from each other does not give a correct estimate of the area between the survival curves if the respective curves cross at some point. The \code{\link{test_curve_equality}} function can be used to calculate the actual area between the curves instead. See \code{?test_curve_equality} for more information.
 
 Since the estimated survival functions are step functions the integrals are calculated exactly instead of relying on trapezoid approximations.
 
@@ -61,7 +62,7 @@ If \code{use_boot} is set to \code{TRUE} and \code{bootstrap} was also set to \c
 }
 \item{booted_rmsts}{A \code{data.frame} containing the adjusted restricted mean survival time estimates for each bootstrap sample.
 }
-\item{rmsts_se}{A named vector containing the bootstrapped standard deviations of the restricted mean survival times.
+\item{rmsts_se}{A named vector containing the bootstrapped standard errors of the restricted mean survival times.
 }
 \item{rmsts_ci_lower}{Lower value of the bootstrap confidence intervals.
 }

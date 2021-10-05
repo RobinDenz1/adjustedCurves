@@ -22,13 +22,13 @@ surv_aiptw_pseudo(data, variable, ev_time, event, conf_int,
 A \code{data.frame} object containing the needed time-to-event data in standard format.
 }
   \item{variable}{
-A character string specifying the variable by which the survival curves should be grouped. Must be a valid columname of \code{data}.
+A character string specifying the variable by which the survival curves should be grouped. Must be a valid column name of \code{data}.
 }
   \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid columname of \code{data}.
+A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
 }
   \item{event}{
-A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
+A character string specifying the binary event indicator. Must be a valid column name of \code{data}.
 }
   \item{conf_int}{
 A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated.
@@ -75,7 +75,7 @@ Instead of only modeling the outcome mechanism or the treatment assignment mecha
 
 When estimating the \code{geese} model the \code{ev_time} variable is used as a factor by default. This results in one coefficient being estimated for each unique point in time, which can be very slow computationally if there are a lot of unique points in time and/or the dataset has many rows. In these cases it is recommended to use \code{type_time="bs"} or \code{type_time="ns"}, which results in the \code{ev_time} being modeled using B-Splines or Natural Splines. Simulation studies indicate that there is little difference in the estimates when an appropriately large number of \code{spline_df} is used.
 
-Covariate-dependent censoring can be accounted for by using inverse probability of censoring weighted pseudo-values instead of reagular pseudo values (see Binder et al. 2014).
+Covariate-dependent censoring can be accounted for by using inverse probability of censoring weighted pseudo-values instead of regular pseudo values (see Binder et al. 2014).
 
 }
 \value{

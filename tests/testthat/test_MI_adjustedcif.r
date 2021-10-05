@@ -17,7 +17,8 @@ outc_mod <- CSC_MI(mids=imp,
                    formula=Hist(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6)
 
 # treatment model
-treat_mod <- with(imp, glm(group ~ x1 + x2 + x3 + x4 + x5 + x6, family="binomial"))
+treat_mod <- with(imp, glm(group ~ x1 + x2 + x3 + x4 + x5 + x6,
+                           family="binomial"))
 
 # censoring model
 cens_mod <- with(imp, coxph(Surv(time, event==0) ~ x1 + x2, x=T))
@@ -262,9 +263,10 @@ test_that("test_curve_equality, two treatments", {
 
 # create 3 treatments
 sim_dat$group2 <- 0
-sim_dat$group2[sim_dat$group==1] <- sample(c(1, 2), size=nrow(sim_dat[sim_dat$group==1,]),
-                                           replace=T)
-sim_dat$group2 <- ifelse(sim_dat$group2==1, "Placebo", ifelse(sim_dat$group2==2, "Chemo", "OP"))
+sim_dat$group2[sim_dat$group==1] <-
+  sample(c(1, 2), size=nrow(sim_dat[sim_dat$group==1,]), replace=T)
+sim_dat$group2 <- ifelse(sim_dat$group2==1, "Placebo",
+                         ifelse(sim_dat$group2==2, "Chemo", "OP"))
 sim_dat$group2 <- factor(sim_dat$group2)
 
 imp <- mice::mice(sim_dat, m=3, method="pmm", printFlag=F)

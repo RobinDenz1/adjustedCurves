@@ -12,9 +12,12 @@ Similar to the AIPTW methods it posseses the doubly-robust property and can also
 
 }
 \usage{
-cif_tmle(data, variable, ev_time, event, cause, conf_int, conf_level=0.95,
-         times, adjust_vars=NULL, SL.ftime=NULL, SL.ctime=NULL,
-         SL.trt=NULL, glm.ftime=NULL, glm.ctime=NULL, glm.trt=NULL, ...)
+cif_tmle(data, variable, ev_time, event, cause,
+         conf_int, conf_level=0.95, times,
+         adjust_vars=NULL, SL.ftime=NULL,
+         SL.ctime=NULL, SL.trt=NULL,
+         glm.ftime=NULL, glm.ctime=NULL,
+         glm.trt=NULL, ...)
 }
 
 \arguments{
@@ -22,13 +25,13 @@ cif_tmle(data, variable, ev_time, event, cause, conf_int, conf_level=0.95,
 A \code{data.frame} object containing the needed time-to-event data in standard format.
   }
   \item{variable}{
-A character string specifying the variable by which the CIFs should be grouped. Must be a valid columname of \code{data}. The variable in question can be either a dichotomous integer variable or a factor variable with exactly two levels.
+A character string specifying the variable by which the CIFs should be grouped. Must be a valid column name of \code{data}. The variable in question can be either a dichotomous integer variable or a factor variable with exactly two levels.
   }
   \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid columname of \code{data}.
+A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
   }
   \item{event}{
-A character string specifying the numeric event indicator. The censoring indicator should be coded as 0 and all other events of interest as 1, 2, etc. Must be a valid columname of \code{data}.
+A character string specifying the numeric event indicator. The censoring indicator should be coded as 0 and all other events of interest as 1, 2, etc. Must be a valid column name of \code{data}.
   }
   \item{cause}{
 The cause of interest for which the cumulative incidence functions should be calculated. Should be a number that appears in the \code{event} column of \code{data}.
@@ -52,7 +55,7 @@ A character vector or list specification to be passed to the \code{SL.library} o
 A character vector or list specification to be passed to the \code{SL.library} argument in the call to \code{SuperLearner} for the estimate of the conditional hazard for censoring. It is expected that the wrappers used in the library will play nicely with the input variables, which will be called "trt" and \code{names(adjust_vars)}.
   }
   \item{SL.trt}{
-A character vector or list specification to be passed to the \code{SL.library} argument in the call to \code{SuperLearner} for the estimate of the conditional probability oftreatment. It is expected that the wrappers used in the library will play nicely with the input variables, which will be \code{names(adjust_vars)}.
+A character vector or list specification to be passed to the \code{SL.library} argument in the call to \code{SuperLearner} for the estimate of the conditional probability of treatment. It is expected that the wrappers used in the library will play nicely with the input variables, which will be \code{names(adjust_vars)}.
   }
   \item{glm.ftime}{
 A character specification of the right-hand side of the equation passed to the \code{formula} option of a call to \code{glm} for the outcome regression. Ignored if \code{SL.ftime} is not equal to \code{NULL}. Use "trt" to specify the treatment in this formula (see examples). The formula can additionally include any variables found in \code{names(adjust_vars)}.
@@ -80,9 +83,9 @@ Additional arguments passed to \code{survtmle}.
 \item{\strong{Dependencies:} This method relies on the \code{survtmle} and \code{SuperLearner} packages.}
 }
 
-TMLE is a two-step procedure. First, initial estimates for the treatment-assignment and the outcome-mechanisms are made using loss-based learning. This is implemented here using the \code{SuperLearner} methodology. In the next step, the estimates obtained by using the outcome-mechanism model are fluctuated based on information from the treatment-assignment model. If the outcome model is already consistent, this fluctuation is very small and the estimates stay consistent. If the outcome model is biased, the fluctuation removes the bias whenever the treatment assignment model is consistent. This process is iterative and continues until a threshhold is hit (either the maximum number of iterations is reached or the bias is smaller than the specified tolerance, see \code{?survtmle}).
+TMLE is a two-step procedure. First, initial estimates for the treatment-assignment and the outcome-mechanisms are made using loss-based learning. This is implemented here using the \code{SuperLearner} methodology. In the next step, the estimates obtained by using the outcome-mechanism model are fluctuated based on information from the treatment-assignment model. If the outcome model is already consistent, this fluctuation is very small and the estimates stay consistent. If the outcome model is biased, the fluctuation removes the bias whenever the treatment assignment model is consistent. This process is iterative and continues until a threshold is hit (either the maximum number of iterations is reached or the bias is smaller than the specified tolerance, see \code{?survtmle}).
 
-As has been shown in multiple studies by Mark J. van der Laan and colleagues, this method has some desireable mathematical properties and generally performs well in appropriate scenarios. The biggest problem is however, that it is only defined for discrete (integer-valued) survival times. Simply discretizing continuous survival times only works to a certain extent and is generally discouraged.
+As has been shown in multiple studies by Mark J. van der Laan and colleagues, this method has some desirable mathematical properties and generally performs well in appropriate scenarios. The biggest problem is however, that it is only defined for discrete (integer-valued) survival times. Simply discretizing continuous survival times only works to a certain extent and is generally discouraged.
 
 When the sample size is large or many time points are of interest, this method will also be *very* slow. While possible to run, bootstrapping would take an enormous amount of time and is therefore discouraged.
 

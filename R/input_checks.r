@@ -15,7 +15,8 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
          "character strings, specifying variables in 'data'.")
   } else if (!method %in% c("km", "iptw_km", "iptw_cox", "iptw_pseudo",
                             "direct", "direct_pseudo", "aiptw_pseudo",
-                            "aiptw", "tmle", "ostmle", "matching", "emp_lik")) {
+                            "aiptw", "tmle", "ostmle", "matching",
+                            "emp_lik")) {
     stop("Method '", method, "' is undefined. See documentation for ",
          "details on available methods.")
   # conf_int
@@ -211,8 +212,8 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
   } else if (method=="iptw_km") {
     if (conf_int & inherits(obj$treatment_model, "formula")) {
       warning("Approximate confidence intervals currently not supported in ",
-              "method='iptw_km' when 'treatment_model' is not a 'glm' or 'multinom'",
-              " object.")
+              "method='iptw_km' when 'treatment_model' is not a 'glm'",
+              " or 'multinom' object.")
     }
   # AIPTW
   } else if (method=="aiptw") {
@@ -222,9 +223,11 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
       stop("At least one of 'treatment_model', 'outcome_model' and ",
            "'censoring_model' needs to be specified, see details.")
     }
+  # Direct
   } else if (method=="direct") {
     if (!"outcome_model" %in% names(obj)) {
-      stop("Argument 'outcome_model' must be specified when using method='direct'.")
+      stop("Argument 'outcome_model' must be specified when using",
+           " method='direct'.")
     }
   }
 
@@ -249,8 +252,8 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
               "to get bootstrap estimates.")
     } else if (method=="direct_pseudo" & !is.null(obj$model_type)) {
       if (obj$model_type != "lm") {
-        warning("Asymptotic variance calculations for method='direct_pseudo' ",
-                "can only be calculated with model_type='lm'.")
+        warning("Asymptotic variance calculations for method='direct_pseudo'",
+                " can only be calculated with model_type='lm'.")
       }
     }
   }
@@ -328,7 +331,7 @@ check_inputs_sim_fun <- function(n, lcovars, outcome_betas, surv_dist,
   }
 
   if (!is.null(lcovars)) {
-    for (i in 1:length(lcovars)) {
+    for (i in seq_len(length(lcovars))) {
       if (!lcovars[[i]][1] %in% c("rbinom", "rnorm", "runif")) {
         stop("The first element of every vector in 'lcovars' must be either ",
              "'rbinom', 'rnorm' or 'runif', not ", lcovars[[i]][1], ".")
@@ -348,7 +351,8 @@ check_inputs_adj_rmst <- function(adjsurv, from, to, use_boot) {
   } else if (from >= to) {
     stop("'from' must be smaller than 'to'.")
   } else if (use_boot & is.null(adjsurv$boot_data)) {
-    warning("Cannot use bootstrapped estimates because they were not estimated.",
+    warning("Cannot use bootstrapped estimates because",
+            " they were not estimated.",
             " Need 'bootstrap=TRUE' in 'adjustedsurv' function call.")
   }
 
@@ -375,7 +379,7 @@ check_inputs_adj_test <- function(adjsurv, from, to) {
   }
 
   if (inherits(adjsurv, "adjustedsurv")) {
-    if (to > max(adjsurv$adjsurv$time, na.rm=T)) {
+    if (to > max(adjsurv$adjsurv$time, na.rm=TRUE)) {
       stop("'to' can not be greater than the latest observed time.")
     }
   } else {
@@ -494,7 +498,8 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
       if (method=="aiptw_pseudo") {
         if (!(is.numeric(obj$treatment_model) |
               inherits(obj$treatment_model, c("glm", "multinom", "mira")))) {
-          stop("Argument 'treatment_model' must be one of glm, multinom or mira",
+          stop("Argument 'treatment_model' must be one of",
+               " glm, multinom or mira",
                " or a numeric vector of propensity scores.")
         }
       }
@@ -532,12 +537,12 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
 
     if (bootstrap) {
       warning("Bootstrapping generally doesn't produce unbiased variance",
-              " estimates with matching estimators. Use with caution. ",
-              "See ?surv_method_matching.")
+              " estimates with matching estimators. Use with caution.",
+              " See ?surv_method_matching.")
     } else if (is.numeric(obj$treatment_model)) {
       if (any(obj$treatment_model > 1) | any(obj$treatment_model < 0)) {
-        stop("Propensity Scores > 1 or < 0 not allowed. Perhaps you supplied ",
-             "weights on accident?")
+        stop("Propensity Scores > 1 or < 0 not allowed. Perhaps you supplied",
+             " weights on accident?")
       }
     }
 
@@ -549,11 +554,11 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
   if (bootstrap) {
 
     if (is.numeric(obj$treatment_model)) {
-      stop("'treatment_model' needs to be a model that can be ",
-           "refit or a formula object when using bootstrap=TRUE.")
+      stop("'treatment_model' needs to be a model that can be",
+           " refit or a formula object when using bootstrap=TRUE.")
     } else if (is.numeric(obj$outcome_model)) {
-      stop("'outcome_model' needs to be an actual model that can be ",
-           "refit when using bootstrap=TRUE.")
+      stop("'outcome_model' needs to be an actual model that can be",
+           " refit when using bootstrap=TRUE.")
     }
 
   }
@@ -613,7 +618,8 @@ check_inputs_sim_crisk_fun <- function(n, lcovars, outcome_betas, gamma,
          "be NULL to use default values, or have to be specified.")
   }
 
-  if (!is.null(outcome_betas) && stats::var(sapply(outcome_betas, length))!=0) {
+  if (!is.null(outcome_betas) && stats::var(vapply(outcome_betas, length,
+                                                   FUN.VALUE=numeric(1)))!=0) {
     stop("The vectors supplied in 'outcome_betas' all need to have,",
          " the same length.")
   }
@@ -625,7 +631,7 @@ check_inputs_sim_crisk_fun <- function(n, lcovars, outcome_betas, gamma,
   }
 
   if (!is.null(lcovars)) {
-    for (i in 1:length(lcovars)) {
+    for (i in seq_len(length(lcovars))) {
       if (!lcovars[[i]][1] %in% c("rbinom", "rnorm", "runif")) {
         stop("The first element of every vector in 'lcovars' must be either ",
              "'rbinom', 'rnorm' or 'runif', not ", lcovars[[i]][1], ".")

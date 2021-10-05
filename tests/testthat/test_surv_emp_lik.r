@@ -4,9 +4,9 @@ set.seed(42)
 
 sim_dat <- adjustedCurves::sim_confounded_surv(n=100)
 sim_dat <- within(sim_dat, {
-  x1 <- ifelse(x1==1, 1, -1);
-  x2 <- ifelse(x2==1, 1, -1);
-  x3 <- ifelse(x3==1, 1, -1);
+  x1 <- ifelse(x1==1, 1, -1)
+  x2 <- ifelse(x2==1, 1, -1)
+  x3 <- ifelse(x3==1, 1, -1)
 })
 
 # outcome model

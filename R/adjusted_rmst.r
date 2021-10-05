@@ -16,7 +16,8 @@
 ## function to calculate the restricted mean survival time of each
 ## adjusted survival curve previously estimated using the adjustedsurv function
 #' @export
-adjusted_rmst <- function(adjsurv, to, from=0, use_boot=F, conf_level=0.95) {
+adjusted_rmst <- function(adjsurv, to, from=0, use_boot=FALSE,
+                          conf_level=0.95) {
 
   ## Using multiple imputation
   if (!is.null(adjsurv$mids_analyses)) {
@@ -24,7 +25,7 @@ adjusted_rmst <- function(adjsurv, to, from=0, use_boot=F, conf_level=0.95) {
     len <- length(adjsurv$mids_analyses)
     mids_out <- rmst_ests <- rmst_se <- n_boots <- vector(mode="list",
                                                           length=len)
-    for (i in 1:len) {
+    for (i in seq_len(len)) {
 
       results_imp <- adjusted_rmst(adjsurv$mids_analyses[[i]],
                                    to=to, from=from, use_boot=use_boot,
@@ -87,7 +88,8 @@ adjusted_rmst <- function(adjsurv, to, from=0, use_boot=F, conf_level=0.95) {
         class(fake_adjsurv) <- "adjustedsurv"
 
         # recursion call
-        adj_rmst <- adjusted_rmst(fake_adjsurv, from=from, to=to, use_boot=F)
+        adj_rmst <- adjusted_rmst(fake_adjsurv, from=from, to=to,
+                                  use_boot=FALSE)
 
         booted_rmsts[[i]] <- adj_rmst$rmsts
       }
@@ -97,7 +99,7 @@ adjusted_rmst <- function(adjsurv, to, from=0, use_boot=F, conf_level=0.95) {
     levs <- unique(adjsurv$adjsurv$group)
 
     rmsts <- vector(mode="numeric", length=length(levs))
-    for (i in 1:length(levs)) {
+    for (i in seq_len(length(levs))) {
 
       surv_dat <- adjsurv$adjsurv[adjsurv$adjsurv$group==levs[i],]
       surv_dat$group <- NULL
@@ -126,11 +128,11 @@ adjusted_rmst <- function(adjsurv, to, from=0, use_boot=F, conf_level=0.95) {
       out$conf_level <- conf_level
       out$n_boot <- n_boot_rmst
       out$booted_rmsts <- booted_rmsts
-      out$rmsts_se <- apply(booted_rmsts, 2, stats::sd, na.rm=T)
+      out$rmsts_se <- apply(booted_rmsts, 2, stats::sd, na.rm=TRUE)
       out$rmsts_ci_lower <- apply(booted_rmsts, 2, stats::quantile,
-                                  probs=1-conf_level, na.rm=T)
+                                  probs=1-conf_level, na.rm=TRUE)
       out$rmsts_ci_upper <- apply(booted_rmsts, 2, stats::quantile,
-                                  probs=conf_level, na.rm=T)
+                                  probs=conf_level, na.rm=TRUE)
     }
 
     return(out)
@@ -164,7 +166,7 @@ print.adjusted_rmst <- function(x, digits=5, ...) {
 ## plot method for the adjusted_rmst function
 #' @importFrom rlang .data
 #' @export
-plot.adjusted_rmst <- function(x, draw_ci=T, color=T, point_size=2,
+plot.adjusted_rmst <- function(x, draw_ci=TRUE, color=TRUE, point_size=2,
                                ci_size=1, ci_width=0.7, xlab="",
                                ylab="Adjusted RMST", title=NULL,
                                gg_theme=ggplot2::theme_classic(), ...) {

@@ -20,8 +20,9 @@
 #' @importFrom foreach %dopar%
 #' @export
 adjustedcif <- function(data, variable, ev_time, event, cause, method,
-                        conf_int=F, conf_level=0.95, times=NULL, bootstrap=F,
-                        n_boot=500, n_cores=1, na.action=options("na.action")[[1]],
+                        conf_int=FALSE, conf_level=0.95, times=NULL,
+                        bootstrap=FALSE, n_boot=500, n_cores=1,
+                        na.action=options("na.action")[[1]],
                         ...) {
 
   check_inputs_adjustedcif(data=data, variable=variable, ev_time=ev_time,
@@ -52,7 +53,7 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
     }
 
     # transform to long format
-    mids <- mice::complete(data, action="long", include=F)
+    mids <- mice::complete(data, action="long", include=FALSE)
 
     # get additional arguments
     args <- list(...)
@@ -62,15 +63,16 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
     args$outcome_model <- NULL
 
     # extract treatment models
-    if (inherits(args$treatment_model$analyses[[1]], c("glm", "lm", "multinom"))) {
+    if (inherits(args$treatment_model$analyses[[1]],
+                 c("glm", "lm", "multinom"))) {
       treatment_models <- args$treatment_model$analyses
       args$treatment_model <- NULL
     } else if (inherits(args$treatment_model, "formula")) {
       treatment_models <- rep(list(args$treatment_model), max(mids$.imp))
       args$treatment_model <- NULL
     } else if (is.numeric(args$treatment_model)) {
-      stop("Supplying weights or propensity scores directly is not allowed when",
-           " using multiple imputation.")
+      stop("Supplying weights or propensity scores directly",
+           " is not allowed when using multiple imputation.")
     } else {
       treatment_models <- NULL
     }
@@ -81,12 +83,13 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
 
     # call adjustedcif once for each multiply imputed dataset
     out <- vector(mode="list", length=max(mids$.imp))
-    for (i in 1:max(mids$.imp)) {
+    for (i in seq_len(max(mids$.imp))) {
 
       imp_data <- mids[mids$.imp==i,]
 
       # NOTE: need to add the data to the model object or ate() fails
-      if (!is.null(treatment_models) & inherits(treatment_models[[i]], "glm")) {
+      if (!is.null(treatment_models) &
+          inherits(treatment_models[[i]], "glm")) {
         treatment_models[[i]]$data <- imp_data
       }
 
@@ -107,7 +110,7 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
     # pool results
     dats <- vector(mode="list", length=length(out))
     boot_dats <- vector(mode="list", length=length(out))
-    for (i in 1:length(out)) {
+    for (i in seq_len(length(out))) {
 
       # direct estimate
       dat <- out[[i]]$adjcif
@@ -152,7 +155,7 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
                     adjcif=plotdata,
                     data=data$data,
                     method=method,
-                    categorical=ifelse(length(levs)>2, T, F),
+                    categorical=ifelse(length(levs)>2, TRUE, FALSE),
                     call=match.call())
 
     if (bootstrap) {
@@ -252,10 +255,11 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
       } else {
 
         boot_out <- vector(mode="list", length=n_boot)
-        for (i in 1:n_boot) {
+        for (i in seq_len(n_boot)) {
           boot_out[[i]] <- adjustedcif_boot(data=data, variable=variable,
                                             ev_time=ev_time, event=event,
-                                            method=method, times_input=times_input,
+                                            method=method,
+                                            times_input=times_input,
                                             times=times, i=i, cause=cause,
                                             cif_fun=cif_fun, levs=levs,
                                             na.action=na.action, ...)
@@ -276,14 +280,14 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
       # calculate some statistics
       boot_stats <- boot_data_same_t %>%
         dplyr::group_by(., time, group) %>%
-        dplyr::summarise(cif=mean(cif_b, na.rm=T),
-                         se=stats::sd(cif_b, na.rm=T),
+        dplyr::summarise(cif=mean(cif_b, na.rm=TRUE),
+                         se=stats::sd(cif_b, na.rm=TRUE),
                          ci_lower=stats::quantile(cif_b,
                                                   probs=(1-conf_level)/2,
-                                                  na.rm=T),
+                                                  na.rm=TRUE),
                          ci_upper=stats::quantile(cif_b,
                                                   probs=1-((1-conf_level)/2),
-                                                  na.rm=T),
+                                                  na.rm=TRUE),
                          n_boot=sum(!is.na(cif_b)),
                          .groups="drop_last")
       boot_stats$group <- factor(boot_stats$group, levels=levs)
@@ -301,7 +305,7 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
 
     out <- list(adjcif=plotdata,
                 method=method,
-                categorical=ifelse(length(levs)>2, T, F),
+                categorical=ifelse(length(levs)>2, TRUE, FALSE),
                 call=match.call())
 
     if (bootstrap) {
@@ -324,7 +328,7 @@ adjustedcif_boot <- function(data, variable, ev_time, event, cause, method,
                              times_input, times, i, cif_fun, levs,
                              na.action, ...) {
 
-  indices <- sample(x=rownames(data), size=nrow(data), replace=T)
+  indices <- sample(x=rownames(data), size=nrow(data), replace=TRUE)
   boot_samp <- data[indices,]
 
   # perform na.action
@@ -336,7 +340,7 @@ adjustedcif_boot <- function(data, variable, ev_time, event, cause, method,
   }
 
   # IMPORTANT: keeps SL in tmle methods from failing
-  row.names(boot_samp) <- 1:nrow(data)
+  row.names(boot_samp) <- seq_len(nrow(data))
 
   # if event specific times are used, use event specific times
   # in bootstrapping as well
@@ -364,13 +368,13 @@ adjustedcif_boot <- function(data, variable, ev_time, event, cause, method,
     if (inherits(pass_args$treatment_model, "glm") |
         inherits(pass_args$treatment_model, "multinom")) {
       pass_args$treatment_model <- stats::update(pass_args$treatment_model,
-                                                 data=boot_samp, trace=F)
+                                                 data=boot_samp, trace=FALSE)
     }
   }
 
   # call cif_method with correct arguments
   args <- list(data=boot_samp, variable=variable, ev_time=ev_time,
-               event=event, conf_int=F, conf_level=0.95, times=times,
+               event=event, conf_int=FALSE, conf_level=0.95, times=times,
                cause=cause)
   args <- c(args, pass_args)
 
@@ -380,15 +384,15 @@ adjustedcif_boot <- function(data, variable, ev_time, event, cause, method,
 
   # read from resulting step function at all t in times
   boot_cif <- vector(mode="list", length=length(levs))
-  for (j in 1:length(levs)) {
+  for (j in seq_len(length(levs))) {
 
     if (method=="aalen_johansen" & is.null(times)) {
       times <- unique(data[,ev_time][data[,variable]==levs[j]])
     }
 
-    cif_boot <- sapply(times, read_from_step_function,
+    cif_boot <- vapply(times, read_from_step_function,
                        step_data=adjcif_boot[adjcif_boot$group==levs[j],],
-                       est="cif")
+                       est="cif", FUN.VALUE=numeric(1))
 
     dat_temp <- data.frame(time=times,
                            cif_b=cif_boot,
@@ -412,9 +416,10 @@ adjustedcif_boot <- function(data, variable, ev_time, event, cause, method,
 ## plot the cumulative incidence functions
 #' @importFrom rlang .data
 #' @export
-plot.adjustedcif <- function(x, draw_ci=F, max_t=Inf,
-                             iso_reg=F, force_bounds=F, use_boot=F,
-                             color=T, linetype=F, facet=F,
+plot.adjustedcif <- function(x, draw_ci=FALSE, max_t=Inf,
+                             iso_reg=FALSE, force_bounds=FALSE,
+                             use_boot=FALSE, color=TRUE,
+                             linetype=FALSE, facet=FALSE,
                              line_size=1, xlab="Time",
                              ylab="Adjusted Cumulative Incidence",
                              title=NULL, legend.title="Group",
@@ -422,12 +427,12 @@ plot.adjustedcif <- function(x, draw_ci=F, max_t=Inf,
                              gg_theme=ggplot2::theme_bw(),
                              ylim=NULL, custom_colors=NULL,
                              custom_linetypes=NULL,
-                             ci_draw_alpha=0.4, steps=T, ...) {
+                             ci_draw_alpha=0.4, steps=TRUE, ...) {
 
   if (use_boot & is.null(x$boot_adjcif)) {
     warning("Cannot use bootstrapped estimates as they were not estimated.",
             " Need bootstrap=TRUE in adjustedcif() call.")
-    draw_ci <- F
+    draw_ci <- FALSE
     plotdata <- x$adjcif
   } else if (use_boot) {
     plotdata <- x$boot_adjcif
@@ -443,8 +448,8 @@ plot.adjustedcif <- function(x, draw_ci=F, max_t=Inf,
   # if specified set those to 0 or 1 respectively
   if (force_bounds) {
     plotdata <- within(plotdata, {
-      cif <- ifelse(cif < 0, 0, cif);
-      cif <- ifelse(cif > 1, 1, cif);
+      cif <- ifelse(cif < 0, 0, cif)
+      cif <- ifelse(cif > 1, 1, cif)
     })
   }
 
@@ -518,14 +523,16 @@ plot.adjustedcif <- function(x, draw_ci=F, max_t=Inf,
                                                      fill=.data$group,
                                                      x=.data$time,
                                                      y=.data$cif),
-                                        alpha=ci_draw_alpha, inherit.aes=F)
+                                        alpha=ci_draw_alpha,
+                                        inherit.aes=FALSE)
   } else if (draw_ci & "ci_lower" %in% colnames(plotdata)) {
     p <- p + ggplot2::geom_ribbon(ggplot2::aes(ymin=.data$ci_lower,
                                                ymax=.data$ci_upper,
                                                fill=.data$group,
                                                x=.data$time,
                                                y=.data$surv),
-                                  alpha=ci_draw_alpha, inherit.aes=F)
+                                  alpha=ci_draw_alpha,
+                                  inherit.aes=FALSE)
   }
   return(p)
 }

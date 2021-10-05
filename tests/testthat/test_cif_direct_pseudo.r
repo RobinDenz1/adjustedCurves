@@ -52,7 +52,8 @@ test_that("2 treatments, no conf_int, no boot, with times", {
                                            cause=1), NA)
 })
 
-test_that("2 treatments, no conf_int, no boot, with times, type_time='factor'", {
+test_that("2 treatments, no conf_int, no boot, with times, type_time='factor'",
+          {
   expect_error(adjustedCurves::adjustedcif(data=sim_dat,
                                            variable="group",
                                            ev_time="time",
@@ -117,7 +118,8 @@ test_that("> 2 treatments, no conf_int, no boot, with times", {
                                            cause=1), NA)
 })
 
-test_that("> 2 treatments, no conf_int, no boot, with times, type_time='factor'", {
+test_that("> 2 treatments, no conf_int, no boot, with times, type_time='factor'"
+          , {
   expect_error(adjustedCurves::adjustedcif(data=sim_dat,
                                            variable="group",
                                            ev_time="time",

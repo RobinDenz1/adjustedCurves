@@ -21,6 +21,7 @@
 
 # CHANGES BY ROBIN DENZ (21.05.2021):
 #   - minor changes to the code layout
+#   - changed 1:n in for loop to seq_len(n)
 jacob.fun <- function(treat, x, psix, a, tau, d) {
 
   n <- length(treat)
@@ -33,7 +34,7 @@ jacob.fun <- function(treat, x, psix, a, tau, d) {
   midd22 <- (n2 - psi %*% tau)
   E <- diag(rep(1, d))
   a1 <- a2 <- a3 <- a4 <-0
-  for (i in 1:n) {
+  for (i in seq_len(n)) {
     di <- treat[i]
     psii <- as.matrix(psix[i,] - a)
     midd1i <- midd1[i]
@@ -65,7 +66,8 @@ est.a.tau <- function(treat, x, psix, a, tau, d) {
   rep_treat <- array(rep(treat, d), dim=c(n, d))
   f1 <- apply(rep_treat * psi / matrix(rep((n1 + psi %*% tau), d), ncol=d),
               2, sum)
-  f2 <- apply((1 - rep_treat) * psi / matrix(rep((n2 - psi %*% tau), d), ncol=d),
+  f2 <- apply((1 - rep_treat) * psi / matrix(rep((n2 - psi %*% tau), d),
+                                             ncol=d),
               2, sum)
   f <- matrix(c(f1, f2), ncol=1)
 
@@ -79,21 +81,22 @@ est.a.tau <- function(treat, x, psix, a, tau, d) {
 #     to set a value for the newton-raphson tolerance
 #   - added max_iter argument allowing the user to change the
 #     maximum number of iterations allowed
+#   - changed 1:max_iter in for loop to seq_len(max_iter)
 #   - minor changes to the code layout
 estamtor <- function(treat, x, psix, a, tau, d, max_iter, newton_tol) {
 
   n <- length(treat)
   n1 <- sum(treat)
   n2 <- n-n1
-  para <- rbind(a, tau);
+  para <- rbind(a, tau)
   a0 <- as.matrix(para[1:d])
   tau0 <- as.matrix(para[-(1:d)])
   fvalue <- est.a.tau(treat, x, psix, a0, tau0, d)
 
-  converge <- F
+  converge <- FALSE
   if(max(abs(fvalue)) < newton_tol) {
 
-    converge <- T
+    converge <- TRUE
     return(list(a=as.matrix(para[1:d]),
                 tau=as.matrix(para[-(1:d)]),
                 converge=converge))
@@ -101,13 +104,13 @@ estamtor <- function(treat, x, psix, a, tau, d, max_iter, newton_tol) {
 
   dfvalue <- jacob.fun(treat, x, psix, a0, tau0, d)
 
-  for (i in 1:max_iter) {
+  for (i in seq_len(max_iter)) {
 
     para1 <- para - MASS::ginv(dfvalue) %*% fvalue
 
     error <- max(abs(para1 - para))
     if (error < newton_tol | max(abs(fvalue)) < newton_tol) {
-      converge <- T
+      converge <- TRUE
       return(list(a=as.matrix(para1[1:d]),
                   tau=as.matrix(para1[-(1:d)]),
                   converge=converge))
@@ -138,7 +141,7 @@ estimator.pi <- function(y, delta, treat, x, psix, max_iter, newton_tol) {
   estnusi <- estamtor(treat, x, psix, a0, tau0, dd, max_iter, newton_tol)
   pi <- rep(1, n)
 
-  if (estnusi$converge==T && length(estnusi$converge)!=0) {
+  if (estnusi$converge==TRUE && length(estnusi$converge)!=0) {
     a <- estnusi$a
     tau <- estnusi$tau
     psi <- psix - t(array(rep(a, n), dim=c(dd, n)))
@@ -194,13 +197,14 @@ el.est <- function(y, delta, treat, x, psix_moment=c("first", "second"),
 
   N <- length(z0)
   if (N > 0) {
-    II0 <- (matrix(rep(z0, m), ncol=m) <= matrix(rep(t, N), ncol=m, byrow=T)) *
+    II0 <- (matrix(rep(z0, m), ncol=m) <= matrix(rep(t, N), ncol=m,
+                                                 byrow=TRUE)) *
       matrix(rep(pi.1, m), ncol=m)
     I0 <- as.numeric(matrix(rep(y, N), ncol=N) >=
-                     matrix(rep(z0, n), ncol=N, byrow=T)) *
+                     matrix(rep(z0, n), ncol=N, byrow=TRUE)) *
       matrix(rep(pi, N), ncol=N)
     ssum <- matrix(rep(apply(I0, 2,sum), m), ncol=m)
-    temp <- 1 - II0 / (ssum + gtol);
+    temp <- 1 - II0 / (ssum + gtol)
   } else {
     temp <- matrix(1, n, m)
   }

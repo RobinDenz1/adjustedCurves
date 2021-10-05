@@ -13,7 +13,7 @@ This page explains the details of estimating augmented inverse probability of tr
 surv_aiptw(data, variable, ev_time, event, conf_int,
            conf_level=0.95, times, outcome_model=NULL,
            treatment_model=NULL, censoring_model=NULL,
-           verbose=F, ...)
+           verbose=FALSE, ...)
 }
 
 \arguments{
@@ -21,13 +21,13 @@ surv_aiptw(data, variable, ev_time, event, conf_int,
 A \code{data.frame} object containing the needed time-to-event data in standard format.
 }
   \item{variable}{
-A character string specifying the variable by which the survival curves should be grouped. Must be a valid columname of \code{data}.
+A character string specifying the variable by which the survival curves should be grouped. Must be a valid column name of \code{data}.
 }
   \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid columname of \code{data}.
+A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
 }
   \item{event}{
-A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
+A character string specifying the binary event indicator. Must be a valid column name of \code{data}.
 }
   \item{conf_int}{
 A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated.

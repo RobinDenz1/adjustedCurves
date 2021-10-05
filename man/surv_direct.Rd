@@ -11,7 +11,8 @@ This page explains the details of estimating confounder-adjusted survival curves
 }
 \usage{
 surv_direct(data, variable, ev_time, event, conf_int,
-            conf_level=0.95, times, outcome_model, verbose=F, ...)
+            conf_level=0.95, times, outcome_model,
+            verbose=FALSE, ...)
 }
 
 \arguments{
@@ -19,13 +20,13 @@ surv_direct(data, variable, ev_time, event, conf_int,
 A \code{data.frame} object containing the needed time-to-event data in standard format.
 }
   \item{variable}{
-A character string specifying the variable by which the survival curves should be grouped. Must be a valid columname of \code{data}. The variable specified should be a factor variable.
+A character string specifying the variable by which the survival curves should be grouped. Must be a valid column name of \code{data}. The variable specified should be a factor variable.
 }
   \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid columname of \code{data}.
+A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
 }
   \item{event}{
-A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
+A character string specifying the binary event indicator. Must be a valid column name of \code{data}.
 }
   \item{conf_int}{
 A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated.

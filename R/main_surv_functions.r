@@ -19,9 +19,10 @@
 #' @importFrom doRNG %dorng%
 #' @importFrom foreach %dopar%
 #' @export
-adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
-                         conf_level=0.95, times=NULL, bootstrap=F,
-                         n_boot=500, n_cores=1, na.action=options("na.action")[[1]],
+adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=FALSE,
+                         conf_level=0.95, times=NULL, bootstrap=FALSE,
+                         n_boot=500, n_cores=1,
+                         na.action=options("na.action")[[1]],
                          ...) {
 
   check_inputs_adjustedsurv(data=data, variable=variable,
@@ -52,7 +53,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
     }
 
     # transform to long format
-    mids <- mice::complete(data, action="long", include=F)
+    mids <- mice::complete(data, action="long", include=FALSE)
 
     # get additional arguments
     args <- list(...)
@@ -70,8 +71,8 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
       treatment_models <- rep(list(args$treatment_model), max(mids$.imp))
       args$treatment_model <- NULL
     } else if (is.numeric(args$treatment_model)) {
-      stop("Supplying weights or propensity scores directly is not allowed when",
-           " using multiple imputation.")
+      stop("Supplying weights or propensity scores directly is not allowed",
+           " when using multiple imputation.")
     } else {
       treatment_models <- NULL
     }
@@ -82,12 +83,13 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
 
     # call adjustedsurv once for each multiply imputed dataset
     out <- vector(mode="list", length=max(mids$.imp))
-    for (i in 1:max(mids$.imp)) {
+    for (i in seq_len(max(mids$.imp))) {
 
       imp_data <- mids[mids$.imp==i,]
 
       # NOTE: need to add the data to the model object or ate() fails
-      if (!is.null(treatment_models) & inherits(treatment_models[[i]], "glm")) {
+      if (!is.null(treatment_models) &
+          inherits(treatment_models[[i]], "glm")) {
         treatment_models[[i]]$data <- imp_data
       }
 
@@ -108,7 +110,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
     # pool results
     dats <- vector(mode="list", length=length(out))
     boot_dats <- vector(mode="list", length=length(out))
-    for (i in 1:length(out)) {
+    for (i in seq_len(length(out))) {
 
       # direct estimate
       dat <- out[[i]]$adjsurv
@@ -153,7 +155,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
                     adjsurv=plotdata,
                     data=data$data,
                     method=method,
-                    categorical=ifelse(length(levs)>2, T, F),
+                    categorical=ifelse(length(levs)>2, TRUE, FALSE),
                     call=match.call())
 
     if (bootstrap) {
@@ -222,7 +224,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
     # get relevant surv_method function
     surv_fun <- get(paste0("surv_", method))
 
-    # bootstrap the whole procedure, can be useful to get sd, p-values
+    # bootstrap the whole procedure, can be useful to get se, p-values
     if (bootstrap) {
 
       if (n_cores > 1) {
@@ -252,7 +254,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
       } else {
 
         boot_out <- vector(mode="list", length=n_boot)
-        for (i in 1:n_boot) {
+        for (i in seq_len(n_boot)) {
           boot_out[[i]] <- adjustedsurv_boot(data=data, variable=variable,
                                              ev_time=ev_time, event=event,
                                              method=method,
@@ -277,14 +279,14 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
       # calculate some statistics
       boot_stats <- boot_data_same_t %>%
         dplyr::group_by(., time, group) %>%
-        dplyr::summarise(surv=mean(surv_b, na.rm=T),
-                         se=stats::sd(surv_b, na.rm=T),
+        dplyr::summarise(surv=mean(surv_b, na.rm=TRUE),
+                         se=stats::sd(surv_b, na.rm=TRUE),
                          ci_lower=stats::quantile(surv_b,
                                                   probs=(1-conf_level)/2,
-                                                  na.rm=T),
+                                                  na.rm=TRUE),
                          ci_upper=stats::quantile(surv_b,
                                                   probs=1-((1-conf_level)/2),
-                                                  na.rm=T),
+                                                  na.rm=TRUE),
                          n_boot=sum(!is.na(surv_b)),
                          .groups="drop_last")
       boot_stats$group <- factor(boot_stats$group, levels=levs)
@@ -303,7 +305,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
     out <- list(adjsurv=plotdata,
                 data=data,
                 method=method,
-                categorical=ifelse(length(levs)>2, T, F),
+                categorical=ifelse(length(levs)>2, TRUE, FALSE),
                 call=match.call())
 
     if (bootstrap) {
@@ -327,7 +329,7 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
                               times_input, times, i, surv_fun, levs,
                               na.action, ...) {
 
-  indices <- sample(x=rownames(data), size=nrow(data), replace=T)
+  indices <- sample(x=rownames(data), size=nrow(data), replace=TRUE)
   boot_samp <- data[indices,]
 
   # perform na.action
@@ -339,7 +341,7 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
   }
 
   # IMPORTANT: keeps SL in tmle methods from failing
-  row.names(boot_samp) <- 1:nrow(data)
+  row.names(boot_samp) <- seq_len(nrow(data))
 
   # if event specific times are used, use event specific times
   # in bootstrapping as well
@@ -368,13 +370,13 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
     if (inherits(pass_args$treatment_model, "glm") |
         inherits(pass_args$treatment_model, "multinom")) {
       pass_args$treatment_model <- stats::update(pass_args$treatment_model,
-                                                 data=boot_samp, trace=F)
+                                                 data=boot_samp, trace=FALSE)
     }
   }
 
   # call surv_method with correct arguments
   args <- list(data=boot_samp, variable=variable, ev_time=ev_time,
-               event=event, conf_int=F, conf_level=0.95, times=times)
+               event=event, conf_int=FALSE, conf_level=0.95, times=times)
   args <- c(args, pass_args)
 
   method_results <- R.utils::doCall(surv_fun, args=args)
@@ -383,14 +385,15 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
 
   # read from resulting step function at all t in times
   boot_surv <- vector(mode="list", length=length(levs))
-  for (j in 1:length(levs)) {
+  for (j in seq_len(length(levs))) {
 
     if (method %in% c("km", "iptw_km") & is.null(times)) {
       times <- unique(data[,ev_time][data[,variable]==levs[j]])
     }
 
-    surv_boot <- sapply(times, read_from_step_function,
-                        step_data=adjsurv_boot[adjsurv_boot$group==levs[j],])
+    surv_boot <- vapply(times, read_from_step_function,
+                        step_data=adjsurv_boot[adjsurv_boot$group==levs[j],],
+                        FUN.VALUE=numeric(1))
 
     dat_temp <- data.frame(time=times,
                            surv_b=surv_boot,
@@ -413,9 +416,10 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
 ## plot the survival curves
 #' @importFrom rlang .data
 #' @export
-plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
-                              iso_reg=F, force_bounds=F, use_boot=F,
-                              color=T, linetype=F, facet=F,
+plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
+                              iso_reg=FALSE, force_bounds=FALSE,
+                              use_boot=FALSE, color=TRUE,
+                              linetype=FALSE, facet=FALSE,
                               line_size=1, xlab="Time",
                               ylab="Adjusted Survival Probability",
                               title=NULL, legend.title="Group",
@@ -423,17 +427,17 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
                               gg_theme=ggplot2::theme_classic(),
                               ylim=NULL, custom_colors=NULL,
                               custom_linetypes=NULL,
-                              ci_draw_alpha=0.4, steps=T,
-                              median_surv_lines=F, median_surv_size=0.5,
+                              ci_draw_alpha=0.4, steps=TRUE,
+                              median_surv_lines=FALSE, median_surv_size=0.5,
                               median_surv_linetype="dashed",
                               median_surv_color="black",
-                              censoring_ind=F, censoring_ind_width=NULL,
+                              censoring_ind=FALSE, censoring_ind_width=NULL,
                               censoring_ind_size=0.5, ...) {
 
   if (use_boot & is.null(x$boot_adjsurv)) {
     warning("Cannot use bootstrapped estimates as they were not estimated.",
             " Need bootstrap=TRUE in adjustedsurv() call.")
-    draw_ci <- F
+    draw_ci <- FALSE
     plotdata <- x$adjsurv
   } else if (use_boot) {
     plotdata <- x$boot_adjsurv
@@ -449,8 +453,8 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
   # if specified set those to 0 or 1 respectively
   if (force_bounds) {
     plotdata <- within(plotdata, {
-      surv <- ifelse(surv < 0, 0, surv);
-      surv <- ifelse(surv > 1, 1, surv);
+      surv <- ifelse(surv < 0, 0, surv)
+      surv <- ifelse(surv > 1, 1, surv)
     })
   }
 
@@ -537,14 +541,14 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
 
     # calculate needed data
     cens_dat <- vector(mode="list", length=length(levs))
-    for (i in 1:length(levs)) {
+    for (i in seq_len(length(levs))) {
 
       x$data <- x$data[which(x$data$time <= max_t),]
       cens_times <- sort(unique(x$data[, x$call$ev_time][
         x$data[, x$call$event]==0 & x$data[, x$call$variable]==levs[i]]))
       adjsurv_temp <- plotdata[plotdata$group==levs[i], ]
-      cens_surv <- sapply(cens_times, read_from_step_function,
-                          step_data=adjsurv_temp)
+      cens_surv <- vapply(cens_times, read_from_step_function,
+                          step_data=adjsurv_temp, FUN.VALUE=numeric(1))
       cens_dat[[i]] <- data.frame(time=cens_times, surv=cens_surv,
                                   group=levs[i])
 
@@ -590,7 +594,7 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
     }
 
     p <- p + pammtools::geom_stepribbon(ci_map, alpha=ci_draw_alpha,
-                                        inherit.aes=F)
+                                        inherit.aes=FALSE)
   } else if (draw_ci & "ci_lower" %in% colnames(plotdata)) {
     ci_map <- ggplot2::aes(ymin=.data$ci_lower,
                            ymax=.data$ci_upper,
@@ -603,7 +607,8 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
       ci_map$fill <- NULL
     }
 
-    p <- p + ggplot2::geom_ribbon(ci_map, alpha=ci_draw_alpha, inherit.aes=F)
+    p <- p + ggplot2::geom_ribbon(ci_map, alpha=ci_draw_alpha,
+                                  inherit.aes=FALSE)
   }
 
   ## Median Survival indicators
@@ -612,7 +617,8 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
     # calculate median survival and add other needed values
     fake_adjsurv <- x
     fake_adjsurv$adjsurv <- plotdata
-    median_surv <- adjusted_median_survival(fake_adjsurv, use_boot=F, verbose=F)
+    median_surv <- adjusted_median_survival(fake_adjsurv, use_boot=FALSE,
+                                            verbose=FALSE)
     median_surv$y <- 0.5
     # set to NA if not in plot
     median_surv$median_surv[median_surv$median_surv > max_t] <- NA
@@ -630,10 +636,10 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
 
       # draw line on surv_p = 0.5 until it hits the last curve
       p <- p + ggplot2::geom_segment(ggplot2::aes(x=0,
-                                                  xend=max(median_surv$median_surv),
-                                                  y=0.5,
-                                                  yend=0.5),
-                                     inherit.aes=F,
+                                              xend=max(median_surv$median_surv),
+                                              y=0.5,
+                                              yend=0.5),
+                                     inherit.aes=FALSE,
                                      linetype=median_surv_linetype,
                                      size=median_surv_size,
                                      color=median_surv_color)
@@ -642,7 +648,7 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
                                                   xend=.data$median_surv,
                                                   y=0.5,
                                                   yend=.data$yend),
-                                     inherit.aes=F,
+                                     inherit.aes=FALSE,
                                      linetype=median_surv_linetype,
                                      size=median_surv_size,
                                      color=median_surv_color,

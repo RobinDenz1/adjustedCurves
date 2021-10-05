@@ -74,7 +74,8 @@ test_that("2 treatments, no conf_int, with user-weights", {
                                             method="iptw_cox",
                                             conf_int=F,
                                             bootstrap=F,
-                                            treatment_model=runif(n=50, min=1, max=2))
+                                            treatment_model=runif(n=50, min=1,
+                                                                  max=2))
                , NA)
 })
 
@@ -151,6 +152,7 @@ test_that("> 2 treatments, no conf_int, with user-weights", {
                                             method="iptw_cox",
                                             conf_int=F,
                                             bootstrap=F,
-                                            treatment_model=runif(n=50, min=1, max=2))
+                                            treatment_model=runif(n=50, min=1,
+                                                                  max=2))
                , NA)
 })

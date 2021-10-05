@@ -8,19 +8,25 @@ Plot Confounder-Adjusted Survival Curves
 A function to graphically display confounder-adjusted survival curves which where previously estimated using the \code{adjustedsurv} function. The user can customize the plot using a variety of options. Internally it uses the \code{ggplot2} package, so additional not implemented features can be added using the standard \code{ggplot2} syntax. This function also includes the option to use isotonic regression on the survival curves, which is of benefit if the estimated curves are not monotone.
 }
 \usage{
-\method{plot}{adjustedsurv}(x, draw_ci=F, max_t=Inf,
-     iso_reg=F, force_bounds=F, use_boot=F,
-     color=T, linetype=F, facet=F,
+\method{plot}{adjustedsurv}(x, draw_ci=FALSE, max_t=Inf,
+     iso_reg=FALSE, force_bounds=FALSE,
+     use_boot=FALSE, color=TRUE,
+     linetype=FALSE, facet=FALSE,
      line_size=1, xlab="Time",
      ylab="Adjusted Survival Probability",
      title=NULL, legend.title="Group",
-     legend.position="right", gg_theme=ggplot2::theme_classic(),
+     legend.position="right",
+     gg_theme=ggplot2::theme_classic(),
      ylim=NULL, custom_colors=NULL,
      custom_linetypes=NULL,
-     ci_draw_alpha=0.4, steps=T, median_surv_lines=F,
-     median_surv_size=0.5, median_surv_linetype="dashed",
-     median_surv_color="black", censoring_ind=F,
-     censoring_ind_width=NULL, censoring_ind_size=0.5, ...)
+     ci_draw_alpha=0.4, steps=TRUE,
+     median_surv_lines=FALSE,
+     median_surv_size=0.5,
+     median_surv_linetype="dashed",
+     median_surv_color="black",
+     censoring_ind=FALSE,
+     censoring_ind_width=NULL,
+     censoring_ind_size=0.5, ...)
 }
 
 \arguments{
@@ -113,7 +119,7 @@ Currently not used.
   }
 }
 \details{
-When using certain methods there is no guarantee that the resulting estimated survival curves are monotonically decreasing. This is unfortunate since we know that it has to be the case. Isotonic regression can be used to fix this problem by ensuring that the survival curves are actually monotonically decreasing everywhere, while also being as close to the observations as possible. Westling et al. (2020) showed mathematically that this does not add any systematic bias to the estimats. More information on the method can be found in Robertson et al. (1988). This adjustment can be done using this function by setting \code{iso_reg} to \code{TRUE}.
+When using certain methods there is no guarantee that the resulting estimated survival curves are monotonically decreasing. This is unfortunate since we know that it has to be the case. Isotonic regression can be used to fix this problem by ensuring that the survival curves are actually monotonically decreasing everywhere, while also being as close to the observations as possible. Westling et al. (2020) showed mathematically that this does not add any systematic bias to the estimates. More information on the method can be found in Robertson et al. (1988). This adjustment can be done using this function by setting \code{iso_reg} to \code{TRUE}.
 
 Similarly, some methods can produce estimates that lie outside the theoretical 0 and 1 bounds of probability. By setting \code{force_bounds} to \code{TRUE} these estimates are manually set to either 0 or 1 (whichever is closer).
 }
