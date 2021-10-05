@@ -230,12 +230,11 @@ sim_confounded_crisk <- function(n=500, lcovars=NULL, outcome_betas=NULL,
     lcovars <- list(x1=c("rbinom", 1, 0.5),
                     x2=c("rbinom", 1, 0.5),
                     x3=c("rbinom", 1, 0.5),
-                    x4=c("rnorm", 0, 1, -2, 2),
-                    x5=c("rnorm", 0, 1, -2, 2),
-                    x6=c("rnorm", 0, 1, -2, 2))
+                    x4=c("rnorm", 0, 1),
+                    x5=c("rnorm", 0, 1),
+                    x6=c("rnorm", 0, 1))
   }
   if (is.null(outcome_betas)) {
-    # TODO: set better default values
     outcome_betas <- list(c(log(1.8), log(1.8)/3),
                           c(log(1.3), log(1.3)/3),
                           c(0, 0),

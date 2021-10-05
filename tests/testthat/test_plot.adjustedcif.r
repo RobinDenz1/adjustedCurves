@@ -2,17 +2,18 @@ library(survival)
 
 set.seed(42)
 
-sim_dat <- sim_confounded_surv(n=100)
+sim_dat <- sim_confounded_crisk(n=100)
 sim_dat$group <- factor(sim_dat$group)
 
-adj <- adjustedsurv(data=sim_dat,
-                    variable="group",
-                    ev_time="time",
-                    event="event",
-                    method="km",
-                    conf_int=T,
-                    bootstrap=T,
-                    n_boot=2)
+adj <- adjustedcif(data=sim_dat,
+                   variable="group",
+                   ev_time="time",
+                   event="event",
+                   method="aalen_johansen",
+                   conf_int=T,
+                   bootstrap=T,
+                   n_boot=2,
+                   cause=1)
 
 test_that("plot, no conf_int", {
   expect_error(plot(adj), NA)

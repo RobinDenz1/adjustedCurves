@@ -111,7 +111,7 @@ Some method specific objects might also be contained in the output.
 }
 
 \references{
-Hier meine eigenen Paper
+Relevant literature can be found in the respective \code{surv_method} documentation.
 }
 \author{
 The function itself was written by Robin Denz, but some \code{surv_method} functions include wrappers for functions written by other people. More information can be found in the respective \code{surv_method} documentation.

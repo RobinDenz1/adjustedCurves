@@ -448,7 +448,7 @@ surv_aiptw <- function(data, variable, ev_time, event, conf_int,
 ## Using Pseudo Observations and Direct Adjustment
 #' @export
 surv_direct_pseudo <- function(data, variable, ev_time, event,
-                               conf_int, conf_level=0.95, times,
+                               conf_int=FALSE, conf_level=0.95, times,
                                outcome_vars, type_time="factor",
                                spline_df=5, censoring_vars=NULL,
                                ipcw_method="binder") {
@@ -767,7 +767,7 @@ surv_tmle <- function(data, variable, ev_time, event, conf_int,
     var_0 <- unlist(lapply(tpfit, function(x) {x$var[1]}))
     var_1 <- unlist(lapply(tpfit, function(x) {x$var[2]}))
 
-    plotdata$sd <- sqrt(c(var_0, var_1))
+    plotdata$se <- sqrt(c(var_0, var_1))
 
     confint.tp.survtmle <- utils::getFromNamespace("confint.tp.survtmle",
                                                    "survtmle")

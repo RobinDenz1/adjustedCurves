@@ -3,7 +3,7 @@ library(survival)
 
 set.seed(42)
 
-sim_dat <- adjustedCurves::sim_confounded_surv(n=300)
+sim_dat <- adjustedCurves::sim_confounded_surv(n=50)
 sim_dat$group <- as.factor(sim_dat$group)
 
 mod <- glm(group ~ x1 + x2 + x3 + x4 + x5 + x6, data=sim_dat,
@@ -38,7 +38,7 @@ test_that("2 treatments, no conf_int, with boot", {
                                             method="iptw_cox",
                                             conf_int=F,
                                             bootstrap=T,
-                                            n_boot=10,
+                                            n_boot=2,
                                             treatment_model=mod), NA)
 })
 
@@ -50,7 +50,7 @@ test_that("2 treatments, with conf_int, with boot", {
                                             method="iptw_cox",
                                             conf_int=T,
                                             bootstrap=T,
-                                            n_boot=10,
+                                            n_boot=2,
                                             treatment_model=mod), NA)
 })
 
@@ -74,11 +74,11 @@ test_that("2 treatments, no conf_int, with user-weights", {
                                             method="iptw_cox",
                                             conf_int=F,
                                             bootstrap=F,
-                                            treatment_model=runif(n=300, min=1, max=2))
+                                            treatment_model=runif(n=50, min=1, max=2))
                , NA)
 })
 
-sim_dat <- adjustedCurves::sim_confounded_surv(n=300)
+sim_dat <- adjustedCurves::sim_confounded_surv(n=50)
 sim_dat$group[sim_dat$group==1] <- sample(c(1, 2),
                                           size=nrow(sim_dat[sim_dat$group==1,]),
                                           replace=T)
@@ -114,7 +114,7 @@ test_that("> 2 treatments, no conf_int, with boot, no ...", {
                                             method="iptw_cox",
                                             conf_int=F,
                                             bootstrap=T,
-                                            n_boot=10,
+                                            n_boot=2,
                                             treatment_model=mod), NA)
 })
 
@@ -126,7 +126,7 @@ test_that("> 2 treatments, with conf_int, with boot, no ...", {
                                             method="iptw_cox",
                                             conf_int=T,
                                             bootstrap=T,
-                                            n_boot=10,
+                                            n_boot=2,
                                             treatment_model=mod), NA)
 })
 
@@ -151,6 +151,6 @@ test_that("> 2 treatments, no conf_int, with user-weights", {
                                             method="iptw_cox",
                                             conf_int=F,
                                             bootstrap=F,
-                                            treatment_model=runif(n=300, min=1, max=2))
+                                            treatment_model=runif(n=50, min=1, max=2))
                , NA)
 })

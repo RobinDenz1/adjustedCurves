@@ -1,9 +1,8 @@
-#library(adjustedCurves)
 library(survival)
 
 set.seed(42)
 
-sim_dat <- adjustedCurves::sim_confounded_surv(n=300)
+sim_dat <- adjustedCurves::sim_confounded_surv(n=50)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # outcome model
@@ -39,7 +38,7 @@ test_that("2 treatments, no conf_int, with boot", {
                                             method="direct",
                                             conf_int=F,
                                             bootstrap=T,
-                                            n_boot=10,
+                                            n_boot=2,
                                             outcome_model=mod), NA)
 })
 
@@ -51,7 +50,7 @@ test_that("2 treatments, with conf_int, with boot", {
                                             method="direct",
                                             conf_int=T,
                                             bootstrap=T,
-                                            n_boot=10,
+                                            n_boot=2,
                                             outcome_model=mod), NA)
 })
 
@@ -63,12 +62,12 @@ test_that("2 treatments, no conf_int, no boot, with times", {
                                             method="direct",
                                             conf_int=T,
                                             bootstrap=T,
-                                            n_boot=10,
+                                            n_boot=2,
                                             outcome_model=mod,
-                                            times=c(1, 2)), NA)
+                                            times=c(0.8, 0.9)), NA)
 })
 
-sim_dat <- adjustedCurves::sim_confounded_surv(n=300)
+sim_dat <- adjustedCurves::sim_confounded_surv(n=90)
 sim_dat$group[sim_dat$group==1] <- sample(c(1, 2),
                                           size=nrow(sim_dat[sim_dat$group==1,]),
                                           replace=T)
@@ -107,7 +106,7 @@ test_that("> 2 treatments, no conf_int, with boot", {
                                             method="direct",
                                             conf_int=F,
                                             bootstrap=T,
-                                            n_boot=10,
+                                            n_boot=2,
                                             outcome_model=mod), NA)
 })
 
@@ -119,7 +118,7 @@ test_that("> 2 treatments, with conf_int, with boot", {
                                             method="direct",
                                             conf_int=T,
                                             bootstrap=T,
-                                            n_boot=10,
+                                            n_boot=2,
                                             outcome_model=mod), NA)
 })
 
@@ -131,10 +130,7 @@ test_that("> 2 treatments, no conf_int, no boot, with times", {
                                             method="direct",
                                             conf_int=F,
                                             bootstrap=F,
-                                            n_boot=10,
+                                            n_boot=2,
                                             outcome_model=mod,
-                                            times=c(1, 2)), NA)
+                                            times=c(0.8, 0.9)), NA)
 })
-
-
-

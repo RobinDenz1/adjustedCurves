@@ -1,6 +1,7 @@
 library(survival)
 
-sim_dat <- sim_confounded_surv(n=200, max_t=1.5)
+set.seed(42)
+sim_dat <- sim_confounded_surv(n=50, max_t=1.5)
 sim_dat$group <- factor(sim_dat$group)
 
 adj <- adjustedsurv(data=sim_dat,

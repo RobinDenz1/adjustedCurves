@@ -1,10 +1,9 @@
-#library(adjustedCurves)
 library(survival)
 library(survtmle)
 
 set.seed(35)
 
-sim_dat <- adjustedCurves::sim_confounded_surv(n=200, max_t=1.5)
+sim_dat <- adjustedCurves::sim_confounded_surv(n=100, max_t=1.5)
 sim_dat$time <- round(sim_dat$time * 10) + 1
 sim_dat$event[sim_dat$event==1] <- sample(c(1, 2), size=sum(sim_dat$event),
                                           replace=T)

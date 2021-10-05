@@ -222,7 +222,7 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
     # get relevant cif_method function
     cif_fun <- get(paste0("cif_", method))
 
-    # bootstrap the whole procedure, can be useful to get sd, p-values
+    # bootstrap the whole procedure, can be useful to get se, p-values
     if (bootstrap) {
 
       if (n_cores > 1) {
@@ -451,9 +451,17 @@ plot.adjustedcif <- function(x, draw_ci=F, max_t=Inf,
   # apply isotonic regression if specified
   if (iso_reg) {
     for (lev in levels(plotdata$group)) {
-      cif <- plotdata$cif[plotdata$group==lev]
-      new <- stats::isoreg(cif)$yf
+      temp <- plotdata[plotdata$group==lev,]
+
+      new <- stats::isoreg(temp$cif)$yf
       plotdata$cif[plotdata$group==lev] <- new
+
+      if (draw_ci & "ci_lower" %in% colnames(temp)) {
+        diff <- temp$cif - new
+
+        plotdata$ci_lower[plotdata$group==lev] <- temp$ci_lower - diff
+        plotdata$ci_upper[plotdata$group==lev] <- temp$ci_upper - diff
+      }
     }
   }
 

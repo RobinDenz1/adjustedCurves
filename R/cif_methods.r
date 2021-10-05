@@ -320,8 +320,8 @@ cif_aiptw <- function(data, variable, ev_time, event, cause, conf_int,
 ## Using Pseudo Observations and Direct Adjustment
 #' @export
 cif_direct_pseudo <- function(data, variable, ev_time, event, cause,
-                              conf_int, conf_level=0.95, times, outcome_vars,
-                              type_time="factor", spline_df=5) {
+                              conf_int=FALSE, conf_level=0.95, times,
+                              outcome_vars, type_time="factor", spline_df=5) {
 
   # estimate pseudo observations
   hist_formula <- stats::as.formula(paste("prodlim::Hist(", ev_time, ", ",
@@ -576,7 +576,7 @@ cif_tmle <- function(data, variable, ev_time, event, cause, conf_int,
     var_0 <- unlist(lapply(tpfit, function(x) {x$var[1]}))
     var_1 <- unlist(lapply(tpfit, function(x) {x$var[2]}))
 
-    plotdata$sd <- sqrt(c(var_0, var_1))
+    plotdata$se <- sqrt(c(var_0, var_1))
 
     confint.tp.survtmle <- utils::getFromNamespace("confint.tp.survtmle",
                                                    "survtmle")

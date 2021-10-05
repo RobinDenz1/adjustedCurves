@@ -2,7 +2,7 @@ library(survival)
 
 set.seed(42)
 
-sim_dat <- adjustedCurves::sim_confounded_surv(n=200)
+sim_dat <- adjustedCurves::sim_confounded_surv(n=100)
 sim_dat <- within(sim_dat, {
   x1 <- ifelse(x1==1, 1, -1);
   x2 <- ifelse(x2==1, 1, -1);

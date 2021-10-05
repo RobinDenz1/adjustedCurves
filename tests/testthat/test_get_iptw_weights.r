@@ -2,7 +2,7 @@
 set.seed(42)
 
 ## 2 treatments
-sim_dat <- adjustedCurves::sim_confounded_surv(n=100)
+sim_dat <- adjustedCurves::sim_confounded_surv(n=50)
 sim_dat$group_num <- sim_dat$group
 sim_dat$group <- as.factor(sim_dat$group)
 

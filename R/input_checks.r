@@ -48,7 +48,8 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     if (method %in% c("matching", "emp_lik", "tmle", "ostmle") &
         !is.factor(data[,variable]) & !is.numeric(data[,variable])) {
       stop("The column in 'data' specified by 'variable' needs to be ",
-           "a factor or a dichotomous integer variable if method='", method, "'.")
+           "a factor or a dichotomous integer variable if method='",
+           method, "'.")
     }
 
     if (!method %in% c("matching", "emp_lik", "tmle", "ostmle") &
@@ -60,20 +61,24 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     # No extrapolation
     if (!is.null(times)) {
       if (max(times) > max(data[,ev_time])) {
-        stop("Values in '", ev_time, "' must be smaller than max(data[,ev_time]).",
+        stop("Values in '", ev_time,
+             "' must be smaller than max(data[,ev_time]).",
              " No extrapolation allowed.")
       }
     }
   } else {
-    if (!is.null(obj$treatment_model) & !inherits(obj$treatment_model, c("mira", "formula"))) {
+    if (!is.null(obj$treatment_model) &
+        !inherits(obj$treatment_model, c("mira", "formula"))) {
       stop("When using multiple imputation, mira objects need to be supplied",
            " to 'treatment_model' instead of single models. See documentation.")
     }
-    if (!is.null(obj$outcome_model) & !inherits(obj$outcome_model, "mira")) {
+    if (!is.null(obj$outcome_model) &
+        !inherits(obj$outcome_model, "mira")) {
       stop("When using multiple imputation, mira objects need to be supplied",
            " to 'outcome_model' instead of single models. See documentation.")
     }
-    if (!is.null(obj$censoring_model) & !inherits(obj$censoring_model, "mira")) {
+    if (!is.null(obj$censoring_model) &
+        !inherits(obj$censoring_model, "mira")) {
       stop("When using multiple imputation, mira objects need to be supplied",
            " to 'censoring_model' instead of single models. See documentation.")
     }
@@ -93,7 +98,8 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
   }
 
   # Direct Pseudo, AIPTW Pseudo
-  if (method=="direct_pseudo" | method=="aiptw_pseudo" | method=="iptw_pseudo") {
+  if (method=="direct_pseudo" | method=="aiptw_pseudo" |
+      method=="iptw_pseudo") {
     requireNamespace("geepack")
     requireNamespace("prodlim")
 
@@ -180,8 +186,9 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
 
       for (col in obj$treatment_vars) {
         if (paste0(unique(data[,col]), collapse="") %in% c("10", "01")) {
-          warning("Dichotomous variables coded with 0 and 1 found in 'treatment_vars'.",
-                  " Consider recoding to -1 and 1 to avoid estimation problems.")
+          warning("Dichotomous variables coded with 0 and 1 found in ",
+                  " 'treatment_vars'. Consider recoding to -1 and 1",
+                  " to avoid estimation problems.")
         }
       }
 
@@ -287,7 +294,8 @@ check_inputs_sim_fun <- function(n, lcovars, outcome_betas, surv_dist,
   }
 
   if (!((is.null(lcovars) & is.null(outcome_betas) & is.null(treatment_betas)) |
-        (is.list(lcovars) & is.numeric(outcome_betas) & is.numeric(treatment_betas)))) {
+        (is.list(lcovars) & is.numeric(outcome_betas) &
+         is.numeric(treatment_betas)))) {
     stop("'lcovars', 'outcome_betas' and 'treatment_betas' can either all ",
          "be NULL to use default values, or have to be specified.")
   }
@@ -323,7 +331,7 @@ check_inputs_sim_fun <- function(n, lcovars, outcome_betas, surv_dist,
     for (i in 1:length(lcovars)) {
       if (!lcovars[[i]][1] %in% c("rbinom", "rnorm", "runif")) {
         stop("The first element of every vector in 'lcovars' must be either ",
-             "'rbinom', 'rnorm' or 'runif', not ", lcovars[[i]][1])
+             "'rbinom', 'rnorm' or 'runif', not ", lcovars[[i]][1], ".")
       }
     }
   }
@@ -349,7 +357,8 @@ check_inputs_adj_rmst <- function(adjsurv, from, to, use_boot) {
 ## for adjustedsurv_test
 check_inputs_adj_test <- function(adjsurv, from, to) {
 
-  if (!(inherits(adjsurv, "adjustedsurv") | inherits(adjsurv, "adjustedcif"))) {
+  if (!(inherits(adjsurv, "adjustedsurv") |
+        inherits(adjsurv, "adjustedcif"))) {
     stop("'adjsurv' must be an 'adjustedsurv' object, created using the ",
          "adjustedsurv function.")
   } else if (is.null(adjsurv$boot_data)) {
@@ -365,13 +374,27 @@ check_inputs_adj_test <- function(adjsurv, from, to) {
     stop("'to' must be greater than 'from'.")
   }
 
-  if (class(adjsurv)=="adjustedsurv") {
-    if (to > max(adjsurv$adjsurv$time)) {
+  if (inherits(adjsurv, "adjustedsurv")) {
+    if (to > max(adjsurv$adjsurv$time, na.rm=T)) {
       stop("'to' can not be greater than the latest observed time.")
     }
   } else {
     if (to > max(adjsurv$adjcif$time)) {
       stop("'to' can not be greater than the latest observed time.")
+    }
+  }
+
+  if (inherits(adjsurv, "adjustedsurv")) {
+    if (length(unique((adjsurv$adjsurv$time))) < 10) {
+      warning("Using only a few points in time might lead to biased",
+              " estimates. Consider using a finer times grid in",
+              " 'adjustedsurv'.")
+    }
+  } else {
+    if (length(unique((adjsurv$adjcif$time))) < 10) {
+      warning("Using only a few points in time might lead to biased",
+              " estimates. Consider using a finer times grid in",
+              " 'adjustedcif'.")
     }
   }
 
@@ -428,8 +451,8 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
   }
 
   if (!method %in% c("aalen_johansen", "iptw", "iptw_pseudo", "direct",
-                            "direct_pseudo", "aiptw_pseudo",
-                            "aiptw", "tmle", "matching")) {
+                     "direct_pseudo", "aiptw_pseudo",
+                     "aiptw", "tmle", "matching")) {
     stop("Method '", method, "' is undefined. See documentation for ",
          "details on available methods.")
   # conf_int
@@ -449,7 +472,8 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
   }
 
   # Direct Pseudo, AIPTW Pseudo
-  if (method=="direct_pseudo" | method=="aiptw_pseudo" | method=="iptw_pseudo") {
+  if (method=="direct_pseudo" | method=="aiptw_pseudo" |
+      method=="iptw_pseudo") {
     requireNamespace("geepack")
     requireNamespace("prodlim")
 
@@ -574,9 +598,39 @@ check_inputs_sim_crisk_fun <- function(n, lcovars, outcome_betas, gamma,
   } else if (max_t <= 0) {
     stop("'max_t' must be bigger than zero.")
   } else if (!is.numeric(group_beta)) {
-    stop("'group_beta' must be a number.")
+    stop("'group_beta' must be a numeric vector.")
   }
 
-  # TODO: more specific checks here
+  if (stats::var(c(length(group_beta), length(gamma), length(lambda)))!=0) {
+    stop("Arguments 'group_beta', 'gamma' and 'lambda' need to have",
+         " the same length.")
+  }
+
+  if (!((is.null(lcovars) & is.null(outcome_betas) & is.null(treatment_betas)) |
+        (is.list(lcovars) & is.list(outcome_betas) &
+         is.numeric(treatment_betas)))) {
+    stop("'lcovars', 'outcome_betas' and 'treatment_betas' can either all ",
+         "be NULL to use default values, or have to be specified.")
+  }
+
+  if (!is.null(outcome_betas) && stats::var(sapply(outcome_betas, length))!=0) {
+    stop("The vectors supplied in 'outcome_betas' all need to have,",
+         " the same length.")
+  }
+
+  if (!is.null(treatment_betas)) {
+    if (is.null(names(treatment_betas))) {
+      stop("Elements in the 'treatment_betas' vector must be named.")
+    }
+  }
+
+  if (!is.null(lcovars)) {
+    for (i in 1:length(lcovars)) {
+      if (!lcovars[[i]][1] %in% c("rbinom", "rnorm", "runif")) {
+        stop("The first element of every vector in 'lcovars' must be either ",
+             "'rbinom', 'rnorm' or 'runif', not ", lcovars[[i]][1], ".")
+      }
+    }
+  }
 
 }

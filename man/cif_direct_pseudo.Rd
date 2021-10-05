@@ -12,8 +12,9 @@ It uses essentially the same methodology as the regular direct adjustment method
 
 }
 \usage{
-cif_direct_pseudo(data, variable, ev_time, event, cause, conf_int,
-                  conf_level=0.95, times, outcome_vars, type_time="factor",
+cif_direct_pseudo(data, variable, ev_time, event, cause,
+                  conf_int=FALSE, conf_level=0.95, times,
+                  outcome_vars, type_time="factor",
                   spline_df=5)
 }
 
@@ -34,7 +35,7 @@ A character string specifying the numeric event indicator. The censoring indicat
 The cause of interest for which the cumulative incidence functions should be calculated. Should be a number that appears in the \code{event} column of \code{data}.
   }
   \item{conf_int}{
-A logical variable, indicating whether the asymptotic variances and confidence intervals of the CIFs should be calculated. Not available for all methods.
+Currently not used because asymptotic variance calculations for this estimator have not been proposed yet. Bootstrapping can still be used to estimate the confidence intervals (see \code{?adjustedcif}).
   }
   \item{conf_level}{
 A number specifying the confidence level of asymptotic confidence intervals.

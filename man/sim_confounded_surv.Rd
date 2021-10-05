@@ -86,7 +86,7 @@ Robin Denz
 
 \examples{
 \dontrun{
-# simulate data with default values, same as in the cited paper
+# simulate data with default values
 sim_dat <- sim_confounded_surv(n=500)
 
 # simulate data with some new values

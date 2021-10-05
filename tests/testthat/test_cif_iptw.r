@@ -4,7 +4,7 @@ library(riskRegression)
 
 set.seed(42)
 
-sim_dat <- adjustedCurves::sim_confounded_surv(n=100)
+sim_dat <- adjustedCurves::sim_confounded_surv(n=50)
 sim_dat$event[sim_dat$event==1] <- sample(c(1, 2), size=sum(sim_dat$event),
                                           replace=T)
 sim_dat$group <- as.factor(sim_dat$group)

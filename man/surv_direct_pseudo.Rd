@@ -12,8 +12,9 @@ It uses essentially the same methodology as the regular direct adjustment method
 
 }
 \usage{
-surv_direct_pseudo(data, variable, ev_time, event, conf_int, conf_level=0.95,
-                   times, outcome_vars, type_time="factor", spline_df=5,
+surv_direct_pseudo(data, variable, ev_time, event, conf_int=FALSE,
+                   conf_level=0.95, times, outcome_vars,
+                   type_time="factor", spline_df=5,
                    censoring_vars=NULL, ipcw_method="binder")
 }
 
@@ -31,7 +32,7 @@ A character string specifying the variable indicating the time-to-event or time-
 A character string specifying the binary event indicator. Must be a valid columname of \code{data}.
 }
    \item{conf_int}{
-A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated.
+Currently not used because asymptotic variance calculations for this estimator have not been proposed yet. Bootstrapping can still be used to estimate the confidence intervals (see \code{?adjustedsurv}).
   }
   \item{conf_level}{
 A number specifying the confidence level of asymptotic confidence intervals.

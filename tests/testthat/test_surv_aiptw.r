@@ -1,10 +1,9 @@
-#library(adjustedCurves)
 library(survival)
 library(riskRegression)
 
 set.seed(42)
 
-sim_dat <- adjustedCurves::sim_confounded_surv(n=300)
+sim_dat <- adjustedCurves::sim_confounded_surv(n=50)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # outcome model
@@ -62,7 +61,7 @@ test_that("2 treatments, no conf_int, no boot, with times", {
                                             n_boot=2,
                                             outcome_model=outc_mod,
                                             treatment_model=treat_mod,
-                                            times=c(1, 2)), NA)
+                                            times=c(0.8, 0.9)), NA)
 })
 
 cens_mod <- coxph(Surv(time, event==0) ~ x2, data=sim_dat, x=T)
@@ -79,5 +78,5 @@ test_that("2 treatments, no conf_int, no boot, with times, with cens_mod", {
                                             outcome_model=outc_mod,
                                             treatment_model=treat_mod,
                                             censoring_model=cens_mod,
-                                            times=c(1, 2)), NA)
+                                            times=c(0.8, 0.9)), NA)
 })

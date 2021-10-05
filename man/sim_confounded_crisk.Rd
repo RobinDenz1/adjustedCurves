@@ -85,7 +85,34 @@ The code for step (3) and (4) descibed in the details was taken from the \code{s
 
 \examples{
 \dontrun{
-# TODO: Example
+# simulate data with default values
+sim_dat <- sim_confounded_crisk(n=100)
+
+# set group betas to 0
+sim_dat <- sim_confounded_crisk(n=100, group_beta=c(0, 0))
+
+# set some custom values
+outcome_betas <- list(c(0.03, 0.4),
+                      c(1.1, 0.8),
+                      c(0, 0),
+                      c(-0.2, -0.4),
+                      c(log(1.3), log(1.3)/3),
+                      c(0, 0))
+
+treatment_betas <- c(x1=0, x2=log(3), x3=log(1.2),
+                     x4=0, x5=log(1.1), x6=log(1.4))
+
+lcovars <- list(x1=c("rbinom", 1, 0.3),
+                x2=c("rbinom", 1, 0.7),
+                x3=c("rbinom", 1, 0.5),
+                x4=c("rnorm", 0, 1),
+                x5=c("rnorm", 0, 1.1),
+                x6=c("rnorm", 0, 0.9))
+
+sim_dat <- sim_confounded_crisk(n=100,
+                                treatment_betas=treatment_betas,
+                                outcome_betas=outcome_betas,
+                                lcovars=lcovars)
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

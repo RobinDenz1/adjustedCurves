@@ -62,7 +62,8 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
     args$outcome_model <- NULL
 
     # extract treatment models
-    if (inherits(args$treatment_model$analyses[[1]], c("glm", "lm", "multinom"))) {
+    if (inherits(args$treatment_model$analyses[[1]],
+                 c("glm", "lm", "multinom"))) {
       treatment_models <- args$treatment_model$analyses
       args$treatment_model <- NULL
     } else if (inherits(args$treatment_model, "formula")) {
@@ -179,7 +180,6 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
   class(out_obj) <- "adjustedsurv"
   return(out_obj)
 
-
   ## normal method using a single data.frame
   } else {
 
@@ -255,7 +255,8 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=F,
         for (i in 1:n_boot) {
           boot_out[[i]] <- adjustedsurv_boot(data=data, variable=variable,
                                              ev_time=ev_time, event=event,
-                                             method=method, times_input=times_input,
+                                             method=method,
+                                             times_input=times_input,
                                              times=times, i=i,
                                              surv_fun=surv_fun, levs=levs,
                                              na.action=na.action, ...)
@@ -460,13 +461,12 @@ plot.adjustedsurv <- function(x, draw_ci=F, max_t=Inf,
       # to surv estimates
       new <- rev(stats::isoreg(rev(temp$surv))$yf)
       plotdata$surv[plotdata$group==lev] <- new
-      # on confidence intervals
+      # shift confidence intervals accordingly
       if (draw_ci & "ci_lower" %in% colnames(temp)) {
-        new <- rev(stats::isoreg(rev(temp$ci_lower))$yf)
-        plotdata$ci_lower[plotdata$group==lev] <- new
+        diff <- temp$surv - new
 
-        new <- rev(stats::isoreg(rev(temp$ci_upper))$yf)
-        plotdata$ci_upper[plotdata$group==lev] <- new
+        plotdata$ci_lower[plotdata$group==lev] <- temp$ci_lower - diff
+        plotdata$ci_upper[plotdata$group==lev] <- temp$ci_upper - diff
       }
     }
   }
