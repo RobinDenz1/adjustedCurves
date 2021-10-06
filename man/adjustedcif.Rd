@@ -5,7 +5,7 @@
 Calculate Cause-Specific Confounder-Adjusted Cumulative Incidence Functions
 }
 \description{
-This is one of two main functions of this R-Package. It allows the user to calculate cause-specific confounder-adjusted cumulative incidence functions using a variety of different methods. It is basically a wrapper for each \code{cif_method} function with some additional functionality, such as bootstrapping. Some of these methods require additional packages to be installed and depending on the specified method there might be additional required arguments in the function call. Documentation on that can be found in the respective \code{cif_method} function. See details and examples.
+This is one of two main functions of this R-Package. It allows the user to calculate cause-specific confounder-adjusted cumulative incidence functions using a variety of different methods. It is basically a wrapper for each \code{cif_method} function with some additional functionality, such as bootstrapping. Some of these methods require additional packages to be installed and, depending on the specified method, there might be additional required arguments in the function call. Documentation on that can be found in the respective \code{cif_method} function. See details and examples.
 }
 \usage{
 adjustedcif(data, variable, ev_time, event, cause,
@@ -65,7 +65,7 @@ The primary purpose of the \code{adjustedcif} function is to provide a convenien
 \itemize{
   \item{"\link[=cif_direct]{direct}": Direct Standardization based on a Cause-Specific Cox-Regression model.}
   \item{"\link[=cif_direct_pseudo]{direct_pseudo}": Direct Standardization based on Pseudo-Values.}
-  \item{"\link[=cif_iptw]{iptw}": A weighted Nelson-Aalen estimator.}
+  \item{"\link[=cif_iptw]{iptw}": A weighted Aalen-Johansen estimator.}
   \item{"\link[=cif_iptw_pseudo]{iptw_pseudo}": A weighted estimator based on Pseudo-Values.}
   \item{"\link[=cif_matching]{matching}": Using propensity score matching to estimate the adjusted CIFs.}
   \item{"\link[=cif_aiptw]{aiptw}": An Augmented Inverse Probability of Treatment Weighting estimator.}
@@ -84,7 +84,7 @@ This function also allows multiple imputation via the \code{mice} package. Inste
 \value{
 Returns an \code{adjustedcif} object containing the following objects:
 
-\item{adjcif}{A \code{data.frame} of estimated cumulative incidences for \code{cause} at some points in time for each level of \code{variable}. Depending on the arguments used also includes standard errors and confidence intervals at points in time.
+\item{adjcif}{A \code{data.frame} of estimated cumulative incidences for \code{cause} at some points in time for each level of \code{variable}. Depending on the arguments used also includes standard errors and confidence intervals.
 }
 \item{method}{
 The method used to adjust the CIFs.

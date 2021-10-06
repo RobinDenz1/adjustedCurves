@@ -6,9 +6,7 @@ Inverse Probability of Treatment Weighted Survival using Cox-Regression
 }
 \description{
 
-This page explains the details of estimating inverse probability of treatment weighted survival curves using a weighted univariate cox-regression for single event time-to-event data. The function is called internally when using \code{method="iptw_cox"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function.
-
-This method works by modelling the treatment assignment mechanism. The individual observations are weighted using inverse probability of treatment weights or other balancing weights (see details) and a univariate cox-regression model. If the model is correctly specified, unbiased results will be obtained. The only difference to the \code{\link[=surv_iptw_km]{iptw_km}} method is a slightly different weighting approach.
+This page explains the details of estimating inverse probability of treatment weighted survival curves using a weighted univariate cox-regression for single event time-to-event data. The function is called internally when using \code{method="iptw_cox"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function. It is highly recommended to use \code{\link[=adjustedsurv]{adjustedsurv}} instead of calling this function directly.
 
 }
 \usage{
@@ -53,7 +51,7 @@ Whether to stabilize the weights or not. Is set to \code{TRUE} by default. Stabi
 Can be either \code{FALSE} (default) or a numeric value at which to trim the weights. If \code{FALSE}, weights are used as calculated or supplied. If a numeric value is supplied, all weights that are bigger than \code{trim} are set to \code{trim} before the analysis is carried out. Useful when some weights are extremely large.
   }
   \item{...}{
-Further arguments passed to \code{WeightIt}.
+Further arguments passed to \code{\link[WeightIt]{weightit}}.
   }
 }
 \details{
@@ -69,7 +67,7 @@ Further arguments passed to \code{WeightIt}.
 \item{\strong{Dependencies:} This method relies on the \code{survival} package. Additionally, the \code{WeightIt} package is required if \code{treatment_model} is a formula object.}
 }
 
-Adjusted survival curves are calculated by first estimating appropriate case-weights for each observation in \code{data}. This can be done using inverse probability of treatment weights using the propensity score (usually estimated using a logistic regression model) or by some other method (see \code{?weightit}). Those estimates are then used to fit a weighted Cox-Regression model, using only \code{variable} as independent variable. Survival Curves based on this model are estimated using the method implemented in the \code{survfit.coxph} function. More information can be found in the literature listed under "references".
+This method works by modelling the treatment assignment mechanism. Adjusted survival curves are calculated by first estimating appropriate case-weights for each observation in \code{data}. This can be done using inverse probability of treatment weights using the propensity score (usually estimated using a logistic regression model) or by some other method (see \code{?weightit}). Those estimates are then used to fit a weighted Cox-Regression model, stratified by \code{variable}. Survival Curves based on this model are estimated using the method implemented in the \code{survfit.coxph} function. More information can be found in the literature listed under "references". The only difference to the \code{\link[=surv_iptw_km]{iptw_km}} method is a slightly different weighting approach.
 
 By default this method uses a a robust sandwich-type variance estimator (\code{robust=TRUE} in the \code{coxph} function call) to calculate the standard error used in the construction of confidence intervals. This estimator has been shown to be biased by Austin (2016). Coupled with stabilized weights however (\code{stabilize=TRUE}) this gives conservative estimates of the variance and confidence intervals (Xu et al. 2010). It is still recommended to use bootstrap confidence intervals instead. This can be done by setting \code{bootstrap=TRUE} in the \code{adjustedsurv} function call.
 }

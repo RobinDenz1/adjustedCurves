@@ -5,7 +5,7 @@
 Calculate Confounder-Adjusted Survival Curves
 }
 \description{
-This is one of the two main functions of this R-Package. It allows the user to calculate confounder-adjusted survival curves using a variety of different methods. It is basically a wrapper for each \code{surv_method} function with some additional functionality, such as bootstrapping. Some of these methods require additional packages to be installed and depending on the specified method there might be additional required arguments in the function call. Documentation on that can be found in the respective \code{surv_method} function. See details and examples.
+This is one of the two main functions of this R-Package. It allows the user to calculate confounder-adjusted survival curves using a variety of different methods. It is basically a wrapper for each \code{surv_method} function with some additional functionality, such as bootstrapping. Some of these methods require additional packages to be installed and, depending on the specified method, there might be additional required arguments in the function call. Documentation on that can be found in the respective \code{surv_method} function. See details and examples.
 }
 \usage{
 adjustedsurv(data, variable, ev_time, event, method,
@@ -63,7 +63,7 @@ The primary purpose of the \code{adjustedsurv} function is to provide a convenie
   \item{"\link[=surv_direct]{direct}": Direct Standardization based on a Cox-Regression model with or without stratification.}
   \item{"\link[=surv_direct_pseudo]{direct_pseudo}": Direct Standardization based on Pseudo-Values.}
   \item{"\link[=surv_iptw_km]{iptw_km}": A weighted Kaplan-Meier estimator.}
-  \item{"\link[=surv_iptw_cox]{iptw_cox}": A weighted estimator based on a univariate weighted Cox-Regression model.}
+  \item{"\link[=surv_iptw_cox]{iptw_cox}": A weighted estimator based on a stratified weighted Cox-Regression model.}
   \item{"\link[=surv_iptw_pseudo]{iptw_pseudo}": A weighted estimator based on Pseudo-Values.}
   \item{"\link[=surv_matching]{matching}": Using propensity score matching to estimate the adjusted survival curves.}
   \item{"\link[=surv_emp_lik]{emp_lik}": Empirical Likelihood based estimator of the survival function.}
@@ -84,7 +84,7 @@ This function also allows multiple imputation via the \code{mice} package. Inste
 \value{
 Returns an \code{adjustedsurv} object containing the following objects:
 
-\item{adjsurv}{A \code{data.frame} of estimated adjusted survival probabilities for some points in time for each level of \code{variable}. Depending on the arguments used also includes standard errors and confidence intervals at points in time.
+\item{adjsurv}{A \code{data.frame} of estimated adjusted survival probabilities for some points in time for each level of \code{variable}. Depending on the arguments used also includes standard errors and confidence intervals.
 }
 \item{data}{The \code{data.frame} used in the original function call.
 }
@@ -97,7 +97,7 @@ The method used to adjust the survival curves.
 The original function call.
 }
 
-When the argument \code{bootstrap} is set to \code{TRUE} it additionally contains the following objects:
+When the argument \code{bootstrap} is set to \code{TRUE}, it additionally contains the following objects:
 
 \item{boot_data}{The adjusted survival curves estimated in each bootstrap sample.
 }

@@ -6,9 +6,7 @@ Inverse Probability of Treatment Weighted CIFs
 }
 \description{
 
-This page explains the details of estimating inverse probability of treatment weighted cumulative incidence functions in a competing risks setting. The function is called internally when using \code{method="iptw"} in the \code{\link[=adjustedcif]{adjustedcif}} function.
-
-This method works by modelling the treatment assignment mechanism. The individual observations are weighted using inverse probability of treatment weights or other balancing weights (see details). If the model is correctly specified, unbiased results will be obtained. See details for more information.
+This page explains the details of estimating inverse probability of treatment weighted cumulative incidence functions in a competing risks setting. The function is called internally when using \code{method="iptw"} in the \code{\link[=adjustedcif]{adjustedcif}} function. It is highly recommended to use \code{\link[=adjustedcif]{adjustedcif}} instead of calling this function directly.
 
 }
 \usage{
@@ -69,7 +67,7 @@ Further arguments passed to \code{\link[riskRegression]{ate}}.
 \item{\strong{Dependencies:} This method relies on the \code{\link[riskRegression]{riskRegression}} package}
 }
 
-Adjusted CIFs are calculated by first estimating appropriate case-weights for each observation in \code{data}. Those weights are used in a weighted version of the Aalen-Johansen estimator. If the weights are correctly estimated the resulting estimates will be unbiased. A more detailed description can be found in Neumann et al. (2016) and Choi et al. (2019). By utilizing another set of weights, this function can also correct the estimates for covariate-dependent censoring (Ozenne et al. 2020). Asymptotic variance calculations are based on the efficient influence curve.
+This method works by modelling the treatment assignment mechanism. Adjusted CIFs are calculated by first estimating appropriate case-weights for each observation in \code{data}. Those weights are used in a weighted version of the Aalen-Johansen estimator. If the weights are correctly estimated the resulting estimates will be unbiased. A more detailed description can be found in Neumann et al. (2016) and Choi et al. (2019). By utilizing another set of weights, this function can also correct the estimates for covariate-dependent censoring (Ozenne et al. 2020). Asymptotic variance calculations are based on the efficient influence curve.
 
 Internally, this function simply calls the \code{\link[riskRegression]{ate}} function with appropriate arguments. The three-dot syntax can be used to pass further arguments to that function. It is however recommended to use the \code{\link[riskRegression]{ate}} function directly when specific settings are required.
 

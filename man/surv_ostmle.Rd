@@ -6,9 +6,7 @@ One-Step Targeted Maximum Likelihood Estimation Survival Curves
 }
 \description{
 
-This page explains the details of estimating adjusted survival curves using the one-step targeted maximum likelihood methodology for single event time-to-event data. The function is called internally when using \code{method="ostmle"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function.
-
-It is very similar to the \code{\link[=surv_tmle]{tmle}} method, with some difference in the estimation techniques. Similar to the AIPTW methods it posseses the doubly-robust property and can also be used to adjust for dependent censoring. It is however important to note that this method should only be used when the time variable is truly discrete and only a few distinct points in time are observed. See details for more information.
+This page explains the details of estimating adjusted survival curves using the one-step targeted maximum likelihood methodology for single event time-to-event data. The function is called internally when using \code{method="ostmle"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function. It is highly recommended to use \code{\link[=adjustedsurv]{adjustedsurv}} instead of calling this function directly.
 
 }
 \usage{

@@ -6,9 +6,7 @@ Inverse Probability of Treatment Weighted Survival Estimates using Pseudo-Values
 }
 \description{
 
-This page explains the details of estimating inverse probability of treatment weighted survival curves using Pseudo-Values for single event time-to-event data. The function is called internally when using \code{method="iptw_pseudo"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function.
-
-This method works by modelling the treatment assignment mechanism. The individual observations are weighted using inverse probability of treatment weights or other balancing weights (see details) and pseudo-values. If the model is correctly specified, unbiased results will be obtained. The main difference to the \code{\link[=surv_iptw_cox]{iptw_cox}} and \code{\link[=surv_iptw_cox]{iptw_km}} functions is the use of pseudo-values.
+This page explains the details of estimating inverse probability of treatment weighted survival curves using Pseudo-Values for single event time-to-event data. The function is called internally when using \code{method="iptw_pseudo"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function. It is highly recommended to use \code{\link[=adjustedsurv]{adjustedsurv}} instead of calling this function directly.
 
 }
 \usage{
@@ -64,7 +62,7 @@ An optional character vector specifying variables in \code{data}. Those are used
 The specific method used in the calculation of inverse probability of censoring weighted pseudo observations. Can be either \code{"binder"} (default) or \code{"hajek"}. See \code{?pseudo_aareg} for more information. Ignored if \code{censoring_vars=NULL}.
 }
   \item{...}{
-Further arguments passed to \code{WeightIt}.
+Further arguments passed to \code{\link[WeightIt]{weightit}}.
   }
 }
 \details{
@@ -80,7 +78,7 @@ Further arguments passed to \code{WeightIt}.
 \item{\strong{Dependencies:} This method relies on the \code{\link[prodlim]{prodlim}} package. The \code{WeightIt} package is also required if \code{treatment_model} is a formula object. Additionally requires the \code{eventglm} package if \code{censoring_vars} is specified.}
 }
 
-Adjusted survival curves are calculated by first estimating appropriate case-weights for each observation in \code{data}. This can be done using inverse probability of treatment weights using the propensity score (usually estimated using a logistic regression model) or by some other method (see \code{?weightit}). Pseudo-Values are then calculated for every observation in \code{data} at some points in time \eqn{T}. Since Pseudo-Values bypass the problem of censoring, a simple weighted average of the Pseudo-Values can be taken for every \eqn{T}. See Andersen et al. (2017) for more details on this method and Andersen and Perme (2010) for more information on Pseudo-Values in general.
+This method works by modelling the treatment assignment mechanism. Adjusted survival curves are calculated by first estimating appropriate case-weights for each observation in \code{data}. This can be done using inverse probability of treatment weights using the propensity score (usually estimated using a logistic regression model) or by some other method (see \code{?weightit}). Pseudo-Values are then calculated for every observation in \code{data} at some points in time \eqn{T}. Since Pseudo-Values bypass the problem of censoring, a simple weighted average of the Pseudo-Values can be taken for every \eqn{T}. See Andersen et al. (2017) for more details on this method and Andersen and Perme (2010) for more information on Pseudo-Values in general.
 
 The standard error of this estimator can be approximated by calculation a weighted version of the standard error estimator. Interestingly, no exact method exists in the weighted case. Four approximations are implemented which can be chosen using the \code{se_method} argument. The equations for \code{"miller"}, \code{"galloway"} and \code{"cochrane"} are described and compared in Gatz and Smith (1995). \code{"simple"} is just the standard equation with a weight term added and should only be used with stabilized weights (\code{stabilize=TRUE}). The resulting estimates are conservative in nature, because they ignore the variation introduced by the pseudo-value calculation (Zeng et al. 2021). It is generally recommended to use bootstrap estimates instead.
 
@@ -96,7 +94,7 @@ Per K. Andersen and Maja Pohar Perme. "Pseudo-Observations in Survival Analysis"
 
 Donald F. Gatz and Luther Smith. "The Standard Error of a Weighted Mean Concentration - I: Bootstrapping Vs Other Methods". In: Atmospheric Environment 29.11 (1995), pp. 1185-1193.
 
-William G. Cochran. Sampling Techniques. Vol. 3. New York: Wiley, 1977.
+William G. Cochrane. Sampling Techniques. Vol. 3. New York: Wiley, 1977.
 
 J. N. Galloway, G. E. Likens, and M. E. Hawley. "Acid Precipitation: Natural Versus Anthropogenic Components". In: Science 226 (1984), pp. 829-831.
 

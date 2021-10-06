@@ -6,7 +6,7 @@ Direct Adjusted Cumulative Incidence Functions
 }
 \description{
 
-This page explains the details of estimating confounder-adjusted CIFs using a previously fit Cause-Specific Cox-Regression model in a competing risks setting. The function is called internally when using \code{method="direct"} in the \code{\link[=adjustedcif]{adjustedcif}} function.
+This page explains the details of estimating confounder-adjusted CIFs using a previously fit Cause-Specific Cox-Regression model in a competing risks setting. The function is called internally when using \code{method="direct"} in the \code{\link[=adjustedcif]{adjustedcif}} function. It is highly recommended to use \code{\link[=adjustedcif]{adjustedcif}} instead of calling this function directly.
 
 }
 \usage{

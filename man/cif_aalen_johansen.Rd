@@ -6,9 +6,9 @@ Group-Specific Aalen-Johansen CIFs
 }
 \description{
 
-This page explains the details of estimating standard Aalen-Johansen cumulative incidence functions, stratified by the group variable. The function is called internally when using \code{method="aalen_johansen"} in the \code{\link[=adjustedcif]{adjustedcif}} function.
+This page explains the details of estimating standard Aalen-Johansen cumulative incidence functions, stratified by the group variable. The function is called internally when using \code{method="aalen_johansen"} in the \code{\link[=adjustedcif]{adjustedcif}} function. It is highly recommended to use \code{\link[=adjustedcif]{adjustedcif}} instead of calling this function directly.
 
-No adjustment for any confounders is made. This function is included only for reference and should not be used when confounder adjusted CIFs are desired.
+NO adjustment for any confounders are made. This function is included only for reference and should not be used when confounder adjusted CIFs are desired.
 }
 \usage{
 cif_aalen_johansen(data, variable, ev_time, event, cause,

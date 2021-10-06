@@ -6,9 +6,7 @@ Direct Adjusted Survival Curves using Pseudo-Values
 }
 \description{
 
-This page explains the details of estimating direct adjusted survival curves using pseudo-values for single event time-to-event data. The function is called internally when using \code{method="direct_pseudo"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function.
-
-It uses essentially the same methodology as the regular direct adjustment method, with the difference that the outcome mechanism is modeled using pseudo-values.
+This page explains the details of estimating direct adjusted survival curves using pseudo-values for single event time-to-event data. The function is called internally when using \code{method="direct_pseudo"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function. It is highly recommended to use \code{\link[=adjustedsurv]{adjustedsurv}} instead of calling this function directly.
 
 }
 \usage{

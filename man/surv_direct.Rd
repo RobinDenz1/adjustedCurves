@@ -6,7 +6,7 @@ Direct Adjusted Survival Curves
 }
 \description{
 
-This page explains the details of estimating confounder-adjusted survival curves using a previously fit Cox-Regression model for single event time-to-event data using Direct Standardization. The function is called internally when using \code{method="direct"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function.
+This page explains the details of estimating confounder-adjusted survival curves using a previously fit Cox-Regression model for single event time-to-event data using Direct Standardization. The function is called internally when using \code{method="direct"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function. It is highly recommended to use \code{\link[=adjustedsurv]{adjustedsurv}} instead of calling this function directly.
 
 }
 \usage{

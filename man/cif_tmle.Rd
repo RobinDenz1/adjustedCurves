@@ -6,9 +6,7 @@ Targeted Maximum Likelihood Estimation for CIFs
 }
 \description{
 
-This page explains the details of estimating adjusted cumulative incidence functions using the targeted maximum likelihood methodology in a competing risks setting. The function is called internally when using \code{method="tmle"} in the \code{\link[=adjustedcif]{adjustedcif}} function.
-
-Similar to the AIPTW methods it posseses the doubly-robust property and can also be used to adjust for dependent censoring. It is however important to note that this method should only be used when the time variable is truly discrete and only a few distinct points in time are observed. See details for more information.
+This page explains the details of estimating adjusted cumulative incidence functions using the targeted maximum likelihood methodology in a competing risks setting. The function is called internally when using \code{method="tmle"} in the \code{\link[=adjustedcif]{adjustedcif}} function. It is highly recommended to use \code{\link[=adjustedcif]{adjustedcif}} instead of calling this function directly.
 
 }
 \usage{

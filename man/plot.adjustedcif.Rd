@@ -116,8 +116,8 @@ library(survival)
 library(ggplot2)
 
 # simulate some data as example
-# PUT HERE
-
+sim_dat <- sim_confounded_crisk(n=500)
+sim_dat$group <- as.factor(sim_dat$group)
 
 # use it to calculate adjusted survival curves with bootstrapping
 adjcif <- adjustedcif(data=sim_dat,
