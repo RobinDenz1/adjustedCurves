@@ -66,7 +66,7 @@ test_that("2 treatments, no conf_int, no boot, with times", {
                                            n_boot=2,
                                            outcome_model=outc_mod,
                                            treatment_model=treat_mod,
-                                           times=c(0.5, 1, 1.3),
+                                           times=c(0.5, 1),
                                            cause=1), NA)
 })
 
@@ -84,6 +84,6 @@ test_that("2 treatments, no conf_int, no boot, with times, with cens_mod", {
                                            outcome_model=outc_mod,
                                            treatment_model=treat_mod,
                                            censoring_model=cens_mod,
-                                           times=c(0.5, 1, 1.3),
+                                           times=c(0.5, 1),
                                            cause=1), NA)
 })

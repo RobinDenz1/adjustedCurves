@@ -1,11 +1,11 @@
 library(survival)
 
 test_that("sim, default parameters", {
-  expect_error(sim_confounded_surv(), NA)
+  expect_error(sim_confounded_surv(n=10), NA)
 })
 
 test_that("sim, correct n", {
-  expect_true(nrow(sim_confounded_surv(100))==100)
+  expect_true(nrow(sim_confounded_surv(10))==10)
 })
 
 test_that("sim, custom values", {

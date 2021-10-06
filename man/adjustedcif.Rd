@@ -5,7 +5,7 @@
 Calculate Cause-Specific Confounder-Adjusted Cumulative Incidence Functions
 }
 \description{
-This is one of two main functions of this R-Package. It allows the user to calculate cause-specific confounder-adjusted cumulative incidence functions using a variety of different methods. It is basically a wrapper for each \code{cif_} function with some additional functionality, such as bootstrapping. Some of these methods require additional packages to be installed and depending on the specified method there might be additional required arguments in the function call. Documentation on that can be found in the respective \code{cif_} function. See details and examples.
+This is one of two main functions of this R-Package. It allows the user to calculate cause-specific confounder-adjusted cumulative incidence functions using a variety of different methods. It is basically a wrapper for each \code{cif_method} function with some additional functionality, such as bootstrapping. Some of these methods require additional packages to be installed and depending on the specified method there might be additional required arguments in the function call. Documentation on that can be found in the respective \code{cif_method} function. See details and examples.
 }
 \usage{
 adjustedcif(data, variable, ev_time, event, cause,
@@ -74,7 +74,7 @@ The primary purpose of the \code{adjustedcif} function is to provide a convenien
   \item{"\link[=cif_aalen_johansen]{aalen_johansen}": A simple stratified Nelson-Aalen estimator without any form of adjustment.}
 }
 
-A short description of each method is contained in the documentation of the respective \code{cif_} function. For more detailed descriptions the cited literature in that same documentation can be used. The documentation for \code{method="direct"} for example can be accessed using \code{?cif_direct}.
+A short description of each method is contained in the documentation of the respective \code{cif_method} function. For more detailed descriptions the cited literature in that same documentation can be used. The documentation for \code{method="direct"} for example can be accessed using \code{?cif_direct}.
 
 For most methods approximations for the asymptotic variance of point estimates of the CIF have been proposed in the literature. Where available, those can be calculated and added to the output object using \code{conf_int=TRUE}. It is however recommended to use bootstrapping to estimate the variance instead, which can be done by setting \code{bootstrap=TRUE}. The \code{n_boot} argument is set to 500 by default. This number was chosen because it worked well in simulations but it does not guarantee convergence in practice. Users are recommended to inspect the bootstrapped estimates and adjust the number of replications accordingly. To allow faster bootstrapping the user can choose to run the function on multiple CPU cores in parallel using the \code{n_cores} argument.
 

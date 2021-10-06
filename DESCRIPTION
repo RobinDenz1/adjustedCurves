@@ -28,9 +28,9 @@ Imports:
 	foreach
 Suggests: 
     testthat (>= 3.0.0),
-	Matching,
+	Matching (>= 4.9),
 	WeightIt (>= 0.11.0),
-	prodlim,
+	prodlim (>= 2019.11.13),
 	survtmle (>= 1.1),
 	R6,
 	MASS,

@@ -5,7 +5,7 @@
 Calculate Confounder-Adjusted Survival Curves
 }
 \description{
-This is one of the two main functions of this R-Package. It allows the user to calculate confounder-adjusted survival curves using a variety of different methods. It is basically a wrapper for each \code{surv_} function with some additional functionality, such as bootstrapping. Some of these methods require additional packages to be installed and depending on the specified method there might be additional required arguments in the function call. Documentation on that can be found in the respective \code{surv_} function. See details and examples.
+This is one of the two main functions of this R-Package. It allows the user to calculate confounder-adjusted survival curves using a variety of different methods. It is basically a wrapper for each \code{surv_method} function with some additional functionality, such as bootstrapping. Some of these methods require additional packages to be installed and depending on the specified method there might be additional required arguments in the function call. Documentation on that can be found in the respective \code{surv_method} function. See details and examples.
 }
 \usage{
 adjustedsurv(data, variable, ev_time, event, method,
@@ -74,7 +74,7 @@ The primary purpose of the \code{adjustedsurv} function is to provide a convenie
   \item{"\link[=surv_km]{km}": A simple stratified Kaplan-Meier estimator without any form of adjustment.}
 }
 
-A short description of each method is contained in the documentation of the respective \code{surv_} function. For more detailed descriptions the cited literature in that same documentation can be used. The documentation for \code{method="direct"} for example can be accessed using \code{?surv_direct}.
+A short description of each method is contained in the documentation of the respective \code{surv_method} function. For more detailed descriptions the cited literature in that same documentation can be used. The documentation for \code{method="direct"} for example can be accessed using \code{?surv_direct}.
 
 For most methods approximations for the asymptotic variance of point estimates of the survival function have been proposed in the literature. Where available, those can be calculated and added to the output object using \code{conf_int=TRUE}. It is however recommended to use bootstrapping to estimate the variance instead, which can be done by setting \code{bootstrap=TRUE}. The \code{n_boot} argument is set to 500 by default. This number was chosen because it worked well in simulations but it does not guarantee convergence in practice. Users are recommended to inspect the bootstrapped estimates and adjust the number of replications accordingly. To allow faster bootstrapping the user can choose to run the function on multiple CPU cores in parallel using the \code{n_cores} argument.
 
