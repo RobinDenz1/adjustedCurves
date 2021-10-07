@@ -178,8 +178,10 @@ read_from_step_function <- function(x, step_data, est="surv") {
   if (nrow(check)==0) {
     if (est=="surv") {
       val <- 1
-    } else {
+    } else if (est=="cif") {
       val <- 0
+    } else {
+      val <- NA
     }
   } else {
     val <- check[,est][which(check$time==max(check$time))][1]
@@ -515,4 +517,103 @@ remove_unnecessary_covars <- function(data, method, variable, ev_time,
 
   return(data)
 
+}
+
+## require needed packages
+load_needed_packages <- function(method, kind, treatment_model,
+                                 censoring_vars) {
+
+  if (kind=="surv") {
+
+    # survival
+    if (method=="direct" | method=="km") {
+      requireNamespace("survival")
+    }
+
+    # riskRegression
+    if (method=="aiptw" | method=="direct") {
+      requireNamespace("riskRegression")
+    }
+
+    # pseudo-values
+    if (method %in% c("direct_pseudo", "aiptw_pseudo", "iptw_pseudo")) {
+      requireNamespace("prodlim")
+
+      if (!is.null(censoring_vars)) {
+        requireNamespace("eventglm")
+      }
+    }
+
+    # WeightIt
+    if ((method %in% c("iptw_km", "iptw_cox", "iptw_pseudo"))
+               && inherits(treatment_model, "formula")) {
+      requireNamespace("WeightIt")
+    }
+
+    # multinom
+    if ((method %in% c("iptw_km", "iptw_cox", "iptw_pseudo", "aiptw_pseudo"))
+               && inherits(treatment_model, "multinom")) {
+      requireNamespace("nnet")
+    }
+
+    # geese
+    if (method=="direct_pseudo" | method=="aiptw_pseudo") {
+      requireNamespace("geepack")
+    }
+
+    # MASS
+    if (method=="emp_lik") {
+      requireNamespace("MASS")
+    }
+
+    # survtmle, SuperLearner
+    if (method=="tmle") {
+      requireNamespace("survtmle")
+      requireNamespace("SuperLearner")
+    }
+
+    # SuperLearner
+    if (method=="ostmle") {
+      requireNamespace("SuperLearner")
+    }
+
+  } else {
+
+    # cmprsk
+    if (method=="aalen_johansen") {
+      requireNamespace("survival")
+    }
+
+    # riskRegression
+    if (method=="aiptw" | method=="direct" | method=="iptw") {
+      requireNamespace("riskRegression")
+    }
+
+    # pseudo-values
+    if (method %in% c("direct_pseudo", "aiptw_pseudo", "iptw_pseudo")) {
+      requireNamespace("prodlim")
+    }
+
+    # WeightIt
+    if (method=="iptw_pseudo" && inherits(treatment_model, "formula")) {
+      requireNamespace("WeightIt")
+    }
+
+    # multinom
+    if ((method %in% c("iptw", "iptw_pseudo", "aiptw_pseudo"))
+        && inherits(treatment_model, "multinom")) {
+      requireNamespace("nnet")
+    }
+
+    # geese
+    if (method=="direct_pseudo" | method=="aiptw_pseudo") {
+      requireNamespace("geepack")
+    }
+
+    # survtmle, SuperLearner
+    if (method=="tmle") {
+      requireNamespace("survtmle")
+      requireNamespace("SuperLearner")
+    }
+  }
 }

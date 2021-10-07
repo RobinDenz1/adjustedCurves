@@ -35,14 +35,20 @@ adjusted_median_survival <- function(adjsurv, use_boot=FALSE,
   out <- plotdata %>%
     dplyr::group_by(., group) %>%
     dplyr::summarise(median_surv=max(time[surv >= 0.5], na.rm=TRUE),
+                     valid=ifelse(min(surv) <= 0.5, TRUE, FALSE),
                      .groups="drop_last")
+  out$median_surv[!out$valid] <- NA
+  out$valid <- NULL
   out <- as.data.frame(out)
+
+  out_print <- out
+  colnames(out_print) <- NULL
 
   if (verbose) {
     cat("----------------------------------\n")
     cat("Adjusted Median Survival Time\n")
     cat("----------------------------------\n")
-    print(out, row.names=FALSE)
+    print(out_print, row.names=FALSE)
     cat("----------------------------------\n")
   }
 

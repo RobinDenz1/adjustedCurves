@@ -83,7 +83,7 @@ Robin Denz
 }
 
 \seealso{
-\code{\link{print.curve_test}}, \code{\link{adjustedsurv}}
+\code{\link{print.curve_test}}, \code{\link{plot.curve_test}}, \code{\link{adjustedsurv}}, \code{\link{adjustedcif}}
 }
 \examples{
 \dontrun{

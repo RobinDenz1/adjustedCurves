@@ -224,6 +224,11 @@ test_curve_equality <- function(adjsurv, to, from=0, conf_level=0.95) {
                                   na.rm=TRUE)
       names(conf_int) <- c("ci_lower", "ci_upper")
 
+      # do this so it shows up in print function
+      fun_call <- match.call()
+      fun_call$from <- from
+      fun_call$to <- to
+
       # put together output
       out <- list(diff_curves=diff_curves,
                   diff_integrals=stats_vec,
@@ -236,7 +241,7 @@ test_curve_equality <- function(adjsurv, to, from=0, conf_level=0.95) {
                   conf_int=conf_int,
                   categorical=FALSE,
                   treat_labs=treat_labs,
-                  call=match.call())
+                  call=fun_call)
 
       ## more than one treatments -> perform pairwise comparisons
     } else {
@@ -345,6 +350,7 @@ print.curve_test <- function(x, ...) {
 #' @export
 plot.curve_test <- function(x, type="curves", xlab=NULL, ylab=NULL,
                             title=NULL, ...) {
+  requireNamespace("ggplot2")
 
   # to remove devtools::check() Notes
   time <- surv <- boot <- integral <- NULL

@@ -31,6 +31,13 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=FALSE,
                             times=times, bootstrap=bootstrap,
                             n_boot=n_boot, na.action=na.action, ...)
 
+  # get required packages
+  three_dots <- list(...)
+  load_needed_packages(method=method, kind="surv",
+                       treatment_model=three_dots$treatment_model,
+                       censoring_vars=three_dots$censoring_vars)
+  rm(three_dots)
+
   ## using multiple imputation
   if (inherits(data, "mids")) {
 
@@ -239,7 +246,9 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=FALSE,
         doParallel::registerDoParallel(cl)
         pkgs <- c("adjustedCurves", "survival")
         export_objs <- c("get_iptw_weights", "read_from_step_function",
-                         "multi_result_class", "adjustedsurv_boot")
+                         "multi_result_class", "adjustedsurv_boot",
+                         "trim_weights", "calc_pseudo_surv",
+                         "geese_predictions", "load_needed_packages")
 
         boot_out <- foreach::foreach(i=1:n_boot, .packages=pkgs,
                                      .export=export_objs) %dorng% {
@@ -329,6 +338,14 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
                               times_input, times, i, surv_fun, levs,
                               na.action, ...) {
 
+  # get required packages
+  three_dots <- list(...)
+  load_needed_packages(method=method, kind="surv",
+                       treatment_model=three_dots$treatment_model,
+                       censoring_vars=three_dots$censoring_vars)
+  rm(three_dots)
+
+  # draw sample
   indices <- sample(x=rownames(data), size=nrow(data), replace=TRUE)
   boot_samp <- data[indices,]
 
@@ -433,6 +450,7 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
                               median_surv_color="black",
                               censoring_ind=FALSE, censoring_ind_width=NULL,
                               censoring_ind_size=0.5, ...) {
+  requireNamespace("ggplot2")
 
   if (use_boot & is.null(x$boot_adjsurv)) {
     warning("Cannot use bootstrapped estimates as they were not estimated.",

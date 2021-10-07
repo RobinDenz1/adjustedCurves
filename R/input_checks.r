@@ -2,8 +2,6 @@
 check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
                                       conf_int, conf_level, times, bootstrap,
                                       n_boot, na.action, ...) {
-  requireNamespace("survival")
-
   obj <- list(...)
 
   if (!inherits(data, c("data.frame", "mids"))) {
@@ -116,8 +114,6 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
   ## Direct Pseudo, AIPTW Pseudo
   if (method=="direct_pseudo" | method=="aiptw_pseudo" |
       method=="iptw_pseudo") {
-    requireNamespace("geepack")
-    requireNamespace("prodlim")
 
     # outcome_vars
     if ("outcome_vars" %in% names(obj) && (!is.character(obj$outcome_vars))) {
@@ -159,12 +155,8 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
       stop("Only integer time is allowed when using method='tmle' or",
            " method='ostmle'.")
     }
-    if (method=="tmle") {
-      requireNamespace("survtmle")
-    }
   ## Empirical Likelihood
   } else if (method=="emp_lik") {
-    requireNamespace("MASS")
 
     # treatment_vars
     if (!is.character(obj$treatment_vars)) {
@@ -196,7 +188,6 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     }
   ## Matching
   } else if (method=="matching") {
-    requireNamespace("Matching")
 
     if (bootstrap) {
       warning("Bootstrapping generally doesn't produce unbiased variance",
@@ -221,6 +212,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     }
   ## AIPTW
   } else if (method=="aiptw") {
+
     if ((!"censoring_model" %in% names(obj)) &
         (!"treatment_model" %in% names(obj)) &
         (!"outcome_model" %in% names(obj))) {
@@ -229,6 +221,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     }
   ## Direct
   } else if (method=="direct") {
+
     if (!"outcome_model" %in% names(obj)) {
       stop("Argument 'outcome_model' must be specified when using",
            " method='direct'.")
@@ -347,7 +340,6 @@ check_inputs_adj_rmst <- function(adjsurv, from, to, use_boot) {
             " they were not estimated.",
             " Need 'bootstrap=TRUE' in 'adjustedsurv' function call.")
   }
-
 }
 
 ## for adjustedsurv_test
@@ -393,15 +385,12 @@ check_inputs_adj_test <- function(adjsurv, from, to) {
               " 'adjustedcif'.")
     }
   }
-
 }
 
 ## for adjustedcif
 check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
                                      conf_int, conf_level, times, bootstrap,
                                      n_boot, cause=cause, na.action, ...) {
-  requireNamespace("survival")
-
   obj <- list(...)
 
   if (!inherits(data, c("data.frame", "mids"))) {
@@ -491,14 +480,11 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
            "' must be smaller than max(data[,ev_time]).",
            " No extrapolation allowed.")
     }
-
   }
 
   ## Direct Pseudo, AIPTW Pseudo
   if (method=="direct_pseudo" | method=="aiptw_pseudo" |
       method=="iptw_pseudo") {
-    requireNamespace("geepack")
-    requireNamespace("prodlim")
 
     # outcome_vars
     if ("outcome_vars" %in% names(obj) && (!is.character(obj$outcome_vars))) {
@@ -534,19 +520,15 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
 
   ## TMLE
   } else if (method=="tmle") {
-    requireNamespace("survtmle")
-
     if (!is.null(times) && (!all(times==floor(times)))) {
       stop("Only integer time is allowed when using method='tmle'.")
     }
   ## Matching
   } else if (method=="matching") {
-    requireNamespace("Matching")
-
     if (bootstrap) {
       warning("Bootstrapping generally doesn't produce unbiased variance",
-              " estimates with matching estimators. Use with caution. ",
-              "See ?surv_matching.")
+              " estimates with matching estimators. Use with caution.",
+              " See ?surv_matching.")
     # treatment_model
     } else if (!"treatment_model" %in% names(obj)) {
       stop("Argument 'treatment_model' must be specified when using",
@@ -556,9 +538,6 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
       stop("Propensity Scores > 1 or < 0 not allowed. Perhaps you supplied ",
            "weights on accident?")
     }
-  ## Aalen-Johansen
-  } else if (method=="aalen_johansen") {
-    requireNamespace("cmprsk")
   ## AIPTW
   } else if (method=="aiptw") {
     if ((!"censoring_model" %in% names(obj)) &
@@ -662,5 +641,4 @@ check_inputs_sim_crisk_fun <- function(n, lcovars, outcome_betas, gamma,
       }
     }
   }
-
 }

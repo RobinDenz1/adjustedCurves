@@ -78,7 +78,7 @@ adjusted_rmst <- function(adjsurv, to, from=0, use_boot=FALSE,
       n_boot <- max(adjsurv$boot_data$boot)
       booted_rmsts <- vector(mode="list", length=n_boot)
 
-      for (i in 1:n_boot) {
+      for (i in seq_len(n_boot)) {
 
         # select one bootstrap data set each
         boot_dat <- adjsurv$boot_data[adjsurv$boot_data$boot==i,]
@@ -138,7 +138,6 @@ adjusted_rmst <- function(adjsurv, to, from=0, use_boot=FALSE,
     return(out)
 
   }
-
 }
 
 ## print method for the adjusted_rmst function
@@ -170,6 +169,7 @@ plot.adjusted_rmst <- function(x, draw_ci=TRUE, color=TRUE, point_size=2,
                                ci_size=1, ci_width=0.7, xlab="",
                                ylab="Adjusted RMST", title=NULL,
                                gg_theme=ggplot2::theme_classic(), ...) {
+  requireNamespace("ggplot2")
 
   # get data from object
   plotdata <- rmst_data_frame(x)

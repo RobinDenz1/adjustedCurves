@@ -31,6 +31,12 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
                            times=times, bootstrap=bootstrap,
                            n_boot=n_boot, na.action=na.action, ...)
 
+  # get required packages
+  three_dots <- list(...)
+  load_needed_packages(method=method, kind="cif",
+                       treatment_model=three_dots$treatment_model,
+                       censoring_vars=three_dots$censoring_vars)
+  rm(three_dots)
 
   if (inherits(data, "mids")) {
 
@@ -240,7 +246,9 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
         doParallel::registerDoParallel(cl)
         pkgs <- c("adjustedCurves", "survival")
         export_objs <- c("get_iptw_weights", "read_from_step_function",
-                         "multi_result_class", "adjustedcif_boot")
+                         "multi_result_class", "adjustedcif_boot",
+                         "trim_weights", "geese_predictions",
+                         "load_needed_packages")
 
         boot_out <- foreach::foreach(i=1:n_boot, .packages=pkgs,
                                     .export=export_objs) %dorng% {
@@ -328,6 +336,14 @@ adjustedcif_boot <- function(data, variable, ev_time, event, cause, method,
                              times_input, times, i, cif_fun, levs,
                              na.action, ...) {
 
+  # get required packages
+  three_dots <- list(...)
+  load_needed_packages(method=method, kind="surv",
+                       treatment_model=three_dots$treatment_model,
+                       censoring_vars=three_dots$censoring_vars)
+  rm(three_dots)
+
+  # draw sample
   indices <- sample(x=rownames(data), size=nrow(data), replace=TRUE)
   boot_samp <- data[indices,]
 
@@ -428,6 +444,7 @@ plot.adjustedcif <- function(x, draw_ci=FALSE, max_t=Inf,
                              ylim=NULL, custom_colors=NULL,
                              custom_linetypes=NULL,
                              ci_draw_alpha=0.4, steps=TRUE, ...) {
+  requireNamespace("ggplot2")
 
   if (use_boot & is.null(x$boot_adjcif)) {
     warning("Cannot use bootstrapped estimates as they were not estimated.",

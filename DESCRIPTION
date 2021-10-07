@@ -19,15 +19,15 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports: 
 	dplyr (>= 1.0.0),
-	ggplot2 (>= 3.0.0),
 	R.utils,
 	rlang,
-	survival (>= 3.0.0),
 	doParallel,
 	doRNG,
 	foreach
 Suggests: 
     testthat (>= 3.0.0),
+	survival (>= 3.0.0),
+	ggplot2 (>= 3.0.0),
 	Matching (>= 4.9),
 	WeightIt (>= 0.11.0),
 	prodlim (>= 2019.11.13),
