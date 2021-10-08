@@ -210,7 +210,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=FALSE,
 
     # get event specific times
     times_input <- times
-    if (is.null(times) & method %in% c("km", "iptw_km")) {
+    if (is.null(times) & !bootstrap & method %in% c("km", "iptw_km")) {
       times <- NULL
     } else if (is.null(times)) {
       times <- sort(unique(data[, ev_time][data[, event]==1]))
@@ -280,25 +280,21 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=FALSE,
 
       # keep factor ordering the same
       boot_data$group <- factor(boot_data$group, levels=levs)
-      colnames(boot_data) <- c("time", "surv_b", "group", "boot")
 
       # calculate some statistics
       boot_stats <- boot_data %>%
         dplyr::group_by(., time, group) %>%
-        dplyr::summarise(surv=mean(surv_b, na.rm=TRUE),
-                         se=stats::sd(surv_b, na.rm=TRUE),
-                         ci_lower=stats::quantile(surv_b,
+        dplyr::summarise(boot_surv=mean(surv, na.rm=TRUE),
+                         se=stats::sd(surv, na.rm=TRUE),
+                         ci_lower=stats::quantile(surv,
                                                   probs=(1-conf_level)/2,
                                                   na.rm=TRUE),
-                         ci_upper=stats::quantile(surv_b,
+                         ci_upper=stats::quantile(surv,
                                                   probs=1-((1-conf_level)/2),
                                                   na.rm=TRUE),
-                         n_boot=sum(!is.na(surv_b)),
+                         n_boot=sum(!is.na(surv)),
                          .groups="drop_last")
       boot_stats$group <- factor(boot_stats$group, levels=levs)
-
-      # get old names back
-      colnames(boot_data) <- c("time", "surv", "group", "boot")
     }
 
     # core of the function
@@ -319,6 +315,11 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=FALSE,
 
     if (bootstrap) {
       out$boot_data <- boot_data
+
+      # merge observed surv estimates to booted estimates
+      plotdata_temp <- dplyr::select(plotdata, c("time", "group", "surv"))
+      boot_stats <- merge(boot_stats, plotdata_temp, by=c("time", "group"))
+
       out$boot_adjsurv <- as.data.frame(boot_stats)
     }
 
@@ -414,10 +415,8 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
                               censoring_ind_size=0.5, ...) {
   requireNamespace("ggplot2")
 
+  # get relevant data for the confidence interval
   if (use_boot & is.null(x$boot_adjsurv)) {
-    warning("Cannot use bootstrapped estimates as they were not estimated.",
-            " Need bootstrap=TRUE in adjustedsurv() call.")
-    draw_ci <- FALSE
     plotdata <- x$adjsurv
   } else if (use_boot) {
     plotdata <- x$boot_adjsurv
@@ -556,39 +555,45 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
   }
 
   ## Confidence intervals
-  if (draw_ci & !"ci_lower" %in% colnames(plotdata)) {
+  if (draw_ci & use_boot & is.null(x$boot_adjsurv)) {
+    warning("Cannot use bootstrapped estimates as they were not estimated.",
+            " Need bootstrap=TRUE in adjustedsurv() call.")
+  } else if (draw_ci & !use_boot & !"ci_lower" %in% colnames(x$adjsurv)) {
     warning("Cannot draw confidence intervals. Either set 'conf_int=TRUE' in",
             " 'adjustedsurv()' call or use bootstrap estimates.")
-  }
+  } else if (draw_ci) {
 
-  if ((draw_ci & "ci_lower" %in% colnames(plotdata)) & steps) {
-    ci_map <- ggplot2::aes(ymin=.data$ci_lower,
-                           ymax=.data$ci_upper,
-                           group=.data$group,
-                           fill=.data$group,
-                           x=.data$time,
-                           y=.data$surv)
+    # plot using step-function interpolation
+    if (steps) {
+      ci_map <- ggplot2::aes(ymin=.data$ci_lower,
+                             ymax=.data$ci_upper,
+                             group=.data$group,
+                             fill=.data$group,
+                             x=.data$time,
+                             y=.data$surv)
 
-    if (!color) {
-      ci_map$fill <- NULL
+      if (!color) {
+        ci_map$fill <- NULL
+      }
+
+      p <- p + pammtools::geom_stepribbon(ci_map, alpha=ci_draw_alpha,
+                                          inherit.aes=FALSE)
+    # plot using linear interpolation
+    } else {
+      ci_map <- ggplot2::aes(ymin=.data$ci_lower,
+                             ymax=.data$ci_upper,
+                             group=.data$group,
+                             fill=.data$group,
+                             x=.data$time,
+                             y=.data$surv)
+
+      if (!color) {
+        ci_map$fill <- NULL
+      }
+
+      p <- p + ggplot2::geom_ribbon(ci_map, alpha=ci_draw_alpha,
+                                    inherit.aes=FALSE)
     }
-
-    p <- p + pammtools::geom_stepribbon(ci_map, alpha=ci_draw_alpha,
-                                        inherit.aes=FALSE)
-  } else if (draw_ci & "ci_lower" %in% colnames(plotdata)) {
-    ci_map <- ggplot2::aes(ymin=.data$ci_lower,
-                           ymax=.data$ci_upper,
-                           group=.data$group,
-                           fill=.data$group,
-                           x=.data$time,
-                           y=.data$surv)
-
-    if (!color) {
-      ci_map$fill <- NULL
-    }
-
-    p <- p + ggplot2::geom_ribbon(ci_map, alpha=ci_draw_alpha,
-                                  inherit.aes=FALSE)
   }
 
   ## Median Survival indicators

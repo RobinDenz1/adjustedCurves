@@ -210,7 +210,7 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
 
     # get event specific times
     times_input <- times
-    if (is.null(times) & method=="aalen_johansen") {
+    if (is.null(times) & !bootstrap & method=="aalen_johansen") {
       times <- NULL
     } else if (is.null(times)) {
       times <- sort(unique(data[, ev_time][data[, event]>=1]))
@@ -408,10 +408,8 @@ plot.adjustedcif <- function(x, draw_ci=FALSE, max_t=Inf,
                              ci_draw_alpha=0.4, steps=TRUE, ...) {
   requireNamespace("ggplot2")
 
+  # get relevant data for the confidence interval
   if (use_boot & is.null(x$boot_adjcif)) {
-    warning("Cannot use bootstrapped estimates as they were not estimated.",
-            " Need bootstrap=TRUE in adjustedcif() call.")
-    draw_ci <- FALSE
     plotdata <- x$adjcif
   } else if (use_boot) {
     plotdata <- x$boot_adjcif
@@ -491,27 +489,46 @@ plot.adjustedcif <- function(x, draw_ci=FALSE, max_t=Inf,
     p <- p + ggplot2::scale_fill_manual(values=custom_colors)
   }
 
-  if (draw_ci & !"ci_lower" %in% colnames(plotdata)) {
+  ## Confidence intervals
+  if (draw_ci & use_boot & is.null(x$boot_adjcif)) {
+    warning("Cannot use bootstrapped estimates as they were not estimated.",
+            " Need bootstrap=TRUE in adjustedcif() call.")
+  } else if (draw_ci & !use_boot & !"ci_lower" %in% colnames(plotdata)) {
     warning("Cannot draw confidence intervals. Either set 'conf_int=TRUE' in",
             " 'adjustedcif()' call or use bootstrap estimates.")
-  }
+  } else if (draw_ci) {
 
-  if ((draw_ci & "ci_lower" %in% colnames(plotdata)) & steps) {
-    p <- p + pammtools::geom_stepribbon(ggplot2::aes(ymin=.data$ci_lower,
-                                                     ymax=.data$ci_upper,
-                                                     fill=.data$group,
-                                                     x=.data$time,
-                                                     y=.data$cif),
-                                        alpha=ci_draw_alpha,
-                                        inherit.aes=FALSE)
-  } else if (draw_ci & "ci_lower" %in% colnames(plotdata)) {
-    p <- p + ggplot2::geom_ribbon(ggplot2::aes(ymin=.data$ci_lower,
-                                               ymax=.data$ci_upper,
-                                               fill=.data$group,
-                                               x=.data$time,
-                                               y=.data$surv),
-                                  alpha=ci_draw_alpha,
-                                  inherit.aes=FALSE)
+    # plot using step-function interpolation
+    if (steps) {
+      ci_map <- ggplot2::aes(ymin=.data$ci_lower,
+                             ymax=.data$ci_upper,
+                             group=.data$group,
+                             fill=.data$group,
+                             x=.data$time,
+                             y=.data$cif)
+
+      if (!color) {
+        ci_map$fill <- NULL
+      }
+
+      p <- p + pammtools::geom_stepribbon(ci_map, alpha=ci_draw_alpha,
+                                          inherit.aes=FALSE)
+      # plot using linear interpolation
+    } else {
+      ci_map <- ggplot2::aes(ymin=.data$ci_lower,
+                             ymax=.data$ci_upper,
+                             group=.data$group,
+                             fill=.data$group,
+                             x=.data$time,
+                             y=.data$cif)
+
+      if (!color) {
+        ci_map$fill <- NULL
+      }
+
+      p <- p + ggplot2::geom_ribbon(ci_map, alpha=ci_draw_alpha,
+                                    inherit.aes=FALSE)
+    }
   }
   return(p)
 }
