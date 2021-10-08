@@ -14,17 +14,17 @@ adj <- adjustedsurv(data=sim_dat,
                     n_boot=10)
 
 test_that("rmst, no boot", {
-  expect_error(adjusted_rmst(adj, to=1.3), NA)
+  expect_error(adjusted_rmst(adj, to=1.1), NA)
 })
 
 test_that("rmst, with boot", {
-  expect_error(adjusted_rmst(adj, to=1.3, use_boot=T), NA)
+  expect_error(adjusted_rmst(adj, to=1.1, use_boot=T), NA)
 })
 
 test_that("rmst, no boot, using from", {
-  expect_error(adjusted_rmst(adj, to=1.3, from=0.3), NA)
+  expect_error(adjusted_rmst(adj, to=1.1, from=0.3), NA)
 })
 
 test_that("rmst, with boot, using from", {
-  expect_error(adjusted_rmst(adj, to=1.3, from=0.3, use_boot=T), NA)
+  expect_error(adjusted_rmst(adj, to=1.1, from=0.3, use_boot=T), NA)
 })

@@ -248,7 +248,8 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=FALSE,
         export_objs <- c("get_iptw_weights", "read_from_step_function",
                          "multi_result_class", "adjustedsurv_boot",
                          "trim_weights", "calc_pseudo_surv",
-                         "geese_predictions", "load_needed_packages")
+                         "geese_predictions", "load_needed_packages",
+                         "specific_times")
 
         boot_out <- foreach::foreach(i=1:n_boot, .packages=pkgs,
                                      .export=export_objs) %dorng% {
@@ -274,19 +275,15 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=FALSE,
         }
       }
 
-      # transform into data.frames
-      boot_data <- lapply(boot_out, function(x) x$boot_data)
-      boot_data_same_t <- lapply(boot_out, function(x) x$boot_data_same_t)
-
-      boot_data <- as.data.frame(dplyr::bind_rows(boot_data))
-      boot_data_same_t <- as.data.frame(dplyr::bind_rows(boot_data_same_t))
+      # transform into data.frame
+      boot_data <- as.data.frame(dplyr::bind_rows(boot_out))
 
       # keep factor ordering the same
       boot_data$group <- factor(boot_data$group, levels=levs)
-      boot_data_same_t$group <- factor(boot_data_same_t$group, levels=levs)
+      colnames(boot_data) <- c("time", "surv_b", "group", "boot")
 
       # calculate some statistics
-      boot_stats <- boot_data_same_t %>%
+      boot_stats <- boot_data %>%
         dplyr::group_by(., time, group) %>%
         dplyr::summarise(surv=mean(surv_b, na.rm=TRUE),
                          se=stats::sd(surv_b, na.rm=TRUE),
@@ -299,6 +296,9 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=FALSE,
                          n_boot=sum(!is.na(surv_b)),
                          .groups="drop_last")
       boot_stats$group <- factor(boot_stats$group, levels=levs)
+
+      # get old names back
+      colnames(boot_data) <- c("time", "surv", "group", "boot")
     }
 
     # core of the function
@@ -314,12 +314,11 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=FALSE,
     out <- list(adjsurv=plotdata,
                 data=data,
                 method=method,
-                categorical=ifelse(length(levs)>2, TRUE, FALSE),
+                categorical=ifelse(length(levs) > 2, TRUE, FALSE),
                 call=match.call())
 
     if (bootstrap) {
       out$boot_data <- boot_data
-      out$boot_data_same_t <- boot_data_same_t
       out$boot_adjsurv <- as.data.frame(boot_stats)
     }
 
@@ -360,35 +359,25 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
   # IMPORTANT: keeps SL in tmle methods from failing
   row.names(boot_samp) <- seq_len(nrow(data))
 
-  # if event specific times are used, use event specific times
-  # in bootstrapping as well
-  if (is.null(times_input) & method %in% c("km", "iptw_km")) {
-    times <- NULL
-  } else if (is.null(times_input)) {
-    times_boot <- sort(unique(boot_samp[, ev_time][boot_samp[, event]==1]))
-
-    if (!0 %in% times_boot) {
-      times_boot <- c(0, times_boot)
-    }
-  } else {
-    times_boot <- times
-  }
-
   # update models/recalculate weights using bootstrap sample
   pass_args <- list(...)
-  if (method %in% c("direct", "aiptw") &
+  if ((method %in% c("direct", "aiptw")) &
       !inherits(pass_args$outcome_model, "formula")) {
     pass_args$outcome_model <- stats::update(pass_args$outcome_model,
                                              data=boot_samp)
   }
 
-  if (method %in% c("iptw_km", "iptw_cox", "iptw_pseudo", "aiptw",
-                    "aiptw_pseudo")) {
-    if (inherits(pass_args$treatment_model, "glm") |
-        inherits(pass_args$treatment_model, "multinom")) {
-      pass_args$treatment_model <- stats::update(pass_args$treatment_model,
-                                                 data=boot_samp, trace=FALSE)
-    }
+  if ((method %in% c("iptw_km", "iptw_cox", "iptw_pseudo", "aiptw",
+                    "aiptw_pseudo")) &&
+      (inherits(pass_args$treatment_model, c("glm", "multinom")))) {
+    pass_args$treatment_model <- stats::update(pass_args$treatment_model,
+                                               data=boot_samp, trace=FALSE)
+  }
+
+  if ((method %in% c("direct", "aiptw")) &&
+      inherits(pass_args$censoring_model, "coxph")) {
+    pass_args$censoring_model <- stats::update(pass_args$censoring_model,
+                                               data=boot_samp)
   }
 
   # call surv_method with correct arguments
@@ -400,34 +389,7 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
   adjsurv_boot <- method_results$plotdata
   adjsurv_boot$boot <- i
 
-  # read from resulting step function at all t in times
-  boot_surv <- vector(mode="list", length=length(levs))
-  for (j in seq_len(length(levs))) {
-
-    if (method %in% c("km", "iptw_km") & is.null(times)) {
-      times <- unique(data[,ev_time][data[,variable]==levs[j]])
-    }
-
-    surv_boot <- vapply(times, read_from_step_function,
-                        step_data=adjsurv_boot[adjsurv_boot$group==levs[j],],
-                        FUN.VALUE=numeric(1))
-
-    dat_temp <- data.frame(time=times,
-                           surv_b=surv_boot,
-                           group=levs[j],
-                           boot=i)
-    boot_surv[[j]] <- dat_temp
-  }
-  boot_surv <- as.data.frame(dplyr::bind_rows(boot_surv))
-
-  # output
-  result <- multi_result_class()
-
-  result$boot_data <- adjsurv_boot
-  result$boot_data_same_t <- boot_surv
-
-  return(result)
-
+  return(adjsurv_boot)
 }
 
 ## plot the survival curves

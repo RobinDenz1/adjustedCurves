@@ -315,17 +315,6 @@ specific_times <- function(plotdata, times, cif=FALSE) {
   return(new_plotdata)
 }
 
-## used to combine output from foreach
-multi_result_class <- function(boot_data=NULL, boot_data_same_t=NULL) {
-  me <- list(
-    boot_data = boot_data,
-    boot_data_same_t = boot_data_same_t
-  )
-
-  class(me) <- append(class(me),"multiResultClass")
-  return(me)
-}
-
 ## redefine 'timepoints' from survtmle to fix a bug in there
 survtmle.timepoints <- function(object, times, returnModels=FALSE,
                                 SL.trt, SL.ctime, SL.ftime,

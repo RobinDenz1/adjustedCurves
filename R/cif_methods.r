@@ -45,6 +45,8 @@ cif_aalen_johansen <- function(data, variable, ev_time, event, cause,
                             conf_level=conf_level, conf_type="plain")
     plotdata$ci_lower <- cif_cis$left
     plotdata$ci_upper <- cif_cis$right
+  } else {
+    plotdata$se <- NULL
   }
 
   if (!is.null(times)) {

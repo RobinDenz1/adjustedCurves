@@ -101,8 +101,6 @@ When the argument \code{bootstrap} is set to \code{TRUE}, it additionally contai
 
 \item{boot_data}{The adjusted survival curves estimated in each bootstrap sample.
 }
-\item{boot_data_same_t}{The value of the adjusted survival probabilities at the same points in time as the original survival curve for each bootstrap sample.
-}
 \item{boot_adjsurv}{The mean adjusted survival curves of all bootstrap samples and corresponding standard errors and percentile confidence intervals.
 }
 

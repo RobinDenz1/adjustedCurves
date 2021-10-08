@@ -172,6 +172,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
       stop("Argument 'standardize' must be either TRUE or FALSE.")
     } else if (inherits(data, "data.frame")) {
 
+      # treatment_vars
       if (!all(obj$treatment_vars %in% colnames(data))) {
         stop("'treatment_vars' should be a character vector of column names ",
              "in 'data', used to model the outcome mechanism.")
@@ -340,6 +341,17 @@ check_inputs_adj_rmst <- function(adjsurv, from, to, use_boot) {
             " they were not estimated.",
             " Need 'bootstrap=TRUE' in 'adjustedsurv' function call.")
   }
+
+  if (to > max(adjsurv$adjsurv$time, na.rm=TRUE)) {
+    stop("'to' can not be greater than the latest observed time.")
+  }
+
+  if (length(unique((adjsurv$adjsurv$time))) < 10) {
+    warning("Using only a few points in time might lead to biased",
+            " estimates. Consider using a finer times grid in",
+            " 'adjustedsurv'.")
+  }
+
 }
 
 ## for adjustedsurv_test

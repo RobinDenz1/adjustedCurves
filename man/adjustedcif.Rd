@@ -99,8 +99,6 @@ When the argument \code{bootstrap} is set to \code{TRUE} it additionally contain
 
 \item{boot_data}{The adjusted CIFs estimated in each bootstrap sample.
 }
-\item{boot_data_same_t}{The value of the adjusted CIFs at the same points in time as the original CIFs for each bootstrap sample.
-}
 \item{boot_adjcif}{The mean CIFs of all bootstrap samples and corresponding standard errors and percentile confidence intervals.
 }
 

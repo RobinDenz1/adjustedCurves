@@ -1,5 +1,5 @@
 
-adjsurv <- list()
+adjsurv <- list(adjsurv=data.frame(time=seq(1, 100)))
 class(adjsurv) <- "adjustedsurv"
 
 not_adjsurv <- list()
@@ -44,3 +44,4 @@ test_that("no bootstrapping performed", {
                                                       use_boot=TRUE),
                NULL)
 })
+

@@ -162,7 +162,7 @@ estimator.pi <- function(y, delta, treat, x, psix, max_iter, newton_tol) {
 #   - added the line "pi[pi<0] <- gtol"
 #   - minor changes to the code layout
 #   - added max_iter, newton_tol, see above
-#   - moved "require(MASS)" to input_check function, used
+#   - moved "require(MASS)" to load_needed_packages function, used
 #     requireNamespace("MASS") instead
 el.est <- function(y, delta, treat, x, psix_moment=c("first", "second"),
                    treat.select, t, standardize=FALSE, gtol=0.00001,

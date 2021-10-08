@@ -445,6 +445,8 @@ plot.curve_test <- function(x, type="curves", xlab=NULL, ylab=NULL,
         ggplot2::theme_bw() +
         ggplot2::labs(x=xlab, y=ylab) +
         ggplot2::facet_wrap(~comp, scales="free")
+    } else {
+      stop("type='", type, "' is not defined.")
     }
 
   } else {
@@ -491,6 +493,8 @@ plot.curve_test <- function(x, type="curves", xlab=NULL, ylab=NULL,
         ggplot2::theme_bw() +
         ggplot2::labs(x=xlab, y=ylab)
 
+    } else {
+      stop("type='", type, "' is not defined.")
     }
   }
 

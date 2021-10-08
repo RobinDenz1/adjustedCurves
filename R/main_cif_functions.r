@@ -248,7 +248,7 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
         export_objs <- c("get_iptw_weights", "read_from_step_function",
                          "multi_result_class", "adjustedcif_boot",
                          "trim_weights", "geese_predictions",
-                         "load_needed_packages")
+                         "load_needed_packages", "specific_times")
 
         boot_out <- foreach::foreach(i=1:n_boot, .packages=pkgs,
                                     .export=export_objs) %dorng% {
@@ -274,19 +274,15 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
         }
       }
 
-      # transform into data.frames
-      boot_data <- lapply(boot_out, function(x) x$boot_data)
-      boot_data_same_t <- lapply(boot_out, function(x) x$boot_data_same_t)
-
-      boot_data <- as.data.frame(dplyr::bind_rows(boot_data))
-      boot_data_same_t <- as.data.frame(dplyr::bind_rows(boot_data_same_t))
+      # transform into data.frame
+      boot_data <- as.data.frame(dplyr::bind_rows(boot_out))
 
       # keep factor ordering the same
       boot_data$group <- factor(boot_data$group, levels=levs)
-      boot_data_same_t$group <- factor(boot_data_same_t$group, levels=levs)
+      colnames(boot_data) <- c("time", "cif_b", "group", "boot")
 
       # calculate some statistics
-      boot_stats <- boot_data_same_t %>%
+      boot_stats <- boot_data %>%
         dplyr::group_by(., time, group) %>%
         dplyr::summarise(cif=mean(cif_b, na.rm=TRUE),
                          se=stats::sd(cif_b, na.rm=TRUE),
@@ -299,6 +295,9 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
                          n_boot=sum(!is.na(cif_b)),
                          .groups="drop_last")
       boot_stats$group <- factor(boot_stats$group, levels=levs)
+
+      # get names back
+      colnames(boot_data) <- c("time", "cif", "group", "boot")
     }
 
     # core of the function
@@ -318,7 +317,6 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
 
     if (bootstrap) {
       out$boot_data <- boot_data
-      out$boot_data_same_t <- boot_data_same_t
       out$boot_adjcif <- as.data.frame(boot_stats)
     }
 
@@ -358,20 +356,6 @@ adjustedcif_boot <- function(data, variable, ev_time, event, cause, method,
   # IMPORTANT: keeps SL in tmle methods from failing
   row.names(boot_samp) <- seq_len(nrow(data))
 
-  # if event specific times are used, use event specific times
-  # in bootstrapping as well
-  if (is.null(times_input) & method=="aalen_johansen") {
-
-  } else if (is.null(times_input)) {
-    times_boot <- sort(unique(boot_samp[, ev_time][boot_samp[, event]>=1]))
-
-    if (!0 %in% times_boot) {
-      times_boot <- c(0, times_boot)
-    }
-  } else {
-    times_boot <- times
-  }
-
   # update models/recalculate weights using bootstrap sample
   pass_args <- list(...)
   if (method %in% c("direct", "aiptw") &
@@ -380,12 +364,16 @@ adjustedcif_boot <- function(data, variable, ev_time, event, cause, method,
                                              data=boot_samp)
   }
 
-  if (method %in% c("iptw", "iptw_pseudo", "aiptw", "aiptw_pseudo")) {
-    if (inherits(pass_args$treatment_model, "glm") |
-        inherits(pass_args$treatment_model, "multinom")) {
-      pass_args$treatment_model <- stats::update(pass_args$treatment_model,
-                                                 data=boot_samp, trace=FALSE)
-    }
+  if ((method %in% c("iptw", "iptw_pseudo", "aiptw", "aiptw_pseudo")) &&
+      inherits(pass_args$treatment_model, c("glm", "multinom"))) {
+    pass_args$treatment_model <- stats::update(pass_args$treatment_model,
+                                               data=boot_samp, trace=FALSE)
+  }
+
+  if ((method %in% c("iptw", "direct", "aiptw")) &&
+      inherits(pass_args$censoring_model, "coxph")) {
+    pass_args$censoring_model <- stats::update(pass_args$censoring_model,
+                                               data=boot_samp)
   }
 
   # call cif_method with correct arguments
@@ -398,33 +386,7 @@ adjustedcif_boot <- function(data, variable, ev_time, event, cause, method,
   adjcif_boot <- method_results$plotdata
   adjcif_boot$boot <- i
 
-  # read from resulting step function at all t in times
-  boot_cif <- vector(mode="list", length=length(levs))
-  for (j in seq_len(length(levs))) {
-
-    if (method=="aalen_johansen" & is.null(times)) {
-      times <- unique(data[,ev_time][data[,variable]==levs[j]])
-    }
-
-    cif_boot <- vapply(times, read_from_step_function,
-                       step_data=adjcif_boot[adjcif_boot$group==levs[j],],
-                       est="cif", FUN.VALUE=numeric(1))
-
-    dat_temp <- data.frame(time=times,
-                           cif_b=cif_boot,
-                           group=levs[j],
-                           boot=i)
-    boot_cif[[j]] <- dat_temp
-  }
-  boot_cif <- as.data.frame(dplyr::bind_rows(boot_cif))
-
-  # output
-  result <- multi_result_class()
-
-  result$boot_data <- adjcif_boot
-  result$boot_data_same_t <- boot_cif
-
-  return(result)
+  return(adjcif_boot)
 
 }
 
