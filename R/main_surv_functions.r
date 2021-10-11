@@ -246,10 +246,9 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=FALSE,
         doParallel::registerDoParallel(cl)
         pkgs <- c("adjustedCurves", "survival")
         export_objs <- c("get_iptw_weights", "read_from_step_function",
-                         "multi_result_class", "adjustedsurv_boot",
-                         "trim_weights", "calc_pseudo_surv",
-                         "geese_predictions", "load_needed_packages",
-                         "specific_times")
+                         "adjustedsurv_boot", "trim_weights",
+                         "calc_pseudo_surv", "geese_predictions",
+                         "load_needed_packages", "specific_times")
 
         boot_out <- foreach::foreach(i=1:n_boot, .packages=pkgs,
                                      .export=export_objs) %dorng% {

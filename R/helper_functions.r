@@ -460,6 +460,10 @@ remove_unnecessary_covars <- function(data, method, variable, ev_time,
     outcome_vars <- all.vars(args$outcome_model$formula)
   } else if (inherits(args$outcome_model, "CauseSpecificCox")) {
     outcome_vars <- all.vars(args$outcome_model$call$formula)
+  } else if (inherits(args$outcome_model, "FGR")) {
+    fgr_call <- args$outcome_model$call
+    fgr_call$data <- NULL
+    outcome_vars <- all.vars(fgr_call)
   } else {
     outcome_vars <- NULL
   }
@@ -579,7 +583,7 @@ load_needed_packages <- function(method, kind, treatment_model,
     }
 
     # pseudo-values
-    if (method %in% c("direct_pseudo", "aiptw_pseudo", "iptw_pseudo")) {
+    if (method %in% c("direct_pseudo", "aiptw_pseudo", "iptw_pseudo", "direct")) {
       requireNamespace("prodlim")
     }
 

@@ -6,7 +6,7 @@ Direct Adjusted Cumulative Incidence Functions
 }
 \description{
 
-This page explains the details of estimating confounder-adjusted CIFs using a previously fit Cause-Specific Cox-Regression model in a competing risks setting. The function is called internally when using \code{method="direct"} in the \code{\link[=adjustedcif]{adjustedcif}} function. It is highly recommended to use \code{\link[=adjustedcif]{adjustedcif}} instead of calling this function directly.
+This page explains the details of estimating confounder-adjusted CIFs using a previously fit Cause-Specific Cox-Regression model or a Fine & Gray model in a competing risks setting. The function is called internally when using \code{method="direct"} in the \code{\link[=adjustedcif]{adjustedcif}} function. It is highly recommended to use \code{\link[=adjustedcif]{adjustedcif}} instead of calling this function directly.
 
 }
 \usage{
@@ -38,25 +38,25 @@ A logical variable, indicating whether the asymptotic variances and confidence i
 A number specifying the confidence level of asymptotic confidence intervals.
   }
   \item{outcome_model}{
-Must be a \code{CauseSpecificCox} model object with \code{variable} as independent variable.
+Must be a \code{CauseSpecificCox} model created using the \code{\link[riskRegression]{CSC}} function or a \code{FGR} model created using the \code{\link[riskRegression]{FGR}} function with \code{variable} as independent variable.
 }
   \item{times}{
 A numeric vector of time points at which the CIFs should be estimated.
 }
   \item{verbose}{
-Whether to print estimation information of the \code{ate} function in the \code{riskRegression} package.
+Whether to print estimation information of the \code{ate} function in the \code{riskRegression} package. Ignored if a \code{FGR} model is supplied.
 }
   \item{...}{
-Further arguments passed to \code{\link[riskRegression]{ate}}.
+Further arguments passed to \code{\link[riskRegression]{ate}} when a \code{CauseSpecificCox} model is supplied in the \code{outcome_model} argument, ignored otherwise.
   }
 }
 \details{
 
 \itemize{
-\item{\strong{Type of Adjustment:} Requires a model describing the outcome mechanism. This must be a \code{\link[riskRegression]{CSC}} model.}
+\item{\strong{Type of Adjustment:} Requires a model describing the outcome mechanism. This must be either a Cause-Specific-Cox Model (\code{\link[riskRegression]{CSC}}) or a Fine & Gray model (\code{\link[riskRegression]{FGR}}).}
 \item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
 \item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
-\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
+\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are only available when using a Cause-Specific-Cox model.}
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
@@ -65,7 +65,7 @@ Further arguments passed to \code{\link[riskRegression]{ate}}.
 
 This method works by executing the following steps: (1) First a model is fitted which describes the outcome mechanism (time-to-event). Next (2) multiple copies of the original dataset are created, one for each possible level of the \code{variable} of interest. (3) The \code{variable} is then set to one level for all observations in each dataset. (4) The model is used to predict the CIF at some points in time T for each observation in all dataset copies. (5) Those estimated probabilities are averaged for each dataset at each point in time, resulting in adjusted CIFs for all levels of the group variable at the specified points in time.
 
-In the literature this method is sometimes called "Direct Standardization", "Corrected Group-Prognosis", "G-Computation" or "G-Formula". If the model in step (1) is correct this method will produce unbiased estimates of the causal CIFs. It is also one of the most efficient methods. Technically any type of model could be used. Currently only \code{\link[riskRegression]{CSC}} models are supported however. More information can be found in the literature listed in the references.
+In the literature this method is sometimes called "Direct Standardization", "Corrected Group-Prognosis", "G-Computation" or "G-Formula". If the model in step (1) is correct this method will produce unbiased estimates of the causal CIFs. It is also one of the most efficient methods. Theoretically any type of model could be used. Currently only \code{\link[riskRegression]{CSC}} models and \code{\link[riskRegression]{FGR}} models are supported. More information can be found in the literature listed in the references.
 
 }
 \value{
@@ -81,7 +81,7 @@ The wrapper function was written by Robin Denz, the \code{ate} function (which t
 }
 
 \seealso{
-\code{\link[riskRegression]{ate}}, \code{\link[riskRegression]{CSC}}
+\code{\link[riskRegression]{ate}}, \code{\link[riskRegression]{CSC}}, \code{\link[riskRegression]{FGR}}, \code{\link[adjustedCurves]{CSC_MI}}, \code{\link[adjustedCurves]{FGR_MI}}
 }
 \examples{
 \dontrun{

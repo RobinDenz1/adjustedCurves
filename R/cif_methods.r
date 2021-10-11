@@ -181,32 +181,61 @@ cif_direct <- function(data, variable, ev_time, event, cause, conf_int,
                        conf_level=0.95, times, outcome_model,
                        verbose=FALSE, ...) {
 
-  cif <- riskRegression::ate(event=outcome_model,
-                             treatment=variable,
-                             data=data,
-                             estimator="Gformula",
-                             times=times,
-                             se=conf_int,
-                             verbose=verbose,
-                             cause=cause,
-                             ...)
-  plotdata <- data.frame(time=cif$meanRisk$time,
-                         cif=cif$meanRisk$estimate,
-                         group=cif$meanRisk$treatment)
+  # Using a Cause-Specific-Cox Model
+  if (inherits(outcome_model, "CauseSpecificCox")) {
 
-  if (conf_int) {
-    plotdata$se <- cif$meanRisk$se
+    cif <- riskRegression::ate(event=outcome_model,
+                               treatment=variable,
+                               data=data,
+                               estimator="Gformula",
+                               times=times,
+                               se=conf_int,
+                               verbose=verbose,
+                               cause=cause,
+                               ...)
+    plotdata <- data.frame(time=cif$meanRisk$time,
+                           cif=cif$meanRisk$estimate,
+                           group=cif$meanRisk$treatment)
 
-    confint.ate <- utils::getFromNamespace("confint.ate", "riskRegression")
+    if (conf_int) {
+      plotdata$se <- cif$meanRisk$se
 
-    cis <- confint.ate(cif, level=conf_level)$meanRisk
-    plotdata$ci_lower <- cis$lower
-    plotdata$ci_upper <- cis$upper
+      confint.ate <- utils::getFromNamespace("confint.ate", "riskRegression")
+
+      cis <- confint.ate(cif, level=conf_level)$meanRisk
+      plotdata$ci_lower <- cis$lower
+      plotdata$ci_upper <- cis$upper
+    }
+
+    output <- list(plotdata=plotdata,
+                   ate_object=cif)
+    class(output) <- "adjustedcif.method"
+
+  # Using a Fine & Gray Model
+  } else if (inherits(outcome_model, "FGR")) {
+
+    predict.FGR <- utils::getFromNamespace("predict.FGR", "riskRegression")
+
+    # manually perform G-Computation
+    levs <- levels(data[,variable])
+    data_temp <- data
+    plotdata <- vector(mode="list", length=length(levs))
+    for (i in seq_len(length(levs))) {
+
+      data_temp[,variable] <- factor(levs[i], levels=levs)
+      cif_lev <- predict.FGR(outcome_model, newdata=data_temp, times=times)
+      cif_lev <- apply(X=cif_lev, MARGIN=2, FUN=mean, na.rm=TRUE)
+
+      row <- data.frame(time=times, cif=cif_lev, group=levs[i])
+      plotdata[[i]] <- row
+
+    }
+    plotdata <- dplyr::bind_rows(plotdata)
+
+    output <- list(plotdata=plotdata)
+    class(output) <- "adjustedcif.method"
+
   }
-
-  output <- list(plotdata=plotdata,
-                 ate_object=cif)
-  class(output) <- "adjustedcif.method"
 
   return(output)
 }

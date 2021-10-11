@@ -563,6 +563,15 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
     if (!"outcome_model" %in% names(obj)) {
       stop("Argument 'outcome_model' must be specified when using",
            " method='direct'.")
+    } else if (!inherits(obj$outcome_model, c("CauseSpecificCox",
+                                              "FGR", "mira"))) {
+      stop("'outcome_model' must be either of a 'CauseSpecificCox'",
+           " or a 'FGR' model fitted using the 'riskRegression' package.",
+           " When using multiple imputation, it should be a 'mira' object.")
+    }
+    if (inherits(obj$outcome_model, "FGR") && cause != obj$outcome_model$cause) {
+      stop("The FGR model needs to be fit with the same 'cause' as specified",
+           " in the 'cause' argument.")
     }
   }
 
