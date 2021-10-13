@@ -51,7 +51,7 @@ Must be a \code{glm} model object with \code{variable} as response variable. See
 Must be a \code{coxph} model object, modeling the censoring mechanism or \code{NULL}. If \code{NULL} (default) independent censoring is assumed. See details and examples.
 }
   \item{verbose}{
-Whether to print estimation information of the \code{ate} function in the \code{riskRegression} package.
+Whether to print estimation information of the \code{ate} function in the \pkg{riskRegression} package.
 }
   \item{...}{
 Further arguments passed to \code{\link[riskRegression]{ate}}.
@@ -67,12 +67,12 @@ Further arguments passed to \code{\link[riskRegression]{ate}}.
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are not guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are not guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on the \code{\link[riskRegression]{riskRegression}} package.}
+\item{\strong{Dependencies:} This method relies on the \pkg{riskRegression} package.}
 }
 
 Instead of only modeling the outcome mechanism or the treatment assignment mechanism, both kind of models are required to use this method. If either of those models are correctly specified, unbiased estimates will be obtained. Can also be used to adjust for dependent censoring using a Cox-Regression model. An obvious advantage of this method is it's doubly robust property. This however comes at the price of some efficiency. It is also possible that some estimates fall outside the 0 and 1 probability bounds, particularly if the time is near 0 or the maximal observed event time. There is also no guarantee that the estimated CIFs will be monotonically increasing. For more information on the methods the user is referred to the literature listed in the references.
 
-This function is basically just a wrapper around the \code{\link[riskRegression]{ate}} function from the \code{riskRegression} package. Additional arguments may be passed to that function using the \code{...} syntax. It is however recommended to use \code{\link[riskRegression]{ate}} directly in these cases.
+This function is basically just a wrapper around the \code{\link[riskRegression]{ate}} function from the \pkg{riskRegression} package. Additional arguments may be passed to that function using the \code{...} syntax. It is however recommended to use \code{\link[riskRegression]{ate}} directly in these cases.
 
 }
 \value{
@@ -125,12 +125,3 @@ adjcif <- adjustedcif(data=sim_dat,
 plot(adjcif)
 }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

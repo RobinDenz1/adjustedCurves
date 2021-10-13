@@ -47,7 +47,7 @@ Whether to stabilize the weights or not. Is set to \code{TRUE} by default. Stabi
 Tolerance at which estimated treatment assignment probabilities are truncated. Every propensity score bigger than 1 - \code{gtol} is set to 1 - \code{gtol} and every propensity score smaller than \code{gtol} is set to \code{gtol}. Useful when there are extreme propensity scores close to 0 or 1.
   }
   \item{...}{
-Further arguments passed to the \code{Match} function of the \code{Matching} Package.
+Further arguments passed to the \code{\link[Matching]{Match}} function of the \pkg{Matching} Package.
   }
 }
 \details{
@@ -60,7 +60,7 @@ Further arguments passed to the \code{Match} function of the \code{Matching} Pac
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on the \code{Matching} package.}
+\item{\strong{Dependencies:} This method relies on the \pkg{Matching} package.}
 }
 
 Using the estimated propensity score, the individual observations in the dataset are matched to each other creating a new dataset in which the covariate distributions are balanced in respect to the two groups defined by \code{variable}. A simple Aalen-Johansen estimator is then used to calculate the confounder-adjusted survival curves.
@@ -120,12 +120,3 @@ adjsurv <- adjustedsurv(data=sim_dat,
 plot(adjsurv)
 }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

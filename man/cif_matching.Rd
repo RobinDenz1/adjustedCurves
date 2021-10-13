@@ -47,7 +47,7 @@ Must be either a model object with \code{variable} as response variable or a vec
 Tolerance at which estimated treatment assignment probabilities are truncated. Every propensity score bigger than 1 - \code{gtol} is set to 1 - \code{gtol} and every propensity score smaller than \code{gtol} is set to \code{gtol}. Useful when there are extreme propensity scores close to 0 or 1.
   }
   \item{...}{
-Further arguments passed to the \code{Match} function of the \code{Matching} Package.
+Further arguments passed to the \code{Match} function of the \pkg{Matching} Package.
   }
 }
 \details{
@@ -60,7 +60,7 @@ Further arguments passed to the \code{Match} function of the \code{Matching} Pac
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on both the \code{Matching} and the \code{cmprsk} packages.}
+\item{\strong{Dependencies:} This method relies on both the \pkg{Matching} and the \pkg{cmprsk} packages.}
 }
 
 Using the estimated propensity score, the individual observations in the dataset are matched to each other creating a new dataset in which the covariate distributions are balanced in respect to the two groups defined by \code{variable}. A simple Aalen-Johansen estimator is then used to calculate the cause-specific confounder-adjusted CIFs.
@@ -71,7 +71,7 @@ In contrast to all other methods, bootstrapped standard error and confidence int
 
 }
 \value{
-Returns a \code{list} object containing a \code{data.frame} with estimated CIFs for some points in time for each level of \code{variable} and the object created using the \code{Match} function.
+Returns a \code{list} object containing a \code{data.frame} with estimated CIFs for some points in time for each level of \code{variable} and the object created using the \code{\link[Matching]{Match}} function.
 }
 \references{
 Peter C. Austin and Jason P. Fine. "Propensity-Score Matching with Competing Risks in Survival Analysis". In: Statistics in Medicine 38 (2019), pp. 751–777.
@@ -121,12 +121,3 @@ adjcif <- adjustedcif(data=sim_dat,
 plot(adjcif)
 }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

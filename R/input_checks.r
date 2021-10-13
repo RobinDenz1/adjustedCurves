@@ -51,9 +51,11 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     }
 
     # Check if categorical should be allowed
-    if (length(unique(data[,variable])) > 2 &
-        method %in% c("matching", "emp_lik", "tmle", "ostmle",
-                      "aiptw")) {
+    levs_len <- length(unique(data[,variable]))
+    if (levs_len < 2) {
+      stop("There have to be at least two groups in 'variable'.")
+    } else if (levs_len > 2 & method %in% c("matching", "emp_lik", "tmle",
+                                            "ostmle", "aiptw")) {
       stop("Categorical treatments are currently not supported for ",
            "method='", method, "'.")
     }
@@ -222,10 +224,24 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     }
   ## Direct
   } else if (method=="direct") {
-
+    # need outcome_model
     if (!"outcome_model" %in% names(obj)) {
       stop("Argument 'outcome_model' must be specified when using",
            " method='direct'.")
+    # no bootstrapping with pecRpart
+    } else if (inherits(obj$outcome_model, c("pecRpart")) & bootstrap) {
+      stop("Bootstrapping is currently not supported with method='direct'",
+           " and an 'outcome_model' of class 'pecRpart'.")
+    # only allow certain models when there is no censoring
+    } else if (inherits(obj$outcome_model, c("glm", "ols", "randomForest")) &&
+               all(data[,event]==1)) {
+      stop("'outcome_models' of class c('glm', 'ols', 'randomForest') are",
+           " only allowed when there is no censoring.")
+    # don't allow selectCox if no covariates are left after selection
+    } else if (inherits(obj$outcome_model, c("selectCox")) &&
+               inherits(obj$outcome_model$fit, "survfit")) {
+      stop("The final 'fit' object in the 'selectCox' model must be a",
+           " coxph object, not survfit.")
     }
   }
 
@@ -359,8 +375,8 @@ check_inputs_adj_test <- function(adjsurv, from, to) {
 
   if (!(inherits(adjsurv, "adjustedsurv") |
         inherits(adjsurv, "adjustedcif"))) {
-    stop("'adjsurv' must be an 'adjustedsurv' object, created using the ",
-         "adjustedsurv function.")
+    stop("'adjsurv' must be an 'adjustedsurv' or 'adjustedcif' object,",
+         "created using the adjustedsurv or adjustedcif function.")
   } else if (is.null(adjsurv$boot_data)) {
     stop("Can only perform a significance test if bootstrapping was ",
          "performed (bootstrap=TRUE in adjustedsurv/adjustedcif call).")
@@ -480,8 +496,10 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
     }
 
     # Check if categorical should be allowed
-    if (length(unique(data[,variable])) > 2 &
-        method %in% c("matching", "tmle", "aiptw")) {
+    levs_len <- length(unique(data[,variable]))
+    if (levs_len < 2) {
+      stop("There have to be at least two groups in 'variable'.")
+    } else if (levs_len > 2 & method %in% c("matching", "tmle", "aiptw")) {
       stop("Categorical treatments are currently not supported for ",
            "method='", method, "'.")
     }
@@ -563,13 +581,9 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
     if (!"outcome_model" %in% names(obj)) {
       stop("Argument 'outcome_model' must be specified when using",
            " method='direct'.")
-    } else if (!inherits(obj$outcome_model, c("CauseSpecificCox",
-                                              "FGR", "mira"))) {
-      stop("'outcome_model' must be either of a 'CauseSpecificCox'",
-           " or a 'FGR' model fitted using the 'riskRegression' package.",
-           " When using multiple imputation, it should be a 'mira' object.")
     }
-    if (inherits(obj$outcome_model, "FGR") && cause != obj$outcome_model$cause) {
+    if (inherits(obj$outcome_model, "FGR") &&
+        cause != obj$outcome_model$cause) {
       stop("The FGR model needs to be fit with the same 'cause' as specified",
            " in the 'cause' argument.")
     }

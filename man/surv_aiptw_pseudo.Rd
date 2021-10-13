@@ -40,7 +40,7 @@ A number specifying the confidence level of asymptotic confidence intervals.
 A numeric vector of time points at which the survival probability should be estimated.
 }
   \item{outcome_vars}{
-A character vector of column names specifying variables to be used when modeling the outcome mechanism using \code{geese}. See details and examples.
+A character vector of column names specifying variables to be used when modeling the outcome mechanism using \code{\link[geepack]{geese}}. See details and examples.
 }
   \item{treatment_model}{
 Must be a \code{glm} or \code{multinom} model object with \code{variable} as response variable. See details and examples.
@@ -68,7 +68,7 @@ The specific method used in the calculation of inverse probability of censoring 
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are not guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are not guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on the \code{geepack} and \code{\link[prodlim]{prodlim}} packages. Additionally requires the \code{eventglm} package if \code{censoring_vars} is specified.}
+\item{\strong{Dependencies:} This method relies on the \pkg{geepack} and \pkg{prodlim} packages. Additionally requires the \pkg{eventglm} package if \code{censoring_vars} is specified.}
 }
 
 Instead of only modeling the outcome mechanism or the treatment assignment mechanism, both kind of models are required to use this method. If either of those models are correctly specified, unbiased estimates will be obtained. In contrast to the \code{\link[=surv_aiptw]{"aiptw"}} method, the "aiptw_pseudo" method uses a generalised estimation equation (geese) approach to model the outcome mechanism. The model is fit in the same way as described in the \code{\link[=surv_direct_pseudo]{"direct_pseudo"}} method. Those Direct Standardization based estimates are then transformed using the previously estimated propensity score. This results in the doubly-robust property of the method. More information on this particular method can be found in the original article by Wang (2018), more information on Pseudo-Values is available in Andersen et al. (2017) and Andersen and Perme (2010).
@@ -127,12 +127,3 @@ adjsurv <- adjustedsurv(data=sim_dat,
 plot(adjsurv, draw_ci=TRUE)
 }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

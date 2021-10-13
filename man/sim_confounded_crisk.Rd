@@ -80,7 +80,7 @@ Morina, D. and A. Navarro (2017). "Competing Risks Simulation with the survsim R
 Arthur Chatton, Florent Le Borgne, Clemence Leyrat, and Yohann Foucher. G-Computation and Inverse Probability Weighting for Time-To-Event Outcomes: A Comparative Study. arXiv:2006.16859v1. (2020).
 }
 \author{
-The code for step (3) and (4) described in the details was taken from the \code{survsim} R-Package, written by David Morina Soler (with slight modifications). The rest of the function was written by Robin Denz.
+The code for step (3) and (4) described in the details was taken from the \pkg{survsim} R-Package, written by David Morina Soler (with slight modifications). The rest of the function was written by Robin Denz.
 }
 
 \examples{
@@ -115,12 +115,3 @@ sim_dat <- sim_confounded_crisk(n=100,
                                 lcovars=lcovars)
 }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

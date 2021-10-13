@@ -78,7 +78,7 @@ Tolerance at which estimated treatment assignment probabilities are truncated. E
 \item{\strong{Allowed Time Values:} Allows only integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on the \code{survtmle}, \code{MASS}, \code{SuperLearner}, \code{R6} and \code{tidyr} packages. The code was taken directly from the \code{MOSS} package, which is currently not available on CRAN. We made tiny changes to it but it's essentially the same. You do not have to install it but it can be installed using the following code: \code{devtools::install_github("wilsoncai1992/MOSS")}. If you use this method, please cite the \code{MOSS} package.}
+\item{\strong{Dependencies:} This method relies on the \pkg{survtmle}, \pkg{MASS}, \pkg{SuperLearner}, \pkg{R6} and \pkg{tidyr} packages. The code was taken directly from the \pkg{MOSS} package, which is currently not available on CRAN. Tiny changes were made but it's essentially the same. You do not have to install it but it can be installed using the following code:\cr \code{devtools::install_github("wilsoncai1992/MOSS")}. \cr If you use this method, please cite the \pkg{MOSS} package.}
 }
 
 Standard TMLE is a two-step procedure. First, initial estimates for the treatment-assignment and the outcome-mechanisms are made using loss-based learning. This is implemented here using the \code{SuperLearner} methodology. In the next step, the estimates obtained by using the outcome-mechanism model are fluctuated based on information from the treatment-assignment model. If the outcome model is already consistent, this fluctuation is very small and the estimates stay consistent. If the outcome model is biased, the fluctuation removes the bias whenever the treatment assignment model is consistent. This process is iterative and continues until a threshold is hit (either the maximum number of iterations is reached or the bias is smaller than the specified tolerance, see \code{?survtmle}).
@@ -128,12 +128,3 @@ adjsurv <- adjustedsurv(data=sim_dat,
 plot(adjsurv)
 }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

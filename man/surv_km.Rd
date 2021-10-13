@@ -53,7 +53,7 @@ The type of confidence interval that should be calculated. Has to be a character
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on the the \code{\link{survival}} package.}
+\item{\strong{Dependencies:} This method relies on the the \pkg{survival} package.}
 }
 
 }
@@ -89,12 +89,3 @@ adjsurv <- adjustedsurv(data=sim_dat,
 plot(adjsurv)
 }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

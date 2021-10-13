@@ -71,10 +71,10 @@ Further arguments passed to \code{\link[WeightIt]{weightit}}.
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are not guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are not guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on the \code{\link[prodlim]{prodlim}} package. The \code{WeightIt} package is also required if \code{treatment_model} is a formula object.}
+\item{\strong{Dependencies:} This method relies on the \pkg{prodlim} package. The \pkg{WeightIt} package is also required if \code{treatment_model} is a formula object.}
 }
 
-This method works by modelling the treatment assignment mechanism. Adjusted CIFs are calculated by first estimating appropriate case-weights for each observation in \code{data}. This can be done using inverse probability of treatment weights using the propensity score (usually estimated using a logistic regression model) or by some other method (see \code{?weightit}). Pseudo-Values of the cause-specific CIF are then calculated for every observation in \code{data} at some points in time \eqn{T}. Since Pseudo-Values bypass the problem of censoring, a simple weighted average of the Pseudo-Values can be taken for every \eqn{T}. See Andersen et al. (2017) for more details on this method and Andersen and Perme (2010) for more information on Pseudo-Values in general.
+This method works by modelling the treatment assignment mechanism. Adjusted CIFs are calculated by first estimating appropriate case-weights for each observation in \code{data}. This can be done using inverse probability of treatment weights using the propensity score (usually estimated using a logistic regression model) or by some other method (see \code{\link[WeightIt]{weightit}}). Pseudo-Values of the cause-specific CIF are then calculated for every observation in \code{data} at some points in time \eqn{T}. Since Pseudo-Values bypass the problem of censoring, a simple weighted average of the Pseudo-Values can be taken for every \eqn{T}. See Andersen et al. (2017) for more details on this method and Andersen and Perme (2010) for more information on Pseudo-Values in general.
 
 The standard error of this estimator can be approximated by calculation a weighted version of the standard error estimator. Interestingly, no exact method exists in the weighted case. Four approximations are implemented which can be chosen using the \code{se_method} argument. The equations for \code{"miller"}, \code{"galloway"} and \code{"cochrane"} are described and compared in Gatz and Smith (1995). \code{"simple"} is just the standard equation with a weight term added and should only be used with stabilized weights (\code{stabilize=TRUE}). The resulting estimates are conservative in nature, because they ignore the variation introduced by the pseudo-value calculation (Zeng et al. 2021). It is generally recommended to use bootstrap estimates instead.
 
@@ -162,12 +162,3 @@ adjcif <- adjustedcif(data=sim_dat,
 plot(adjcif)
 }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

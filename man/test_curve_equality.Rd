@@ -33,8 +33,6 @@ Instead of relying on numerical integration, this function uses step-function in
 
 When the \code{adjustedsurv} or \code{adjustedcif} object was fitted using multiply imputed datasets, the tests are performed separately for each dataset. The estimates for the integral of the difference are combined using Rubins Rule. The confidence intervals for this quantity are calculated by pooling the bootstrap standard errors and recalculating the confidence interval using the normal approximation. The P-Values are also pooled using a method described in Licht (2010). It is recommended to check if the pooled P-Value is in agreement with the pooled confidence interval.
 
-This function has not been tested extensively yet and is still in the experimental stage. Use with caution.
-
 }
 \value{
 Returns a \code{curve_test} object. If there are exactly two treatments this list contains the following object:
@@ -147,12 +145,3 @@ print(adjtest)
 
 }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

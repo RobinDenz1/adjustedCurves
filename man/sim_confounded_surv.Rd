@@ -48,10 +48,10 @@ sim_confounded_surv(n=500, lcovars=NULL, outcome_betas=NULL,
   Tolerance at which estimated treatment assignment probabilities are truncated.
   }
   \item{cens_fun}{
-  A function to generate censoring times.
+  A function to generate censoring times or \code{NULL}. If \code{NULL}, no censoring is introduced.
   }
   \item{cens_args}{
-  Arguments passed to \code{cens_fun}.
+  Arguments passed to \code{cens_fun}. Ignored if \code{cens_fun=NULL}.
   }
   \item{max_t}{
   A number denoting the maximum follow-up time. Every event time bigger than this threshold are censored.
@@ -101,12 +101,3 @@ sim_dat <- sim_confounded_surv(n=250, lcovars=lcovars,
                                outcome_betas=outcome_betas)
 }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

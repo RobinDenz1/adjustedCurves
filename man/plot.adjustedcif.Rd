@@ -5,7 +5,7 @@
 Plot Confounder-Adjusted Cumulative Incidence Functions
 }
 \description{
-A function to graphically display confounder-adjusted cumulative incidence functions which where previously estimated using the \code{adjustedcif} function. The user can customize the plot using a variety of options. Internally it uses the \code{ggplot2} package, so additional not implemented features can be added using the standard \code{ggplot2} syntax. This function also includes the option to use isotonic regression on the CIFs, which is of benefit if the estimated curves are not monotone.
+A function to graphically display confounder-adjusted cumulative incidence functions which where previously estimated using the \code{\link[adjustedCurves]{adjustedcif}} function. The user can customize the plot using a variety of options. Internally it uses the \pkg{ggplot2} package, so additional not implemented features can be added using the standard \pkg{ggplot2} syntax. This function also includes the option to use isotonic regression on the CIFs, which is of benefit if the estimated curves are not monotone.
 }
 \usage{
 \method{plot}{adjustedcif}(x, draw_ci=FALSE, max_t=Inf,
@@ -24,7 +24,7 @@ A function to graphically display confounder-adjusted cumulative incidence funct
 
 \arguments{
   \item{x}{
-An \code{adjustedcif} object created using the \code{adjustedcif} function.
+An \code{adjustedcif} object created using the \code{\link[adjustedCurves]{adjustedcif}} function.
   }
   \item{draw_ci}{
 A logical variable indicating whether the confidence intervals should be drawn.
@@ -39,7 +39,7 @@ A logical variable indicating whether the estimates should be monotonized using 
 A logical variable indicating whether the 0 and 1 bounds of the CIFs should be forced in the plot. See details.
   }
   \item{use_boot}{
-A logical variable denoting whether the bootstrapped estimates should be used for the curves and their confidence intervals. Can only be used if they were calculated. See \code{adjustedsurv}.
+A logical variable denoting whether the bootstrapped estimates should be used for the curves and their confidence intervals. Can only be used if they were calculated. See \code{\link[adjustedCurves]{adjustedcif}}.
   }
   \item{color}{
 A logical variable indicating whether the curves should be colored differently.
@@ -160,12 +160,3 @@ plot(adjsurv, legend.position="bottom", linetype=TRUE,
 plot(adjsurv) + theme_classic()
 }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

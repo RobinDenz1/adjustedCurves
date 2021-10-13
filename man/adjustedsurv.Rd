@@ -17,7 +17,7 @@ adjustedsurv(data, variable, ev_time, event, method,
 
 \arguments{
   \item{data}{
-A \code{data.frame} object containing the needed time-to-event data in standard format. Can also be a \code{mids} object created with the \code{mice} package. See details for how this works.
+A \code{data.frame} object containing the needed time-to-event data in standard format. Can also be a \code{mids} object created with the \pkg{mice} package. See details for how this works.
   }
   \item{variable}{
 A character string specifying the variable by which the survival curves should be grouped. Must be a valid column name of \code{data}. The variable specified should ideally be a factor variable, but integers also work for some methods.
@@ -47,7 +47,7 @@ A logical variable indicating whether bootstrapping should be performed or not. 
 Number of bootstrap replications to perform. Ignored if \code{bootstrap} is \code{FALSE}.
   }
   \item{n_cores}{
-The number of cores to use when calculating bootstrap estimates. Ignored if \code{bootstrap=FALSE}. Is set to 1 by default, resulting in single threaded processing. Internally uses the \code{doParallel} package if \code{n_cores > 1}. In that case it also uses the \code{doRNG} package to make the results replicable. See \code{?doRNG} and \code{?doParallel} for more details. Using multiple cores will speed up the calculation considerably in most cases.
+The number of cores to use when calculating bootstrap estimates. Ignored if \code{bootstrap=FALSE}. Is set to 1 by default, resulting in single threaded processing. Internally uses the \pkg{doParallel} package if \code{n_cores > 1}. In that case it also uses the \pkg{doRNG} package to make the results replicable. See \code{?doRNG} and \code{?doParallel} for more details. Using multiple cores will speed up the calculation considerably in most cases.
   }
   \item{na.action}{
 How missing values should be handled. Can be one of: na.fail, na.omit, na.pass or na.exclude. Also accepts strings of the function names. See \code{?na.action} for more details. By default it uses the na.action which is set in the global options by the respective user. Ignored if multiple imputation is used.
@@ -60,7 +60,7 @@ Further arguments passed to the respective \code{surv_method}. See details.
 The primary purpose of the \code{adjustedsurv} function is to provide a convenient way to calculate confounder-adjusted survival curves using any of the methods provided in the literature. A \code{\link[=plot.adjustedsurv]{plot}} method is provided to graphically display the estimated survival curves as well. Currently the following methods can be used:
 
 \itemize{
-  \item{"\link[=surv_direct]{direct}": Direct Standardization based on a Cox-Regression model with or without stratification.}
+  \item{"\link[=surv_direct]{direct}": Direct Standardization based on a previously fit model (Cox-Regression, ...).}
   \item{"\link[=surv_direct_pseudo]{direct_pseudo}": Direct Standardization based on Pseudo-Values.}
   \item{"\link[=surv_iptw_km]{iptw_km}": A weighted Kaplan-Meier estimator.}
   \item{"\link[=surv_iptw_cox]{iptw_cox}": A weighted estimator based on a stratified weighted Cox-Regression model.}
@@ -78,7 +78,7 @@ A short description of each method is contained in the documentation of the resp
 
 For most methods approximations for the asymptotic variance of point estimates of the survival function have been proposed in the literature. Where available, those can be calculated and added to the output object using \code{conf_int=TRUE}. It is however recommended to use bootstrapping to estimate the variance instead, which can be done by setting \code{bootstrap=TRUE}. The \code{n_boot} argument is set to 500 by default. This number was chosen because it worked well in simulations but it does not guarantee convergence in practice. Users are recommended to inspect the bootstrapped estimates and adjust the number of replications accordingly. To allow faster bootstrapping the user can choose to run the function on multiple CPU cores in parallel using the \code{n_cores} argument.
 
-This function also allows multiple imputation via the \code{mice} package. Instead of supplying a single data.frame, the user should create a \code{mids} object using the \code{mice} function and directly pass this to the \code{data} argument. When methods are used which rely on previously estimated treatment or outcome models such as \code{direct} or \code{aiptw}, the user is required to supply a \code{mira} object instead of a single model. In other words: the models have to be fit on every imputed dataset before supplying them to this function. See \code{?mice} and the associated documentation for more information on how to use multiple imputation. When using \code{bootstrap=TRUE} and multiple imputation, the bootstrapping is performed on every imputed dataset separately. Survival probabilities are simply averaged across the imputed datasets according to Rubins Rule. Confidence intervals are calculated by first averaging the standard errors over all imputed datasets and afterwards using this pooled value to obtain a new confidence interval with the normal approximation.
+This function also allows multiple imputation via the \pkg{mice} package. Instead of supplying a single data.frame, the user should create a \code{mids} object using the \code{mice} function and directly pass this to the \code{data} argument. When methods are used which rely on previously estimated treatment or outcome models such as \code{direct} or \code{aiptw}, the user is required to supply a \code{mira} object instead of a single model. In other words: the models have to be fit on every imputed dataset before supplying them to this function. See \code{?mice} and the associated documentation for more information on how to use multiple imputation. When using \code{bootstrap=TRUE} and multiple imputation, the bootstrapping is performed on every imputed dataset separately. Survival probabilities are simply averaged across the imputed datasets according to Rubins Rule. Confidence intervals are calculated by first averaging the standard errors over all imputed datasets and afterwards using this pooled value to obtain a new confidence interval with the normal approximation.
 
 }
 \value{
@@ -208,12 +208,3 @@ adjsurv <- adjustedsurv(data=sim_dat,
 # respective surv_method. See ?surv_ + "method" for more information.
 }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

@@ -458,12 +458,19 @@ remove_unnecessary_covars <- function(data, method, variable, ev_time,
   # extract variables from outcome model
   if (inherits(args$outcome_model, "coxph")) {
     outcome_vars <- all.vars(args$outcome_model$formula)
-  } else if (inherits(args$outcome_model, "CauseSpecificCox")) {
+  } else if (inherits(args$outcome_model, c("CauseSpecificCox", "FGR", "aalen",
+                                            "cox.aalen", "flexsurvreg",
+                                            "pecCforest", "prodlim",
+                                            "psm", "randomForest",
+                                            "riskRegression", "selectCox",
+                                            "glm", "ols", "rfsrc",
+                                            "penfitS3", "gbm",
+                                            "singleEventCB"))) {
     outcome_vars <- all.vars(args$outcome_model$call$formula)
-  } else if (inherits(args$outcome_model, "FGR")) {
-    fgr_call <- args$outcome_model$call
-    fgr_call$data <- NULL
-    outcome_vars <- all.vars(fgr_call)
+  } else if (inherits(args$outcome_model, "pecRpart")) {
+    outcome_vars <- all.vars(args$outcome_model$rpart$terms)
+  } else if (inherits(args$outcome_model, "ranger")) {
+    outcome_vars <- all.vars(args$outcome_model$call[[2]])
   } else {
     outcome_vars <- NULL
   }
@@ -583,7 +590,8 @@ load_needed_packages <- function(method, kind, treatment_model,
     }
 
     # pseudo-values
-    if (method %in% c("direct_pseudo", "aiptw_pseudo", "iptw_pseudo", "direct")) {
+    if (method %in% c("direct_pseudo", "aiptw_pseudo", "iptw_pseudo",
+                      "direct")) {
       requireNamespace("prodlim")
     }
 

@@ -13,21 +13,21 @@ FGR_MI(mids, formula, cause=1, ...)
 
 \arguments{
   \item{mids}{
-A \code{mids} object created using the \code{mice} function. This replaces the \code{data} argument in the original function call.
+A \code{mids} object created using the \code{\link[mice]{mice}} function. This replaces the \code{data} argument in the original function call.
   }
   \item{formula}{
-A formula object passed to the \code{FGR} function in the \code{riskRegression} package.
+A formula object passed to the \code{\link[riskRegression]{FGR}} function in the \pkg{riskRegression} package.
   }
   \item{cause}{
 The failure type of interest. Defaults to 1.
   }
   \item{...}{
-Other arguments which should be passed to the \code{FGR} function in the \code{riskRegression} package.
+Other arguments which should be passed to the \code{\link[riskRegression]{FGR}} function in the \pkg{riskRegression} package.
   }
 }
 \details{
 
-A small convenience function to calculate Fine & Gray models for multiply imputed data. It is simply a wrapper around the \code{FGR} function from the \code{riskRegression} package, because the usual use of \code{with} is not supported directly. It returns a \code{mira} object, which can be passed to the \code{outcome_model} argument inside of the \code{adjustedcif} function when needed. No \code{pool} method or other functionality is available.
+A small convenience function to calculate Fine & Gray models for multiply imputed data. It is simply a wrapper around the \code{\link[riskRegression]{FGR}} function from the \pkg{riskRegression} package, because the usual use of \code{with} is not supported directly. It returns a \code{mira} object, which can be passed to the \code{outcome_model} argument inside of the \code{\link[adjustedCurves]{adjustedcif}} function when needed. No \code{pool} method or other functionality is available.
 
 }
 \value{

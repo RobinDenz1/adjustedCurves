@@ -311,31 +311,140 @@ surv_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
 #' @export
 surv_direct <- function(data, variable, ev_time, event, conf_int,
                         conf_level=0.95, times, outcome_model,
-                        verbose=FALSE, ...) {
+                        verbose=FALSE, predict_fun=NULL,  ...) {
 
-  surv <- riskRegression::ate(event=outcome_model, treatment=variable,
-                              data=data, estimator="Gformula",
-                              times=times, se=conf_int, verbose=verbose,
-                              cause=1, ...)
-  plotdata <- data.frame(time=surv$meanRisk$time,
-                         surv=1 - surv$meanRisk$estimate,
-                         group=surv$meanRisk$treatment)
+  # using the ate function
+  if (inherits(outcome_model, c("coxph", "cph"))) {
+    surv <- riskRegression::ate(event=outcome_model, treatment=variable,
+                                data=data, estimator="Gformula",
+                                times=times, se=conf_int, verbose=verbose,
+                                cause=1, ...)
+    plotdata <- data.frame(time=surv$meanRisk$time,
+                           surv=1 - surv$meanRisk$estimate,
+                           group=surv$meanRisk$treatment)
 
-  if (conf_int) {
-    plotdata$se <- surv$meanRisk$se
+    if (conf_int) {
+      plotdata$se <- surv$meanRisk$se
 
-    confint.ate <- utils::getFromNamespace("confint.ate", "riskRegression")
+      confint.ate <- utils::getFromNamespace("confint.ate", "riskRegression")
 
-    cis <- confint.ate(surv, level=conf_level)$meanRisk
-    plotdata$ci_lower <- 1 - cis$upper
-    plotdata$ci_upper <- 1 - cis$lower
+      cis <- confint.ate(surv, level=conf_level)$meanRisk
+      plotdata$ci_lower <- 1 - cis$upper
+      plotdata$ci_upper <- 1 - cis$lower
+    }
+
+    output <- list(plotdata=plotdata,
+                   ate_object=surv)
+    class(output) <- "adjustedsurv.method"
+  # using outcome_model specific functions
+  } else {
+    plotdata <- surv_g_comp(outcome_model=outcome_model,
+                            data=data,
+                            variable=variable,
+                            times=times,
+                            predict_fun=predict_fun,
+                            ...)
+    output <- list(plotdata=plotdata)
+    class(output) <- "adjustedsurv.method"
   }
 
-  output <- list(plotdata=plotdata,
-                 ate_object=surv)
-  class(output) <- "adjustedsurv.method"
-
   return(output)
+}
+
+## using models other than coxph in method="direct" for
+## survival endpoints
+surv_g_comp <- function(outcome_model, data, variable, times,
+                        predict_fun, ...) {
+
+  # perform G-Computation
+  levs <- levels(data[,variable])
+  data_temp <- data
+  plotdata <- vector(mode="list", length=length(levs))
+  for (i in seq_len(length(levs))) {
+
+    # set variable to one level each
+    data_temp[,variable] <- factor(levs[i], levels=levs)
+
+    # use user-supplied custom prediction function
+    if (!is.null(predict_fun)) {
+      surv_lev <- predict_fun(outcome_model,
+                              newdata=data_temp,
+                              times=times,
+                              ...)
+    # use function from pec package for fast & easy survival prediction
+    # NOTE: while aalen & cox.aalen are not working in predictRisk, keep them
+    #       here
+    } else if (inherits(outcome_model, c("pecCforest", "pecRpart",
+                                         "selectCox", "aalen", "cox.aalen"))) {
+      requireNamespace("pec")
+
+      # get model.matrix if needed
+      if (inherits(outcome_model, c("aalen"))) {
+        mod_vars <- all.vars(outcome_model$call$formula)
+        mod_form <- paste0(" ~ ", paste0(mod_vars, collapse=" + "))
+        mod_data <- as.data.frame(stats::model.matrix(
+          stats::as.formula(mod_form), data=data_temp))
+      } else {
+        mod_data <- data_temp
+      }
+
+      # predict survival
+      surv_lev <- pec::predictSurvProb(outcome_model,
+                                       newdata=mod_data,
+                                       times=times,
+                                       ...)
+    # using predictRisk
+    # NOTE: - In this context "BinaryTree", "lrm", "rpart make no sense
+    #         because they don't allow prediction at multiple t
+    #       - Can't use "coxph.penal" due to bugs in predictRisk
+    #       - "hal9001" not tested, "singleEventCB" has problems
+    } else if (inherits(outcome_model, c("coxphTD", "prodlim", "psm",
+                                         "ranger", "rfsrc", "riskRegression",
+                                         "ARR", "penfitS3", "gbm",
+                                         "flexsurvreg", "singleEventCB",
+                                         "wglm", "hal9001"))) {
+
+      surv_lev <- riskRegression::predictRisk(object=outcome_model,
+                                              newdata=data_temp,
+                                              times=times,
+                                              cause=1,
+                                              ...)
+      surv_lev <- 1 - surv_lev
+
+    # using predictProb
+    } else if (inherits(outcome_model, c("glm", "ols", "randomForest"))) {
+      requireNamespace("pec")
+      predictProb <- utils::getFromNamespace("predictProb", "pec")
+
+      surv_lev <- predictProb(object=outcome_model,
+                              newdata=data_temp,
+                              times=times,
+                              ...)
+    # try to directly use S3 prediction function
+    } else {
+      surv_lev <- tryCatch(
+        expr={stats::predict(outcome_model,
+                             newdata=data_temp,
+                             times=times,
+                             ...)},
+        error=function(e){stop("The following error occured using",
+                               " the default S3 predict method: '", e,
+                               "' Specify a valid 'predict_fun' or",
+                               " use a different model. See details.")}
+      )
+    }
+
+    # take arithmetic mean of predictions and add those to the
+    # output object
+    surv_lev <- apply(X=surv_lev, MARGIN=2, FUN=mean, na.rm=TRUE)
+    row <- data.frame(time=times, surv=surv_lev, group=levs[i])
+    plotdata[[i]] <- row
+
+  }
+  plotdata <- dplyr::bind_rows(plotdata)
+  row.names(plotdata) <- seq_len(nrow(plotdata))
+
+  return(plotdata)
 }
 
 ## Using propensity score matching

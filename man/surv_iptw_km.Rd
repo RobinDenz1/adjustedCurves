@@ -64,7 +64,7 @@ Further arguments passed to \code{\link[WeightIt]{weightit}}.
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method does not depend on other packages directly. However the \code{WeightIt} package is required if \code{treatment_model} is a formula object.}
+\item{\strong{Dependencies:} This method does not depend on other packages directly. However the \pkg{WeightIt} package is required if \code{treatment_model} is a formula object.}
 }
 
 This method works by modelling the treatment assignment mechanism. Adjusted survival curves are calculated by first estimating appropriate case-weights for each observation in \code{data}. This can be done using inverse probability of treatment weights using the propensity score (usually estimated using a logistic regression model) or by some other method (see \code{?weightit}). Those weights are used in a weighted version of the Kaplan-Meier estimator proposed by Xie and Liu (2005). If the weights are correctly estimated the resulting estimates will be unbiased. The only difference to the \code{\link[=surv_iptw_cox]{iptw_cox}} method is a slightly different weighting approach.
@@ -137,12 +137,3 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         weight_method="optweight")
 }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

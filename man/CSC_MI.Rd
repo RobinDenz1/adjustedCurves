@@ -13,18 +13,18 @@ CSC_MI(mids, formula, ...)
 
 \arguments{
   \item{mids}{
-A \code{mids} object created using the \code{mice} function. This replaces the \code{data} argument in the original function call.
+A \code{mids} object created using the \code{\link[mice]{mice}} function. This replaces the \code{data} argument in the original function call.
   }
   \item{formula}{
-A formula object passed to the \code{CSC} function in the \code{riskRegression} package.
+A formula object passed to the \code{\link[riskRegression]{CSC}} function in the \pkg{riskRegression} package.
   }
   \item{...}{
-Other arguments which should be passed to the \code{CSC} function in the \code{riskRegression} package.
+Other arguments which should be passed to the \code{\link[riskRegression]{CSC}} function in the \pkg{riskRegression} package.
   }
 }
 \details{
 
-A small convenience function to perform CSC regression on multiply imputed data. It is simply a wrapper around the \code{CSC} function from the \code{riskRegression} package, because the usual use of \code{with} is not supported directly. It returns a \code{mira} object, which can be passed to the \code{outcome_model} argument inside of the \code{adjustedcif} function when needed. No \code{pool} method or other functionality is available.
+A small convenience function to perform CSC regression on multiply imputed data. It is simply a wrapper around the \code{\link[riskRegression]{CSC}} function from the \pkg{riskRegression} package, because the usual use of \code{with} is not supported directly. It returns a \code{mira} object, which can be passed to the \code{outcome_model} argument inside of the \code{\link[adjustedCurves]{adjustedcif}} function when needed. No \code{pool} method or other functionality is available.
 
 }
 \value{
@@ -38,7 +38,7 @@ Robin Denz
 }
 
 \seealso{
-\code{\link{adjustedsurv}}
+\code{\link{adjustedsurv}}, \code{\link[riskRegression]{CSC}}, \code{\link[mice]{mice}}
 }
 \examples{
 \dontrun{
@@ -64,12 +64,3 @@ csc_mods <- CSC_MI(mids=mids,
 
 }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

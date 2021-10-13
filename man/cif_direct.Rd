@@ -6,13 +6,13 @@ Direct Adjusted Cumulative Incidence Functions
 }
 \description{
 
-This page explains the details of estimating confounder-adjusted CIFs using a previously fit Cause-Specific Cox-Regression model or a Fine & Gray model in a competing risks setting. The function is called internally when using \code{method="direct"} in the \code{\link[=adjustedcif]{adjustedcif}} function. It is highly recommended to use \code{\link[=adjustedcif]{adjustedcif}} instead of calling this function directly.
+This page explains the details of estimating confounder-adjusted CIFs using a previously fit model to describe the outcome mechanism in a competing risks setting. The function is called internally when using \code{method="direct"} in the \code{\link[=adjustedcif]{adjustedcif}} function. It is highly recommended to use \code{\link[=adjustedcif]{adjustedcif}} instead of calling this function directly.
 
 }
 \usage{
 cif_direct(data, variable, ev_time, event, cause,
            conf_int, conf_level=0.95, times, outcome_model,
-           verbose=FALSE, ...)
+           verbose=FALSE, predict_fun=NULL, ...)
 }
 
 \arguments{
@@ -32,35 +32,38 @@ A character string specifying the numeric event indicator. The censoring indicat
 The cause of interest for which the cumulative incidence functions should be calculated. Should be a number that appears in the \code{event} column of \code{data}.
   }
   \item{conf_int}{
-A logical variable, indicating whether the asymptotic variances and confidence intervals of the CIFs should be calculated. Not available for all methods.
+A logical variable, indicating whether the asymptotic variances and confidence intervals of the CIFs should be calculated. Asymptotic variance calculations are only availabe if the \code{outcome_model} is a \code{CauseSpecificCox} model. The \code{\link[riskRegression]{ate}} function is used for the calculation in that case. Bootstrap confidence intervals can however be calculated with all supported models. See \code{?adjustedcif} for more information on bootstrapping.
   }
   \item{conf_level}{
 A number specifying the confidence level of asymptotic confidence intervals.
   }
   \item{outcome_model}{
-Must be a \code{CauseSpecificCox} model created using the \code{\link[riskRegression]{CSC}} function or a \code{FGR} model created using the \code{\link[riskRegression]{FGR}} function with \code{variable} as independent variable.
+Must be a previously fit model object including \code{variable} as independent variable. Apart from the classic \code{CauseSpecificCox} model this function also supports a variety of other models, such as the Fine & Gray model (\code{\link[riskRegression]{FGR}}). See \code{\link[adjustedCurves]{cif_direct_models}} for a list of supported model objects and some more details.
 }
   \item{times}{
 A numeric vector of time points at which the CIFs should be estimated.
 }
   \item{verbose}{
-Whether to print estimation information of the \code{ate} function in the \code{riskRegression} package. Ignored if a \code{FGR} model is supplied.
+Whether to print estimation information of the \code{ate} function in the \pkg{riskRegression} package. Ignored if a \code{outcome_model} is not a \code{CauseSpecificCox} model.
+}
+  \item{predict_fun}{
+A function which should be used to calculate the predicted cause-specific cumulative incidences given covariates and some points in time. This argument only needs to be specified if the kind of model supplied in the \code{outcome_model} is not directly supported. See \code{\link[adjustedCurves]{cif_direct_models}} for more information. Defaults to \code{NULL}.
 }
   \item{...}{
-Further arguments passed to \code{\link[riskRegression]{ate}} when a \code{CauseSpecificCox} model is supplied in the \code{outcome_model} argument, ignored otherwise.
+Further arguments passed to \code{\link[riskRegression]{ate}} when a \code{CauseSpecificCox} model is supplied in the \code{outcome_model} argument. Otherwise arguments are passed to the respective \code{predict} function. See \code{\link[adjustedCurves]{cif_direct_models}} for more details.
   }
 }
 \details{
 
 \itemize{
-\item{\strong{Type of Adjustment:} Requires a model describing the outcome mechanism. This must be either a Cause-Specific-Cox Model (\code{\link[riskRegression]{CSC}}) or a Fine & Gray model (\code{\link[riskRegression]{FGR}}).}
+\item{\strong{Type of Adjustment:} Requires a model describing the outcome mechanism. Both Cause-Specific-Cox models (\code{\link[riskRegression]{CSC}}) and Fine & Gray models (\code{\link[riskRegression]{FGR}}) are supported, as well as other models. See \code{\link[adjustedCurves]{cif_direct_models}} for a full list.}
 \item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
 \item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
 \item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are only available when using a Cause-Specific-Cox model.}
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on the \code{\link[riskRegression]{riskRegression}} package.}
+\item{\strong{Dependencies:} This method relies on the \pkg{riskRegression} package. Depending on \code{outcome_model} other packages might be needed. See \code{\link[adjustedCurves]{cif_direct_models}} for more details.}
 }
 
 This method works by executing the following steps: (1) First a model is fitted which describes the outcome mechanism (time-to-event). Next (2) multiple copies of the original dataset are created, one for each possible level of the \code{variable} of interest. (3) The \code{variable} is then set to one level for all observations in each dataset. (4) The model is used to predict the CIF at some points in time T for each observation in all dataset copies. (5) Those estimated probabilities are averaged for each dataset at each point in time, resulting in adjusted CIFs for all levels of the group variable at the specified points in time.
@@ -77,7 +80,7 @@ Xu Zhang and Mei-Jie Zhang. "SAS Macros for Estimation of Direct Adjusted Cumula
 Brice Maxime Hugues Ozenne, Thomas Harder Scheike, and Laila Staerk. "On the Estimation of Average Treatment Effects with Right-Censored Time to Event Outcome and Competing Risks". In: Biometrical Journal 62 (2020), pp. 751–763.
 }
 \author{
-The wrapper function was written by Robin Denz, the \code{ate} function (which this wrapper is build around) was written by other people. See \code{?ate} for more details.
+The function itself was written by Robin Denz. When using \code{CauseSpecificCox} models however, this function is just a wrapper around the \code{\link[riskRegression]{ate}} function, which was written by other people. See \code{?ate} for more information.
 }
 
 \seealso{
@@ -111,12 +114,3 @@ adjcif <- adjustedcif(data=sim_dat,
 plot(adjcif)
 }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

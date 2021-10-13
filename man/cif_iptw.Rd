@@ -48,7 +48,7 @@ Must be a \code{glm} or \code{multinom} model object with \code{variable} as res
 Either \code{NULL} to make no adjustments for dependent censoring, or a \code{coxph} object. See \code{?ate} for more details.
   }
   \item{verbose}{
-Whether to print estimation information of the \code{ate} function in the \code{riskRegression} package.
+Whether to print estimation information of the \code{ate} function in the \pkg{riskRegression} package.
   }
   \item{...}{
 Further arguments passed to \code{\link[riskRegression]{ate}}.
@@ -64,7 +64,7 @@ Further arguments passed to \code{\link[riskRegression]{ate}}.
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on the \code{\link[riskRegression]{riskRegression}} package}
+\item{\strong{Dependencies:} This method relies on the \pkg{riskRegression} package}
 }
 
 This method works by modelling the treatment assignment mechanism. Adjusted CIFs are calculated by first estimating appropriate case-weights for each observation in \code{data}. Those weights are used in a weighted version of the Aalen-Johansen estimator. If the weights are correctly estimated the resulting estimates will be unbiased. A more detailed description can be found in Neumann et al. (2016) and Choi et al. (2019). By utilizing another set of weights, this function can also correct the estimates for covariate-dependent censoring (Ozenne et al. 2020). Asymptotic variance calculations are based on the efficient influence curve.
@@ -109,12 +109,3 @@ adjcif <- adjustedcif(data=sim_dat,
 plot(adjcif)
 }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

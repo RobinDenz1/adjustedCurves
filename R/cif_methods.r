@@ -179,7 +179,7 @@ cif_iptw_pseudo <- function(data, variable, ev_time, event, cause,
 #' @export
 cif_direct <- function(data, variable, ev_time, event, cause, conf_int,
                        conf_level=0.95, times, outcome_model,
-                       verbose=FALSE, ...) {
+                       verbose=FALSE, predict_fun=NULL, ...) {
 
   # Using a Cause-Specific-Cox Model
   if (inherits(outcome_model, "CauseSpecificCox")) {
@@ -212,25 +212,15 @@ cif_direct <- function(data, variable, ev_time, event, cause, conf_int,
     class(output) <- "adjustedcif.method"
 
   # Using a Fine & Gray Model
-  } else if (inherits(outcome_model, "FGR")) {
+  } else {
 
-    predict.FGR <- utils::getFromNamespace("predict.FGR", "riskRegression")
-
-    # manually perform G-Computation
-    levs <- levels(data[,variable])
-    data_temp <- data
-    plotdata <- vector(mode="list", length=length(levs))
-    for (i in seq_len(length(levs))) {
-
-      data_temp[,variable] <- factor(levs[i], levels=levs)
-      cif_lev <- predict.FGR(outcome_model, newdata=data_temp, times=times)
-      cif_lev <- apply(X=cif_lev, MARGIN=2, FUN=mean, na.rm=TRUE)
-
-      row <- data.frame(time=times, cif=cif_lev, group=levs[i])
-      plotdata[[i]] <- row
-
-    }
-    plotdata <- dplyr::bind_rows(plotdata)
+    plotdata <- cif_g_comp(outcome_model=outcome_model,
+                           data=data,
+                           variable=variable,
+                           times=times,
+                           predict_fun=predict_fun,
+                           cause=cause,
+                           ...)
 
     output <- list(plotdata=plotdata)
     class(output) <- "adjustedcif.method"
@@ -238,6 +228,67 @@ cif_direct <- function(data, variable, ev_time, event, cause, conf_int,
   }
 
   return(output)
+}
+
+## using models other than coxph in method="direct" for
+## survival endpoints
+cif_g_comp <- function(outcome_model, data, variable, times,
+                       predict_fun, cause, ...) {
+
+  # perform G-Computation
+  levs <- levels(data[,variable])
+  data_temp <- data
+  plotdata <- vector(mode="list", length=length(levs))
+  for (i in seq_len(length(levs))) {
+
+    # set variable to one level each
+    data_temp[,variable] <- factor(levs[i], levels=levs)
+
+    # use user-supplied custom prediction function
+    if (!is.null(predict_fun)) {
+      surv_lev <- predict_fun(outcome_model,
+                              newdata=data_temp,
+                              times=times,
+                              cause=cause,
+                              ...)
+    # using predictRisk
+    # NOTE: 'ranger' and 'fitSmoothHazard' accept a cause in predictRisk
+    #       but don't actually work here.
+    } else if (inherits(outcome_model, c("prodlim", "FGR", "rfsrc",
+                                         "riskRegression", "ARR",
+                                         "hal9001"))) {
+
+      surv_lev <- riskRegression::predictRisk(object=outcome_model,
+                                              newdata=data_temp,
+                                              times=times,
+                                              cause=cause,
+                                              ...)
+
+    # using the S3 predict method
+    } else {
+      surv_lev <- tryCatch(
+        expr={stats::predict(outcome_model,
+                             newdata=data_temp,
+                             times=times,
+                             cause=cause,
+                             ...)},
+        error=function(e){stop("The following error occured using",
+                               " the default S3 predict method: '", e,
+                               "' Specify a valid 'predict_fun' or",
+                               " use a different model. See details.")}
+      )
+    }
+
+    # take arithmetic mean of predictions and add those to the
+    # output object
+    surv_lev <- apply(X=surv_lev, MARGIN=2, FUN=mean, na.rm=TRUE)
+    row <- data.frame(time=times, surv=surv_lev, group=levs[i])
+    plotdata[[i]] <- row
+  }
+  plotdata <- as.data.frame(dplyr::bind_rows(plotdata))
+  row.names(plotdata) <- seq_len(nrow(plotdata))
+
+  return(plotdata)
 }
 
 ## Matching

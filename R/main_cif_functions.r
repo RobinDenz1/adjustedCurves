@@ -244,8 +244,7 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
         # initialize clusters
         cl <- parallel::makeCluster(n_cores, outfile="")
         doParallel::registerDoParallel(cl)
-        pkgs <- c("adjustedCurves", "survival", "riskRegression",
-                  "prodlim")
+        pkgs <- (.packages())
         export_objs <- c("get_iptw_weights", "read_from_step_function",
                          "adjustedcif_boot", "trim_weights",
                          "geese_predictions", "load_needed_packages",
@@ -334,13 +333,6 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
 adjustedcif_boot <- function(data, variable, ev_time, event, cause, method,
                              times_input, times, i, cif_fun, levs,
                              na.action, ...) {
-
-  # get required packages
-  three_dots <- list(...)
-  load_needed_packages(method=method, kind="cif",
-                       treatment_model=three_dots$treatment_model,
-                       censoring_vars=three_dots$censoring_vars)
-  rm(three_dots)
 
   # draw sample
   indices <- sample(x=rownames(data), size=nrow(data), replace=TRUE)

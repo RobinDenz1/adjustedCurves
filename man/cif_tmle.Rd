@@ -78,7 +78,7 @@ Additional arguments passed to \code{survtmle}.
 \item{\strong{Allowed Time Values:} Allows only integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are not guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on the \code{survtmle} and \code{SuperLearner} packages.}
+\item{\strong{Dependencies:} This method relies on the \pkg{survtmle} and \pkg{SuperLearner} packages.}
 }
 
 TMLE is a two-step procedure. First, initial estimates for the treatment-assignment and the outcome-mechanisms are made using loss-based learning. This is implemented here using the \code{SuperLearner} methodology. In the next step, the estimates obtained by using the outcome-mechanism model are fluctuated based on information from the treatment-assignment model. If the outcome model is already consistent, this fluctuation is very small and the estimates stay consistent. If the outcome model is biased, the fluctuation removes the bias whenever the treatment assignment model is consistent. This process is iterative and continues until a threshold is hit (either the maximum number of iterations is reached or the bias is smaller than the specified tolerance, see \code{?survtmle}).
@@ -89,7 +89,7 @@ When the sample size is large or many time points are of interest, this method w
 
 }
 \value{
-Returns a \code{list} object containing a \code{data.frame} with estimated CIFs for some points in time for each level of \code{variable}, the object created using the \code{survtmle} function and the object created using the \code{survtmle.timepoints} function.
+Returns a \code{list} object containing a \code{data.frame} with estimated CIFs for some points in time for each level of \code{variable}, the object created using the \code{\link[survtmle]{survtmle}} function and the object created using the \code{survtmle.timepoints} function.
 }
 \references{
 Megan S. Schuler and Sherri Rose. "Targeted Maximum Likelihood Estimation for Causal Inference in Observational Studies". In: American Journal of Epidemiology 186.1 (2017), pp. 65-73.
@@ -97,7 +97,7 @@ Megan S. Schuler and Sherri Rose. "Targeted Maximum Likelihood Estimation for Ca
 David Benkeser, Marco Carone, and Peter B. Gilbert. "Improved Estimation of the Cumulative Incidence of Rare Outcomes". In: Statistics in Medicine 37.2 (2018), pp. 280–293.
 }
 \author{
-The wrapper function was written by Robin Denz, the \code{survtmle} package (which this wrapper is based on) was written by David Benkeser and Nima Hejazi. See \code{?survtmle} for more details.
+The wrapper function was written by Robin Denz, the \pkg{survtmle} package (which this wrapper is based on) was written by David Benkeser and Nima Hejazi. See \code{?survtmle} for more details.
 }
 
 \seealso{
@@ -129,12 +129,3 @@ adjcif <- adjustedcif(data=sim_dat,
 plot(adjcif, iso_reg=TRUE)
 }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

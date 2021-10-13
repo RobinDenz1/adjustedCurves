@@ -19,9 +19,9 @@
 #' @importFrom doRNG %dorng%
 #' @importFrom foreach %dopar%
 #' @export
-adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=FALSE,
-                         conf_level=0.95, times=NULL, bootstrap=FALSE,
-                         n_boot=500, n_cores=1,
+adjustedsurv <- function(data, variable, ev_time, event, method,
+                         conf_int=FALSE, conf_level=0.95, times=NULL,
+                         bootstrap=FALSE, n_boot=500, n_cores=1,
                          na.action=options("na.action")[[1]],
                          ...) {
 
@@ -244,11 +244,12 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=FALSE,
         # initialize clusters
         cl <- parallel::makeCluster(n_cores, outfile="")
         doParallel::registerDoParallel(cl)
-        pkgs <- c("adjustedCurves", "survival")
+        pkgs <- (.packages())
         export_objs <- c("get_iptw_weights", "read_from_step_function",
                          "adjustedsurv_boot", "trim_weights",
                          "calc_pseudo_surv", "geese_predictions",
-                         "load_needed_packages", "specific_times")
+                         "load_needed_packages", "specific_times",
+                         "surv_g_comp")
 
         boot_out <- foreach::foreach(i=1:n_boot, .packages=pkgs,
                                      .export=export_objs) %dorng% {
@@ -336,13 +337,6 @@ adjustedsurv <- function(data, variable, ev_time, event, method, conf_int=FALSE,
 adjustedsurv_boot <- function(data, variable, ev_time, event, method,
                               times_input, times, i, surv_fun, levs,
                               na.action, ...) {
-
-  # get required packages
-  three_dots <- list(...)
-  load_needed_packages(method=method, kind="surv",
-                       treatment_model=three_dots$treatment_model,
-                       censoring_vars=three_dots$censoring_vars)
-  rm(three_dots)
 
   # draw sample
   indices <- sample(x=rownames(data), size=nrow(data), replace=TRUE)
@@ -684,11 +678,13 @@ print.adjustedsurv <- function(x, ...) {
   cat("   - Method: ", method_name, "\n", sep="")
   cat("   - Times: ", times_str, "\n", sep="")
 
-  if (as.logical(toString(x$call$bootstrap))) {
-    cat("   - Bootstrapping: Performed with ", x$call$n_boot,
-        " Replications\n", sep="")
-  } else {
+  if (is.null(x$call$bootstrap) ||
+      !as.logical(as.character(x$call$bootstrap))) {
     cat("   - Bootstrapping: Not none\n", sep="")
+  } else {
+    n_boot <- ifelse(is.null(x$call$n_boot), 500, x$call$n_boot)
+    cat("   - Bootstrapping: Performed with ", n_boot,
+        " Replications\n", sep="")
   }
 
   if (is.null(x$call$conf_int) || !as.logical(as.character(x$call$conf_int))) {
