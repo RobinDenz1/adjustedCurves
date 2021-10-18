@@ -215,12 +215,14 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     }
   ## AIPTW
   } else if (method=="aiptw") {
-
-    if ((!"censoring_model" %in% names(obj)) &
-        (!"treatment_model" %in% names(obj)) &
-        (!"outcome_model" %in% names(obj))) {
-      stop("At least one of 'treatment_model', 'outcome_model' and ",
-           "'censoring_model' needs to be specified, see details.")
+    # need treatment_model
+    if (!"treatment_model" %in% names(obj)) {
+      stop("Argument 'treatment_model' must be specified when using",
+           " method='aiptw'.")
+    # need outcome_model
+    } else if (!"outcome_model" %in% names(obj)) {
+      stop("Argument 'outcome_model' must be specified when using",
+           " method='aiptw'.")
     }
   ## Direct
   } else if (method=="direct") {
@@ -570,11 +572,14 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
     }
   ## AIPTW
   } else if (method=="aiptw") {
-    if ((!"censoring_model" %in% names(obj)) &
-        (!"treatment_model" %in% names(obj)) &
-        (!"outcome_model" %in% names(obj))) {
-      stop("At least one of 'treatment_model', 'outcome_model' and ",
-           "'censoring_model' needs to be specified, see details.")
+    # need treatment_model
+    if (!"treatment_model" %in% names(obj)) {
+      stop("Argument 'treatment_model' must be specified when using",
+           " method='aiptw'.")
+      # need outcome_model
+    } else if (!"outcome_model" %in% names(obj)) {
+      stop("Argument 'outcome_model' must be specified when using",
+           " method='aiptw'.")
     }
   ## Direct
   } else if (method=="direct") {

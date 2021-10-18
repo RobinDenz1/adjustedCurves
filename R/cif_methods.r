@@ -348,8 +348,8 @@ cif_matching <- function(data, variable, ev_time, event, cause, conf_int,
 ## Using Augmented Inverse Probability of Treatment Weighting
 #' @export
 cif_aiptw <- function(data, variable, ev_time, event, cause, conf_int,
-                      conf_level=0.95, times, outcome_model=NULL,
-                      treatment_model=NULL, censoring_model=NULL,
+                      conf_level=0.95, times, outcome_model,
+                      treatment_model, censoring_model=NULL,
                       verbose=FALSE, ...) {
 
   # defaults for input models
@@ -357,16 +357,6 @@ cif_aiptw <- function(data, variable, ev_time, event, cause, conf_int,
     form <- paste0("survival::Surv(", ev_time, ", ", event, "==0) ~ 1")
     censoring_model <- survival::coxph(stats::as.formula(form), data=data,
                                        x=TRUE, y=TRUE)
-  }
-  if (is.null(treatment_model)) {
-    form <- paste0(variable, " ~ 1")
-    treatment_model <- stats::glm(stats::as.formula(form), data=data,
-                                  family="binomial")
-  }
-  if (is.null(outcome_model)) {
-    form <- paste0("prodlim::Hist(", ev_time, ", ", event, ") ~ 1")
-    outcome_model <- riskRegression::CSC(stats::as.formula(form),
-                                         data=data, x=TRUE)
   }
 
   # estimate AIPTW cumulative incidence

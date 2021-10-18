@@ -87,89 +87,57 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
                                 trim=trim, ...)
   }
 
-  # for later
-  times_input <- times
-
-  # weighted Kaplan-Meier estimator
   levs <- levels(data[,variable])
+
   plotdata <- vector(mode="list", length=length(levs))
+  for (i in seq_len(length(levs))){
 
-  for (i in seq_len(length(levs))) {
+    dat_group <- data[data[,variable]==levs[i],]
+    weights_group <- weights[data[,variable]==levs[i]]
 
-    data_lev <- data[data[,variable]==levs[i],]
-    weights_lev <- weights[data[,variable]==levs[i]]
+    # calculate weighted risk set and events
+    tj <- c(0, sort(unique(dat_group[,ev_time][dat_group[,event]==1])))
+    dj <- vapply(tj, function(x){sum(weights_group[dat_group[,ev_time]==x &
+                                                   dat_group[,event]==1])},
+                 FUN.VALUE=numeric(1))
+    yj <- vapply(tj, function(x){sum(weights_group[dat_group[,ev_time]>=x])},
+                 FUN.VALUE=numeric(1))
+    st <- cumprod(1 - (dj / yj))
 
-    times <- sort(unique(data_lev[,ev_time][data_lev[,event]==1]))
-    max_t <- max(data_lev[,ev_time])
+    plotdata_group <- data.frame(time=tj, surv=st, group=levs[i])
 
-    if (!0 %in% times) {
-      times <- c(0, times)
+    # adding approximate confidence intervals
+    if (conf_int) {
+
+      # variance calculation based of Xie et al.
+      m <- vapply(tj, FUN.VALUE=numeric(1),
+                  function(x){sum((weights_group[dat_group[,ev_time]>=x])^2)})
+      mj <- ((yj^2) / m)
+      fracj <- dj / (mj * (yj - dj))
+      fracj_cumsum <- cumsum(fracj)
+      Vst <- (st^2) * fracj_cumsum
+
+      # standard error
+      # NOTE: the n is already accounted for, so taking the sqrt() is
+      #       enough to calculate the standard error
+      plotdata_group$se <- sqrt(Vst)
+
+      # normal approximation
+      surv_ci <- confint_surv(surv=plotdata_group$surv,
+                              se=plotdata_group$se,
+                              conf_level=conf_level,
+                              conf_type="plain")
+      plotdata_group$ci_lower <- surv_ci$left
+      plotdata_group$ci_upper <- surv_ci$right
+
     }
-    if (!max_t %in% times) {
-      times <- c(times, max_t)
-    }
-
-    d_j <- vapply(times, function(x){sum(weights_lev[data_lev[,ev_time]==x &
-                                                   data_lev[,event]==1])},
-                  FUN.VALUE=numeric(1))
-    Y_j <- vapply(times, function(x){sum(weights_lev[data_lev[,ev_time]>=x])},
-                  FUN.VALUE=numeric(1))
-    S_t <- cumprod((Y_j-d_j)/Y_j)
-
-    plotdata[[i]] <- data.frame(time=times, surv=S_t, group=levs[i],
-                                d_j=d_j, Y_j=Y_j)
+    plotdata[[i]] <- plotdata_group
   }
+
   plotdata <- dplyr::bind_rows(plotdata)
 
-  # variance, confidence interval
-  if (conf_int) {
-    plotdata$se <- NA
-    plotdata$s_j <- 1 - (plotdata$d_j / plotdata$Y_j)
-
-    # get propensity scores
-    if (inherits(treatment_model, "glm")) {
-      ps_score <- treatment_model$fitted.values
-    } else if (inherits(treatment_model, "multinom")) {
-      predict.multinom <- utils::getFromNamespace("predict.multinom", "nnet")
-      ps_score <- predict.multinom(treatment_model, newdata=data, type="probs")
-    }
-
-    for (i in seq_len(length(levs))) {
-
-      # relevant propensity scores
-      if (length(levs) > 2) {
-        ps_score_lev <- ps_score[,levs[i]]
-      } else if (i==1) {
-        ps_score_lev <- 1 - ps_score
-      } else if (i==2) {
-        ps_score_lev <- ps_score
-      }
-
-      adj_km_lev <- plotdata[plotdata$group==levs[i],]
-
-      # calculate Mj for every relevant point in time
-      adj_km_lev$Mj <- vapply(adj_km_lev$time, calc_Mj, data=data,
-                              ev_time=ev_time, ps_score=ps_score_lev,
-                              FUN.VALUE=numeric(1))
-
-      # calculate variance at each point in time
-      iptw_km_var <- vapply(adj_km_lev$time, calc_iptw_km_var,
-                            adj_km=adj_km_lev, FUN.VALUE=numeric(1))
-      plotdata$se[plotdata$group==levs[i]] <- sqrt(iptw_km_var)
-    }
-    plotdata$s_j <- NULL
-
-    surv_cis <- confint_surv(surv=plotdata$surv, se=plotdata$se,
-                             conf_level=conf_level, conf_type="plain")
-    plotdata$ci_lower <- surv_cis$left
-    plotdata$ci_upper <- surv_cis$right
-  }
-
-  plotdata$d_j <- NULL
-  plotdata$Y_j <- NULL
-
-  if (!is.null(times_input)) {
-    plotdata <- specific_times(plotdata, times_input)
+  if (!is.null(times)) {
+    plotdata <- specific_times(plotdata, times)
   }
 
   output <- list(plotdata=plotdata,
@@ -177,12 +145,13 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
   class(output) <- "adjustedsurv.method"
 
   return(output)
+
 }
 
 ## IPTW with univariate cox-model
 # NOTE:
 # - using the G-Formula directly on the iptw cox model does not work,
-#   probably because all predict() functions ignore the weights when
+#   probably because all predict() methods ignore the weights when
 #   calculating the baseline hazard. Only this version is actually unbiased
 #' @export
 surv_iptw_cox <- function(data, variable, ev_time, event, conf_int,
@@ -394,7 +363,7 @@ surv_g_comp <- function(outcome_model, data, variable, times,
                                        times=times,
                                        ...)
     # using predictRisk
-    # NOTE: - In this context "BinaryTree", "lrm", "rpart make no sense
+    # NOTE: - In this context "BinaryTree", "lrm", "rpart" make no sense
     #         because they don't allow prediction at multiple t
     #       - Can't use "coxph.penal" due to bugs in predictRisk
     #       - "hal9001" not tested, "singleEventCB" has problems
@@ -509,8 +478,8 @@ surv_matching <- function(data, variable, ev_time, event, conf_int=FALSE,
 ## Using Augmented Inverse Probability of Treatment Weighting
 #' @export
 surv_aiptw <- function(data, variable, ev_time, event, conf_int,
-                       conf_level=0.95, times, outcome_model=NULL,
-                       treatment_model=NULL, censoring_model=NULL,
+                       conf_level=0.95, times, outcome_model,
+                       treatment_model, censoring_model=NULL,
                        verbose=FALSE, ...) {
 
   # defaults for input models
@@ -518,16 +487,6 @@ surv_aiptw <- function(data, variable, ev_time, event, conf_int,
     form <- paste0("survival::Surv(", ev_time, ", ", event, "==0) ~ 1")
     censoring_model <- survival::coxph(stats::as.formula(form), data=data,
                                        x=TRUE)
-  }
-  if (is.null(treatment_model)) {
-    form <- paste0(variable, " ~ 1")
-    treatment_model <- stats::glm(stats::as.formula(form), data=data,
-                                  family="binomial")
-  }
-  if (is.null(outcome_model)) {
-    form <- paste0("survival::Surv(", ev_time, ", ", event, ") ~ 1")
-    outcome_model <- survival::coxph(stats::as.formula(form), data=data,
-                                     x=TRUE)
   }
 
   # estimate AIPTW cumulative incidence

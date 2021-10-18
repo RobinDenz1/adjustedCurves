@@ -11,8 +11,8 @@ This page explains the details of estimating augmented inverse probability of tr
 }
 \usage{
 surv_aiptw(data, variable, ev_time, event, conf_int,
-           conf_level=0.95, times, outcome_model=NULL,
-           treatment_model=NULL, censoring_model=NULL,
+           conf_level=0.95, times, outcome_model,
+           treatment_model, censoring_model=NULL,
            verbose=FALSE, ...)
 }
 

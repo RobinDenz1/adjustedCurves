@@ -63,25 +63,6 @@ trim_weights <- function(weights, trim) {
 
 }
 
-## a stat needed to calculate the variance of the iptw_km method
-calc_Mj <- function(t, data, ev_time, ps_score) {
-
-  relevant_ps <- ps_score[data[,ev_time] >= t]
-  Mj <- ((sum(1/relevant_ps))^2) / (sum((1/relevant_ps)^2))
-  return(Mj)
-
-}
-
-## calculate the variance of iptw_km estimates
-calc_iptw_km_var <- function(t, adj_km) {
-
-  rel_t <- adj_km[adj_km$time <= t,]
-  rel_t$in_sum <- (1-rel_t$s_j) / (rel_t$Mj * rel_t$s_j)
-  var_iptw_km <- rel_t$surv[rel_t$time==t]^2 * sum(rel_t$in_sum)
-  return(var_iptw_km)
-
-}
-
 ## Computes the standard error of a weighted mean using one of
 ## four possible approximations
 weighted.var.se <- function(x, w, se_method, na.rm=FALSE) {
