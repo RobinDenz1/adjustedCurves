@@ -74,9 +74,9 @@ In contrast to all other methods, bootstrapped standard error and confidence int
 Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable} and the object created using the \code{Match} function.
 }
 \references{
-Angela Winnett and Peter Sasieni. "Adjusted Nelson-Aalen Estimates with Retrospective Matching". In: Journal of the American Statistical Association 97.457 (2002), pp. 245-256.
+Peter C. Austin. "The Use of Propensity Score Methods with Survival or Time-To-Event Outcomes: Reporting Measures of Effect Similar to those Used in Randomized Experiments". In: Statistics in Medicine 33 (2014), 1242-1258
 
-Peter C. Austin, Neal Thomas, and Donald B. Rubin. "Covariate-Adjusted Survival Analyses in Propensity-Score Matched Samples: Imputing Potential Time-To-Event Outcomes". In: Statistical Methods in Medical Research 29.3 (2020), pp. 728-751.
+Angela Winnett and Peter Sasieni. "Adjusted Nelson-Aalen Estimates with Retrospective Matching". In: Journal of the American Statistical Association 97.457 (2002), pp. 245-256.
 
 Alberto Abadie and Guido W. Imbens. "On the Failure of the Bootstrap for Matching Estimators". In: Econometrica 76.6 (2008), pp. 1537–1557.
 }

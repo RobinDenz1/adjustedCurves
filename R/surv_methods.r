@@ -1062,5 +1062,4 @@ surv_cupples <- function(data, variable, ev_time, event, conf_int=FALSE,
   class(output) <- "adjustedsurv.method"
 
   return(output)
-
 }
