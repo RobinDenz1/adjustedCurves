@@ -15,7 +15,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
   } else if (!method %in% c("km", "iptw_km", "iptw_cox", "iptw_pseudo",
                             "direct", "direct_pseudo", "aiptw_pseudo",
                             "aiptw", "tmle", "ostmle", "matching",
-                            "emp_lik")) {
+                            "emp_lik", "cupples")) {
     stop("Method '", method, "' is undefined. See documentation for ",
          "details on available methods.")
   # conf_int
@@ -245,6 +245,22 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
       stop("The final 'fit' object in the 'selectCox' model must be a",
            " coxph object, not survfit.")
     }
+  ## Cupples
+  } else if (method=="cupples") {
+    # need adjust_vars
+    if (!"adjust_vars" %in% names(obj)) {
+      stop("Argument 'adjust_vars' needs to be specified when using",
+           " method='cupples'.")
+    # no continuous confounders
+    } else if (inherits(data, "data.frame")) {
+      for (i in seq_len(length(obj$adjust_vars))) {
+        if (is.numeric(data[,obj$adjust_vars[i]]) &&
+            !all(floor(data[,obj$adjust_vars[i]])==data[,obj$adjust_vars[i]])) {
+          stop("Variables in 'adjust_vars' have to be integer, factor or",
+               "character variables. Continuous variables are not allowed.")
+        }
+      }
+    }
   }
 
   # bootstrapping
@@ -254,7 +270,8 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
   }
 
   # asymptotic variance calculations
-  if (conf_int & (method %in% c("emp_lik", "matching", "direct_pseudo"))) {
+  if (conf_int & (method %in% c("emp_lik", "matching", "direct_pseudo",
+                                "cupples"))) {
     warning("Asymptotic or exact variance calculations are currently",
             " not available for method='", method, "'. Use bootstrap=TRUE",
             " to get bootstrap estimates.")

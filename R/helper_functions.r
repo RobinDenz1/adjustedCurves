@@ -488,6 +488,8 @@ remove_unnecessary_covars <- function(data, method, variable, ev_time,
     } else {
       needed_covars <- colnames(data)
     }
+  } else if (method=="cupples") {
+    needed_covars <- c(needed_covars, args$adjust_vars)
   }
 
   # remove duplicates

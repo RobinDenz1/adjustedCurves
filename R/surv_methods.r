@@ -1009,3 +1009,58 @@ surv_ostmle <- function(data, variable, ev_time, event, conf_int,
 
   return(output)
 }
+
+## Adjustment based on a weighted average of stratified Kaplan-Meier estimates
+#' @export
+surv_cupples <- function(data, variable, ev_time, event, conf_int=FALSE,
+                         conf_level=0.95, times, adjust_vars, na.rm=FALSE) {
+
+  # devtools checks
+  . <- .COVARS <- time <- treat_group <- surv <- count <- NULL
+
+  # additional variables needed
+  # NOTE: This code assumes that there is no column named .ALL or .COVARS
+  #       and that there are no tabs in the column names
+  data$.ALL <- interaction(data[,c(variable, adjust_vars)], sep="\t")
+  data$.COVARS <- interaction(data[,adjust_vars], sep="\t")
+
+  # Kaplan-Meier survival curve for each possible strata at
+  # every event time
+  plotdata <- surv_km(data=data,
+                      variable=".ALL",
+                      ev_time=ev_time,
+                      event=event,
+                      times=times,
+                      conf_int=FALSE)$plotdata
+
+  # add indicator for treatment group and remove said treatment group from
+  # the 'group' variable
+  plotdata$treat_group <- sub("\t.*", "", plotdata$group)
+  plotdata$group <- sub(".*?\t", "", plotdata$group)
+
+  # add count of 'group' at baseline, ignoring treatment group
+  count_dat <- data %>%
+    dplyr::group_by(.COVARS) %>%
+    dplyr::summarise(count = dplyr::n())
+  colnames(count_dat)[1] <- c("group")
+
+  # merge together
+  plotdata <- merge(count_dat, plotdata, by="group", all.y=TRUE)
+
+  # take weighted in each treatment group at each t, over strata
+  plotdata <- plotdata %>%
+    dplyr::group_by(., time, treat_group) %>%
+    dplyr::summarise(surv=stats::weighted.mean(x=surv, w=count, na.rm=FALSE))
+  colnames(plotdata) <- c("time", "group", "surv")
+
+  # remove NAs
+  if (na.rm) {
+    plotdata <- plotdata[!is.na(plotdata$surv),]
+  }
+
+  output <- list(plotdata=as.data.frame(plotdata))
+  class(output) <- "adjustedsurv.method"
+
+  return(output)
+
+}
