@@ -210,7 +210,8 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
 
     # get event specific times
     times_input <- times
-    if (is.null(times) & !bootstrap & method %in% c("km", "iptw_km")) {
+    if (is.null(times) & !bootstrap & method %in% c("km", "iptw_km", "iptw_cox",
+                                                    "strat_amato")) {
       times <- NULL
     } else if (is.null(times)) {
       times <- sort(unique(data[, ev_time][data[, event]==1]))
@@ -665,6 +666,10 @@ print.adjustedsurv <- function(x, ...) {
     method_name <- "One-Step Targeted Maximum Likelihood Estimation"
   } else if (x$method=="km") {
     method_name <- "Kaplan-Meier Estimator"
+  } else if (x$method=="strat_cupples") {
+    method_name <- "Weighted Kaplan-Meier Stratification by Cupples et al."
+  } else if (x$method=="strat_amato") {
+    method_name <- "Weighted Kaplan-Meier Stratification by Amato"
   }
 
   times_str <- ifelse(is.null(x$call$times), "Event-Specific Times",

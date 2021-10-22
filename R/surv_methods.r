@@ -1011,9 +1011,11 @@ surv_ostmle <- function(data, variable, ev_time, event, conf_int,
 }
 
 ## Adjustment based on a weighted average of stratified Kaplan-Meier estimates
+## using the method by Cupples et al.
 #' @export
-surv_cupples <- function(data, variable, ev_time, event, conf_int=FALSE,
-                         conf_level=0.95, times, adjust_vars, na.rm=FALSE) {
+surv_strat_cupples <- function(data, variable, ev_time, event,
+                               conf_int=FALSE, conf_level=0.95, times,
+                               adjust_vars, na.rm=FALSE) {
 
   # devtools checks
   . <- .COVARS <- time <- treat_group <- surv <- count <- NULL
@@ -1061,5 +1063,95 @@ surv_cupples <- function(data, variable, ev_time, event, conf_int=FALSE,
   output <- list(plotdata=as.data.frame(plotdata))
   class(output) <- "adjustedsurv.method"
 
+  return(output)
+}
+
+## Adjustment based on a weighted average of stratified Kaplan-Meier estimates
+## using the method by Amato
+#' @export
+surv_strat_amato <- function(data, variable, ev_time, event,
+                             conf_int=FALSE, conf_level=0.95,
+                             times=NULL, adjust_vars) {
+
+  # silence checks
+  . <- group <- time <- wdj <- wcj <- wrj <- delta_wdj <- delta_wd <- wr <- NULL
+  times_input <- times
+
+  # proportions in reference data
+  data$.COVARS <- interaction(data[,adjust_vars])
+  Pjs <- prop.table(table(data$.COVARS))
+
+  levs <- levels(data[,variable])
+  levs_adjust_var <- levels(data$.COVARS)
+  out <- list()
+  for (i in seq_len(length(levs))) {
+
+    # data for treatment i
+    dat_I <- data[data[,variable]==levs[i],]
+    times <- c(0, sort(unique(dat_I[,ev_time][dat_I[,event]==1])))
+
+    for (j in seq_len(length(levs_adjust_var))) {
+
+      # data for treatment i and only strata j
+      dat_IJ <- dat_I[dat_I$.COVARS==levs_adjust_var[j],]
+
+      # weights for these individuals
+      ajn <- nrow(dat_I) * Pjs[levs_adjust_var[j]] / nrow(dat_IJ)
+
+      # people observed to fail
+      Ndj <- vapply(times, FUN=function(x) {sum(dat_IJ[,ev_time] <= x &
+                                                dat_IJ[,event]==1)},
+                    FUN.VALUE=numeric(1))
+      delta_Ndj <- vapply(times, FUN=function(x) {sum(dat_IJ[,ev_time] == x &
+                                                      dat_IJ[,event]==1)},
+                          FUN.VALUE=numeric(1))
+
+      # people censored
+      Ncj <- vapply(times, FUN=function(x) {sum(dat_IJ[,ev_time] <= x &
+                                                dat_IJ[,event]==0)},
+                    FUN.VALUE=numeric(1))
+      # people at risk
+      Nrj <- vapply(times, FUN=function(x) {sum(dat_IJ[,ev_time] >= x)},
+                    FUN.VALUE=numeric(1))
+
+      # put together
+      temp <- data.frame(time=times, ajn=ajn[[1]],
+                         Ndj=Ndj, Ncj=Ncj, Nrj=Nrj, delta_Ndj=delta_Ndj,
+                         strata=levs_adjust_var[j], group=levs[i])
+      out[[length(out)+1]] <- temp
+    }
+  }
+  dat_stats <- dplyr::bind_rows(out)
+
+  # calculate sums of weights
+  dat_stats$wdj <- dat_stats$Ndj * dat_stats$ajn
+  dat_stats$wcj <- dat_stats$Ncj * dat_stats$ajn
+  dat_stats$wrj <- dat_stats$Nrj * dat_stats$ajn
+  dat_stats$delta_wdj <- dat_stats$delta_Ndj * dat_stats$ajn
+
+  # calculate survival probability
+  plotdata <- dat_stats %>%
+    dplyr::group_by(., group, time) %>%
+    dplyr::summarise(wd=sum(wdj),
+                     wc=sum(wcj),
+                     wr=sum(wrj),
+                     delta_wd=sum(delta_wdj)) %>%
+    dplyr::mutate(., surv=cumprod(1 - (delta_wd / wr)))
+
+  # remove unnecessary variables
+  plotdata$wd <- NULL
+  plotdata$wc <- NULL
+  plotdata$wr <- NULL
+  plotdata$delta_wd <- NULL
+  plotdata$group <- factor(plotdata$group, levels=levs)
+  plotdata <- as.data.frame(plotdata)
+
+  if (!is.null(times_input)) {
+    plotdata <- specific_times(plotdata, times_input)
+  }
+
+  output <- list(plotdata=plotdata,
+                 Pjs=Pjs)
+  class(output) <- "adjustedsurv.method"
   return(output)
 }

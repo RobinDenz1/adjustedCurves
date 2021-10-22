@@ -488,7 +488,7 @@ remove_unnecessary_covars <- function(data, method, variable, ev_time,
     } else {
       needed_covars <- colnames(data)
     }
-  } else if (method=="cupples") {
+  } else if (method=="strat_cupples" | method=="strat_amato") {
     needed_covars <- c(needed_covars, args$adjust_vars)
   }
 

@@ -1,4 +1,5 @@
 library(survival)
+library(adjustedCurves)
 
 set.seed(42)
 
@@ -10,14 +11,13 @@ sim_dat <- sim_confounded_surv(n=200, list(x1=c("rbinom", 1, 0.5),
                                group_beta=0)
 sim_dat$group2 <- factor(sim_dat$group)
 
-
 ## Just check if function throws any errors
 test_that("2 treatments, one confounder, no boot", {
   expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
                                             variable="group2",
                                             ev_time="time",
                                             event="event",
-                                            method="cupples",
+                                            method="strat_amato",
                                             adjust_vars="x1"), NA)
 })
 
@@ -26,7 +26,7 @@ test_that("2 treatments, two confounders, no boot", {
                                             variable="group2",
                                             ev_time="time",
                                             event="event",
-                                            method="cupples",
+                                            method="strat_amato",
                                             adjust_vars=c("x1", "x3")), NA)
 })
 
@@ -35,7 +35,7 @@ test_that("2 treatments, two confounders, with boot", {
                                             variable="group2",
                                             ev_time="time",
                                             event="event",
-                                            method="cupples",
+                                            method="strat_amato",
                                             adjust_vars=c("x1", "x3"),
                                             bootstrap=TRUE,
                                             n_boot=2), NA)
@@ -52,7 +52,7 @@ test_that("> 2 treatments, one confounder, no boot", {
                                             variable="group",
                                             ev_time="time",
                                             event="event",
-                                            method="cupples",
+                                            method="strat_amato",
                                             adjust_vars="x1"), NA)
 })
 
@@ -61,7 +61,7 @@ test_that("> 2 treatments, two confounders, no boot", {
                                             variable="group",
                                             ev_time="time",
                                             event="event",
-                                            method="cupples",
+                                            method="strat_amato",
                                             adjust_vars=c("x1", "x3")), NA)
 })
 
@@ -70,7 +70,7 @@ test_that("> 2 treatments, two confounders, with boot", {
                                             variable="group",
                                             ev_time="time",
                                             event="event",
-                                            method="cupples",
+                                            method="strat_amato",
                                             adjust_vars=c("x1", "x3"),
                                             bootstrap=TRUE,
                                             n_boot=2), NA)

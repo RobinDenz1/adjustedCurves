@@ -1,18 +1,18 @@
-\name{surv_cupples}
-\alias{surv_cupples}
+\name{surv_strat_cupples}
+\alias{surv_strat_cupples}
 
 \title{
 Adjusted Survival Curves for Categorical Confounders using the Method by Cupples et al. (1995)
 }
 \description{
 
-This page explains the details of estimating confounder-adjusted survival curves using a weighted average of stratified Kaplan-Meier estimates using the method described in Cupples et al. (1995). The function is called internally when using \code{method="cupples"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function. It is highly recommended to use \code{\link[=adjustedsurv]{adjustedsurv}} instead of calling this function directly.
+This page explains the details of estimating confounder-adjusted survival curves using a weighted average of stratified Kaplan-Meier estimates using the method described in Cupples et al. (1995). The function is called internally when using \code{method="strat_cupples"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function. It is highly recommended to use \code{\link[=adjustedsurv]{adjustedsurv}} instead of calling this function directly.
 
 }
 \usage{
-surv_cupples(data, variable, ev_time, event,
-             conf_int=FALSE, conf_level=0.95,
-             times, adjust_vars, na.rm=FALSE)
+surv_strat_cupples(data, variable, ev_time, event,
+                   conf_int=FALSE, conf_level=0.95,
+                   times, adjust_vars, na.rm=FALSE)
 }
 
 \arguments{
@@ -90,7 +90,7 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         variable="group",
                         ev_time="time",
                         event="event",
-                        method="direct",
+                        method="strat_cupples",
                         adjust_vars=c("x1", "x3"),
                         conf_int=FALSE)
 

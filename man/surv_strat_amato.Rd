@@ -1,0 +1,95 @@
+\name{surv_strat_amato}
+\alias{surv_strat_amato}
+
+\title{
+Adjusted Survival Curves for Categorical Confounders using the Method by Amato (1988)
+}
+\description{
+
+This page explains the details of estimating confounder-adjusted survival curves using a weighted average of stratified Kaplan-Meier estimates using the method described in Amato (1999). The function is called internally when using \code{method="strat_amato"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function. It is highly recommended to use \code{\link[=adjustedsurv]{adjustedsurv}} instead of calling this function directly.
+
+}
+\usage{
+surv_strat_amato(data, variable, ev_time, event,
+                 conf_int=FALSE, conf_level=0.95,
+                 times=NULL, adjust_vars)
+}
+
+\arguments{
+  \item{data}{
+A \code{data.frame} object containing the needed time-to-event data in standard format.
+}
+  \item{variable}{
+A character string specifying the variable by which the survival curves should be grouped. Must be a valid column name of \code{data}. The variable specified should be a factor variable.
+}
+  \item{ev_time}{
+A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
+}
+  \item{event}{
+A character string specifying the binary event indicator. Must be a valid column name of \code{data}.
+}
+  \item{conf_int}{
+Currently not used because asymptotic variance calculations for this estimator have not been implemented.
+  }
+  \item{conf_level}{
+A number specifying the confidence level of asymptotic confidence intervals.
+  }
+  \item{times}{
+A numeric vector of time points at which the survival probability should be estimated or \code{NULL} (default). If \code{NULL}, the full survival curves are estimated using the standard method. If \code{times} is numeric, the full curves are still estimated and the respective values are simply read off the curves.
+}
+  \item{adjust_vars}{
+A single string or character vector specifying column names in data for which the survival curves should be adjusted for. The variables specified can be integers, factors or characters. Only categorical variables can be used with this method. See details.
+  }
+}
+\details{
+
+\itemize{
+\item{\strong{Type of Adjustment:} The survival curves are adjusted by calculating a weighted version of the Kaplan-Meier estimator, based on stratification on covariates. This only works for categorical confounders. See below for more information.}
+\item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
+\item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
+\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are not available.}
+\item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
+\item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
+\item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
+\item{\strong{Dependencies:} This method has no dependencies.}
+}
+
+This is one of the older adjustment methods desribed in the literature. It only works for categorical confounders. If adjustments for continuous confounders are desired, the user needs to explicitly categorize the continuous confounders. It is recommended to use one of the other methods implemented in this package in that case. The method works exactly as desribed in Amato (1988). The number of people at risk and the number of events in each stratum at each point in time is reweighted and combined into a single estimate for each treatment. \code{data} is used as reference population to calculate the weights. A more detailed description can be found in the original article.
+
+If a character vector is supplied in the \code{adjust_vars} argument, every possible combination of the variables specified in \code{adjust_vars} will be used as strata. This might lead to problems when there are strata with very little data in them.
+
+}
+\value{
+Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
+}
+\references{
+Amato, D. A. A Generalized Kaplan-Meier Estimator for Heterogenous Populations. Communications in Statistics: Theory and Methods, 1988, 17, 263-286
+}
+\author{
+Robin Denz
+}
+
+\seealso{
+\code{\link[adjustedCurves]{adjustedsurv}}
+}
+\examples{
+\dontrun{
+library(survival)
+
+# simulate some data as example
+sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat$group <- as.factor(sim_dat$group)
+
+# adjust survival curves for some categorical confounders
+adjsurv <- adjustedsurv(data=sim_dat,
+                        variable="group",
+                        ev_time="time",
+                        event="event",
+                        method="strat_amato",
+                        adjust_vars=c("x1", "x3"),
+                        conf_int=FALSE)
+
+# plot the curves
+plot(adjsurv)
+}
+}
