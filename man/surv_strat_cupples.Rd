@@ -68,7 +68,7 @@ Returns a \code{list} object containing a \code{data.frame} with the estimated a
 \references{
 Cupples, L. A.; Gragnon, D. R.; Ramaswamy, R. & D'Agostino, R. Age-Adjusted Survival Curves with Application in the Framingham Study. Statistics in Medicine, 1995, 14, 1731-1744
 
-Nieto, F. J. & Coresh, J. Adjusting Survival Curves for Confounders: A Review and a New Method. American Journal of Epidemiology, 1996, 143, 1059-1068
+Kramar A.; Com-Nougué, C. Estimation des courbes de survie ajustées. Revue d Épidémiologie et de Santé Publique, 1990, 38, 149-152
 }
 \author{
 Robin Denz
