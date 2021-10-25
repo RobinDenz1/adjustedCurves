@@ -1052,7 +1052,8 @@ surv_strat_cupples <- function(data, variable, ev_time, event,
   # take weighted in each treatment group at each t, over strata
   plotdata <- plotdata %>%
     dplyr::group_by(., time, treat_group) %>%
-    dplyr::summarise(surv=stats::weighted.mean(x=surv, w=count, na.rm=FALSE))
+    dplyr::summarise(surv=stats::weighted.mean(x=surv, w=count, na.rm=FALSE),
+                     .groups="drop_last")
   colnames(plotdata) <- c("time", "group", "surv")
 
   # remove NAs
@@ -1067,7 +1068,7 @@ surv_strat_cupples <- function(data, variable, ev_time, event,
 }
 
 ## Adjustment based on a weighted average of stratified Kaplan-Meier estimates
-## using the method by Amato
+## using the method by Amato (1988)
 #' @export
 surv_strat_amato <- function(data, variable, ev_time, event,
                              conf_int=FALSE, conf_level=0.95,
@@ -1135,7 +1136,8 @@ surv_strat_amato <- function(data, variable, ev_time, event,
     dplyr::summarise(wd=sum(wdj),
                      wc=sum(wcj),
                      wr=sum(wrj),
-                     delta_wd=sum(delta_wdj)) %>%
+                     delta_wd=sum(delta_wdj),
+                     .groups="drop_last") %>%
     dplyr::mutate(., surv=cumprod(1 - (delta_wd / wr)))
 
   # remove unnecessary variables
@@ -1153,5 +1155,83 @@ surv_strat_amato <- function(data, variable, ev_time, event,
   output <- list(plotdata=plotdata,
                  Pjs=Pjs)
   class(output) <- "adjustedsurv.method"
+  return(output)
+}
+
+## Adjustment based on a weighted average of stratified Kaplan-Meier estimates
+## using the method by Gregory (1988)
+#' @export
+surv_strat_gregory <- function(data, variable, ev_time, event,
+                               conf_int=FALSE, conf_level=0.95,
+                               times=NULL, adjust_vars, na.rm=FALSE) {
+
+  # silence checks
+  . <- time <- group <- frac <- frac_sum <- NULL
+
+  data$.COVARS <- interaction(data[,adjust_vars])
+  times_input <- times
+
+  # tk
+  times <- c(0, sort(unique(data[,ev_time][data[,event]==1])))
+
+  # n at risk over all strata and treatments
+  L..k <- vapply(times, FUN=function(x) {sum(data[,ev_time] >= x)},
+                 FUN.VALUE=numeric(1))
+
+  levs <- levels(data[,variable])
+  levs_adjust_var <- levels(data$.COVARS)
+  out <- list()
+  for (j in seq_len(length(levs_adjust_var))) {
+
+    # data for strata j
+    dat_J <- data[data$.COVARS==levs_adjust_var[j],]
+
+    # n at risk over all treatments for strata j
+    L.jk <- vapply(times, FUN=function(x) {sum(dat_J[,ev_time] >= x)},
+                   FUN.VALUE=numeric(1))
+    fjk <- L.jk / L..k
+
+    for (i in seq_len(length(levs))) {
+
+      # data for treatment i and strata j
+      dat_IJ <- dat_J[dat_J[,variable]==levs[i],]
+
+      # n at risk in treatment i and strata j
+      Lijk <- vapply(times, FUN=function(x) {sum(dat_IJ[,ev_time] >= x)},
+                     FUN.VALUE=numeric(1))
+
+      # 1 if event at t occurred in treatment group i and strata j
+      # 0 otherwise
+      dijk <- vapply(times, FUN=function(x) {sum(dat_IJ[,ev_time] == x &
+                                                 dat_IJ[,event]==1)},
+                     FUN.VALUE=numeric(1))
+
+      frac <- fjk * ((Lijk - dijk) / Lijk)
+
+      out[[length(out)+1]] <- data.frame(time=times,
+                                         frac=frac,
+                                         group=levs[i],
+                                         strata=levs_adjust_var[j])
+    }
+  }
+  dat_stats <- dplyr::bind_rows(out)
+
+  # calculate final survival estimates
+  plotdata <- dat_stats %>%
+    dplyr::group_by(., time, group) %>%
+    dplyr::summarise(frac_sum=sum(frac),
+                     .groups="drop_last") %>%
+    dplyr::group_by(., group) %>%
+    dplyr::mutate(surv=cumprod(frac_sum))
+  plotdata <- as.data.frame(plotdata)
+  plotdata$frac_sum <- NULL
+
+  if (!is.null(times_input)) {
+    plotdata <- specific_times(plotdata, times_input)
+  }
+
+  output <- list(plotdata=plotdata)
+  class(output) <- "adjustedsurv.method"
+
   return(output)
 }

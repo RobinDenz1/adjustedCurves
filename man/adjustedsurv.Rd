@@ -71,8 +71,9 @@ The primary purpose of the \code{adjustedsurv} function is to provide a convenie
   \item{"\link[=surv_aiptw_pseudo]{aiptw_pseudo}": An Augmented Inverse Probability of Treatment Weighting estimator using Pseudo-Values.}
   \item{"\link[=surv_tmle]{tmle}": Targeted Maximum Likelihood Estimation for survival curves.}
   \item{"\link[=surv_ostmle]{ostmle}": One-Step Targeted Maximum Likelihood Estimation for survival curves.}
-  \item{"\link[=surv_strat_cupples]{strat_cupples}": Adjusted Survival Curves for Categorical Confounders using the Method by Cupples et al. (1995).}
   \item{"\link[=surv_strat_amato]{strat_amato}": Adjusted Survival Curves for Categorical Confounders using the Method by Amato (1988).}
+  \item{"\link[=surv_strat_gregory]{strat_gregory}": Adjusted Survival Curves for Categorical Confounders using the Method by Gregory (1988).}
+  \item{"\link[=surv_strat_cupples]{strat_cupples}": Adjusted Survival Curves for Categorical Confounders using the Method by Cupples et al. (1995).}
   \item{"\link[=surv_km]{km}": A simple stratified Kaplan-Meier estimator without any form of adjustment.}
 }
 

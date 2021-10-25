@@ -15,7 +15,8 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
   } else if (!method %in% c("km", "iptw_km", "iptw_cox", "iptw_pseudo",
                             "direct", "direct_pseudo", "aiptw_pseudo",
                             "aiptw", "tmle", "ostmle", "matching",
-                            "emp_lik", "strat_cupples", "strat_amato")) {
+                            "emp_lik", "strat_cupples", "strat_amato",
+                            "strat_gregory")) {
     stop("Method '", method, "' is undefined. See documentation for ",
          "details on available methods.")
   # conf_int
@@ -142,11 +143,12 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
              "Add more points in time to 'times' and try again.")
       # spline_df
       } else if (!is.null(obj$spline_df) && (obj$spline_df > length(times))) {
-        warning("'spline_df' > len(times) might lead to problems.")
+        warning("'spline_df' > len(times) might lead to problems.",
+                call.=FALSE)
       } else if (!is.null(obj$type_time) && (5 > length(times) &
                                              obj$type_time!="factor")) {
         warning("'spline_df' > length(times)=5 might lead to problems when",
-                  " type_time!='factor'.")
+                  " type_time!='factor'.", call.=FALSE)
       }
     }
 
@@ -184,7 +186,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
         if (paste0(unique(data[,col]), collapse="") %in% c("10", "01")) {
           warning("Dichotomous variables coded with 0 and 1 found in ",
                   " 'treatment_vars'. Consider recoding to -1 and 1",
-                  " to avoid estimation problems.")
+                  " to avoid estimation problems.", call.=FALSE)
         }
       }
 
@@ -195,7 +197,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     if (bootstrap) {
       warning("Bootstrapping generally doesn't produce unbiased variance",
               " estimates with matching estimators. Use with caution. ",
-              "See ?surv_matching.")
+              "See ?surv_matching.", call.=FALSE)
     # treatment_model
     } else if (!"treatment_model" %in% names(obj)) {
       stop("Argument 'treatment_model' must be specified when using",
@@ -211,7 +213,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
                     is.numeric(obj$treatment_model))) {
       warning("Approximate confidence intervals currently not supported in ",
               "method='iptw_km' when 'treatment_model' is not a 'glm'",
-              " or 'multinom' object.")
+              " or 'multinom' object.", call.=FALSE)
     }
   ## AIPTW
   } else if (method=="aiptw") {
@@ -245,19 +247,21 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
       stop("The final 'fit' object in the 'selectCox' model must be a",
            " coxph object, not survfit.")
     }
-  ## Cupples / Amato
-  } else if (method=="strat_cupples" | method=="strat_amato") {
+  ## Cupples / Amato / Gregory
+  } else if (method=="strat_cupples" | method=="strat_amato" |
+             method=="strat_gregory") {
     # need adjust_vars
     if (!"adjust_vars" %in% names(obj)) {
       stop("Argument 'adjust_vars' needs to be specified when using",
-           " method='strat_cupples' or method='strat_amato'.")
+           " method='", method, "'.")
     # no continuous confounders
     } else if (inherits(data, "data.frame")) {
       for (i in seq_len(length(obj$adjust_vars))) {
         if (is.numeric(data[,obj$adjust_vars[i]]) &&
             !all(floor(data[,obj$adjust_vars[i]])==data[,obj$adjust_vars[i]])) {
           stop("Variables in 'adjust_vars' have to be integer, factor or",
-               "character variables. Continuous variables are not allowed.")
+               "character variables. Continuous variables are not allowed",
+               " when using method='", method, "'.")
         }
       }
     }
@@ -274,7 +278,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
                                 "strat_cupples", "strat_amato"))) {
     warning("Asymptotic or exact variance calculations are currently",
             " not available for method='", method, "'. Use bootstrap=TRUE",
-            " to get bootstrap estimates.")
+            " to get bootstrap estimates.", call.=FALSE)
   }
 }
 
@@ -374,7 +378,8 @@ check_inputs_adj_rmst <- function(adjsurv, from, to, use_boot) {
   } else if (use_boot & is.null(adjsurv$boot_data)) {
     warning("Cannot use bootstrapped estimates because",
             " they were not estimated.",
-            " Need 'bootstrap=TRUE' in 'adjustedsurv' function call.")
+            " Need 'bootstrap=TRUE' in 'adjustedsurv' function call.",
+            call.=FALSE)
   }
 
   if (to > max(adjsurv$adjsurv$time, na.rm=TRUE)) {
@@ -384,7 +389,7 @@ check_inputs_adj_rmst <- function(adjsurv, from, to, use_boot) {
   if (length(unique((adjsurv$adjsurv$time))) < 10) {
     warning("Using only a few points in time might lead to biased",
             " estimates. Consider using a finer times grid in",
-            " 'adjustedsurv'.")
+            " 'adjustedsurv'.", call.=FALSE)
   }
 
 }
@@ -423,13 +428,13 @@ check_inputs_adj_test <- function(adjsurv, from, to) {
     if (length(unique((adjsurv$adjsurv$time))) < 10) {
       warning("Using only a few points in time might lead to biased",
               " estimates. Consider using a finer times grid in",
-              " 'adjustedsurv'.")
+              " 'adjustedsurv'.", call.=FALSE)
     }
   } else {
     if (length(unique((adjsurv$adjcif$time))) < 10) {
       warning("Using only a few points in time might lead to biased",
               " estimates. Consider using a finer times grid in",
-              " 'adjustedcif'.")
+              " 'adjustedcif'.", call.=FALSE)
     }
   }
 }
@@ -560,10 +565,12 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
              "Add more points in time to 'times' and run again.")
       # spline_df
       } else if (!is.null(obj$spline_df) && (obj$spline_df > length(times))) {
-        warning("'spline_df' > len(times) might lead to problems.")
+        warning("'spline_df' > len(times) might lead to problems.",
+                call.=FALSE)
       } else if (!is.null(obj$type_time) &&
                  (5 > length(times) & obj$type_time!="factor")) {
-        warning("'spline_df' > len(times) might lead to problems.")
+        warning("'spline_df' > len(times) might lead to problems.",
+                call.=FALSE)
       }
     }
 
@@ -621,7 +628,7 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
   if (conf_int & (method %in% c("matching", "direct_pseudo"))) {
     warning("Asymptotic or exact variance calculations are currently",
             " not available for method='", method, "'. Use bootstrap=TRUE",
-            " to get bootstrap estimates.")
+            " to get bootstrap estimates.", call.=FALSE)
   }
 }
 

@@ -210,8 +210,10 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
 
     # get event specific times
     times_input <- times
-    if (is.null(times) & !bootstrap & method %in% c("km", "iptw_km", "iptw_cox",
-                                                    "strat_amato")) {
+    if (is.null(times) & !bootstrap & method %in% c("km", "iptw_km",
+                                                    "iptw_cox",
+                                                    "strat_amato",
+                                                    "strat_gregory")) {
       times <- NULL
     } else if (is.null(times)) {
       times <- sort(unique(data[, ev_time][data[, event]==1]))
@@ -356,14 +358,14 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
 
   # update models/recalculate weights using bootstrap sample
   pass_args <- list(...)
-  if ((method %in% c("direct", "aiptw")) &
+  if ((method %in% c("direct", "aiptw")) &&
       !inherits(pass_args$outcome_model, "formula")) {
     pass_args$outcome_model <- stats::update(pass_args$outcome_model,
                                              data=boot_samp)
   }
 
   if ((method %in% c("iptw_km", "iptw_cox", "iptw_pseudo", "aiptw",
-                    "aiptw_pseudo")) &&
+                     "aiptw_pseudo")) &&
       (inherits(pass_args$treatment_model, c("glm", "multinom")))) {
     pass_args$treatment_model <- stats::update(pass_args$treatment_model,
                                                data=boot_samp, trace=FALSE)
@@ -551,10 +553,10 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
   ## Confidence intervals
   if (draw_ci & use_boot & is.null(x$boot_adjsurv)) {
     warning("Cannot use bootstrapped estimates as they were not estimated.",
-            " Need bootstrap=TRUE in adjustedsurv() call.")
+            " Need bootstrap=TRUE in adjustedsurv() call.", call.=FALSE)
   } else if (draw_ci & !use_boot & !"ci_lower" %in% colnames(x$adjsurv)) {
     warning("Cannot draw confidence intervals. Either set 'conf_int=TRUE' in",
-            " 'adjustedsurv()' call or use bootstrap estimates.")
+            " 'adjustedsurv()' call or use bootstrap estimates.", call.=FALSE)
   } else if (draw_ci) {
 
     # plot using step-function interpolation
@@ -670,6 +672,8 @@ print.adjustedsurv <- function(x, ...) {
     method_name <- "Weighted Kaplan-Meier Stratification by Cupples et al."
   } else if (x$method=="strat_amato") {
     method_name <- "Weighted Kaplan-Meier Stratification by Amato"
+  } else if (x$method=="strat_gregory") {
+    method_name <- "Weighted Kaplan-Meier Stratification by Gregory"
   }
 
   times_str <- ifelse(is.null(x$call$times), "Event-Specific Times",

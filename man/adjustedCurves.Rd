@@ -16,7 +16,7 @@ It is well known that confounding is a serious problem when analyzing data from 
 
 \strong{\emph{What features are included in this package?}}
 
-This package includes 13 methods to calculate confounder-adjusted survival curves (single event) and eight methods to calculate confounder adjusted cumulative incidence functions (possibly with multiple competing events). It provides \code{plot} functions to easily produce highly customizable and publication-ready graphics. It also allows the user to easily calculate relevant statistics, such as confidence intervals, p-values, and adjusted restricted mean survival time estimates. Multiple Imputation is directly supported.
+This package includes 14 methods to calculate confounder-adjusted survival curves (single event) and eight methods to calculate confounder adjusted cumulative incidence functions (possibly with multiple competing events). It provides \code{plot} functions to easily produce highly customizable and publication-ready graphics. It also allows the user to easily calculate relevant statistics, such as confidence intervals, p-values, and adjusted restricted mean survival time estimates. Multiple Imputation is directly supported.
 
 \strong{\emph{How is this package designed?}}
 
