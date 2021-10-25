@@ -94,7 +94,7 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
       imp_data <- mids[mids$.imp==i,]
 
       # NOTE: need to add the data to the model object or ate() fails
-      if (!is.null(treatment_models) &
+      if (!is.null(treatment_models) &&
           inherits(treatment_models[[i]], "glm")) {
         treatment_models[[i]]$data <- imp_data
       }
@@ -382,7 +382,6 @@ adjustedcif_boot <- function(data, variable, ev_time, event, cause, method,
   return(adjcif_boot)
 
 }
-
 
 ## plot the cumulative incidence functions
 #' @importFrom rlang .data

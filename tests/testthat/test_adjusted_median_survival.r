@@ -9,15 +9,15 @@ adj <- adjustedsurv(data=sim_dat,
                     ev_time="time",
                     event="event",
                     method="km",
-                    conf_int=T,
-                    bootstrap=T,
+                    conf_int=TRUE,
+                    bootstrap=TRUE,
                     n_boot=10)
 
 test_that("median surv, no boot", {
-  expect_error(adjusted_median_survival(adj, use_boot=F), NA)
+  expect_error(adjusted_median_survival(adj, use_boot=FALSE), NA)
 })
 
 test_that("median surv, with boot", {
-  expect_error(adjusted_median_survival(adj, use_boot=T), NA)
+  expect_error(adjusted_median_survival(adj, use_boot=TRUE), NA)
 })
 

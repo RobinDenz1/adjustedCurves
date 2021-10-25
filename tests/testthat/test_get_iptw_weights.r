@@ -16,8 +16,8 @@ test_that("2 treatments, using glm", {
                                                  treatment_model=treat_mod,
                                                  weight_method="ps",
                                                  variable="group",
-                                                 stabilize=T,
-                                                 trim=F), NA)
+                                                 stabilize=TRUE,
+                                                 trim=FALSE), NA)
 })
 
 test_that("2 treatments, using weightit", {
@@ -25,8 +25,8 @@ test_that("2 treatments, using weightit", {
                                                 treatment_model=group ~ x2 + x3,
                                                 weight_method="ps",
                                                 variable="group",
-                                                stabilize=T,
-                                                trim=F), NA)
+                                                stabilize=TRUE,
+                                                trim=FALSE), NA)
 })
 
 test_that("2 treatments, using glm + trim", {
@@ -34,7 +34,7 @@ test_that("2 treatments, using glm + trim", {
                                                  treatment_model=treat_mod,
                                                  weight_method="ps",
                                                  variable="group",
-                                                 stabilize=T,
+                                                 stabilize=TRUE,
                                                  trim=3), NA)
 })
 
@@ -43,7 +43,7 @@ test_that("2 treatments, using weightit + trim", {
                                                 treatment_model=group ~ x2 + x3,
                                                 weight_method="ps",
                                                 variable="group",
-                                                stabilize=T,
+                                                stabilize=TRUE,
                                                 trim=3), NA)
 })
 
@@ -52,14 +52,14 @@ test_that("2 treatments, not using stabilize", {
                                                  treatment_model=treat_mod,
                                                  weight_method="ps",
                                                  variable="group",
-                                                 stabilize=T,
+                                                 stabilize=TRUE,
                                                  trim=3), NA)
 })
 
 ## 3 treatments
 sim_dat$group2 <- 0
 sim_dat$group2[sim_dat$group_num==1] <-
-  sample(c(1, 2), size=nrow(sim_dat[sim_dat$group_num==1,]), replace=T)
+  sample(c(1, 2), size=nrow(sim_dat[sim_dat$group_num==1,]), replace=TRUE)
 sim_dat$group2 <- ifelse(sim_dat$group2==1, "Placebo",
                          ifelse(sim_dat$group2==2, "Chemo", "OP"))
 sim_dat$group2 <- factor(sim_dat$group2)
@@ -72,8 +72,8 @@ test_that("3 treatments, using multinom", {
                                                  treatment_model=treat_mod,
                                                  weight_method="ps",
                                                  variable="group2",
-                                                 stabilize=T,
-                                                 trim=F), NA)
+                                                 stabilize=TRUE,
+                                                 trim=FALSE), NA)
 })
 
 test_that("3 treatments, using weightit", {
@@ -81,8 +81,8 @@ test_that("3 treatments, using weightit", {
                                                 treatment_model=group ~ x2 + x3,
                                                 weight_method="ps",
                                                 variable="group2",
-                                                stabilize=T,
-                                                trim=F), NA)
+                                                stabilize=TRUE,
+                                                trim=FALSE), NA)
 })
 
 test_that("3 treatments, using multinom + trim", {
@@ -90,7 +90,7 @@ test_that("3 treatments, using multinom + trim", {
                                                  treatment_model=treat_mod,
                                                  weight_method="ps",
                                                  variable="group2",
-                                                 stabilize=T,
+                                                 stabilize=TRUE,
                                                  trim=3), NA)
 })
 
@@ -99,7 +99,7 @@ test_that("3 treatments, using weightit + trim", {
                                                 treatment_model=group ~ x2 + x3,
                                                 weight_method="ps",
                                                 variable="group2",
-                                                stabilize=T,
+                                                stabilize=TRUE,
                                                 trim=3), NA)
 })
 
@@ -108,7 +108,7 @@ test_that("3 treatments, not using stabilize", {
                                                  treatment_model=treat_mod,
                                                  weight_method="ps",
                                                  variable="group2",
-                                                 stabilize=T,
+                                                 stabilize=TRUE,
                                                  trim=3), NA)
 })
 

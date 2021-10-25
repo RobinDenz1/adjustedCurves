@@ -9,8 +9,8 @@ adj <- adjustedsurv(data=sim_dat,
                     ev_time="time",
                     event="event",
                     method="km",
-                    conf_int=T,
-                    bootstrap=T,
+                    conf_int=TRUE,
+                    bootstrap=TRUE,
                     n_boot=10)
 
 test_that("rmst, no boot", {
@@ -18,7 +18,7 @@ test_that("rmst, no boot", {
 })
 
 test_that("rmst, with boot", {
-  expect_error(adjusted_rmst(adj, to=1.1, use_boot=T), NA)
+  expect_error(adjusted_rmst(adj, to=1.1, use_boot=TRUE), NA)
 })
 
 test_that("rmst, no boot, using from", {
@@ -26,5 +26,5 @@ test_that("rmst, no boot, using from", {
 })
 
 test_that("rmst, with boot, using from", {
-  expect_error(adjusted_rmst(adj, to=1.1, from=0.3, use_boot=T), NA)
+  expect_error(adjusted_rmst(adj, to=1.1, from=0.3, use_boot=TRUE), NA)
 })

@@ -8,7 +8,7 @@ sim_dat$group <- as.factor(sim_dat$group)
 
 # outcome model
 outc_mod <- survival::coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6,
-                            data=sim_dat, x=T)
+                            data=sim_dat, x=TRUE)
 
 # treatment model
 treat_mod <- glm(group ~ x1 + x2 + x3 + x4 + x5 + x6, data=sim_dat,
@@ -21,7 +21,7 @@ test_that("2 treatments, no conf_int, no boot", {
                                             ev_time="time",
                                             event="event",
                                             method="aiptw",
-                                            conf_int=F,
+                                            conf_int=FALSE,
                                             outcome_model=outc_mod,
                                             treatment_model=treat_mod), NA)
 })
@@ -32,7 +32,7 @@ test_that("2 treatments, with conf_int, no boot", {
                                             ev_time="time",
                                             event="event",
                                             method="aiptw",
-                                            conf_int=T,
+                                            conf_int=TRUE,
                                             outcome_model=outc_mod,
                                             treatment_model=treat_mod), NA)
 })
@@ -43,8 +43,8 @@ test_that("2 treatments, no conf_int, with boot", {
                                             ev_time="time",
                                             event="event",
                                             method="aiptw",
-                                            conf_int=F,
-                                            bootstrap=T,
+                                            conf_int=FALSE,
+                                            bootstrap=TRUE,
                                             n_boot=2,
                                             outcome_model=outc_mod,
                                             treatment_model=treat_mod), NA)
@@ -56,15 +56,15 @@ test_that("2 treatments, no conf_int, no boot, with times", {
                                             ev_time="time",
                                             event="event",
                                             method="aiptw",
-                                            conf_int=F,
-                                            bootstrap=F,
+                                            conf_int=FALSE,
+                                            bootstrap=FALSE,
                                             n_boot=2,
                                             outcome_model=outc_mod,
                                             treatment_model=treat_mod,
                                             times=c(0.8, 0.9)), NA)
 })
 
-cens_mod <- coxph(Surv(time, event==0) ~ x2, data=sim_dat, x=T)
+cens_mod <- coxph(Surv(time, event==0) ~ x2, data=sim_dat, x=TRUE)
 
 test_that("2 treatments, no conf_int, no boot, with times, with cens_mod", {
   expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
@@ -72,8 +72,8 @@ test_that("2 treatments, no conf_int, no boot, with times, with cens_mod", {
                                             ev_time="time",
                                             event="event",
                                             method="aiptw",
-                                            conf_int=F,
-                                            bootstrap=F,
+                                            conf_int=FALSE,
+                                            bootstrap=FALSE,
                                             n_boot=2,
                                             outcome_model=outc_mod,
                                             treatment_model=treat_mod,

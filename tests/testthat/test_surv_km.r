@@ -11,7 +11,7 @@ test_that("2 treatments, no conf_int, no boot", {
                                             ev_time="time",
                                             event="event",
                                             method="km",
-                                            conf_int=F), NA)
+                                            conf_int=FALSE), NA)
 })
 
 test_that("2 treatments, with conf_int, no boot", {
@@ -20,7 +20,7 @@ test_that("2 treatments, with conf_int, no boot", {
                                             ev_time="time",
                                             event="event",
                                             method="km",
-                                            conf_int=T), NA)
+                                            conf_int=TRUE), NA)
 })
 
 test_that("2 treatments, no conf_int, with boot", {
@@ -29,8 +29,8 @@ test_that("2 treatments, no conf_int, with boot", {
                                             ev_time="time",
                                             event="event",
                                             method="km",
-                                            conf_int=F,
-                                            bootstrap=T,
+                                            conf_int=FALSE,
+                                            bootstrap=TRUE,
                                             n_boot=2), NA)
 })
 
@@ -40,15 +40,15 @@ test_that("2 treatments, with conf_int, with boot", {
                                             ev_time="time",
                                             event="event",
                                             method="km",
-                                            conf_int=T,
-                                            bootstrap=T,
+                                            conf_int=TRUE,
+                                            bootstrap=TRUE,
                                             n_boot=2), NA)
 })
 
 sim_dat <- adjustedCurves::sim_confounded_surv(n=50)
 sim_dat$group[sim_dat$group==1] <- sample(c(1, 2),
                                           size=nrow(sim_dat[sim_dat$group==1,]),
-                                          replace=T)
+                                          replace=TRUE)
 sim_dat$group <- as.factor(sim_dat$group)
 
 
@@ -58,7 +58,7 @@ test_that("> 2 treatments, no conf_int, no boot", {
                                             ev_time="time",
                                             event="event",
                                             method="km",
-                                            conf_int=F), NA)
+                                            conf_int=FALSE), NA)
 })
 
 test_that("> 2 treatments, with conf_int, no boot", {
@@ -67,7 +67,7 @@ test_that("> 2 treatments, with conf_int, no boot", {
                                             ev_time="time",
                                             event="event",
                                             method="km",
-                                            conf_int=T), NA)
+                                            conf_int=TRUE), NA)
 })
 
 test_that("> 2 treatments, no conf_int, with boot", {
@@ -76,8 +76,8 @@ test_that("> 2 treatments, no conf_int, with boot", {
                                             ev_time="time",
                                             event="event",
                                             method="km",
-                                            conf_int=F,
-                                            bootstrap=T,
+                                            conf_int=FALSE,
+                                            bootstrap=TRUE,
                                             n_boot=2), NA)
 })
 
@@ -87,7 +87,7 @@ test_that("> 2 treatments, with conf_int, with boot", {
                                             ev_time="time",
                                             event="event",
                                             method="km",
-                                            conf_int=T,
-                                            bootstrap=T,
+                                            conf_int=TRUE,
+                                            bootstrap=TRUE,
                                             n_boot=2), NA)
 })

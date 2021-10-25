@@ -4,7 +4,7 @@ set.seed(42)
 
 sim_dat <- adjustedCurves::sim_confounded_surv(n=50)
 sim_dat$event[sim_dat$event==1] <- sample(c(1, 2), size=sum(sim_dat$event),
-                                          replace=T)
+                                          replace=TRUE)
 sim_dat$group <- as.factor(sim_dat$group)
 
 mod <- glm(group ~ x1 + x2 + x3 + x4 + x5 + x6, data=sim_dat,
@@ -17,7 +17,7 @@ test_that("2 treatments, no conf_int, no boot", {
                                            ev_time="time",
                                            event="event",
                                            method="iptw_pseudo",
-                                           conf_int=F,
+                                           conf_int=FALSE,
                                            treatment_model=mod,
                                            cause=1), NA)
 })
@@ -28,7 +28,7 @@ test_that("2 treatments, with conf_int, no boot", {
                                            ev_time="time",
                                            event="event",
                                            method="iptw_pseudo",
-                                           conf_int=T,
+                                           conf_int=TRUE,
                                            treatment_model=mod,
                                            cause=1), NA)
 })
@@ -39,8 +39,8 @@ test_that("2 treatments, no conf_int, with boot", {
                                            ev_time="time",
                                            event="event",
                                            method="iptw_pseudo",
-                                           conf_int=F,
-                                           bootstrap=T,
+                                           conf_int=FALSE,
+                                           bootstrap=TRUE,
                                            n_boot=2,
                                            treatment_model=mod,
                                            cause=1), NA)
@@ -52,8 +52,8 @@ test_that("2 treatments, with conf_int, with boot", {
                                            ev_time="time",
                                            event="event",
                                            method="iptw_pseudo",
-                                           conf_int=T,
-                                           bootstrap=T,
+                                           conf_int=TRUE,
+                                           bootstrap=TRUE,
                                            n_boot=2,
                                            treatment_model=mod,
                                            cause=1), NA)
@@ -65,8 +65,8 @@ test_that("2 treatments, no conf_int, with WeightIt", {
                                            ev_time="time",
                                            event="event",
                                            method="iptw_pseudo",
-                                           conf_int=F,
-                                           bootstrap=F,
+                                           conf_int=FALSE,
+                                           bootstrap=FALSE,
                                            treatment_model=group ~ x1 + x2,
                                            weight_method="ps",
                                            cause=1), NA)
@@ -78,8 +78,8 @@ test_that("2 treatments, no conf_int, with user-weights", {
                                            ev_time="time",
                                            event="event",
                                            method="iptw_pseudo",
-                                           conf_int=F,
-                                           bootstrap=F,
+                                           conf_int=FALSE,
+                                           bootstrap=FALSE,
                                            treatment_model=runif(n=50, min=1,
                                                                  max=2),
                                            cause=1)
@@ -89,9 +89,9 @@ test_that("2 treatments, no conf_int, with user-weights", {
 sim_dat <- adjustedCurves::sim_confounded_surv(n=100)
 sim_dat$group[sim_dat$group==1] <- sample(c(1, 2),
                                           size=nrow(sim_dat[sim_dat$group==1,]),
-                                          replace=T)
+                                          replace=TRUE)
 sim_dat$event[sim_dat$event==1] <- sample(c(1, 2), size=sum(sim_dat$event),
-                                          replace=T)
+                                          replace=TRUE)
 sim_dat$group <- as.factor(sim_dat$group)
 
 mod <- nnet::multinom(group ~ x1 + x2 + x3 + x4 + x5 + x6, data=sim_dat)
@@ -102,7 +102,7 @@ test_that("> 2 treatments, no conf_int, no boot, no ...", {
                                            ev_time="time",
                                            event="event",
                                            method="iptw_pseudo",
-                                           conf_int=F,
+                                           conf_int=FALSE,
                                            treatment_model=mod,
                                            cause=1), NA)
 })
@@ -113,7 +113,7 @@ test_that("> 2 treatments, with conf_int, no boot, no ...", {
                                            ev_time="time",
                                            event="event",
                                            method="iptw_pseudo",
-                                           conf_int=T,
+                                           conf_int=TRUE,
                                            treatment_model=mod,
                                            cause=1), NA)
 })
@@ -124,8 +124,8 @@ test_that("> 2 treatments, no conf_int, with boot, no ...", {
                                            ev_time="time",
                                            event="event",
                                            method="iptw_pseudo",
-                                           conf_int=F,
-                                           bootstrap=T,
+                                           conf_int=FALSE,
+                                           bootstrap=TRUE,
                                            n_boot=2,
                                            treatment_model=mod,
                                            cause=1), NA)
@@ -137,8 +137,8 @@ test_that("> 2 treatments, with conf_int, with boot, no ...", {
                                            ev_time="time",
                                            event="event",
                                            method="iptw_pseudo",
-                                           conf_int=T,
-                                           bootstrap=T,
+                                           conf_int=TRUE,
+                                           bootstrap=TRUE,
                                            n_boot=2,
                                            treatment_model=mod,
                                            cause=1), NA)
@@ -151,8 +151,8 @@ test_that("> 2 treatments, with conf_int, with boot, no ...", {
 #                                            ev_time="time",
 #                                            event="event",
 #                                            method="iptw_km",
-#                                            conf_int=F,
-#                                            bootstrap=F,
+#                                            conf_int=FALSE,
+#                                            bootstrap=FALSE,
 #                                            treatment_model=group ~ x1 + x2,
 #                                            weight_method="ps"), NA)
 #})
@@ -163,8 +163,8 @@ test_that("> 2 treatments, no conf_int, with user-weights", {
                                            ev_time="time",
                                            event="event",
                                            method="iptw_pseudo",
-                                           conf_int=F,
-                                           bootstrap=F,
+                                           conf_int=FALSE,
+                                           bootstrap=FALSE,
                                            treatment_model=runif(n=100, min=1,
                                                                  max=2),
                                            cause=1)

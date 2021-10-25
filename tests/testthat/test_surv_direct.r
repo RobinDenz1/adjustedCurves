@@ -7,7 +7,7 @@ sim_dat$group <- as.factor(sim_dat$group)
 
 # outcome model
 mod <- survival::coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6,
-                       data=sim_dat, x=T)
+                       data=sim_dat, x=TRUE)
 
 ## Just check if function throws any errors
 test_that("2 treatments, no conf_int, no boot", {
@@ -70,7 +70,7 @@ test_that("2 treatments, no conf_int, no boot, with times", {
 sim_dat <- adjustedCurves::sim_confounded_surv(n=90)
 sim_dat$group[sim_dat$group==1] <- sample(c(1, 2),
                                           size=nrow(sim_dat[sim_dat$group==1,]),
-                                          replace=T)
+                                          replace=TRUE)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # outcome model

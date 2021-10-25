@@ -6,7 +6,7 @@ set.seed(42)
 
 sim_dat <- adjustedCurves::sim_confounded_surv(n=65)
 sim_dat$event[sim_dat$event==1] <- sample(c(1, 2), size=sum(sim_dat$event),
-                                          replace=T)
+                                          replace=TRUE)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # outcome model
@@ -211,7 +211,7 @@ sim_dat$group[sim_dat$group==1] <- sample(c(1, 2),
                                           replace=T)
 sim_dat$group <- as.factor(sim_dat$group)
 sim_dat$event[sim_dat$event==1] <- sample(c(1, 2), size=sum(sim_dat$event),
-                                          replace=T)
+                                          replace=TRUE)
 
 # outcome models
 mod_CSC <- riskRegression::CSC(Hist(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6,

@@ -10,18 +10,18 @@ sim_dat$group <- as.factor(sim_dat$group)
 sim_dat$x1 <- ifelse(runif(n=100) <= 0.4, sim_dat$x1, NA)
 
 # impute dataset
-imp <- mice::mice(sim_dat, m=3, method="pmm", printFlag=F)
+imp <- mice::mice(sim_dat, m=3, method="pmm", printFlag=FALSE)
 
 # outcome model
 outc_mod <- with(imp, coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6,
-                            x=T))
+                            x=TRUE))
 
 # treatment model
 treat_mod <- with(imp, glm(group ~ x1 + x2 + x3 + x4 + x5 + x6,
                            family="binomial"))
 
 # censoring model
-cens_mod <- with(imp, coxph(Surv(time, event==0) ~ x1 + x2, x=T))
+cens_mod <- with(imp, coxph(Surv(time, event==0) ~ x1 + x2, x=TRUE))
 
 outc_vars <- c("x1", "x2", "x3", "x4", "x5", "x6")
 treat_vars <- c("x1", "x2", "x3", "x4", "x5", "x6")
@@ -33,7 +33,7 @@ test_that("MI, direct, no boot", {
                                             ev_time="time",
                                             event="event",
                                             method="direct",
-                                            conf_int=F,
+                                            conf_int=FALSE,
                                             outcome_model=outc_mod), NA)
 })
 
@@ -43,8 +43,8 @@ test_that("MI, direct, boot", {
                                             ev_time="time",
                                             event="event",
                                             method="direct",
-                                            conf_int=F,
-                                            bootstrap=T,
+                                            conf_int=FALSE,
+                                            bootstrap=TRUE,
                                             n_boot=3,
                                             outcome_model=outc_mod), NA)
 })
@@ -56,7 +56,7 @@ test_that("MI, direct_pseudo, no boot", {
                                             ev_time="time",
                                             event="event",
                                             method="direct_pseudo",
-                                            conf_int=F,
+                                            conf_int=FALSE,
                                             outcome_vars=outc_vars,
                                             type_time="bs"), NA)
 })
@@ -67,8 +67,8 @@ test_that("MI, direct_pseudo, boot", {
                                             ev_time="time",
                                             event="event",
                                             method="direct_pseudo",
-                                            conf_int=F,
-                                            bootstrap=T,
+                                            conf_int=FALSE,
+                                            bootstrap=TRUE,
                                             n_boot=3,
                                             outcome_vars=outc_vars,
                                             type_time="bs"), NA)
@@ -82,7 +82,7 @@ test_that("MI, iptw_km, no boot, glm", {
                                             ev_time="time",
                                             event="event",
                                             method="iptw_km",
-                                            conf_int=F,
+                                            conf_int=FALSE,
                                             treatment_model=treat_mod), NA)
 })
 
@@ -92,8 +92,8 @@ test_that("MI, iptw_km, boot, glm", {
                                             ev_time="time",
                                             event="event",
                                             method="iptw_km",
-                                            conf_int=F,
-                                            bootstrap=T,
+                                            conf_int=FALSE,
+                                            bootstrap=TRUE,
                                             n_boot=3,
                                             treatment_model=treat_mod), NA)
 })
@@ -105,7 +105,7 @@ test_that("MI, iptw_km, no boot, weightit", {
                                           ev_time="time",
                                           event="event",
                                           method="iptw_km",
-                                          conf_int=F,
+                                          conf_int=FALSE,
                                           treatment_model=group ~ x1 + x2 + x3),
                NA)
 })
@@ -116,8 +116,8 @@ test_that("MI, iptw_km, boot, weightit", {
                                           ev_time="time",
                                           event="event",
                                           method="iptw_km",
-                                          conf_int=F,
-                                          bootstrap=T,
+                                          conf_int=FALSE,
+                                          bootstrap=TRUE,
                                           n_boot=3,
                                           treatment_model=group ~ x1 + x2 + x3),
                NA)
@@ -132,7 +132,7 @@ test_that("MI, iptw_cox, no boot", {
                                             ev_time="time",
                                             event="event",
                                             method="iptw_cox",
-                                            conf_int=F,
+                                            conf_int=FALSE,
                                             treatment_model=treat_mod), NA)
 })
 
@@ -142,8 +142,8 @@ test_that("MI, iptw_cox, boot", {
                                             ev_time="time",
                                             event="event",
                                             method="iptw_cox",
-                                            conf_int=F,
-                                            bootstrap=T,
+                                            conf_int=FALSE,
+                                            bootstrap=TRUE,
                                             n_boot=3,
                                             treatment_model=treat_mod), NA)
 })
@@ -155,7 +155,7 @@ test_that("MI, iptw_cox, no boot, weightit", {
                                           ev_time="time",
                                           event="event",
                                           method="iptw_cox",
-                                          conf_int=F,
+                                          conf_int=FALSE,
                                           treatment_model=group ~ x1 + x2 + x3),
                NA)
 })
@@ -166,8 +166,8 @@ test_that("MI, iptw_cox, boot, weightit", {
                                           ev_time="time",
                                           event="event",
                                           method="iptw_cox",
-                                          conf_int=F,
-                                          bootstrap=T,
+                                          conf_int=FALSE,
+                                          bootstrap=TRUE,
                                           n_boot=3,
                                           treatment_model=group ~ x1 + x2 + x3),
                NA)
@@ -181,7 +181,7 @@ test_that("MI, iptw_pseudo, no boot", {
                                             ev_time="time",
                                             event="event",
                                             method="iptw_pseudo",
-                                            conf_int=F,
+                                            conf_int=FALSE,
                                             treatment_model=treat_mod), NA)
 })
 
@@ -191,8 +191,8 @@ test_that("MI, iptw_pseudo, boot", {
                                             ev_time="time",
                                             event="event",
                                             method="iptw_pseudo",
-                                            conf_int=F,
-                                            bootstrap=T,
+                                            conf_int=FALSE,
+                                            bootstrap=TRUE,
                                             n_boot=3,
                                             treatment_model=treat_mod), NA)
 })
@@ -204,7 +204,7 @@ test_that("MI, iptw_pseudo, no boot, weightit", {
                                           ev_time="time",
                                           event="event",
                                           method="iptw_pseudo",
-                                          conf_int=F,
+                                          conf_int=FALSE,
                                           treatment_model=group ~ x1 + x2 + x3),
                NA)
 })
@@ -215,8 +215,8 @@ test_that("MI, iptw_pseudo, boot, weightit", {
                                           ev_time="time",
                                           event="event",
                                           method="iptw_pseudo",
-                                          conf_int=F,
-                                          bootstrap=T,
+                                          conf_int=FALSE,
+                                          bootstrap=TRUE,
                                           n_boot=3,
                                           treatment_model=group ~ x1 + x2 + x3),
                NA)
@@ -229,7 +229,7 @@ test_that("MI, matching, no boot", {
                                             ev_time="time",
                                             event="event",
                                             method="matching",
-                                            conf_int=F,
+                                            conf_int=FALSE,
                                             treatment_model=treat_mod), NA)
 })
 
@@ -240,7 +240,7 @@ test_that("MI, aiptw, no boot", {
                                             ev_time="time",
                                             event="event",
                                             method="aiptw",
-                                            conf_int=F,
+                                            conf_int=FALSE,
                                             outcome_model=outc_mod,
                                             treatment_model=treat_mod), NA)
 })
@@ -251,8 +251,8 @@ test_that("MI, aiptw, boot", {
                                             ev_time="time",
                                             event="event",
                                             method="aiptw",
-                                            conf_int=F,
-                                            bootstrap=T,
+                                            conf_int=FALSE,
+                                            bootstrap=TRUE,
                                             n_boot=3,
                                             outcome_model=outc_mod,
                                             treatment_model=treat_mod), NA)
@@ -265,7 +265,7 @@ test_that("MI, aiptw_pseudo, no boot", {
                                             ev_time="time",
                                             event="event",
                                             method="aiptw_pseudo",
-                                            conf_int=F,
+                                            conf_int=FALSE,
                                             outcome_vars=outc_vars,
                                             treatment_model=treat_mod,
                                             type_time="bs"), NA)
@@ -277,8 +277,8 @@ test_that("MI, aiptw_pseudo, boot", {
                                             ev_time="time",
                                             event="event",
                                             method="aiptw_pseudo",
-                                            conf_int=F,
-                                            bootstrap=T,
+                                            conf_int=FALSE,
+                                            bootstrap=TRUE,
                                             n_boot=3,
                                             outcome_vars=outc_vars,
                                             treatment_model=treat_mod,
@@ -292,7 +292,7 @@ test_that("MI, km, no boot", {
                                             ev_time="time",
                                             event="event",
                                             method="km",
-                                            conf_int=F), NA)
+                                            conf_int=FALSE), NA)
 })
 
 test_that("MI, km, boot", {
@@ -301,8 +301,8 @@ test_that("MI, km, boot", {
                                             ev_time="time",
                                             event="event",
                                             method="km",
-                                            conf_int=F,
-                                            bootstrap=T,
+                                            conf_int=FALSE,
+                                            bootstrap=TRUE,
                                             n_boot=3), NA)
 })
 
@@ -311,7 +311,7 @@ sim_dat$x1 <- ifelse(sim_dat$x1==0, -1, 1)
 sim_dat$x2 <- ifelse(sim_dat$x2==0, -1, 1)
 sim_dat$x3 <- ifelse(sim_dat$x3==0, -1, 1)
 
-imp <- mice::mice(sim_dat, m=3, method="pmm", printFlag=F)
+imp <- mice::mice(sim_dat, m=3, method="pmm", printFlag=FALSE)
 
 test_that("MI, emp_lik, no boot", {
   expect_error(adjustedCurves::adjustedsurv(data=imp,
@@ -319,7 +319,7 @@ test_that("MI, emp_lik, no boot", {
                                             ev_time="time",
                                             event="event",
                                             method="emp_lik",
-                                            conf_int=F,
+                                            conf_int=FALSE,
                                             treatment_vars=treat_vars), NA)
 })
 
@@ -329,8 +329,8 @@ test_that("MI, emp_lik, boot", {
                                             ev_time="time",
                                             event="event",
                                             method="emp_lik",
-                                            conf_int=F,
-                                            bootstrap=T,
+                                            conf_int=FALSE,
+                                            bootstrap=TRUE,
                                             n_boot=3,
                                             treatment_vars=treat_vars), NA)
 })
@@ -341,28 +341,32 @@ adjsurv <- adjustedCurves::adjustedsurv(data=imp,
                                         ev_time="time",
                                         event="event",
                                         method="km",
-                                        bootstrap=T,
+                                        bootstrap=TRUE,
                                         n_boot=3,
                                         na.action="na.omit")
 
 test_that("adjusted_median_survival, no boot", {
-  expect_error(adjustedCurves::adjusted_median_survival(adjsurv, use_boot=F),
+  expect_error(adjustedCurves::adjusted_median_survival(adjsurv,
+                                                        use_boot=FALSE),
                NA)
 })
 
 test_that("adjusted_median_survival, boot", {
-  expect_error(adjustedCurves::adjusted_median_survival(adjsurv, use_boot=T),
+  expect_error(adjustedCurves::adjusted_median_survival(adjsurv,
+                                                        use_boot=TRUE),
                NA)
 })
 
 ### adjusted_rmst
 test_that("adjusted_rmst, no boot", {
-  expect_error(adjustedCurves::adjusted_rmst(adjsurv, from=0, to=1, use_boot=F),
+  expect_error(adjustedCurves::adjusted_rmst(adjsurv, from=0, to=1,
+                                             use_boot=FALSE),
                NA)
 })
 
 test_that("adjusted_rmst, boot", {
-  expect_error(adjustedCurves::adjusted_rmst(adjsurv, from=0, to=1, use_boot=T),
+  expect_error(adjustedCurves::adjusted_rmst(adjsurv, from=0, to=1,
+                                             use_boot=TRUE),
                NA)
 })
 
@@ -374,12 +378,12 @@ test_that("test_curve_equality, two treatments", {
 # create 3 treatments
 sim_dat$group2 <- 0
 sim_dat$group2[sim_dat$group==1] <-
-  sample(c(1, 2), size=nrow(sim_dat[sim_dat$group==1,]), replace=T)
+  sample(c(1, 2), size=nrow(sim_dat[sim_dat$group==1,]), replace=TRUE)
 sim_dat$group2 <- ifelse(sim_dat$group2==1, "Placebo",
                          ifelse(sim_dat$group2==2, "Chemo", "OP"))
 sim_dat$group2 <- factor(sim_dat$group2)
 
-imp <- mice::mice(sim_dat, m=3, method="pmm", printFlag=F)
+imp <- mice::mice(sim_dat, m=3, method="pmm", printFlag=FALSE)
 
 # fit adjustedsurv
 adjsurv <- adjustedCurves::adjustedsurv(data=imp,
@@ -387,7 +391,7 @@ adjsurv <- adjustedCurves::adjustedsurv(data=imp,
                                         ev_time="time",
                                         event="event",
                                         method="km",
-                                        bootstrap=T,
+                                        bootstrap=TRUE,
                                         n_boot=3,
                                         na.action="na.omit")
 

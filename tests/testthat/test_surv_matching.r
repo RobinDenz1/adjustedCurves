@@ -17,7 +17,7 @@ test_that("2 treatments, no conf_int, no boot", {
                                             ev_time="time",
                                             event="event",
                                             method="matching",
-                                            conf_int=F,
+                                            conf_int=FALSE,
                                             treatment_model=mod), NA)
 })
 
@@ -27,8 +27,8 @@ test_that("2 treatments, no conf_int, no boot, with ps_score", {
                                             ev_time="time",
                                             event="event",
                                             method="matching",
-                                            conf_int=F,
-                                            bootstrap=F,
+                                            conf_int=FALSE,
+                                            bootstrap=FALSE,
                                             n_boot=2,
                                             treatment_model=ps_score), NA)
 })

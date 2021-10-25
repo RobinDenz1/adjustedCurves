@@ -39,7 +39,7 @@ A numeric vector of time points at which the survival probability should be esti
 A character vector of column names specifying variables to be used as covariates in the empirical likelihood estimation. See details and examples.
 }
   \item{moment}{
-A character string specifying which moment to adjust for. See details.
+A character string specifying which moment to adjust for. Can be either \code{"first"} (default) or \code{"second"}.
 }
   \item{standardize}{
 A logical variable indicating whether the \code{treatment_vars} variables should be standardized. See details.

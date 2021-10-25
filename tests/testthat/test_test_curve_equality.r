@@ -12,8 +12,8 @@ adj <- adjustedsurv(data=sim_dat,
                     ev_time="time",
                     event="event",
                     method="km",
-                    conf_int=T,
-                    bootstrap=T,
+                    conf_int=TRUE,
+                    bootstrap=TRUE,
                     n_boot=10)
 
 test_that("test_curve_equality, no from", {
@@ -28,7 +28,7 @@ test_that("test_curve_equality, with from", {
 
 sim_dat <- sim_confounded_surv(n=200, max_t=1.5)
 sim_dat$event[sim_dat$event==1] <- sample(c(1, 2), size=sum(sim_dat$event),
-                                          replace=T)
+                                          replace=TRUE)
 sim_dat$group <- factor(sim_dat$group)
 
 adj <- adjustedcif(data=sim_dat,
@@ -37,8 +37,8 @@ adj <- adjustedcif(data=sim_dat,
                    event="event",
                    method="aalen_johansen",
                    cause=1,
-                   conf_int=T,
-                   bootstrap=T,
+                   conf_int=TRUE,
+                   bootstrap=TRUE,
                    n_boot=10)
 
 test_that("test_curve_equality, no from", {

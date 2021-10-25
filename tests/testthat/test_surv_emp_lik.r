@@ -19,7 +19,7 @@ test_that("2 treatments, no conf_int, no boot", {
                                             ev_time="time",
                                             event="event",
                                             method="emp_lik",
-                                            conf_int=F,
+                                            conf_int=FALSE,
                                             treatment_vars=treatment_vars), NA)
 })
 
@@ -29,8 +29,8 @@ test_that("2 treatments, no conf_int, with boot", {
                                             ev_time="time",
                                             event="event",
                                             method="emp_lik",
-                                            conf_int=F,
-                                            bootstrap=T,
+                                            conf_int=FALSE,
+                                            bootstrap=TRUE,
                                             n_boot=2,
                                             treatment_vars=treatment_vars), NA)
 })
@@ -41,8 +41,8 @@ test_that("2 treatments, no conf_int, no boot, with times", {
                                             ev_time="time",
                                             event="event",
                                             method="emp_lik",
-                                            conf_int=F,
-                                            bootstrap=F,
+                                            conf_int=FALSE,
+                                            bootstrap=FALSE,
                                             treatment_vars=treatment_vars,
                                             times=c(0.5, 0.8, 1)), NA)
 })

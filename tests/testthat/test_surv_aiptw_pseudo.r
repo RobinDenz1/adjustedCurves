@@ -21,7 +21,7 @@ test_that("2 treatments, no conf_int, no boot", {
                                             ev_time="time",
                                             event="event",
                                             method="aiptw_pseudo",
-                                            conf_int=F,
+                                            conf_int=FALSE,
                                             outcome_vars=outcome_vars,
                                             treatment_model=treat_mod,
                                             type_time="bs"), NA)
@@ -33,7 +33,7 @@ test_that("2 treatments, with conf_int, no boot", {
                                             ev_time="time",
                                             event="event",
                                             method="aiptw_pseudo",
-                                            conf_int=T,
+                                            conf_int=TRUE,
                                             outcome_vars=outcome_vars,
                                             treatment_model=treat_mod,
                                             type_time="bs"), NA)
@@ -45,8 +45,8 @@ test_that("2 treatments, no conf_int, with boot", {
                                             ev_time="time",
                                             event="event",
                                             method="aiptw_pseudo",
-                                            conf_int=F,
-                                            bootstrap=T,
+                                            conf_int=FALSE,
+                                            bootstrap=TRUE,
                                             n_boot=2,
                                             outcome_vars=outcome_vars,
                                             treatment_model=treat_mod,
@@ -59,8 +59,8 @@ test_that("2 treatments, no conf_int, no boot, with times, factor time", {
                                             ev_time="time",
                                             event="event",
                                             method="aiptw_pseudo",
-                                            conf_int=F,
-                                            bootstrap=F,
+                                            conf_int=FALSE,
+                                            bootstrap=FALSE,
                                             n_boot=2,
                                             outcome_vars=outcome_vars,
                                             treatment_model=treat_mod,
@@ -72,7 +72,7 @@ test_that("2 treatments, no conf_int, no boot, with times, factor time", {
 sim_dat <- adjustedCurves::sim_confounded_surv(n=50)
 sim_dat$group[sim_dat$group==1] <- sample(c(1, 2),
                                           size=nrow(sim_dat[sim_dat$group==1,]),
-                                          replace=T)
+                                          replace=TRUE)
 sim_dat$group <- as.factor(sim_dat$group)
 
 treat_mod <- nnet::multinom(group ~ x1 + x2, data=sim_dat)
@@ -83,7 +83,7 @@ test_that("> 2 treatments, no conf_int, no boot", {
                                             ev_time="time",
                                             event="event",
                                             method="aiptw_pseudo",
-                                            conf_int=F,
+                                            conf_int=FALSE,
                                             outcome_vars=outcome_vars,
                                             treatment_model=treat_mod,
                                             type_time="bs"), NA)
@@ -95,7 +95,7 @@ test_that("> 2 treatments, with conf_int, no boot", {
                                             ev_time="time",
                                             event="event",
                                             method="aiptw_pseudo",
-                                            conf_int=T,
+                                            conf_int=TRUE,
                                             outcome_vars=outcome_vars,
                                             treatment_model=treat_mod,
                                             type_time="bs"), NA)
@@ -107,8 +107,8 @@ test_that("> 2 treatments, no conf_int, with boot", {
                                             ev_time="time",
                                             event="event",
                                             method="aiptw_pseudo",
-                                            conf_int=F,
-                                            bootstrap=T,
+                                            conf_int=FALSE,
+                                            bootstrap=TRUE,
                                             n_boot=2,
                                             outcome_vars=outcome_vars,
                                             treatment_model=treat_mod,
@@ -121,8 +121,8 @@ test_that("> 2 treatments, no conf_int, no boot, with times, factor time", {
                                             ev_time="time",
                                             event="event",
                                             method="aiptw_pseudo",
-                                            conf_int=F,
-                                            bootstrap=F,
+                                            conf_int=FALSE,
+                                            bootstrap=FALSE,
                                             n_boot=2,
                                             outcome_vars=outcome_vars,
                                             treatment_model=treat_mod,

@@ -5,7 +5,7 @@ set.seed(42)
 
 sim_dat <- adjustedCurves::sim_confounded_surv(n=50)
 sim_dat$event[sim_dat$event==1] <- sample(c(1, 2), size=sum(sim_dat$event),
-                                          replace=T)
+                                          replace=TRUE)
 sim_dat$group <- as.factor(sim_dat$group)
 
 outcome_vars <- c("x1", "x2", "x3", "x4")
@@ -17,7 +17,7 @@ test_that("2 treatments, no conf_int, no boot", {
                                            ev_time="time",
                                            event="event",
                                            method="direct_pseudo",
-                                           conf_int=F,
+                                           conf_int=FALSE,
                                            outcome_vars=outcome_vars,
                                            type_time="bs",
                                            cause=1), NA)
@@ -29,8 +29,8 @@ test_that("2 treatments, no conf_int, with boot", {
                                            ev_time="time",
                                            event="event",
                                            method="direct_pseudo",
-                                           conf_int=F,
-                                           bootstrap=T,
+                                           conf_int=FALSE,
+                                           bootstrap=TRUE,
                                            n_boot=2,
                                            outcome_vars=outcome_vars,
                                            type_time="bs",
@@ -43,8 +43,8 @@ test_that("2 treatments, no conf_int, no boot, with times", {
                                            ev_time="time",
                                            event="event",
                                            method="direct_pseudo",
-                                           conf_int=F,
-                                           bootstrap=T,
+                                           conf_int=FALSE,
+                                           bootstrap=TRUE,
                                            n_boot=2,
                                            outcome_vars=outcome_vars,
                                            times=c(0.3, 0.8),
@@ -59,8 +59,8 @@ test_that("2 treatments, no conf_int, no boot, with times, type_time='factor'",
                                            ev_time="time",
                                            event="event",
                                            method="direct_pseudo",
-                                           conf_int=F,
-                                           bootstrap=F,
+                                           conf_int=FALSE,
+                                           bootstrap=FALSE,
                                            n_boot=5,
                                            outcome_vars=outcome_vars,
                                            times=c(0.3, 0.8),
@@ -71,10 +71,10 @@ test_that("2 treatments, no conf_int, no boot, with times, type_time='factor'",
 sim_dat <- adjustedCurves::sim_confounded_surv(n=60)
 sim_dat$group[sim_dat$group==1] <- sample(c(1, 2),
                                           size=nrow(sim_dat[sim_dat$group==1,]),
-                                          replace=T)
+                                          replace=TRUE)
 sim_dat$group <- as.factor(sim_dat$group)
 sim_dat$event[sim_dat$event==1] <- sample(c(1, 2), size=sum(sim_dat$event),
-                                          replace=T)
+                                          replace=TRUE)
 sim_dat$time <- round(sim_dat$time, 1)
 
 test_that("> 2 treatments, no conf_int, no boot", {
@@ -83,7 +83,7 @@ test_that("> 2 treatments, no conf_int, no boot", {
                                            ev_time="time",
                                            event="event",
                                            method="direct_pseudo",
-                                           conf_int=F,
+                                           conf_int=FALSE,
                                            outcome_vars=outcome_vars,
                                            type_time="bs",
                                            cause=1), NA)
@@ -95,8 +95,8 @@ test_that("> 2 treatments, no conf_int, with boot", {
                                            ev_time="time",
                                            event="event",
                                            method="direct_pseudo",
-                                           conf_int=F,
-                                           bootstrap=T,
+                                           conf_int=FALSE,
+                                           bootstrap=TRUE,
                                            n_boot=2,
                                            outcome_vars=outcome_vars,
                                            type_time="bs",
@@ -109,8 +109,8 @@ test_that("> 2 treatments, no conf_int, no boot, with times", {
                                            ev_time="time",
                                            event="event",
                                            method="direct_pseudo",
-                                           conf_int=F,
-                                           bootstrap=F,
+                                           conf_int=FALSE,
+                                           bootstrap=FALSE,
                                            n_boot=2,
                                            outcome_vars=outcome_vars,
                                            times=c(0.3, 0.8, 1, 1.5),
@@ -125,8 +125,8 @@ test_that("> 2 treatments, no conf_int, no boot, with times, type_time='factor'"
                                            ev_time="time",
                                            event="event",
                                            method="direct_pseudo",
-                                           conf_int=F,
-                                           bootstrap=F,
+                                           conf_int=FALSE,
+                                           bootstrap=FALSE,
                                            n_boot=5,
                                            outcome_vars=outcome_vars,
                                            times=c(0.3, 0.8, 1, 1.5),
