@@ -12,7 +12,8 @@ This page explains the details of estimating confounder-adjusted survival curves
 \usage{
 surv_strat_cupples(data, variable, ev_time, event,
                    conf_int=FALSE, conf_level=0.95,
-                   times, adjust_vars, na.rm=FALSE)
+                   times, adjust_vars, reference=NULL,
+                   na.rm=FALSE)
 }
 
 \arguments{
@@ -40,6 +41,9 @@ A numeric vector of time points at which the survival probability should be esti
   \item{adjust_vars}{
 A single string or character vector specifying column names in data for which the survival curves should be adjusted for. The variables specified can be integers, factors or characters. Only categorical variables can be used with this method. See details.
   }
+  \item{reference}{
+A \code{data.frame} to be used as a reference population when weighting the survival curves or \code{NULL} (default). If \code{NULL} the survival curves are weighted in reference to the full sample supplied using \code{data}, regardless of the \code{variable} level. If a \code{data.frame} is supplied it needs to include all variables specified in \code{adjust_vars}.
+  }
   \item{na.rm}{
 Whether to remove the rows from the output at which no survival probability could be estimated. The reason for the occurence of \code{NA} values is given in the details.
   }
@@ -57,7 +61,7 @@ Whether to remove the rows from the output at which no survival probability coul
 \item{\strong{Dependencies:} This method relies on the \pkg{survival} package.}
 }
 
-This is one of the older adjustment methods desribed in the literature. It only works for categorical confounders. If adjustments for continuous confounders are desired, the user needs to explicitly categorize the continuous confounders. It is recommended to use one of the other methods implemented in this package in that case. The method works exactly as desribed in Cupples et al. (1995). First, stratified Kaplan-Meier estimates for each possible combination of all supplied variables (\code{variable} + \code{adjust_vars}) are calculated. If for example a dichotomous \code{variable} with the levels "Treatment" and "Control" is supplied in conjunction with a single dichotomous confounder "Sex" with the levels "male" and "female", this method would calculate four Kaplan-Meier curves (Treatment + male, Treatment + female, Control + male, Control + female). Next a simple weighted average of these survival curves is taken per level in \code{variable}, where the weights are the number of occurences of each confounder level in the pooled sample. A more detailed description can be found in the original article.
+This is one of the older adjustment methods desribed in the literature. It only works for categorical confounders. If adjustments for continuous confounders are desired, the user needs to explicitly categorize the continuous confounders. It is recommended to use one of the other methods implemented in this package in that case. The method works exactly as desribed in Cupples et al. (1995). First, stratified Kaplan-Meier estimates for each possible combination of all supplied variables (\code{variable} + \code{adjust_vars}) are calculated. If for example a dichotomous \code{variable} with the levels "Treatment" and "Control" is supplied in conjunction with a single dichotomous confounder "Sex" with the levels "male" and "female", this method would calculate four Kaplan-Meier curves (Treatment + male, Treatment + female, Control + male, Control + female). Next a simple weighted average of these survival curves is taken per level in \code{variable}, where the weights are the number of occurences of each confounder level in the reference data. The reference data is the pooled sample by default, but external reference data can be used. A more detailed description can be found in the original article.
 
 If a character vector is supplied in the \code{adjust_vars} argument, the Kaplan-Meier estimates are created for each combination of all supplied variables. If the sample size is small and/or there are many levels in these variables, the estimates can become unstable or undefined. Because it is a weighted average of Kaplan-Meier curves, estimates for this method are only defined for points in time with a valied Kaplan-Meier estimate in all strata. Continuing the example from above, if the Kaplan-Meier curve of the strata "Treatment + male" only extends to t = 100, it will be impossible to estimate the adjusted survival curve for t > 100 using this method.
 

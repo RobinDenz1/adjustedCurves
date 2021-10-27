@@ -182,7 +182,7 @@ cif_direct <- function(data, variable, ev_time, event, cause, conf_int,
                        verbose=FALSE, predict_fun=NULL, ...) {
 
   # Using a Cause-Specific-Cox Model
-  if (inherits(outcome_model, "CauseSpecificCox")) {
+  if (inherits(outcome_model, "CauseSpecificCox") & is.null(predict_fun)) {
 
     cif <- riskRegression::ate(event=outcome_model,
                                treatment=variable,

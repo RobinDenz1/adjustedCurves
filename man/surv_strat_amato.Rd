@@ -12,7 +12,8 @@ This page explains the details of estimating confounder-adjusted survival curves
 \usage{
 surv_strat_amato(data, variable, ev_time, event,
                  conf_int=FALSE, conf_level=0.95,
-                 times=NULL, adjust_vars)
+                 times=NULL, adjust_vars,
+                 reference=NULL)
 }
 
 \arguments{
@@ -40,6 +41,9 @@ A numeric vector of time points at which the survival probability should be esti
   \item{adjust_vars}{
 A single string or character vector specifying column names in data for which the survival curves should be adjusted for. The variables specified can be integers, factors or characters. Only categorical variables can be used with this method. See details.
   }
+  \item{reference}{
+A \code{data.frame} to be used as a reference population when weighting the survival curves or \code{NULL} (default). If \code{NULL} the survival curves are weighted in reference to the full sample supplied using \code{data}, regardless of the \code{variable} level. If a \code{data.frame} is supplied it needs to include all variables specified in \code{adjust_vars}.
+  }
 }
 \details{
 
@@ -54,9 +58,9 @@ A single string or character vector specifying column names in data for which th
 \item{\strong{Dependencies:} This method has no dependencies.}
 }
 
-This is one of the older adjustment methods desribed in the literature. It only works for categorical confounders. If adjustments for continuous confounders are desired, the user needs to explicitly categorize the continuous confounders. It is recommended to use one of the other methods implemented in this package in that case. The method works exactly as desribed in Amato (1988). The number of people at risk and the number of events in each stratum at each point in time is reweighted and combined into a single estimate for each treatment. \code{data} is used as reference population to calculate the weights. A more detailed description can be found in the original article.
+This is one of the older adjustment methods desribed in the literature. It only works for categorical confounders. If adjustments for continuous confounders are desired, the user needs to explicitly categorize the continuous confounders. It is recommended to use one of the other methods implemented in this package in that case. The method works exactly as desribed in Amato (1988). The number of people at risk and the number of events in each stratum at each point in time is reweighted and combined into a single estimate for each treatment. The reference data used to calculate the weights is the pooled sample (\code{data}) by default, but external reference data can be supplied. A more detailed description can be found in the original article.
 
-If a character vector is supplied in the \code{adjust_vars} argument, every possible combination of the variables specified in \code{adjust_vars} will be used as strata. This might lead to problems when there are strata with very little data in them.
+If a character vector is supplied in the \code{adjust_vars} argument, every possible combination of the variables specified in \code{adjust_vars} will be used as strata. This might lead to problems when there are strata with very little data in them. In contrast to other stratification based methods however, this method allows the estimation of adjusted survival curves up to the last point in time at which there is at least one individual at risk in the pooled sample.
 
 }
 \value{

@@ -437,7 +437,7 @@ remove_unnecessary_covars <- function(data, method, variable, ev_time,
   }
 
   # extract variables from outcome model
-  if (inherits(args$outcome_model, "coxph")) {
+  if (inherits(args$outcome_model, c("coxph", "mexhaz"))) {
     outcome_vars <- all.vars(args$outcome_model$formula)
   } else if (inherits(args$outcome_model, c("CauseSpecificCox", "FGR", "aalen",
                                             "cox.aalen", "flexsurvreg",
@@ -510,7 +510,7 @@ load_needed_packages <- function(method, kind, treatment_model,
   if (kind=="surv") {
 
     # survival
-    if (method=="direct" | method=="km") {
+    if (method=="direct" | method=="km" | method=="strat_cupples") {
       requireNamespace("survival")
     }
 

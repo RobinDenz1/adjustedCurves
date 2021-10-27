@@ -360,8 +360,20 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
   pass_args <- list(...)
   if ((method %in% c("direct", "aiptw")) &&
       !inherits(pass_args$outcome_model, "formula")) {
-    pass_args$outcome_model <- stats::update(pass_args$outcome_model,
-                                             data=boot_samp)
+    # special case when using mexhaz
+    if (inherits(pass_args$outcome_model, "mexhaz")) {
+
+      # NOTE: currently not working due to a bug in update.mexhaz
+      stop("Bootstrapping is currently not possible when using",
+           " models of class 'mexhaz' due to a bug in update.mexhaz().")
+      pass_args$outcome_model <- stats::update(object=pass_args$outcome_model,
+                                               formula=outcome_model$formula,
+                                               data=boot_samp,
+                                               base=outcome_model$base)
+    } else {
+      pass_args$outcome_model <- stats::update(pass_args$outcome_model,
+                                               data=boot_samp)
+    }
   }
 
   if ((method %in% c("iptw_km", "iptw_cox", "iptw_pseudo", "aiptw",
@@ -556,7 +568,7 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
             " Need bootstrap=TRUE in adjustedsurv() call.", call.=FALSE)
   } else if (draw_ci & !use_boot & !"ci_lower" %in% colnames(x$adjsurv)) {
     warning("Cannot draw confidence intervals. Either set 'conf_int=TRUE' in",
-            " 'adjustedsurv()' call or use bootstrap estimates.", call.=FALSE)
+            " adjustedsurv() call or use bootstrap estimates.", call.=FALSE)
   } else if (draw_ci) {
 
     # plot using step-function interpolation

@@ -283,7 +283,7 @@ surv_direct <- function(data, variable, ev_time, event, conf_int,
                         verbose=FALSE, predict_fun=NULL,  ...) {
 
   # using the ate function
-  if (inherits(outcome_model, c("coxph", "cph"))) {
+  if (inherits(outcome_model, c("coxph", "cph")) & is.null(predict_fun)) {
     surv <- riskRegression::ate(event=outcome_model, treatment=variable,
                                 data=data, estimator="Gformula",
                                 times=times, se=conf_int, verbose=verbose,
@@ -372,6 +372,7 @@ surv_g_comp <- function(outcome_model, data, variable, times,
                                          "ARR", "penfitS3", "gbm",
                                          "flexsurvreg", "singleEventCB",
                                          "wglm", "hal9001"))) {
+      requireNamespace("riskRegression")
 
       surv_lev <- riskRegression::predictRisk(object=outcome_model,
                                               newdata=data_temp,
@@ -389,6 +390,13 @@ surv_g_comp <- function(outcome_model, data, variable, times,
                               newdata=data_temp,
                               times=times,
                               ...)
+    # some customly created functions from here
+    } else if (inherits(outcome_model, "mexhaz")) {
+      # can't do predictions at 0
+      times <- times[times > 0]
+      surv_lev <- sapply(X=times, object=outcome_model, data.val=data_temp,
+                   FUN=function(x, ...){
+                     stats::predict(time.pts=x, ...)$results$surv})
     # try to directly use S3 prediction function
     } else {
       surv_lev <- tryCatch(
@@ -1015,7 +1023,7 @@ surv_ostmle <- function(data, variable, ev_time, event, conf_int,
 #' @export
 surv_strat_cupples <- function(data, variable, ev_time, event,
                                conf_int=FALSE, conf_level=0.95, times,
-                               adjust_vars, na.rm=FALSE) {
+                               adjust_vars, reference=NULL, na.rm=FALSE) {
 
   # devtools checks
   . <- .COVARS <- time <- treat_group <- surv <- count <- NULL
@@ -1024,7 +1032,10 @@ surv_strat_cupples <- function(data, variable, ev_time, event,
   # NOTE: This code assumes that there is no column named .ALL or .COVARS
   #       and that there are no tabs in the column names
   data$.ALL <- interaction(data[,c(variable, adjust_vars)], sep="\t")
-  data$.COVARS <- interaction(data[,adjust_vars], sep="\t")
+  if (is.null(reference)) {
+    reference <- data
+  }
+  reference$.COVARS <- interaction(reference[,adjust_vars], sep="\t")
 
   # Kaplan-Meier survival curve for each possible strata at
   # every event time
@@ -1041,7 +1052,7 @@ surv_strat_cupples <- function(data, variable, ev_time, event,
   plotdata$group <- sub(".*?\t", "", plotdata$group)
 
   # add count of 'group' at baseline, ignoring treatment group
-  count_dat <- data %>%
+  count_dat <- reference %>%
     dplyr::group_by(.COVARS) %>%
     dplyr::summarise(count = dplyr::n())
   colnames(count_dat)[1] <- c("group")
@@ -1072,15 +1083,21 @@ surv_strat_cupples <- function(data, variable, ev_time, event,
 #' @export
 surv_strat_amato <- function(data, variable, ev_time, event,
                              conf_int=FALSE, conf_level=0.95,
-                             times=NULL, adjust_vars) {
+                             times=NULL, adjust_vars, reference=NULL) {
 
   # silence checks
   . <- group <- time <- wdj <- wcj <- wrj <- delta_wdj <- delta_wd <- wr <- NULL
   times_input <- times
 
   # proportions in reference data
+  if (is.null(reference)) {
+    reference <- data
+  }
+  reference$.COVARS <- interaction(reference[,adjust_vars])
+  Pjs <- prop.table(table(reference$.COVARS))
+
+  # also calculate strata variable in data
   data$.COVARS <- interaction(data[,adjust_vars])
-  Pjs <- prop.table(table(data$.COVARS))
 
   levs <- levels(data[,variable])
   levs_adjust_var <- levels(data$.COVARS)

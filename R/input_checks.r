@@ -265,6 +265,14 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
         }
       }
     }
+    # valid reference data
+    if ((method=="strat_cupples" | method=="strat_amato") &
+        !is.null(obj$reference)) {
+      if (all(obj$adjust_vars %in% colnames(obj$reference))) {
+        stop("If a 'reference' data.frame is supplied, it needs to contain",
+             " all variables listed in 'adjust_vars'.")
+      }
+    }
   }
 
   # bootstrapping

@@ -495,6 +495,9 @@ test_that("glm, > 2 treatments, with boot", {
 #mod_fitSmoothHazard <- casebase::fitSmoothHazard(event ~ time + x1 + group,
 #                                                 sim_dat, ratio=10)
 #
+#library(mexhaz)
+#mod_mexhaz <- mexhaz::mexhaz(Surv(time, event) ~ group + x1 + x6, data=sim_dat)
+#
 #test_that("pecCforest, 2 treatments, no boot", {
 #  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
 #                                            variable="group",
@@ -784,6 +787,30 @@ test_that("glm, > 2 treatments, with boot", {
 #                                            method="direct",
 #                                            conf_int=FALSE,
 #                                            outcome_model=mod_fitSmoothHazard,
+#                                            bootstrap=TRUE,
+#                                            n_boot=2),
+#               NA)
+#})
+#
+#test_that("mexhaz, 2 treatments, no boot", {
+#  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
+#                                            variable="group",
+#                                            ev_time="time",
+#                                            event="event",
+#                                            method="direct",
+#                                            conf_int=FALSE,
+#                                            outcome_model=mod_mexhaz),
+#               NA)
+#})
+#
+#test_that("mexhaz, 2 treatments, with boot", {
+#  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
+#                                            variable="group",
+#                                            ev_time="time",
+#                                            event="event",
+#                                            method="direct",
+#                                            conf_int=FALSE,
+#                                            outcome_model=mod_mexhaz,
 #                                            bootstrap=TRUE,
 #                                            n_boot=2),
 #               NA)
