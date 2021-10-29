@@ -602,3 +602,10 @@ load_needed_packages <- function(method, kind, treatment_model,
     }
   }
 }
+
+## suppress cat() output
+quiet <- function(x) {
+  sink(tempfile())
+  on.exit(sink())
+  invisible(force(x))
+}

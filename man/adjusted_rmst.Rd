@@ -47,7 +47,7 @@ If multiple imputation was used when creating the \code{adjsurv} object, the ana
 \value{
 Returns a \code{adjusted_rmst} object containing the following object:
 
-\item{rmsts}{A named vector containing the adjusted restricted mean survival time estimates.
+\item{auc}{A named vector containing the adjusted restricted mean survival time estimates.
 }
 \item{from}{\code{from} argument in function call.
 }
@@ -60,13 +60,13 @@ If \code{use_boot} is set to \code{TRUE} and \code{bootstrap} was also set to \c
 }
 \item{n_boot}{The numbers of bootstrap iterations actually used to calculate the bootstrap estimates.
 }
-\item{booted_rmsts}{A \code{data.frame} containing the adjusted restricted mean survival time estimates for each bootstrap sample.
+\item{booted_auc}{A \code{data.frame} containing the adjusted restricted mean survival time estimates for each bootstrap sample.
 }
-\item{rmsts_se}{A named vector containing the bootstrapped standard errors of the restricted mean survival times.
+\item{auc_se}{A named vector containing the bootstrapped standard errors of the restricted mean survival times.
 }
-\item{rmsts_ci_lower}{Lower value of the bootstrap confidence intervals.
+\item{auc_ci_lower}{Lower value of the bootstrap confidence intervals.
 }
-\item{rmsts_ci_upper}{Upper value of the bootstrap confidence intervals.
+\item{auc_ci_upper}{Upper value of the bootstrap confidence intervals.
 }
 
 If multiple imputation was used the output also contains an \code{mids_analyses} object, containing one \code{adjusted_rmst} object for each imputed dataset.
@@ -113,7 +113,7 @@ adjrmst <- adjusted_rmst(adjsurv, from=0, to=1, use_boot=FALSE)
 print(adjrmst)
 
 # calculate adjusted restricted mean survival times from 0 to 1,
-# including standard deviations and confidence intervals
+# including standard errors and confidence intervals
 adjrmst <- adjusted_rmst(adjsurv, from=0, to=1, use_boot=TRUE,
                          conf_level=0.95)
 print(adjrmst)

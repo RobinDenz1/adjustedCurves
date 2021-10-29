@@ -268,7 +268,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     # valid reference data
     if ((method=="strat_cupples" | method=="strat_amato") &
         !is.null(obj$reference)) {
-      if (all(obj$adjust_vars %in% colnames(obj$reference))) {
+      if (!all(obj$adjust_vars %in% colnames(obj$reference))) {
         stop("If a 'reference' data.frame is supplied, it needs to contain",
              " all variables listed in 'adjust_vars'.")
       }
@@ -400,6 +400,45 @@ check_inputs_adj_rmst <- function(adjsurv, from, to, use_boot) {
             " 'adjustedsurv'.", call.=FALSE)
   }
 
+}
+
+## for adjusted_rmtl function
+check_inputs_adj_rmtl <- function(adj, from, to, use_boot) {
+
+  if (!is.numeric(from) | !is.numeric(to)) {
+    stop("'from' and 'to' must be numbers.")
+  } else if (!(from >= 0 & to >= 0)) {
+    stop("'from' and 'to' must be >= 0.")
+  } else if (!inherits(adj, c("adjustedsurv", "adjustedcif"))) {
+    stop("'adj' must be an 'adjustedsurv' object created using",
+         " the 'adjustedsurv()' function or an 'adjustedcif' object",
+         " created using the 'adjustedcif()' function.")
+  } else if (from >= to) {
+    stop("'from' must be smaller than 'to'.")
+  } else if (use_boot & is.null(adj$boot_data)) {
+    warning("Cannot use bootstrapped estimates because",
+            " they were not estimated.",
+            " Need 'bootstrap=TRUE' in 'adjustedsurv'/'adjustedcif'",
+            " function call.", call.=FALSE)
+  }
+
+  if (inherits(adj, "adjustedsurv")) {
+    max_t <- max(adj$adjsurv$time, na.rm=TRUE)
+    n_t <- length(unique((adj$adjsurv$time)))
+  } else {
+    max_t <- max(adj$adjcif$time, na.rm=TRUE)
+    n_t <- length(unique((adj$adjcif$time)))
+  }
+
+  if (to > max_t) {
+    stop("'to' can not be greater than the latest observed time.")
+  }
+
+  if (n_t < 10) {
+    warning("Using only a few points in time might lead to biased",
+            " estimates. Consider using a finer times grid in",
+            " 'adjustedsurv'/'adjustedcif'.", call.=FALSE)
+  }
 }
 
 ## for adjustedsurv_test

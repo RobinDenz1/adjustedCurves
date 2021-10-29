@@ -5,7 +5,7 @@
 Calculate Cause-Specific Confounder-Adjusted Cumulative Incidence Functions
 }
 \description{
-This is one of two main functions of this R-Package. It allows the user to calculate cause-specific confounder-adjusted cumulative incidence functions using a variety of different methods. It is basically a wrapper for each \code{cif_method} function with some additional functionality, such as bootstrapping. Some of these methods require additional packages to be installed and, depending on the specified method, there might be additional required arguments in the function call. Documentation on that can be found in the respective \code{cif_method} function. See details and examples.
+This is one of two main functions of this R-Package. It allows the user to calculate cause-specific confounder-adjusted cumulative incidence functions in the presence of competing events using a variety of different methods. It is basically a wrapper for each \code{cif_method} function with some additional functionality, such as bootstrapping. Some of these methods require additional packages to be installed and, depending on the specified method, there might be additional required arguments in the function call. Documentation on that can be found in the respective \code{cif_method} function. See details and examples.
 }
 \usage{
 adjustedcif(data, variable, ev_time, event, cause,

@@ -12,7 +12,7 @@ This package aims to unite all available adjustments methods for calculating con
 
 \strong{\emph{What exactly are adjusted survival curves / adjusted cumulative incidence functions?}}
 
-It is well known that confounding is a serious problem when analyzing data from non-randomized studies. This is also true when calculating survival curves or cumulative incidence function. The aim is to estimate the population averaged survival probability or cumulative incidence for some group \eqn{z}, which would have been observed if every individual would have been assigned to group \eqn{z}. A formal definition of the estimand can be found in Cai & van der Laan (2020) on page 723.
+It is well known that confounding is a serious problem when analyzing data from non-randomized studies. This is also true when calculating survival curves or cumulative incidence functions. The aim is to estimate the population averaged survival probability or cumulative incidence for some group \eqn{z}, which would have been observed if every individual would have been assigned to group \eqn{z}. A formal definition of the estimand can be found in Cai & van der Laan (2020) on page 723.
 
 \strong{\emph{What features are included in this package?}}
 

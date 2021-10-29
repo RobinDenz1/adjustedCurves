@@ -366,10 +366,11 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
       # NOTE: currently not working due to a bug in update.mexhaz
       stop("Bootstrapping is currently not possible when using",
            " models of class 'mexhaz' due to a bug in update.mexhaz().")
-      pass_args$outcome_model <- stats::update(object=pass_args$outcome_model,
-                                               formula=outcome_model$formula,
-                                               data=boot_samp,
-                                               base=outcome_model$base)
+      pass_args$outcome_model <- quiet(stats::update(
+                                        object=pass_args$outcome_model,
+                                        formula=pass_args$outcome_model$formula,
+                                        data=boot_samp,
+                                        base=pass_args$outcome_model$base))
     } else {
       pass_args$outcome_model <- stats::update(pass_args$outcome_model,
                                                data=boot_samp)
