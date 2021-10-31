@@ -61,12 +61,16 @@ This is one of the older adjustment methods desribed in the literature. It only 
 
 If a character vector is supplied in the \code{adjust_vars} argument, the Kaplan-Meier estimates are created for each combination of all supplied variables. If the sample size is small and/or there are many levels in these variables, the estimates can become unstable or undefined. Because it is a weighted average of Kaplan-Meier curves, estimates for this method are only defined for points in time with a valied Kaplan-Meier estimate in all strata. For example, if the Kaplan-Meier curve of the strata "Treatment + male" only extends to t = 100, it will be impossible to estimate the adjusted survival curve for t > 100 using this method.
 
+Nieto & Coresh (1996) proposed a very similar method. The only difference is that Nieto & Coresh (1996) used the control group as reference population, which results in a different causal estimand. Using the method by Nieto & Coresh (1996) with the full \code{data} as reference population as described in Gregory (1988) would produce exactly the same results.
+
 }
 \value{
 Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
 }
 \references{
 Gregory, W. M. Adjusting Survival Curves for Imbalances in Prognostic Factors. British Journal of Cancer, 1988, 58, 202-204
+
+Nieto, F. J. & Coresh, J. Adjusting Survival Curves for Confounders: A Review and a New Method. American Journal of Epidemiology, 1996, 143, 1059-1068
 }
 \author{
 Robin Denz

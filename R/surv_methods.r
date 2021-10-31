@@ -1217,8 +1217,7 @@ surv_strat_gregory <- function(data, variable, ev_time, event,
       Lijk <- vapply(times, FUN=function(x) {sum(dat_IJ[,ev_time] >= x)},
                      FUN.VALUE=numeric(1))
 
-      # 1 if event at t occurred in treatment group i and strata j
-      # 0 otherwise
+      # events at t in treatment i and strata j
       dijk <- vapply(times, FUN=function(x) {sum(dat_IJ[,ev_time] == x &
                                                  dat_IJ[,event]==1)},
                      FUN.VALUE=numeric(1))
