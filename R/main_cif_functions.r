@@ -457,6 +457,11 @@ plot.adjustedcif <- function(x, draw_ci=FALSE, max_t=Inf,
     p <- p + ggplot2::geom_line(size=line_size)
   }
 
+  # don't use the word "adjusted" with standard Kaplan-Meier
+  if (ylab=="Adjusted Cumulative Incidence" & x$method=="aalen_johansen") {
+    ylab <- "Cumulative Incidence"
+  }
+
   p <- p + gg_theme +
     ggplot2::labs(x=xlab, y=ylab, color=legend.title,
                   linetype=legend.title, fill=legend.title) +

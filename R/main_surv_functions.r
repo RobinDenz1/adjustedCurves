@@ -482,6 +482,11 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
     p <- p + ggplot2::geom_line(size=line_size)
   }
 
+  # don't use the word "adjusted" with standard Kaplan-Meier
+  if (ylab=="Adjusted Survival Probability" & x$method=="km") {
+    ylab <- "Survival Probability"
+  }
+
   p <- p + gg_theme +
     ggplot2::labs(x=xlab, y=ylab, color=legend.title,
                   linetype=legend.title, fill=legend.title) +
@@ -531,7 +536,7 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
     cens_dat <- vector(mode="list", length=length(levs))
     for (i in seq_len(length(levs))) {
 
-      x$data <- x$data[which(x$data$time <= max_t),]
+      x$data <- x$data[which(x$data[,x$call$ev_time] <= max_t),]
       cens_times <- sort(unique(x$data[, x$call$ev_time][
         x$data[, x$call$event]==0 & x$data[, x$call$variable]==levs[i]]))
       adjsurv_temp <- plotdata[plotdata$group==levs[i], ]
@@ -682,11 +687,11 @@ print.adjustedsurv <- function(x, ...) {
   } else if (x$method=="km") {
     method_name <- "Kaplan-Meier Estimator"
   } else if (x$method=="strat_cupples") {
-    method_name <- "Weighted Kaplan-Meier Stratification by Cupples et al."
+    method_name <- "Stratification & Weighting by Cupples et al."
   } else if (x$method=="strat_amato") {
-    method_name <- "Weighted Kaplan-Meier Stratification by Amato"
+    method_name <- "Stratification & Weighting by Amato"
   } else if (x$method=="strat_gregory") {
-    method_name <- "Weighted Kaplan-Meier Stratification by Gregory"
+    method_name <- "Stratification & Weighting by Gregory"
   }
 
   times_str <- ifelse(is.null(x$call$times), "Event-Specific Times",

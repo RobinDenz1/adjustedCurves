@@ -423,38 +423,6 @@ test_that("weights in matching", {
                  NULL)
 })
 
-test_that("weights with asymptotic CI in method='iptw_km'", {
-  expect_warning(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="iptw_km",
-                                            conf_int=TRUE,
-                                            conf_level=0.95,
-                                            times=NULL,
-                                            bootstrap=FALSE,
-                                            n_boot=2,
-                                            na.action="na.omit",
-                                            treatment_model=runif(20)),
-               NULL)
-})
-
-test_that("formula with asymptotic CI in method='iptw_km'", {
-  expect_warning(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
-                                                    variable="group",
-                                                    ev_time="time",
-                                                    event="event",
-                                                    method="iptw_km",
-                                                    conf_int=TRUE,
-                                                    conf_level=0.95,
-                                                    times=NULL,
-                                                    bootstrap=FALSE,
-                                                    n_boot=2,
-                                                    na.action="na.omit",
-                                                    treatment_model=group ~ x1),
-               NULL)
-})
-
 test_that("no models with method='aiptw'", {
   expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
                                                           variable="group",

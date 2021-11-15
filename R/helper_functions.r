@@ -426,8 +426,9 @@ remove_unnecessary_covars <- function(data, method, variable, ev_time,
 
   # extract variables from treatment model
   if (inherits(args$treatment_model, "multinom")) {
-    treatment_vars <- args$treatment_model$coefnames
-    treatment_vars <- treatment_vars[treatment_vars!="(Intercept)"]
+    #treatment_vars <- args$treatment_model$coefnames
+    #treatment_vars <- treatment_vars[treatment_vars!="(Intercept)"]
+    treatment_vars <- all.vars(args$treatment_model$call$formula)
   } else if (inherits(args$treatment_model, c("glm", "lm"))) {
     treatment_vars <- all.vars(args$treatment_model$formula)
   } else if (inherits(args$treatment_model, "formula")) {

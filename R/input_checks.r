@@ -207,14 +207,6 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
       stop("Propensity Scores > 1 or < 0 not allowed. Perhaps you supplied ",
            "weights on accident?")
     }
-  ## IPTW KM
-  } else if (method=="iptw_km") {
-    if (conf_int & (inherits(obj$treatment_model, "formula") |
-                    is.numeric(obj$treatment_model))) {
-      warning("Approximate confidence intervals currently not supported in ",
-              "method='iptw_km' when 'treatment_model' is not a 'glm'",
-              " or 'multinom' object.", call.=FALSE)
-    }
   ## AIPTW
   } else if (method=="aiptw") {
     # need treatment_model
