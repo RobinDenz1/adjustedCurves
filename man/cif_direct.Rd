@@ -99,7 +99,6 @@ sim_dat$group <- as.factor(sim_dat$group)
 cox_mod <- CSC(Hist(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
                  data=sim_dat)
 
-
 # use it to calculate adjusted CIFs
 adjcif <- adjustedcif(data=sim_dat,
                       variable="group",
@@ -112,5 +111,29 @@ adjcif <- adjustedcif(data=sim_dat,
 
 # plot the curves
 plot(adjcif)
+
+## using multiple imputation
+library(mice)
+
+# introduce random missingness in x1 as example
+# NOTE: This is only done as an example, in reality you would
+#       already have missing data, not introduce it yourself.
+sim_dat$x1 <- ifelse(runif(n=500) < 0.5, sim_dat$x1, NA)
+
+# perform multiple imputation
+mids <- mice::mice(data=sim_dat, method="pmm", m=5, printFlag=F)
+
+# fit model for each imputed dataset, using the CSC_MI helper function
+mira <- CSC_MI(mids, Hist(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group)
+
+# calculate adjusted CIFs on imputed data
+adj <- adjustedcif(data=mids,
+                   variable="group",
+                   ev_time="time",
+                   event="event",
+                   method="direct",
+                   cause=1,
+                   outcome_model=mira)
+plot(adj)
 }
 }

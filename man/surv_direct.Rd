@@ -88,6 +88,7 @@ The function itself was written by Robin Denz. When using \code{coxph} models ho
 \examples{
 \dontrun{
 library(survival)
+library(riskRegression)
 
 # simulate some data as example
 sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
@@ -96,7 +97,6 @@ sim_dat$group <- as.factor(sim_dat$group)
 # estimate a cox-regression for the outcome
 cox_mod <- coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
                  data=sim_dat, x=TRUE)
-
 
 # use it to calculate adjusted survival curves
 adjsurv <- adjustedsurv(data=sim_dat,
@@ -109,5 +109,29 @@ adjsurv <- adjustedsurv(data=sim_dat,
 
 # plot the curves
 plot(adjsurv)
+
+## using multiple imputation
+library(mice)
+
+# introduce random missingness in x1 as example
+# NOTE: This is only done as an example, in reality you would
+#       already have missing data, not introduce it yourself.
+sim_dat$x1 <- ifelse(runif(n=500) < 0.5, sim_dat$x1, NA)
+
+# perform multiple imputation
+mids <- mice::mice(data=sim_dat, method="pmm", m=5, printFlag=F)
+
+# fit model for each imputed dataset
+mira <- with(mids, coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
+                         x=TRUE))
+
+# calculate adjusted survival curves on imputed data
+adj <- adjustedsurv(data=mids,
+                    variable="group",
+                    ev_time="time",
+                    event="event",
+                    method="direct",
+                    outcome_model=mira)
+plot(adj)
 }
 }

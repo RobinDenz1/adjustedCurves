@@ -194,12 +194,8 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
   ## Matching
   } else if (method=="matching") {
 
-    if (bootstrap) {
-      warning("Bootstrapping generally doesn't produce unbiased variance",
-              " estimates with matching estimators. Use with caution. ",
-              "See ?surv_matching.", call.=FALSE)
-    # treatment_model
-    } else if (!"treatment_model" %in% names(obj)) {
+    # treatment model
+    if (!"treatment_model" %in% names(obj)) {
       stop("Argument 'treatment_model' must be specified when using",
            " method='matching'.")
     } else if (is.numeric(obj$treatment_model) &&
@@ -620,12 +616,8 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
     }
   ## Matching
   } else if (method=="matching") {
-    if (bootstrap) {
-      warning("Bootstrapping generally doesn't produce unbiased variance",
-              " estimates with matching estimators. Use with caution.",
-              " See ?surv_matching.")
     # treatment_model
-    } else if (!"treatment_model" %in% names(obj)) {
+    if (!"treatment_model" %in% names(obj)) {
       stop("Argument 'treatment_model' must be specified when using",
            " method='matching'.")
     } else if (is.numeric(obj$treatment_model) &&

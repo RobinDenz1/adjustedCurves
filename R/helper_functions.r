@@ -206,7 +206,7 @@ exact_stepfun_difference <- function(adjsurv, times, est="surv") {
 }
 
 ## calculate exact integral under step function
-# 'stepfun' needs to be a data.frame with columns 'time' and 'surv',
+# 'stepfun' needs to be a data.frame with columns 'time' and 'est',
 # sorted by time with no duplicates in time
 exact_stepfun_integral <- function(stepfun, from, to, est="surv") {
 
@@ -447,7 +447,7 @@ remove_unnecessary_covars <- function(data, method, variable, ev_time,
                                             "riskRegression", "selectCox",
                                             "glm", "ols", "rfsrc",
                                             "penfitS3", "gbm",
-                                            "singleEventCB"))) {
+                                            "singleEventCB", "fcrr"))) {
     outcome_vars <- all.vars(args$outcome_model$call$formula)
   } else if (inherits(args$outcome_model, "pecRpart")) {
     outcome_vars <- all.vars(args$outcome_model$rpart$terms)

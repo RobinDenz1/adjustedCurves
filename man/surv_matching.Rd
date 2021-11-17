@@ -12,7 +12,7 @@ This page explains the details of estimating adjusted survival curves using prop
 \usage{
 surv_matching(data, variable, ev_time, event, conf_int=FALSE,
               conf_level=0.95, times, treatment_model,
-              stabilize=TRUE, gtol=0.001, ...)
+              gtol=0.001, ...)
 }
 
 \arguments{
@@ -40,9 +40,6 @@ A numeric vector of time points for which to return the survival probability est
   \item{treatment_model}{
 Must be either a model object with \code{variable} as response variable or a vector of previously estimated propensity scores.
 }
-  \item{stabilize}{
-Whether to stabilize the weights or not. Is set to \code{TRUE} by default. Stabilizing has no effect on the estimates, only on the asymptotic variance calculations and confidence intervals. Without stabilizing, those estimates are biased downward.
-  }
   \item{gtol}{
 Tolerance at which estimated treatment assignment probabilities are truncated. Every propensity score bigger than 1 - \code{gtol} is set to 1 - \code{gtol} and every propensity score smaller than \code{gtol} is set to \code{gtol}. Useful when there are extreme propensity scores close to 0 or 1.
   }
@@ -56,30 +53,34 @@ Further arguments passed to the \code{\link[Matching]{Match}} function of the \p
 \item{\strong{Type of Adjustment:} Requires a model describing the treatment assignment mechanism. This must be either a \code{\link{glm}} object.}
 \item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
 \item{\strong{Categorical groups:} Only two groups in \code{variable} are allowed. Must be an integer variable containing only 0 and 1 or a factor variable with exactly two levels.}
-\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are currently not available. Bootstrapping is also discouraged.}
+\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are currently not available.}
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
 \item{\strong{Dependencies:} This method relies on the \pkg{Matching} package.}
 }
 
-Using the estimated propensity score, the individual observations in the dataset are matched to each other creating a new dataset in which the covariate distributions are balanced in respect to the two groups defined by \code{variable}. A simple Aalen-Johansen estimator is then used to calculate the confounder-adjusted survival curves.
+Using the estimated propensity score, the individual observations in the dataset are matched to each other creating a new dataset in which the covariate distributions are balanced in respect to the two groups defined by \code{variable}. A simple Kaplan-Meier estimator is then used to calculate the confounder-adjusted survival curves. This corresponds to the method described in Austin (2014). Details on the algorithm used for matching can be found in the documentation of the \pkg{Matching} package.
 
-Simulation studies have shown that this method is significantly less efficient than other methods included in this R-Package. While it does produce unbiased estimates, the variation in these estimates is very high. We strongly suggest using one of the other methods implemented here.
+We choose not to implement other matching based estimators (see Winnett & Sasieni (2002), Galimberti et al. (2002) and Austin (2020)) because of the wide range of matching algorithms and parameters. Trying to automate the matching process in a function like this would, in our opinion, disrupt the workflow of the user while also encouraging suboptimal practices. We however included this simple version of a matching estimator as a reference and to raise the awareness that using matching is a valid method to obtain adjusted survival curves.
 
-In contrast to all other methods, bootstrapped standard error and confidence intervals are generally not unbiased here and are therefore not allowed. See Abadie & Imbens (2008) for a detailed explanation.
+Simulation studies have shown that this particular method as implemented here is significantly less efficient than other methods included in this R-Package. While it does produce unbiased estimates, the variation in these estimates is very high. We suggest using one of the other available methods.
 
 }
 \value{
 Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable} and the object created using the \code{Match} function.
 }
 \references{
-Peter C. Austin. "The Use of Propensity Score Methods with Survival or Time-To-Event Outcomes: Reporting Measures of Effect Similar to those Used in Randomized Experiments". In: Statistics in Medicine 33 (2014), 1242-1258
+Austin, P. C. "The Use of Propensity Score Methods with Survival or Time-To-Event Outcomes: Reporting Measures of Effect Similar to those Used in Randomized Experiments". In: Statistics in Medicine 33 (2014), 1242-1258
 
-Alberto Abadie and Guido W. Imbens. "On the Failure of the Bootstrap for Matching Estimators". In: Econometrica 76.6 (2008), pp. 1537–1557.
+Winnett, A. & Sasieni, P. "Adjusted Nelson-Aalen Estimates with Retrospective Matching". In: Journal of the American Statistical Association 97 (2002), 245-256
+
+Galimberti, S.; Sasieni, P. & Valsecchi, M. G. "A Weighted Kaplan-Meier Estimator for Matched Data with Application to the Comparison of Chemotherapy and Bone-Marrow Transplant in Leukaemia". In: Statistics in Medicine 21 (2002), 3847-3864
+
+Austin, P. C.; Thomas, N. & Rubin, D. B. "Covariate-Adjusted Survival Analyses in Propensity-Score Matched Samples: Imputing Potential Time-To-Event Outcomes". In: Statistical Methods in Medical Research 29 (2020), 728-751
 }
 \author{
-The wrapper function was written by Robin Denz, the \code{Match} function (which this wrapper is build around) was written by other people. See \code{?Match} for more details.
+Robin Denz
 }
 
 \seealso{

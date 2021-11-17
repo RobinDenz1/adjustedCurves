@@ -70,8 +70,5 @@ adjsurv <- adjustedsurv(data=sim_dat,
 # calculate adjusted median survival times
 adjusted_median_survival(adjsurv, use_boot=FALSE)
 
-# calculate adjusted median survival times with confidence intervals
-adjusted_median_survival(adjsurv, use_boot=TRUE, conf_level=0.95)
-
 }
 }

@@ -235,6 +235,8 @@ cif_direct <- function(data, variable, ev_time, event, cause, conf_int,
 cif_g_comp <- function(outcome_model, data, variable, times,
                        predict_fun, cause, ...) {
 
+  row_creation <- TRUE
+
   # perform G-Computation
   levs <- levels(data[,variable])
   data_temp <- data
@@ -264,6 +266,23 @@ cif_g_comp <- function(outcome_model, data, variable, times,
                                               cause=cause,
                                               ...)
 
+    # for fastCrr
+    } else if (inherits(outcome_model, "fcrr")) {
+      # get model matrix
+      mod_vars <- all.vars(outcome_model$call[[2]])
+      mod_form <- paste0(" ~ ", paste0(mod_vars, collapse=" + "))
+      mod_data <- as.data.frame(stats::model.matrix(
+        stats::as.formula(mod_form), data=data_temp))
+      mod_data <- mod_data[,2:ncol(mod_data)]
+
+      # calculate average CIF
+      rel_cols <- colnames(outcome_model$df[,3:ncol(outcome_model$df)])
+      surv_lev <- average_CIF_fccr(outcome_model, mod_data[,rel_cols])
+      row <- data.frame(time=outcome_model$uftime,
+                        cif=surv_lev,
+                        group=levs[i])
+
+      row_creation <- FALSE
     # using the S3 predict method
     } else {
       surv_lev <- tryCatch(
@@ -281,8 +300,10 @@ cif_g_comp <- function(outcome_model, data, variable, times,
 
     # take arithmetic mean of predictions and add those to the
     # output object
-    surv_lev <- apply(X=surv_lev, MARGIN=2, FUN=mean, na.rm=TRUE)
-    row <- data.frame(time=times, surv=surv_lev, group=levs[i])
+    if (row_creation) {
+      surv_lev <- apply(X=surv_lev, MARGIN=2, FUN=mean, na.rm=TRUE)
+      row <- data.frame(time=times, cif=surv_lev, group=levs[i])
+    }
     plotdata[[i]] <- row
   }
   plotdata <- as.data.frame(dplyr::bind_rows(plotdata))

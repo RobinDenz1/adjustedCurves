@@ -428,7 +428,7 @@ surv_g_comp <- function(outcome_model, data, variable, times,
 #' @export
 surv_matching <- function(data, variable, ev_time, event, conf_int=FALSE,
                           conf_level=0.95, times, treatment_model,
-                          stabilize=TRUE, gtol=0.001, ...) {
+                          gtol=0.001, ...) {
 
   # if it's a factor, turn it into numeric
   if (is.factor(data[,variable])) {
@@ -454,10 +454,6 @@ surv_matching <- function(data, variable, ev_time, event, conf_int=FALSE,
   m_dat <- rbind(data[rr$index.treated,], data[rr$index.control,])
 
   weights <- rr$weights
-
-  if (stabilize) {
-    weights <- weights * length(weights) / sum(weights)
-  }
   m_dat$match_weights <- c(weights, weights)
 
   # estimate survival curve

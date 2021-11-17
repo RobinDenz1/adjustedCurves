@@ -78,7 +78,7 @@ A short description of each method is contained in the documentation of the resp
 
 For most methods approximations for the asymptotic variance of point estimates of the CIF have been proposed in the literature. Where available, those can be calculated and added to the output object using \code{conf_int=TRUE}. It is however recommended to use bootstrapping to estimate the variance instead, which can be done by setting \code{bootstrap=TRUE}. The \code{n_boot} argument is set to 500 by default. This number was chosen because it worked well in simulations but it does not guarantee convergence in practice. Users are recommended to inspect the bootstrapped estimates and adjust the number of replications accordingly. To allow faster bootstrapping the user can choose to run the function on multiple CPU cores in parallel using the \code{n_cores} argument.
 
-This function also allows multiple imputation via the \pkg{mice} package. Instead of supplying a single data.frame, the user should create a \code{mids} object using the \code{mice} function and directly pass this to the \code{data} argument. When methods are used which rely on previously estimated treatment or outcome models such as \code{direct} or \code{aiptw}, the user is required to supply a \code{mira} object instead of a single model. In other words: the models have to be fit on every imputed dataset before supplying them to this function. See \code{?mice} and the associated documentation for more information on how to use multiple imputation. When using \code{bootstrap=TRUE} and multiple imputation, the bootstrapping is performed on every imputed dataset separately. Cumulative Incidences are simply averaged across the imputed datasets according to Rubins Rule. Confidence intervals are calculated by first averaging the standard errors over all imputed datasets and afterwards using this pooled value to obtain a new confidence interval with the normal approximation.
+This function also allows multiple imputation via the \pkg{mice} package. Instead of supplying a single data.frame, the user should create a \code{mids} object using the \code{mice} function and directly pass this to the \code{data} argument. When methods are used which rely on previously estimated treatment or outcome models such as \code{direct} or \code{aiptw}, the user is required to supply a \code{mira} object instead of a single model. In other words: the models have to be fit on every imputed dataset before supplying them to this function. See \code{?mice} and the associated documentation for more information on how to use multiple imputation. When using \code{bootstrap=TRUE} and multiple imputation, the bootstrapping is performed on every imputed dataset separately. Cumulative Incidences are simply averaged across the imputed datasets according to Rubins Rule. Confidence intervals are calculated by first averaging the standard errors over all imputed datasets and afterwards using this pooled value to obtain a new confidence interval with the normal approximation. It is not known how good this works with many missing values in \code{ev_time}, \code{event} or \code{variable} so users should be cautious in those cases.
 
 }
 \value{
@@ -212,6 +212,33 @@ adjcif <- adjustedcif(data=sim_dat,
                       bootstrap=TRUE,
                       n_boot=100,
                       n_cores=parallel::detectCores()-1)
+
+# using multiple imputation
+library(mice)
+library(WeightIt)
+
+# simulate some data as example
+sim_dat <- sim_confounded_crisk(n=500, max_t=1.2)
+sim_dat$group <- as.factor(sim_dat$group)
+
+# introduce random missingness in x1 as example
+# NOTE: This is only done as an example, in reality you would
+#       already have missing data, not introduce it yourself.
+sim_dat$x1 <- ifelse(runif(n=500) < 0.5, sim_dat$x1, NA)
+
+# perform multiple imputation
+mids <- mice::mice(data=sim_dat, method="pmm", m=5, printFlag=F)
+
+# IPTW Pseudo using WeightIt on imputed data, for cause = 1
+adj <- adjustedcif(data=mids,
+                   variable="group",
+                   ev_time="time",
+                   event="event",
+                   method="iptw_pseudo",
+                   cause=1,
+                   treatment_model=group ~ x1 + x2 + x5 + x6,
+                   weight_method="ps")
+plot(adj)
 
 # More specific examples can be found in the documentation of each
 # respective cif_method. See ?cif_ + "method" for more information.

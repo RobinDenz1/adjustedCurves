@@ -397,22 +397,6 @@ test_that("continuous times in tmle", {
                NULL)
 })
 
-test_that("bootstrap in matching", {
-  expect_warning(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
-                                                           variable="group",
-                                                           ev_time="time",
-                                                           event="event",
-                                                           method="matching",
-                                                           conf_int=FALSE,
-                                                           conf_level=0.95,
-                                                           times=0.2,
-                                                           bootstrap=TRUE,
-                                                           n_boot=2,
-                                                           na.action="na.omit",
-                                                           cause=1),
-                 NULL)
-})
-
 test_that("weights in matching", {
   expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
                                       variable="group",
