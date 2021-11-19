@@ -23,7 +23,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
                          conf_int=FALSE, conf_level=0.95, times=NULL,
                          bootstrap=FALSE, n_boot=500, n_cores=1,
                          na.action=options("na.action")[[1]],
-                         ...) {
+                         clean_data=TRUE, ...) {
 
   check_inputs_adjustedsurv(data=data, variable=variable,
                             ev_time=ev_time, event=event, method=method,
@@ -193,9 +193,11 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
   } else {
 
     # only keep needed covariates
-    data <- remove_unnecessary_covars(data=data, variable=variable,
-                                      method=method, ev_time=ev_time,
-                                      event=event, ...)
+    if (clean_data) {
+      data <- remove_unnecessary_covars(data=data, variable=variable,
+                                        method=method, ev_time=ev_time,
+                                        event=event, ...)
+    }
 
     # perform na.action
     if (is.function(na.action)) {
@@ -421,7 +423,7 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
                               median_surv_linetype="dashed",
                               median_surv_color="black",
                               censoring_ind=FALSE, censoring_ind_width=NULL,
-                              censoring_ind_size=0.5, ...) {
+                              censoring_ind_size=0.5, cif=FALSE, ...) {
   requireNamespace("ggplot2")
 
   # get relevant data for the confidence interval
@@ -463,6 +465,20 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
     }
   }
 
+  # plot CIF instead of survival
+  if (cif) {
+    plotdata$surv <- 1 - plotdata$surv
+
+    if ("ci_lower" %in% colnames(plotdata)) {
+      plotdata$ci_lower <- 1 - plotdata$ci_lower
+      plotdata$ci_upper <- 1 - plotdata$ci_upper
+    }
+
+    if (ylab=="Adjusted Survival Probability") {
+      ylab <- "Adjusted Cumulative Incidence"
+    }
+  }
+
   ## The main plot
   mapping <- ggplot2::aes(x=.data$time, y=.data$surv, color=.data$group,
                           linetype=.data$group, group=.data$group)
@@ -485,6 +501,8 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
   # don't use the word "adjusted" with standard Kaplan-Meier
   if (ylab=="Adjusted Survival Probability" & x$method=="km") {
     ylab <- "Survival Probability"
+  } else if (ylab=="Adjusted Cumulative Incidence" & x$method=="km") {
+    ylab <- "Cumulative Incidence"
   }
 
   p <- p + gg_theme +
@@ -611,7 +629,10 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
   }
 
   ## Median Survival indicators
-  if (median_surv_lines) {
+  if (median_surv_lines & cif) {
+    warning("Cannot draw median survival indicators when using cif=TRUE.",
+            call.=FALSE)
+  } else if (median_surv_lines) {
 
     # calculate median survival and add other needed values
     fake_adjsurv <- x

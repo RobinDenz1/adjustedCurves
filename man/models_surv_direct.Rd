@@ -1,5 +1,5 @@
-\name{surv_direct_models}
-\alias{surv_direct_models}
+\name{models_surv_direct}
+\alias{models_surv_direct}
 
 \title{
 
@@ -76,4 +76,8 @@ It is sometimes possible to use models even if they are not listed here. There a
 
 If you think that some important models are missing from this list, please file an issue on the official github page with a specific feature request (URL can be found in the DESCRIPTION file) or contact the package maintainer directly using the given e-mail address.
 
+}
+
+\note{
+When using outcome models which are not directly supported (either through the default predict method or a custom \code{predict_fun}) it might be necessary to set the \code{clean_data} argument of the \code{adjustedsurv} function to \code{FALSE}.
 }

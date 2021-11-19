@@ -1,5 +1,5 @@
-\name{cif_direct_models}
-\alias{cif_direct_models}
+\name{models_cif_direct}
+\alias{models_cif_direct}
 
 \title{
 
@@ -33,6 +33,8 @@ The following models are directly supported in the \code{outcome_model} in the \
 
   \item{}{\code{\link[fastcmprsk]{fastCrr}} [\strong{C}, Required Packages: \pkg{fastcmprsk}]}
 
+  \item{}{\code{\link[timereg]{comp.risk}} [\strong{C}, Required Packages: \pkg{timereg}]}
+
   \item{}{Any model with a fitting S3 prediction method or a valid \code{predict_fun} can be used as well. See below.}
 }
 
@@ -44,4 +46,8 @@ It is sometimes possible to use models even if they are not listed here. There a
 
 If you think that some important models are missing from this list, please file an issue on the official github page with a specific feature request (URL can be found in the DESCRIPTION file) or contact the package maintainer directly using the given e-mail address.
 
+}
+
+\note{
+When using outcome models which are not directly supported (either through the default predict method or a custom \code{predict_fun}) it might be necessary to set the \code{clean_data} argument of the \code{adjustedcif} function to \code{FALSE}.
 }

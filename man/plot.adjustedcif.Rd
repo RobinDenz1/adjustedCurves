@@ -19,7 +19,10 @@ A function to graphically display confounder-adjusted cumulative incidence funct
      gg_theme=ggplot2::theme_bw(),
      ylim=NULL, custom_colors=NULL,
      custom_linetypes=NULL,
-     ci_draw_alpha=0.4, steps=TRUE, ...)
+     ci_draw_alpha=0.4, steps=TRUE,
+     censoring_ind=FALSE,
+     censoring_ind_width=NULL,
+     censoring_ind_size=0.5, ...)
 }
 
 \arguments{
@@ -85,6 +88,15 @@ A number indicating the level of transparency that should be used when drawing t
   }
   \item{steps}{
 A logical variable indicating whether the CIFs should be plotted as a step function or using straight lines. Straight lines should not be used with a simple Aalen-Joahnsen estimator. It is recommended to only use straight lines when a sufficiently fine grid of time points was used in the estimation step.
+  }
+  \item{censoring_ind}{
+Whether to draw small lines indicating censored individuals on the survival curves. Those will be affected by \code{linetype} and \code{color} as well.
+  }
+  \item{censoring_ind_width}{
+A numeric value specifying the width of the censoring indicators. Ignored if \code{censoring_ind=FALSE}. By default (\code{censoring_ind_width=NULL}) the width of the censoring indicators is equal to 5 percent of the plot height.
+  }
+  \item{censoring_ind_size}{
+A numeric value specifying the size of the censoring indicators. Ignored if \code{censoring_ind=FALSE}.
   }
   \item{...}{
 Currently not used.

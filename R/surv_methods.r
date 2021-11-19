@@ -394,6 +394,7 @@ surv_g_comp <- function(outcome_model, data, variable, times,
     } else if (inherits(outcome_model, "mexhaz")) {
       # can't do predictions at 0
       times <- times[times > 0]
+      times <- c(0.000001, times)
       surv_lev <- sapply(X=times, object=outcome_model, data.val=data_temp,
                    FUN=function(x, ...){
                      stats::predict(time.pts=x, ...)$results$surv})

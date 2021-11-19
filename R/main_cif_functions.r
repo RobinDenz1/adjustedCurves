@@ -23,7 +23,7 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
                         conf_int=FALSE, conf_level=0.95, times=NULL,
                         bootstrap=FALSE, n_boot=500, n_cores=1,
                         na.action=options("na.action")[[1]],
-                        ...) {
+                        clean_data=TRUE, ...) {
 
   check_inputs_adjustedcif(data=data, variable=variable, ev_time=ev_time,
                            event=event, cause=cause, method=method,
@@ -193,9 +193,11 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
   } else {
 
     # only keep needed covariates
-    data <- remove_unnecessary_covars(data=data, variable=variable,
-                                      method=method, ev_time=ev_time,
-                                      event=event, ...)
+    if (clean_data) {
+      data <- remove_unnecessary_covars(data=data, variable=variable,
+                                        method=method, ev_time=ev_time,
+                                        event=event, ...)
+    }
 
     # perform na.action
     if (is.function(na.action)) {
@@ -248,7 +250,7 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
         export_objs <- c("get_iptw_weights", "read_from_step_function",
                          "adjustedcif_boot", "trim_weights",
                          "geese_predictions", "load_needed_packages",
-                         "specific_times")
+                         "specific_times", "cif_g_comp")
 
         boot_out <- foreach::foreach(i=1:n_boot, .packages=pkgs,
                                     .export=export_objs) %dorng% {
@@ -311,6 +313,7 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
     plotdata$group <- factor(plotdata$group, levels=levs)
 
     out <- list(adjcif=plotdata,
+                data=data,
                 method=method,
                 categorical=ifelse(length(levs)>2, TRUE, FALSE),
                 call=match.call())
@@ -397,7 +400,9 @@ plot.adjustedcif <- function(x, draw_ci=FALSE, max_t=Inf,
                              gg_theme=ggplot2::theme_bw(),
                              ylim=NULL, custom_colors=NULL,
                              custom_linetypes=NULL,
-                             ci_draw_alpha=0.4, steps=TRUE, ...) {
+                             ci_draw_alpha=0.4, steps=TRUE,
+                             censoring_ind=FALSE, censoring_ind_width=NULL,
+                             censoring_ind_size=0.5, ...) {
   requireNamespace("ggplot2")
 
   # get relevant data for the confidence interval
@@ -484,6 +489,64 @@ plot.adjustedcif <- function(x, draw_ci=FALSE, max_t=Inf,
   }
   if (!is.null(custom_colors)) {
     p <- p + ggplot2::scale_fill_manual(values=custom_colors)
+  }
+
+  ## Censoring indicators
+  if (censoring_ind) {
+
+    if (is.null(censoring_ind_width)) {
+
+      if (is.null(ylim)) {
+        ystart <- 1 - ggplot2::layer_scales(p)$y$range$range[1]
+      } else {
+        ystart <- 1 - ylim[1]
+      }
+
+      censoring_ind_width <- ystart * 0.05
+
+    }
+
+    if (is.factor(plotdata$group)) {
+      levs <- levels(plotdata$group)
+    } else {
+      levs <- unique(plotdata$group)
+    }
+
+    # calculate needed data
+    cens_dat <- vector(mode="list", length=length(levs))
+    for (i in seq_len(length(levs))) {
+
+      x$data <- x$data[which(x$data[,x$call$ev_time] <= max_t),]
+      cens_times <- sort(unique(x$data[, x$call$ev_time][
+        x$data[, x$call$event]==0 & x$data[, x$call$variable]==levs[i]]))
+      adjcif_temp <- plotdata[plotdata$group==levs[i], ]
+      cens_cif <- vapply(X=cens_times, FUN=read_from_step_function,
+                         FUN.VALUE=numeric(1), step_data=adjcif_temp,
+                         est="cif")
+      cens_dat[[i]] <- data.frame(time=cens_times, cif=cens_cif,
+                                  group=levs[i])
+
+    }
+    cens_dat <- dplyr::bind_rows(cens_dat)
+    cens_dat <- cens_dat[!is.na(cens_dat$cif) ,]
+
+    cens_map <- ggplot2::aes(x=.data$time,
+                             y=.data$cif-(censoring_ind_width/2),
+                             xend=.data$time,
+                             yend=.data$cif+(censoring_ind_width/2),
+                             group=.data$group,
+                             color=.data$group,
+                             linetype=.data$group)
+    if (!color) {
+      cens_map$colour <- NULL
+    }
+    if (!linetype) {
+      cens_map$linetype <- NULL
+    }
+
+    p <- p + ggplot2::geom_segment(data=cens_dat, cens_map,
+                                   size=censoring_ind_size)
+
   }
 
   ## Confidence intervals

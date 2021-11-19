@@ -266,7 +266,7 @@ cif_g_comp <- function(outcome_model, data, variable, times,
                                               cause=cause,
                                               ...)
 
-    # for fastCrr
+    # for fastCrr in fastcmprsk
     } else if (inherits(outcome_model, "fcrr")) {
       # get model matrix
       mod_vars <- all.vars(outcome_model$call[[2]])
@@ -283,6 +283,10 @@ cif_g_comp <- function(outcome_model, data, variable, times,
                         group=levs[i])
 
       row_creation <- FALSE
+    # for comp.risk in timereg
+    } else if (inherits(outcome_model, "comprisk")) {
+      surv_lev <- stats::predict(outcome_model, newdata=data_temp,
+                                 times=times)$P1
     # using the S3 predict method
     } else {
       surv_lev <- tryCatch(

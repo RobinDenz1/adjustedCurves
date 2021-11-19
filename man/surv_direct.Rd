@@ -35,7 +35,7 @@ A logical variable, indicating whether the asymptotic variances and confidence i
 A number specifying the confidence level of asymptotic confidence intervals.
   }
   \item{outcome_model}{
-Must be a previously fit model object including \code{variable} as independent variable. Apart from the classic \code{coxph} model this function also supports a variety of other models. See \code{\link[adjustedCurves]{surv_direct_models}} for a list of supported model objects and some more details.
+Must be a previously fit model object including \code{variable} as independent variable. Apart from the classic \code{coxph} model this function also supports a variety of other models. See \code{\link[adjustedCurves]{models_surv_direct}} for a list of supported model objects and some more details.
 }
   \item{times}{
 A numeric vector of time points at which the survival probability should be estimated.
@@ -44,28 +44,28 @@ A numeric vector of time points at which the survival probability should be esti
 Whether to print estimation information of the \code{ate} function in the \pkg{riskRegression} package. Ignored if \code{outcome_model} is not a \code{coxph} object.
 }
   \item{predict_fun}{
-A function which should be used to calculate the predicted survival probabilties given covariates and some points in time. This argument only needs to be specified if the kind of model supplied in the \code{outcome_model} is not directly supported. See \code{\link[adjustedCurves]{surv_direct_models}} for more information. Defaults to \code{NULL}.
+A function which should be used to calculate the predicted survival probabilties given covariates and some points in time. This argument only needs to be specified if the kind of model supplied in the \code{outcome_model} is not directly supported. See \code{\link[adjustedCurves]{models_surv_direct}} for more information. Defaults to \code{NULL}.
 }
   \item{...}{
-Further arguments passed to \code{ate} if \code{outcome_model} is a \code{coxph} object. Otherwise the additional arguments are passed to the respective \code{predict} method. See \code{\link[adjustedCurves]{surv_direct_models}} for more information.
+Further arguments passed to \code{ate} if \code{outcome_model} is a \code{coxph} object. Otherwise the additional arguments are passed to the respective \code{predict} method. See \code{\link[adjustedCurves]{models_surv_direct}} for more information.
   }
 }
 \details{
 
 \itemize{
-\item{\strong{Type of Adjustment:} Requires a model describing the outcome mechanism. See \code{\link[adjustedCurves]{surv_direct_models}} for a list of supported model objects and some more details.}
+\item{\strong{Type of Adjustment:} Requires a model describing the outcome mechanism. See \code{\link[adjustedCurves]{models_surv_direct}} for a list of supported model objects and some more details.}
 \item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
 \item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
 \item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available only if \code{outcome_model} is a \code{coxph} object.}
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
-\item{\strong{Dependencies:} This method relies on the \pkg{riskRegression} package. Depending on \code{outcome_model} other packages might be needed. See \code{\link[adjustedCurves]{surv_direct_models}} for more details.}
+\item{\strong{Dependencies:} This method relies on the \pkg{riskRegression} package. Depending on \code{outcome_model} other packages might be needed. See \code{\link[adjustedCurves]{models_surv_direct}} for more details.}
 }
 
 This method works by executing the following steps: (1) First a model is fitted which describes the outcome mechanism (time-to-event). Next (2) multiple copies of the original dataset are created, one for each possible level of the \code{variable} of interest. (3) The \code{variable} is then set to one level for all observations in each dataset. (4) The model is used to predict the survival probabilities at some points in time T for each observation in all dataset copies. (5) Those estimated probabilities are averaged for each dataset at each point in time, resulting in adjusted survival probabilities for all levels of the group variable at the specified points in time.
 
-In the literature this method is sometimes called "Direct Standardization", "Corrected Group-Prognosis", "G-Computation" or "G-Formula". If the model in step (1) is correct this method will produce unbiased estimates of the causal survival curves. It is also one of the most efficient methods. More information can be found in the literature listed in the references. The most popular model for describing the outcome mechanism in a time-to-event context is the Cox-regression model (\code{\link[survival]{coxph}}). This function however also supports a variety of other models.
+In the literature this method is sometimes called "Direct Standardization", "Corrected Group-Prognosis", "G-Computation" or "G-Formula". If the model in step (1) is "correct"" this method will produce unbiased estimates of the counterfactual survival curves. A model can be called a "correct" model in this context if it can be used to produce unbiased estimates of the true (but unknown) individual survival probabilities given covariates. When used properly this is one of the most efficient methods. More information can be found in the literature listed in the references. The most popular model for describing the outcome mechanism in a time-to-event context is the Cox-regression model (\code{\link[survival]{coxph}}). This function however also supports a variety of other models.
 
 }
 \value{
@@ -83,7 +83,7 @@ The function itself was written by Robin Denz. When using \code{coxph} models ho
 }
 
 \seealso{
-\code{\link[adjustedCurves]{surv_direct_models}}, \code{\link[riskRegression]{ate}}, \code{\link[survival]{coxph}}
+\code{\link[adjustedCurves]{models_surv_direct}}, \code{\link[riskRegression]{ate}}, \code{\link[survival]{coxph}}
 }
 \examples{
 \dontrun{

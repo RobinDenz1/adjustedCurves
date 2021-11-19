@@ -12,7 +12,7 @@ adjustedcif(data, variable, ev_time, event, cause,
             method, conf_int=FALSE, conf_level=0.95,
             times=NULL, bootstrap=FALSE, n_boot=500,
             n_cores=1, na.action=options("na.action")[[1]],
-            ...)
+            clean_data=TRUE, ...)
 }
 
 \arguments{
@@ -44,7 +44,7 @@ A number specifying the confidence level of asymptotic and/or bootstrap confiden
 A numeric vector of time points at which the cumulative incidences should be estimated or \code{NULL}. If \code{NULL} the cumulative incidence is estimated at all points in time at which any event occurred in the pooled sample.
   }
   \item{bootstrap}{
-A logical variable indicating whether bootstrapping should be performed or not. In bootstrapping, a number of simple random samples with replacement of size \code{nrow(data)} is drawn from \code{data}. For each sample the calculations are repeated and used to estimate standard errors and confidence intervals. This can be used to obtain confidence intervals when asymptotic variance calculations are not available.
+A logical variable indicating whether bootstrapping should be performed or not. In bootstrapping, a number of simple random samples with replacement of size \code{nrow(data)} are drawn from \code{data}. For each sample the calculations are repeated and used to estimate standard errors and confidence intervals. This can be used to obtain confidence intervals when asymptotic variance calculations are not available.
   }
   \item{n_boot}{
 Number of bootstrap replications to perform. Ignored if \code{bootstrap} is \code{FALSE}.
@@ -54,6 +54,9 @@ The number of cores to use when calculating bootstrap estimates. Ignored if \cod
   }
   \item{na.action}{
 How missing values should be handled. Can be one of: na.fail, na.omit, na.pass or na.exclude. Also accepts strings of the function names. See \code{?na.action} for more details. By default it uses the na.action which is set in the global options by the respective user.
+  }
+  \item{clean_data}{
+If \code{TRUE} all columns which are not needed for the estimation are removed from \code{data} before any further calculations are performed. This ensures that calls to \code{na.omit} (see argument \code{na.action}) do not remove rows which are fully observed in respect to relevant columns due to missing values in irrelevant columns. Set to \code{FALSE} to skip this step. Usually this argument can be ignored. When using non-standard outcome models however it should be set to \code{FALSE}.
   }
   \item{...}{
 Further arguments passed to the respective \code{cif_method}. See details.
