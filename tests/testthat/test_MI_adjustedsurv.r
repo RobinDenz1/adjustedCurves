@@ -13,7 +13,8 @@ sim_dat$x1 <- ifelse(runif(n=100) <= 0.4, sim_dat$x1, NA)
 imp <- mice::mice(sim_dat, m=3, method="pmm", printFlag=FALSE)
 
 # outcome model
-outc_mod <- with(imp, coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6,
+outc_mod <- with(imp, coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 +
+                              group,
                             x=TRUE))
 
 # treatment model

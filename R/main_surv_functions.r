@@ -192,6 +192,9 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
   ## normal method using a single data.frame
   } else {
 
+    # use data.frame methods only, no tibbles etc.
+    data <- as.data.frame(data)
+
     # only keep needed covariates
     if (clean_data) {
       data <- remove_unnecessary_covars(data=data, variable=variable,

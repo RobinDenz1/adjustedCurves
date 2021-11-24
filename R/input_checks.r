@@ -81,8 +81,9 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     }
 
     # Check if event variable has the right format
-    if (!is.numeric(data[,event])) {
-      stop("The column in 'data' specified by 'event' must be numeric.")
+    if (!is.numeric(data[,event]) & !is.logical(data[,event])) {
+      stop("The column in 'data' specified by 'event' must be numeric",
+           " or logical.")
     }
 
     # No extrapolation
@@ -234,6 +235,11 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
                inherits(obj$outcome_model$fit, "survfit")) {
       stop("The final 'fit' object in the 'selectCox' model must be a",
            " coxph object, not survfit.")
+    # variable has to be inside formula of coxph
+    } else if (inherits(obj$outcome_model, "coxph")) {
+      if (!variable %in% all.vars(obj$outcome_model$formula)) {
+        stop("'variable' has to be included in the cox-regression model.")
+      }
     }
   ## Cupples / Amato / Gregory
   } else if (method=="strat_cupples" | method=="strat_amato" |
@@ -550,8 +556,9 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
     }
 
     # Check if event variable has the right format
-    if (!is.numeric(data[,event])) {
-      stop("The column in 'data' specified by 'event' must be numeric.")
+    if (!is.numeric(data[,event]) & !is.logical(data[,event])) {
+      stop("The column in 'data' specified by 'event' must be numeric",
+           " or logical.")
     }
 
     # Check if categorical should be allowed

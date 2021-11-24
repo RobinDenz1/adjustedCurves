@@ -284,6 +284,12 @@ surv_direct <- function(data, variable, ev_time, event, conf_int,
 
   # using the ate function
   if (inherits(outcome_model, c("coxph", "cph")) & is.null(predict_fun)) {
+
+    # NOTE: This prevents an error message in predictSurv() when
+    #       the 'weights' argument was used in the coxph() call.
+    #       Standard error calculations might be off in that case, not sure.
+    outcome_model$weights <- 1
+
     surv <- riskRegression::ate(event=outcome_model, treatment=variable,
                                 data=data, estimator="Gformula",
                                 times=times, se=conf_int, verbose=verbose,
