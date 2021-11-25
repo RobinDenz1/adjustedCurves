@@ -289,6 +289,7 @@ surv_direct <- function(data, variable, ev_time, event, conf_int,
     #       the 'weights' argument was used in the coxph() call.
     #       Standard error calculations might be off in that case, not sure.
     outcome_model$weights <- 1
+    outcome_model$naive.var <- NULL
 
     surv <- riskRegression::ate(event=outcome_model, treatment=variable,
                                 data=data, estimator="Gformula",

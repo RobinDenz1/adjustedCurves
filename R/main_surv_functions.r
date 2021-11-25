@@ -25,6 +25,13 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
                          na.action=options("na.action")[[1]],
                          clean_data=TRUE, ...) {
 
+  if (inherits(data, "data.frame")) {
+    # use data.frame methods only, no tibbles etc.
+    data <- as.data.frame(data)
+  } else if (!inherits(data, "mids")) {
+    stop("'data' must be either a data.frame or mids object.")
+  }
+
   check_inputs_adjustedsurv(data=data, variable=variable,
                             ev_time=ev_time, event=event, method=method,
                             conf_int=conf_int, conf_level=conf_level,
@@ -191,9 +198,6 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
 
   ## normal method using a single data.frame
   } else {
-
-    # use data.frame methods only, no tibbles etc.
-    data <- as.data.frame(data)
 
     # only keep needed covariates
     if (clean_data) {

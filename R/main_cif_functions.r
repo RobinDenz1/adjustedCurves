@@ -25,6 +25,13 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
                         na.action=options("na.action")[[1]],
                         clean_data=TRUE, ...) {
 
+  # use data.frame methods only, no tibbles etc.
+  if (inherits(data, "data.frame")) {
+    data <- as.data.frame(data)
+  } else if (!inherits(data, "mids")) {
+    stop("'data' needs to be either a data.frame or mids object.")
+  }
+
   check_inputs_adjustedcif(data=data, variable=variable, ev_time=ev_time,
                            event=event, cause=cause, method=method,
                            conf_int=conf_int, conf_level=conf_level,
@@ -191,9 +198,6 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
 
   ## normal method using a single data.frame
   } else {
-
-    # use data.frame methods only, no tibbles etc.
-    data <- as.data.frame(data)
 
     # only keep needed covariates
     if (clean_data) {
