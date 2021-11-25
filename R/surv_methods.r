@@ -1180,74 +1180,119 @@ surv_strat_amato <- function(data, variable, ev_time, event,
 }
 
 ## Adjustment based on a weighted average of stratified Kaplan-Meier estimates
-## using the method by Gregory (1988)
+## using the method by Gregory (1988) and Nieto & Coresh (1996)
+# NOTE: Equations are due to Nieto & Coresh (1996) because while both
+#       methods produce the same results when using the full data as reference,
+#       only Nieto's formulation allows the calculation of confidence intervals.
 #' @export
-surv_strat_gregory <- function(data, variable, ev_time, event,
-                               conf_int=FALSE, conf_level=0.95,
-                               times=NULL, adjust_vars, na.rm=FALSE) {
+surv_strat_gregory_nieto <- function(data, variable, ev_time, event,
+                                     conf_int, conf_level=0.95,
+                                     times=NULL, adjust_vars, na.rm=FALSE) {
 
   # silence checks
-  . <- time <- group <- frac <- frac_sum <- NULL
+  . <- time <- group <- frac <- est_var <- wji <- var_j <- NULL
 
   data$.COVARS <- interaction(data[,adjust_vars])
   times_input <- times
 
-  # tk
-  times <- c(0, sort(unique(data[,ev_time][data[,event]==1])))
-
-  # n at risk over all strata and treatments
-  L..k <- vapply(times, FUN=function(x) {sum(data[,ev_time] >= x)},
-                 FUN.VALUE=numeric(1))
-
+  # needed levels
   levs <- levels(data[,variable])
   levs_adjust_var <- levels(data$.COVARS)
+
   out <- list()
-  for (j in seq_len(length(levs_adjust_var))) {
+  for (i in seq_len(length(levs))) {
 
-    # data for strata j
-    dat_J <- data[data$.COVARS==levs_adjust_var[j],]
+    dat_X <- data[data[,variable]==levs[i],]
 
-    # n at risk over all treatments for strata j
-    L.jk <- vapply(times, FUN=function(x) {sum(dat_J[,ev_time] >= x)},
+    # 1.)
+    tj <- c(0, sort(unique(dat_X[,ev_time][dat_X[,event]==1])))
+
+    for (j in seq_len(length(levs_adjust_var))) {
+
+      # data at X, Z
+      dat_XZ <- data[data[,variable]==levs[i] &
+                       data$.COVARS==levs_adjust_var[j],]
+
+      # 2.)
+      nxzj <- vapply(tj, function(x){sum(dat_XZ[,ev_time]>=x)},
+                     FUN.VALUE=numeric(1))
+      axzj <- vapply(tj, function(x){sum(dat_XZ[,ev_time]==x &
+                                           dat_XZ[,event]==1)},
+                     FUN.VALUE=numeric(1))
+      # 3.)
+      qxzj <- axzj / nxzj
+
+      # 4.) but modified, calculating n at risk in strata overall instead
+      #     of using the control group
+      dat_Z <- data[data$.COVARS==levs_adjust_var[j],]
+      nz <- vapply(tj, function(x){sum(dat_Z[,ev_time]>=x)},
                    FUN.VALUE=numeric(1))
-    fjk <- L.jk / L..k
 
-    for (i in seq_len(length(levs))) {
-
-      # data for treatment i and strata j
-      dat_IJ <- dat_J[dat_J[,variable]==levs[i],]
-
-      # n at risk in treatment i and strata j
-      Lijk <- vapply(times, FUN=function(x) {sum(dat_IJ[,ev_time] >= x)},
-                     FUN.VALUE=numeric(1))
-
-      # events at t in treatment i and strata j
-      dijk <- vapply(times, FUN=function(x) {sum(dat_IJ[,ev_time] == x &
-                                                 dat_IJ[,event]==1)},
-                     FUN.VALUE=numeric(1))
-
-      frac <- fjk * ((Lijk - dijk) / Lijk)
-
-      out[[length(out)+1]] <- data.frame(time=times,
-                                         frac=frac,
-                                         group=levs[i],
+      out[[length(out)+1]] <- data.frame(time=tj, nxzj=nxzj, axzj=axzj,
+                                         qxzj=qxzj, nz=nz, group=levs[i],
                                          strata=levs_adjust_var[j])
     }
   }
-  dat_stats <- dplyr::bind_rows(out)
+  out <- dplyr::bind_rows(out)
 
-  # calculate final survival estimates
-  plotdata <- dat_stats %>%
+  # appendix 1
+  if (conf_int) {
+    # calculate total nj (n at risk) in full data
+    tj_overall <- c(0, sort(unique(data[,ev_time][data[,event]==1])))
+    nj <- vapply(tj_overall, function(x){sum(data[,ev_time]>=x)},
+                 FUN.VALUE=numeric(1))
+    dat_nj <- data.frame(time=tj_overall, nj=nj)
+
+    # merge to previous output
+    out <- merge(out, dat_nj, by="time", all.x=TRUE)
+
+    # calculate wji
+    out$wji <- out$nz / out$nj
+
+    # calculate the sum needed at the end of equation 7
+    out <- out %>%
+      dplyr::group_by(., time, group) %>%
+      dplyr::mutate(sum_wq=sum(wji * qxzj))
+
+    # stratum specific variance
+    out$var_j <- out$wji^2 * ( ((1 - out$qxzj)*out$qxzj) / out$nxzj ) *
+      (1 / (1 - out$sum_wq)^2)
+  } else {
+    out$var_j <- 0
+  }
+
+  # 5.) + 6.) and variance from appendix
+  plotdata <- out %>%
     dplyr::group_by(., time, group) %>%
-    dplyr::summarise(frac_sum=sum(frac),
+    dplyr::summarise(frac=(sum(qxzj * nz)) / sum(nz),
+                     est_var=sum(var_j),
                      .groups="drop_last") %>%
     dplyr::group_by(., group) %>%
-    dplyr::mutate(surv=cumprod(frac_sum))
+    dplyr::mutate(surv=cumprod(1 - frac),
+                  se=sqrt(cumsum(est_var)))
+  plotdata$frac <- NULL
   plotdata <- as.data.frame(plotdata)
-  plotdata$frac_sum <- NULL
+
+  # equation 8 appendix
+  if (conf_int) {
+    surv_ci <- confint_surv(surv=log(plotdata$surv),
+                            se=plotdata$se,
+                            conf_level=conf_level,
+                            conf_type="plain")
+    plotdata$ci_lower <- exp(surv_ci$left)
+    plotdata$ci_upper <- exp(surv_ci$right)
+  } else {
+    plotdata$se <- NULL
+    plotdata$est_var <- NULL
+  }
 
   if (!is.null(times_input)) {
     plotdata <- specific_times(plotdata, times_input)
+  }
+
+  # remove NAs
+  if (na.rm) {
+    plotdata <- plotdata[!is.na(plotdata$surv),]
   }
 
   output <- list(plotdata=plotdata)

@@ -75,7 +75,7 @@ The primary purpose of the \code{adjustedsurv} function is to provide a convenie
   \item{"\link[=surv_tmle]{tmle}": Targeted Maximum Likelihood Estimation for survival curves.}
   \item{"\link[=surv_ostmle]{ostmle}": One-Step Targeted Maximum Likelihood Estimation for survival curves.}
   \item{"\link[=surv_strat_amato]{strat_amato}": A method based on stratification and weighting by Amato (1988).}
-  \item{"\link[=surv_strat_gregory]{strat_gregory}": A method based on stratification and weighting by Gregory (1988).}
+  \item{"\link[=surv_strat_gregory_nieto]{strat_gregory_nieto}": A method based on stratification and weighting by Gregory (1988) and Nieto & Coresh (1996).}
   \item{"\link[=surv_strat_cupples]{strat_cupples}": A method based on stratification and weighting by Cupples et al. (1995).}
   \item{"\link[=surv_km]{km}": A simple stratified Kaplan-Meier estimator without any form of adjustment.}
 }

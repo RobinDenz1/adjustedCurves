@@ -489,7 +489,7 @@ remove_unnecessary_covars <- function(data, method, variable, ev_time,
       needed_covars <- colnames(data)
     }
   } else if (method=="strat_cupples" | method=="strat_amato" |
-             method=="strat_gregory") {
+             method=="strat_gregory_nieto") {
     needed_covars <- c(needed_covars, args$adjust_vars)
   }
 

@@ -222,7 +222,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
     if (is.null(times) & !bootstrap & method %in% c("km", "iptw_km",
                                                     "iptw_cox",
                                                     "strat_amato",
-                                                    "strat_gregory")) {
+                                                    "strat_gregory_nieto")) {
       times <- NULL
     } else if (is.null(times)) {
       times <- sort(unique(data[, ev_time][data[, event]==1]))
@@ -718,8 +718,8 @@ print.adjustedsurv <- function(x, ...) {
     method_name <- "Stratification & Weighting by Cupples et al."
   } else if (x$method=="strat_amato") {
     method_name <- "Stratification & Weighting by Amato"
-  } else if (x$method=="strat_gregory") {
-    method_name <- "Stratification & Weighting by Gregory"
+  } else if (x$method=="strat_gregory_nieto") {
+    method_name <- "Stratification & Weighting by Gregory / Nieto & Coresh"
   }
 
   times_str <- ifelse(is.null(x$call$times), "Event-Specific Times",
