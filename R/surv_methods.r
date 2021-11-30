@@ -443,7 +443,7 @@ surv_matching <- function(data, variable, ev_time, event, conf_int=FALSE,
     levs <- levels(data[,variable])
     data[,variable] <- ifelse(data[,variable]==levs[1], 0, 1)
   } else {
-    levs <- unique(data[,variable])
+    levs <- sort(unique(data[,variable]))
   }
 
   if (is.numeric(treatment_model)) {
@@ -751,7 +751,7 @@ surv_emp_lik <- function(data, variable, ev_time, event, conf_int=FALSE,
     levs <- levels(data[,variable])
     data[,variable] <- ifelse(data[,variable]==levs[1], 0, 1)
   } else {
-    levs <- unique(data[,variable])
+    levs <- sort(unique(data[,variable]))
   }
 
   el_0 <- el.est(y=data[, ev_time],

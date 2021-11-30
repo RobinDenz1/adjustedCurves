@@ -73,9 +73,9 @@ If multiple imputation was used the output also contains an \code{mids_analyses}
 
 }
 \references{
-Sarah C. Conner, Lisa M. Sullivan, Emelia J. Benjamin, Michael P. LaValley, Sandro Galea, and Ludovic Trinquart. "Adjusted Restricted Mean Survival Times in Observational Studies". In: Statistics in Medicine 38 (2019), pp. 3832-3860.
+Sarah C. Conner et al. (2019). "Adjusted Restricted Mean Survival Times in Observational Studies". In: Statistics in Medicine 38, pp. 3832–3860
 
-Patrick Royston and Mahesh K. B. Parmar. "Restricted Mean Survival Time: An Alternative to the Hazard Ratio for the Design and Analysis of Randomized Trials with a Time-To-Event Outcome". In: BMC Medical Research Methodology 13.152 (2013).
+Patrick Royston and Mahesh K. B. Parmar (2013). "Restricted Mean Survival Time: An Alternative to the Hazard Ratio for the Design and Analysis of Randomized Trials with a Time-To-Event Outcome". In: BMC Medical Research Methodology 13.152
 }
 \author{
 Robin Denz

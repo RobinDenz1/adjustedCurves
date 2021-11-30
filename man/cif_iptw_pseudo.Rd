@@ -95,7 +95,7 @@ J. N. Galloway, G. E. Likens, and M. E. Hawley. "Acid Precipitation: Natural Ver
 
 J. M. Miller. A Statistical Evaluation of the U.S. Precipitation Chemistry Network. Precipitation Scavenging (edited by Semonin R. G. and Beadle R. W.) pp. 639-659. Available as CONF 74100 from National Technical Information Service, U.S. Dept. of Commerce, Springfiel, VA. 1977.
 
-S. Zeng, F. Li, L. Hu and F. Li. "Propensity Score Weighting Analysis of Survival Outcomes Using Pseudo-Observations". In: arXiv: 2103.00605v1 (2021)
+Shuxi Zeng et al. (2021). Propensity Score Weighting Analysis of Survival Outcomes Using Pseudo-Observations. arXiv: 2103.00605v1
 }
 \author{
 Robin Denz

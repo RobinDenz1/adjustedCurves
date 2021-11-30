@@ -77,7 +77,7 @@ Beyersman, Jan, Arelien Latouche, Anika Buchholz and Martin Schumacher (2009). "
 
 Morina, D. and A. Navarro (2017). "Competing Risks Simulation with the survsim R Package". In: Communications in Statistics: Simulation and Computation 46.7, pp. 5712-5722.
 
-Arthur Chatton, Florent Le Borgne, Clemence Leyrat, and Yohann Foucher. G-Computation and Inverse Probability Weighting for Time-To-Event Outcomes: A Comparative Study. arXiv:2006.16859v1. (2020).
+Arthur Chatton et al. (2020). G-Computation and Inverse Probability Weighting for Time-To-Event Outcomes: A Comparative Study. arXiv:2006.16859v1
 }
 \author{
 The code for step (3) and (4) described in the details was taken from the \pkg{survsim} R-Package, written by David Morina Soler (with slight modifications). The rest of the function was written by Robin Denz.

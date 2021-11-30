@@ -511,6 +511,11 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
   } else if (ylab=="Adjusted Cumulative Incidence" & x$method=="km") {
     ylab <- "Cumulative Incidence"
   }
+  # also warn the user when using steps=FALSE with Kaplan-Meier
+  if (x$method=="km" & !steps) {
+    warning("Unadjusted Kaplan-Meier estimates should only be drawn as",
+            " step functions (steps=TRUE).")
+  }
 
   p <- p + gg_theme +
     ggplot2::labs(x=xlab, y=ylab, color=legend.title,

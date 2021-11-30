@@ -1,6 +1,6 @@
 \name{sim_confounded_surv}
 \alias{sim_confounded_surv}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Simulate Survival Data with Confounders
 }
@@ -15,7 +15,6 @@ sim_confounded_surv(n=500, lcovars=NULL, outcome_betas=NULL,
                     cens_fun=function(n){stats::rweibull(n, 1, 2)},
                     cens_args=list(), max_t=Inf)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{n}{
   An integer specifying the sample size of the simulated data set.
@@ -78,7 +77,7 @@ Returns a \code{data.frame} object containing the simulated covariates, the even
 \references{
 Ralf Bender, Thomas Augustin, and Maria Blettner. "Generating Survival Times to Simulate Cox Proportional Hazards Models". In: Statistics in Medicine 24.11 (2005), pp. 1713-1723.
 
-Arthur Chatton, Florent Le Borgne, Clemence Leyrat, and Yohann Foucher. G-Computation and Inverse Probability Weighting for Time-To-Event Outcomes: A Comparative Study. arXiv:2006.16859v1. (2020).
+Arthur Chatton et al. (2020). G-Computation and Inverse Probability Weighting for Time-To-Event Outcomes: A Comparative Study. arXiv:2006.16859v1
 }
 \author{
 Robin Denz

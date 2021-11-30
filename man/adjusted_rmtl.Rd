@@ -65,7 +65,7 @@ If multiple imputation was used the output also contains an \code{mids_analyses}
 
 }
 \references{
-Conner, S. C. & Trunquart, L. Estimation and Modeling of the Restricted Mean Time Lost in the Presence of Competing Risks. Statistics in Medicine, 2021
+Sarah C. Conner and Ludovic Trunquart (2021). "Estimation and Modeling of the Restricted Mean Time Lost in the Presence of Competing Risks". In: Statistics in Medicine
 }
 \author{
 Robin Denz
