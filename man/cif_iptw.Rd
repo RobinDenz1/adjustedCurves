@@ -76,11 +76,11 @@ Internally, this function simply calls the \code{\link[riskRegression]{ate}} fun
 Returns a \code{list} object containing a \code{data.frame} with estimated CIFs for some points in time for each level of \code{variable} and the original object created using the \code{ate} function.
 }
 \references{
-Anke Neumann and Cecile Billionnet. "Covariate Adjustment of Cumulative Incidence Functions for Competing Risks Data Using Inverse Probability of Treatment Weighting". In: Computer Methods and Programs in Biomedicine 129 (2016), pp. 63–70.
+Anke Neumann and Cécile Billionnet (2016). "Covariate Adjustment of Cumulative Incidence Functions for Competing Risks Data Using Inverse Probability of Treatment Weighting". In: Computer Methods and Programs in Biomedicine 129, pp. 63-70
 
-Sangbum Choi, Chaewon Kim, Hua Zhong, Eun-Seok Ryu, and SungWon Han. "Adjusted-Crude-Incidence Analysis of Multiple Treatments and Unbalanced Samples on Competing Risks". In: Statistics and Its Inference 12 (2019), pp. 423–437.
+Sangbum Choi, Chaewon Kim, Hua Zhong, Eun-Seok Ryu, and Sung Won Han (2019). "Adjusted-Crude-Incidence Analysis of Multiple Treatments and Unbalanced Samples on Competing Risks". In: Statistics and Its Inference 12, pp. 423-437
 
-Brice Maxime Hugues Ozenne, Thomas Harder Scheike, and Laila Staerk. "On the Estimation of Average Treatment Effects with Right-Censored Time to Event Outcome and Competing Risks". In: Biometrical Journal 62 (2020), pp. 751–763.
+Brice Maxime Hugues Ozenne, Thomas Harder Scheike, and Laila Stærk (2020). "On the Estimation of Average Treatment Effects with Right-Censored Time to Event Outcome and Competing Risks". In: Biometrical Journal 62, pp. 751-763
 }
 \author{
 The wrapper function was written by Robin Denz, the \code{\link[riskRegression]{ate}} function itself was written by other people. See \code{?ate} for more information.

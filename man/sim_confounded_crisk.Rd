@@ -73,11 +73,11 @@ Returns a \code{data.frame} object containing the simulated covariates, the even
 }
 
 \references{
-Beyersman, Jan, Arelien Latouche, Anika Buchholz and Martin Schumacher (2009). "Simulating Competing Risks Data in Survival Analysis". In: Statistics in Medicine 28, S. 956-971.
+Jan Beyersmann, Arélien Latouche, Anika Buchholz, and Martin Schumacher (2009). "Simulating Competing Risks Data in Survival Analysis". In: Statistics in Medicine 28, pp. 956-971
 
-Morina, D. and A. Navarro (2017). "Competing Risks Simulation with the survsim R Package". In: Communications in Statistics: Simulation and Computation 46.7, pp. 5712-5722.
+D. Morina and A. Navarro (2017). "Competing Risks Simulation with the survsim R Package". In: Communications in Statistics: Simulation and Computation 46.7, pp. 5712-5722
 
-Arthur Chatton et al. (2020). G-Computation and Inverse Probability Weighting for Time-To-Event Outcomes: A Comparative Study. arXiv:2006.16859v1
+Arthur Chatton, Florent Le Borgne, Clémence Leyrat, and Yohann Foucher (2020). G-Computation and Inverse Probability Weighting for Time-To-Event Outcomes: A Comparative Study. arXiv:2006.16859v1
 }
 \author{
 The code for step (3) and (4) described in the details was taken from the \pkg{survsim} R-Package, written by David Morina Soler (with slight modifications). The rest of the function was written by Robin Denz.

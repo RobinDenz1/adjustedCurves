@@ -75,9 +75,9 @@ In the literature this method is sometimes called "Direct Standardization", "Cor
 Returns a \code{list} object containing a \code{data.frame} with estimated CIFs for some points in time for each level of \code{variable} and the original object created using the \code{ate} function.
 }
 \references{
-Xu Zhang and Mei-Jie Zhang. "SAS Macros for Estimation of Direct Adjusted Cumulative Incidence Curves Under Proportional Subdistribution Hazards Models". In: Computer Methods and Programs in Biomedicine 101.1 (2011), pp. 87–93.
+Xu Zhang and Mei-Jie Zhang (2011). "SAS Macros for Estimation of Direct Adjusted Cumulative Incidence Curves Under Proportional Subdistribution Hazards Models". In: Computer Methods and Programs in Biomedicine 101.1, pp. 87-93
 
-Brice Maxime Hugues Ozenne, Thomas Harder Scheike, and Laila Staerk. "On the Estimation of Average Treatment Effects with Right-Censored Time to Event Outcome and Competing Risks". In: Biometrical Journal 62 (2020), pp. 751–763.
+Brice Maxime Hugues Ozenne, Thomas Harder Scheike, and Laila Staerk (2020). "On the Estimation of Average Treatment Effects with Right-Censored Time to Event Outcome and Competing Risks". In: Biometrical Journal 62, pp. 751-763
 }
 \author{
 The function itself was written by Robin Denz. When using \code{CauseSpecificCox} models however, this function is just a wrapper around the \code{\link[riskRegression]{ate}} function, which was written by other people. See \code{?ate} for more information.

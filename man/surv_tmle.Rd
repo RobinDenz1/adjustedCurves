@@ -88,9 +88,11 @@ When the sample size is large or many time points are of interest, this method w
 Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable}, the object created using the \code{\link[survtmle]{survtmle}} function and the object created using the \code{survtmle.timepoints} function.
 }
 \references{
-Megan S. Schuler and Sherri Rose. "Targeted Maximum Likelihood Estimation for Causal Inference in Observational Studies". In: American Journal of Epidemiology 186.1 (2017), pp. 65-73.
+Ori M. Stitelman and Mark J. van der Laan (2010). "Collaborative Targeted Maximum Likelihood for Time to Event Data". In: The International Journal of Biostatistics 6.1
 
+David Benkeser, Marco Carone, and Peter B. Gilbert (2018). "Improved Estimation of the Cumulative Incidence of Rare Outcomes". In: Statistics in Medicine 37.2, pp. 280-293
 
+Megan S. Schuler and Sherri Rose (2017). "Targeted Maximum Likelihood Estimation for Causal Inference in Observational Studies". In: American Journal of Epidemiology 186.1, pp. 65-73
 }
 \author{
 The wrapper function was written by Robin Denz, the \code{survtmle} package (which this wrapper is based on) was written by David Benkeser and Nima Hejazi. See \code{?survtmle} for more details.

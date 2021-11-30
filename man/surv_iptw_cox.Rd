@@ -75,11 +75,11 @@ By default this method uses a a robust sandwich-type variance estimator (\code{r
 Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable}, the weighted \code{coxph} model, the weighted \code{survfit} object and the weights used in the analysis.
 }
 \references{
-Stephen R. Cole and Miguel A. Hernan. "Adjusted Survival Curves with Inverse Probability Weights". In: Computer Methods and Programs in Biomedicine 2003.75 (2004), pp. 45-49.
+Stephen R. Cole and Miguel A. Hernán (2004). "Adjusted Survival Curves with Inverse Probability Weights". In: Computer Methods and Programs in Biomedicine 2003.75, pp. 45-49
 
-Peter C. Austin. "Variance Estimation when Using Inverse Probability of Treatment Weighting (IPTW) with Survival Analysis". In: Statistics in Medicine 35 (2016), pp. 5642-5655.
+Peter C. Austin (2016). "Variance Estimation when Using Inverse Probability of Treatment Weighting (IPTW) with Survival Analysis". In: Statistics in Medicine 35, pp. 5642-5655
 
-Stanley Xu, Colleen Ross and Marsha A. Raebel, Susan Shetterly, Christopher Blanchette, and David Smith. "Use of Stabilized Inverse Propensity Scores as Weights to Directly Estimate Relative Risk and Its Confidence Intervals". In: Value in Health 13.2 (2010), pp. 273-277.
+Stanley Xu, Colleen Ross abd Marsha A. Raebel, Susan Shetterly, Christopher Blanchette, and David Smith (2010). "Use of Stabilized Inverse Propensity Scores as Weights to Directly Estimate Relative Risk and Its Confidence Intervals". In: Value in Health 13.2, pp. 273-277
 }
 \author{
 Robin Denz

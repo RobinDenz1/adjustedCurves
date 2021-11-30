@@ -61,7 +61,7 @@ The type of confidence interval that should be calculated. Has to be a character
 Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable} and the original \code{survfit} object.
 }
 \references{
-E. L. Kaplan and Paul Meier. "Nonparametric Estimation from Incomplete Observations". In: Journal of the American Statistical Association 53.282 (1958), pp. 457-481.
+E. L. Kaplan and Paul Meier (1958). "Nonparametric Estimation from Incomplete Observations". In: Journal of the American Statistical Association 53.282, pp. 457-481
 }
 \author{
 The wrapper function was written by Robin Denz, the \code{survfit} function (which this wrapper is build around) was written by other people. See \code{?survfit} for more details.

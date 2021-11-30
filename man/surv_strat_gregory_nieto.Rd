@@ -68,9 +68,9 @@ Nieto & Coresh (1996) proposed a very similar method. The only major difference 
 Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
 }
 \references{
-Gregory, W. M. Adjusting Survival Curves for Imbalances in Prognostic Factors. British Journal of Cancer, 1988, 58, 202-204
+W. M. Gregory (1988). "Adjusting Survival Curves for Imbalances in Prognostic Factors". In: British Journal of Cancer 58, pp. 202-204
 
-Nieto, F. J. & Coresh, J. Adjusting Survival Curves for Confounders: A Review and a New Method. American Journal of Epidemiology, 1996, 143, 1059-1068
+F. Javier Nieto and Josef Coresh (1996). "Adjusting Survival Curves for Confounders: A Review and a New Method". In: American Journal of Epidemiology 143.10, pp. 1059-1068
 }
 \author{
 Robin Denz

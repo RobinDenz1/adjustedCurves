@@ -33,9 +33,9 @@ When competing risks are present, the cause-specific confounder-adjusted surviva
 Bug reports, suggestions and feature requests are highly welcome. Please file an issue on the official github page or contact the author directly using the supplied e-mail address.
 }
 \references{
-Weixin Cai & Mark J. van der Laan. "One-Step Targeted Maximum Likelihood Estimation for Time-To-Event Outcomes". In: Biometrics 76 (2020), pp. 722-733.
+Weixin Cai and Mark J. van der Laan (2020). "One-Step Targeted Maximum Likelihood Estimation for Time-To-Event Outcomes". In: Biometrics 76, pp. 722-733
 
-J. M. Satagopan; L. Ben-Porat; M. Berwick; M. Robson; D. Kutler & Auerbach, A. D. "A Note on Competing Risks in Survival Data Analysis". In: British Journal of Cancer, 91 (2004), pp. 1229-1235.
+J. M. Satagopan, L. Ben-Porat, M. Berwick, M. Robson, D. Kutler, and A. D. Auerbach (2004). "A Note on Competing Risks in Survival Data Analysis". In: British Journal of Cancer 91, pp. 1229-1235.
 }
 \author{
 Robin Denz, <robin.denz@rub.de>

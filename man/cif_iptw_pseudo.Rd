@@ -83,19 +83,19 @@ The standard error of this estimator can be approximated by calculation a weight
 Returns a \code{list} object containing a \code{data.frame} with estimated CIFs for some points in time for each level of \code{variable}, the estimated pseudo-values and the weights used in the analysis.
 }
 \references{
-Per K. Andersen, Elisavet Syriopoulou, and Erik T. Parner. "Causal Inference in Survival Analysis using Pseudo-Observations". In: Statistics in Medicine 36 (2017), pp. 2669-2681.
+Per Kragh Andersen, Elisavet Syriopoulou, and Erik T. Parner (2017). "Causal Inference in Survival Analysis using Pseudo-Observations". In: Statistics in Medicine 36, pp. 2669-2681
 
-Per K. Andersen and Maja Pohar Perme. "Pseudo-Observations in Survival Analysis". In: Statistical Methods in Medical Research 19 (2010), pp. 71-99.
+Per Kragh Andersen and Maja Pohar Perme (2010). "Pseudo-Observations in Survival Analysis". In: Statistical Methods in Medical Research 19, pp. 71-99
 
-Donald F. Gatz and Luther Smith. "The Standard Error of a Weighted Mean Concentration - I: Bootstrapping Vs Other Methods". In: Atmospheric Environment 29.11 (1995), pp. 1185-1193.
+Donald F. Gatz and Luther Smith (1995). "The Standard Error of a Weighted Mean Concentration - I: Bootstrapping Vs Other Methods". In: Atmospheric Environment 29.11, pp. 1185-1193
 
-William G. Cochrane. Sampling Techniques. Vol. 3. New York: Wiley, 1977.
+William G. Cochran (1977). Sampling Techniques. Vol. 3. New York: Wiley
 
-J. N. Galloway, G. E. Likens, and M. E. Hawley. "Acid Precipitation: Natural Versus Anthropogenic Components". In: Science 226 (1984), pp. 829-831.
+J. N. Galloway, G. E. Likens, and M. E. Hawley (1984). "Acid Precipitation: Natural Versus Anthropogenic Components". In: Science 226, pp. 829-831
 
-J. M. Miller. A Statistical Evaluation of the U.S. Precipitation Chemistry Network. Precipitation Scavenging (edited by Semonin R. G. and Beadle R. W.) pp. 639-659. Available as CONF 74100 from National Technical Information Service, U.S. Dept. of Commerce, Springfiel, VA. 1977.
+J. M. Miller (1977). A Statistical Evaluation of the U.S. Precipitation Chemistry Network. Precipitation Scavenging (edited by Semonin R. G. and Beadle R. W.) pp. 639-659. Available as CONF 74100 from National Technical Information Service, U.S. Dept. of Commerce, Springfiel, VA.
 
-Shuxi Zeng et al. (2021). Propensity Score Weighting Analysis of Survival Outcomes Using Pseudo-Observations. arXiv: 2103.00605v1
+Shuxi Zeng, Fan Li, Liangyuan Hu, and Fan Li (2021). Propensity Score Weighting Analysis of Survival Outcomes Using Pseudo-Observations. arXiv: 2103.00605v1
 }
 \author{
 Robin Denz

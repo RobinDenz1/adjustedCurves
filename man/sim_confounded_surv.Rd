@@ -75,9 +75,9 @@ Returns a \code{data.frame} object containing the simulated covariates, the even
 }
 
 \references{
-Ralf Bender, Thomas Augustin, and Maria Blettner. "Generating Survival Times to Simulate Cox Proportional Hazards Models". In: Statistics in Medicine 24.11 (2005), pp. 1713-1723.
+Ralf Bender, Thomas Augustin, and Maria Blettner (2005). "Generating Survival Times to Simulate Cox Proportional Hazards Models". In: Statistics in Medicine 24.11, pp. 1713-1723
 
-Arthur Chatton et al. (2020). G-Computation and Inverse Probability Weighting for Time-To-Event Outcomes: A Comparative Study. arXiv:2006.16859v1
+Arthur Chatton, Florent Le Borgne, Clémence Leyrat, and Yohann Foucher (2020). G-Computation and Inverse Probability Weighting for Time-To-Event Outcomes: A Comparative Study. arXiv:2006.16859v1
 }
 \author{
 Robin Denz

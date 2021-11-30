@@ -72,7 +72,7 @@ Simulation results showed that this specific implementation of this method is th
 Returns a \code{list} object containing a \code{data.frame} with estimated CIFs for some points in time for each level of \code{variable} and the object created using the \code{\link[Matching]{Match}} function.
 }
 \references{
-Peter C. Austin and Jason P. Fine. "Propensity-Score Matching with Competing Risks in Survival Analysis". In: Statistics in Medicine 38 (2019), pp. 751–777.
+Peter C. Austin and Jason P. Fine (2019). "Propensity-Score Matching with Competing Risks in Survival Analysis". In: Statistics in Medicine 38, pp. 751-777
 }
 \author{
 Robin Denz

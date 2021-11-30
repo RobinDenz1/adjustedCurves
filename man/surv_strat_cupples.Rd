@@ -70,9 +70,9 @@ If a character vector is supplied in the \code{adjust_vars} argument, the Kaplan
 Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
 }
 \references{
-Cupples, L. A.; Gragnon, D. R.; Ramaswamy, R. & D'Agostino, R. Age-Adjusted Survival Curves with Application in the Framingham Study. Statistics in Medicine, 1995, 14, 1731-1744
+A. Kramar and C. Com-Nougué (1990). "Estimation des courbes de survie ajustées". In: Revue d Épidémiologie et de Santé Publique 38.2, pp. 149-152
 
-Kramar A.; Com-Nougué, C. Estimation des courbes de survie ajustées. Revue d Épidémiologie et de Santé Publique, 1990, 38, 149-152
+L. Adrienne Cupples, David R. Gragnon, Ratna Ramaswamy, and Ralph D’Agostino (1995). "Age-Adjusted Survival Curves with Application in the Framingham Study". In: Statistics in Medicine 14, pp. 1731-1744
 }
 \author{
 Robin Denz

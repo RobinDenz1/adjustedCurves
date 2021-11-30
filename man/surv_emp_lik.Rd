@@ -74,9 +74,9 @@ A non-parametric likelihood based method which does not require the researcher t
 Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
 }
 \references{
-Xiaofei Wang, Fangfang Bai, Herbert Pang, and Stephen L. George. "Bias-Adjusted Kaplan-Meier Survival Curves for Marginal Treatment Effect in Observational Studies". In: Journal of Biopharmaceutical Statistics 29.4 (2019), pp. 592-605.
+Xiaofei Wang, Fangfang Bai, Herbert Pang, and Stephen L. George (2019). "Bias-Adjusted Kaplan-Meier Survival Curves for Marginal Treatment Effect in Observational Studies". In: Journal of Biopharmaceutical Statistics 29.4, pp. 592-605
 
-Art B. Owen. Empirical Likelihood. Boca Raton: CRC Press, 2001.
+Art B. Owen (2001). Empirical Likelihood. Boca Raton: CRC Press
 }
 \author{
 All functions used for the estimation were written by:

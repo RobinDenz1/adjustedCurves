@@ -111,9 +111,9 @@ Similarly, some methods can produce estimates that lie outside the theoretical 0
 Returns a \code{ggplot2} object.
 }
 \references{
-Ted Westling, Mark J. van der Laan, and Marco Carone. "Correcting an Estimator of a Multivariate Monotone Function with Isotonic Regression". In: Electronic Journal of Statistics 14 (2020), pp. 3032-3069.
+Ted Westling, Mark J. van der Laan, and Marco Carone (2020). "Correcting an Estimator of a Multivariate Monotone Function with Isotonic Regression". In: Electronic Journal of Statistics 14, pp. 3032-3069
 
-Robertson, T., Wright, F. T. and Dykstra, R. L. "Order Restricted Statistical Inference". John Wiley & Sons, (1988)
+Tim Robertson, F. T. Wright, and R. L. Dykstra (1988). Order Restricted Statistical Inference. Hoboken: John Wiley & Sons
 }
 \author{
 Robin Denz

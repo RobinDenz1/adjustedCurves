@@ -71,13 +71,13 @@ Simulation studies have shown that this particular method as implemented here is
 Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable} and the object created using the \code{Match} function.
 }
 \references{
-Austin, P. C. "The Use of Propensity Score Methods with Survival or Time-To-Event Outcomes: Reporting Measures of Effect Similar to those Used in Randomized Experiments". In: Statistics in Medicine 33 (2014), 1242-1258
+Peter C. Austin (2014). "The Use of Propensity Score Methods with Survival or Time-To-Event Outcomes: Reporting Measures of Effect Similar to those Used in Randomized Experiments". In: Statistics in Medicine 33, pp. 1242-1258
 
-Winnett, A. & Sasieni, P. "Adjusted Nelson-Aalen Estimates with Retrospective Matching". In: Journal of the American Statistical Association 97 (2002), 245-256
+Angela Winnett and Peter Sasieni (2002). "Adjusted Nelson-Aalen Estimates with Retrospective Matching". In: Journal of the American Statistical Association 97.457, pp. 245-256
 
-Galimberti, S.; Sasieni, P. & Valsecchi, M. G. "A Weighted Kaplan-Meier Estimator for Matched Data with Application to the Comparison of Chemotherapy and Bone-Marrow Transplant in Leukaemia". In: Statistics in Medicine 21 (2002), 3847-3864
+Stefania Galimberti, Peter Sasieni, and Maria Grazia Valsecchi (2002). "A Weighted Kaplan-Meier Estimator for Matched Data with Application to the Comparison of Chemotherapy and Bone-Marrow Transplant in Leukaemia". In: Statistics in Medicine 21, pp. 3847-3864
 
-Austin, P. C.; Thomas, N. & Rubin, D. B. "Covariate-Adjusted Survival Analyses in Propensity-Score Matched Samples: Imputing Potential Time-To-Event Outcomes". In: Statistical Methods in Medical Research 29 (2020), 728-751
+Peter C. Austin, Neal Thomas, and Donald B. Rubin (2020). "Covariate-Adjusted Survival Analyses in Propensity-Score Matched Samples: Imputing Potential Time- To-Event Outcomes". In: Statistical Methods in Medical Research 29.3, pp. 728-751
 }
 \author{
 Robin Denz

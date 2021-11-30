@@ -72,11 +72,11 @@ In the literature this method is sometimes called "Direct Standardization", "Cor
 Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable} and the original object created using the \code{ate} function.
 }
 \references{
-I-Ming Chang, Rebecca Gelman, and Marcello Pagano. "Corrected Group Prognostic Curves and Summary Statistics". In: Journal of Chronic Diseases 35 (1982), pp. 669-674.
+I-Ming Chang, Rebecca Gelman, and Marcello Pagano (1982). "Corrected Group Prognostic Curves and Summary Statistics". In: Journal of Chronic Diseases 35, pp. 669-674
 
-Robert W. Makuch. "Adjusted Survival Curve Estimation Using Covariates". In: Journal of Chronic Diseases 35.6 (1982), pp. 437-443.
+Robert W. Makuch (1982). "Adjusted Survival Curve Estimation Using Covariates". In: Journal of Chronic Diseases 35.6, pp. 437-443
 
-Xu Zhang, Fausto R. Loberiza, John P. Klein, and Mei-Jie Zhang. "A SAS Macro for Estimation of Direct Adjusted Survival Curves Based on a Stratified Cox Regression Model". In: Computer Methods and Programs in Biomedicine 88 (2007), pp. 95-101.
+Xu Zhang, Fausto R. Loberiza, John P. Klein, and Mei-Jie Zhang (2007). "A SAS Macro for Estimation of Direct Adjusted Survival Curves Based on a Stratified Cox Regression Model". In: Computer Methods and Programs in Biomedicine 88, pp. 95-101
 }
 \author{
 The function itself was written by Robin Denz. When using \code{coxph} models however, this function is just a wrapper around the \code{\link[riskRegression]{ate}} function, which was written by other people. See \code{?ate} for more information.

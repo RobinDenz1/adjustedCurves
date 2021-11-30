@@ -67,7 +67,7 @@ If a character vector is supplied in the \code{adjust_vars} argument, every poss
 Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
 }
 \references{
-Amato, D. A. A Generalized Kaplan-Meier Estimator for Heterogenous Populations. Communications in Statistics: Theory and Methods, 1988, 17, 263-286
+David A. Amato (1988). "A Generalized Kaplan-Meier Estimator for Heterogenous Populations". In: Communications in Statistics: Theory and Methods 17.1, pp. 263-286
 }
 \author{
 Robin Denz

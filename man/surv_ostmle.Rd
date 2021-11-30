@@ -94,7 +94,11 @@ When the sample size is large or many time points are of interest, this method w
 Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable} and the original iterated MOSS objects for each treatment.
 }
 \references{
-Weixin Cai and Mark J. van der Laan. "One-Step Targeted Maximum Likelihood Estimation for Time-To-Event Outcomes". In: Biometrics 76 (2020), pp. 722-733.
+Weixin Cai and Mark J. van der Laan (2020). "One-Step Targeted Maximum Likelihood Estimation for Time-To-Event Outcomes". In: Biometrics 76, pp. 722–733
+
+David Benkeser, Marco Carone, and Peter B. Gilbert (2018). "Improved Estimation of the Cumulative Incidence of Rare Outcomes". In: Statistics in Medicine 37.2, pp. 280–293
+
+Megan S. Schuler and Sherri Rose (2017). "Targeted Maximum Likelihood Estimation for Causal Inference in Observational Studies". In: American Journal of Epidemiology 186.1, pp. 65-73
 }
 \author{
 The wrapper function was written by Robin Denz, the \code{MOSS} package (which this wrapper is based on) was written by Wilson Cai. See <https://github.com/wilsoncai1992/MOSS/> for more details.

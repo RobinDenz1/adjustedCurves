@@ -92,9 +92,9 @@ When the sample size is large or many time points are of interest, this method w
 Returns a \code{list} object containing a \code{data.frame} with estimated CIFs for some points in time for each level of \code{variable}, the object created using the \code{\link[survtmle]{survtmle}} function and the object created using the \code{survtmle.timepoints} function.
 }
 \references{
-Megan S. Schuler and Sherri Rose. "Targeted Maximum Likelihood Estimation for Causal Inference in Observational Studies". In: American Journal of Epidemiology 186.1 (2017), pp. 65-73.
+Megan S. Schuler and Sherri Rose (2017). "Targeted Maximum Likelihood Estimation for Causal Inference in Observational Studies". In: American Journal of Epidemiology 186.1, pp. 65-73
 
-David Benkeser, Marco Carone, and Peter B. Gilbert. "Improved Estimation of the Cumulative Incidence of Rare Outcomes". In: Statistics in Medicine 37.2 (2018), pp. 280–293.
+David Benkeser, Marco Carone, and Peter B. Gilbert (2018). "Improved Estimation of the Cumulative Incidence of Rare Outcomes". In: Statistics in Medicine 37.2, pp. 280-293
 }
 \author{
 The wrapper function was written by Robin Denz, the \pkg{survtmle} package (which this wrapper is based on) was written by David Benkeser and Nima Hejazi. See \code{?survtmle} for more details.

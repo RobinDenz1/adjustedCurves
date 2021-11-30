@@ -66,15 +66,15 @@ If multiply imputed datasets where used, the object also includes a \code{mids_a
 
 }
 \references{
-Margaret Sullivan Pepe and Thomas R. Fleming. "Weighted Kaplan-Meier Statistics: A Class of Distance Tests for Censored Survival Data". In: Biometrics 45.2 (1989), pp. 497-507.
+Margaret Sullivan Pepe and Thomas R. Fleming (1989). "Weighted Kaplan-Meier Statistics: A Class of Distance Tests for Censored Survival Data". In: Biometrics 45.2, pp. 497-507
 
-Margaret Sullivan Pepe and Thomas R. Fleming. "Weighted Kaplan-Meier Statistics: Large Sample and Optimality Considerations". In: Journal of the Royal Statistical Society: Series B 53.2 (1991), pp. 341–352.
+Margaret Sullivan Pepe and Thomas R. Fleming (1991). "Weighted Kaplan-Meier Statistics: Large Sample and Optimality Considerations". In: Journal of the Royal Statistical Society: Series B 53.2, pp. 341-352
 
-Nicholas I. Fisher and Peter Hall. "On Bootstrap Hypothesis Testing". In: Australian Journal of Statistics 32.2 (1990), pp. 177-190.
+Nicholas I. Fisher and Peter Hall (1990). "On Bootstrap Hypothesis Testing". In: Australian Journal of Statistics 32.2, pp. 177-190
 
-Florent Le Borgne, Bruno Giraudeau, Anne Héléne Querard, Magali Giral, and Yohann Foucher. "Comparisons of the Performance of Different Statistical Tests for Time-To-Event Analysis with Confounding Factors: Practical Illustrations in Kidney Transplantation". In: Statistics in Medicine 35 (2016), pp. 1103-1116.
+Florent Le Borgne, Bruno Giraudeau, Anne Héléne Querard, Magali Giral, and Yohann Foucher (2016). "Comparisons of the Performance of Different Statistical Tests for Time-To-Event Analysis with Confounding Factors: Practical Illustrations in Kidney Transplantation". In: Statistics in Medicine 35, pp. 1103-1116
 
-Licht, C. "New Methods for Generating Significance Levels from Multiply-Imputed Data", PhD Thesis, Otto-Friedrich-Universität Bamberg, Fakultät Sozial- und Wirtschaftswissenschaften, 2010
+Christine Licht (2010). "New Methods for Generating Significance Levels from Multiply-Imputed Data". PhD thesis. Otto-Friedrich-Universität Bamberg, Fakultät Sozial- und Wirtschaftswissenschaften
 }
 \author{
 Robin Denz
