@@ -171,7 +171,6 @@ read_from_step_function <- function(x, step_data, est="surv") {
 }
 
 ## calculate difference between two step functions
-## according to some transformation function
 exact_stepfun_difference <- function(adjsurv, times, est="surv") {
 
   levs <- unique(adjsurv$group)
@@ -230,7 +229,6 @@ exact_stepfun_integral <- function(stepfun, from, to, est="surv") {
       temp[,est] <- earliest
       stepfun <- rbind(temp, stepfun)
     }
-
   }
 
   # when there are unknown survival times, return NA

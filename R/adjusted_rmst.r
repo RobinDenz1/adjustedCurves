@@ -155,6 +155,11 @@ adjusted_rmst <- function(adjsurv, to, from=0, use_boot=FALSE,
 
   check_inputs_adj_rmst(adjsurv=adjsurv, from=from, to=to, use_boot=use_boot)
 
+  # set to FALSE if it can't be done
+  if (use_boot & is.null(adjsurv$boot_adjsurv)) {
+    use_boot <- FALSE
+  }
+
   out <- AUC(object=adjsurv, to=to, from=from, use_boot=use_boot,
              conf_level=conf_level)
   class(out) <- "adjusted_rmst"
@@ -168,6 +173,11 @@ adjusted_rmtl <- function(adj, to, from=0, use_boot=FALSE,
                           conf_level=0.95) {
 
   check_inputs_adj_rmtl(adj=adj, from=from, to=to, use_boot=use_boot)
+
+  # set to FALSE if it can't be done
+  if (use_boot & is.null(adj$boot_adjsurv) & is.null(adj$boot_adjcif)) {
+    use_boot <- FALSE
+  }
 
   # calculate area under curve
   out <- AUC(object=adj, to=to, from=from, use_boot=use_boot,

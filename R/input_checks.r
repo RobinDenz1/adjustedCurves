@@ -113,6 +113,18 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
       stop("When using multiple imputation, mira objects need to be supplied",
            " to 'censoring_model' instead of single models. See documentation.")
     }
+    # warn user when there are missing values in event variable
+    if (anyNA(as.data.frame(data$data)[,event])) {
+      warning("Using multiple imputation with missing values in 'event'",
+              " variable has not been tested yet. Use with caution.",
+              call.=FALSE)
+    }
+    # warn user when there are missing values in ev_time variable
+    if (anyNA(as.data.frame(data$data)[,ev_time])) {
+      warning("Using multiple imputation with missing values in 'ev_time'",
+              " variable has not been tested yet. Use with caution.",
+              call.=FALSE)
+    }
   }
 
   ## Direct Pseudo, AIPTW Pseudo
@@ -377,7 +389,7 @@ check_inputs_adj_rmst <- function(adjsurv, from, to, use_boot) {
          "the 'adjustedsurv()' function.")
   } else if (from >= to) {
     stop("'from' must be smaller than 'to'.")
-  } else if (use_boot & is.null(adjsurv$boot_data)) {
+  } else if (use_boot & is.null(adjsurv$boot_adjsurv)) {
     warning("Cannot use bootstrapped estimates because",
             " they were not estimated.",
             " Need 'bootstrap=TRUE' in 'adjustedsurv' function call.",
@@ -409,7 +421,7 @@ check_inputs_adj_rmtl <- function(adj, from, to, use_boot) {
          " created using the 'adjustedcif()' function.")
   } else if (from >= to) {
     stop("'from' must be smaller than 'to'.")
-  } else if (use_boot & is.null(adj$boot_data)) {
+  } else if (use_boot & is.null(adj$boot_adjsurv) & is.null(adj$boot_adjcif)) {
     warning("Cannot use bootstrapped estimates because",
             " they were not estimated.",
             " Need 'bootstrap=TRUE' in 'adjustedsurv'/'adjustedcif'",

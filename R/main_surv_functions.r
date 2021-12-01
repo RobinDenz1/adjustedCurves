@@ -25,8 +25,8 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
                          na.action=options("na.action")[[1]],
                          clean_data=TRUE, ...) {
 
+  # use data.frame methods only, no tibbles etc.
   if (inherits(data, "data.frame")) {
-    # use data.frame methods only, no tibbles etc.
     data <- as.data.frame(data)
   } else if (!inherits(data, "mids")) {
     stop("'data' must be either a data.frame or mids object.")
@@ -456,7 +456,10 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
   }
 
   # apply isotonic regression if specified
-  if (iso_reg) {
+  if (iso_reg & anyNA(plotdata$surv)) {
+    stop("Isotonic Regression cannot be used when there are missing",
+         " values in the final survival estimates.")
+  } else if (iso_reg) {
     for (lev in levels(plotdata$group)) {
       temp <- plotdata[plotdata$group==lev,]
       # to surv estimates
@@ -609,6 +612,8 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
 
     # plot using step-function interpolation
     if (steps) {
+      requireNamespace("pammtools")
+
       ci_map <- ggplot2::aes(ymin=.data$ci_lower,
                              ymax=.data$ci_upper,
                              group=.data$group,

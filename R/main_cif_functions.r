@@ -435,7 +435,10 @@ plot.adjustedcif <- function(x, draw_ci=FALSE, max_t=Inf,
   }
 
   # apply isotonic regression if specified
-  if (iso_reg) {
+  if (iso_reg & anyNA(plotdata$cif)) {
+    stop("Isotonic Regression cannot be used when there are missing",
+         " values in the final CIF estimates.")
+  } else if (iso_reg) {
     for (lev in levels(plotdata$group)) {
       temp <- plotdata[plotdata$group==lev,]
 
