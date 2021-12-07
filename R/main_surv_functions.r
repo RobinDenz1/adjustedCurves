@@ -214,6 +214,11 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
       data <- na.action(data)
     }
 
+    # edge case: there is no data left after removals
+    if (nrow(data)) {
+      stop("There is no non-missing data left after call to 'na.action'.")
+    }
+
     # define those to remove Notes in devtools::check()
     . <- i <- time <- group <- surv_b <- surv <- se <- NULL
 
@@ -698,44 +703,50 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
 ## S3 print method for adjustedsurv objects
 #' @export
 print.adjustedsurv <- function(x, ...) {
+  print(x$adjsurv, ...)
+}
 
-  if (x$method=="direct") {
+## S3 summary method for adjustedsurv objects
+#' @export
+summary.adjustedsurv <- function(object, ...) {
+
+  if (object$method=="direct") {
     method_name <- "Direct Standardization"
-  } else if (x$method=="direct_pseudo") {
+  } else if (object$method=="direct_pseudo") {
     method_name <- "Direct Standardization: Pseudo-Values"
-  } else if (x$method=="iptw_km") {
+  } else if (object$method=="iptw_km") {
     method_name <- "Inverse Probability of Treatment Weighting: Kaplan-Meier"
-  } else if (x$method=="iptw_cox") {
+  } else if (object$method=="iptw_cox") {
     method_name <- "Inverse Probability of Treatment Weighting: Cox-Regression"
-  } else if (x$method=="iptw_pseudo") {
+  } else if (object$method=="iptw_pseudo") {
     method_name <- "Inverse Probability of Treatment Weighting: Pseudo-Values"
-  } else if (x$method=="matching") {
+  } else if (object$method=="matching") {
     method_name <- "Propensity Score Matching"
-  } else if (x$method=="emp_lik") {
+  } else if (object$method=="emp_lik") {
     method_name <- "Empirical Likelihood Estimation"
-  } else if (x$method=="aiptw") {
+  } else if (object$method=="aiptw") {
     method_name <- "Augmented Inverse Probability of Treatment Weighting"
-  } else if (x$method=="aiptw_pseudo") {
+  } else if (object$method=="aiptw_pseudo") {
     method_name <- paste0("Augmented Inverse Probability of Treatment",
                           " Weighting: Pseudo-Values")
-  } else if (x$method=="tmle") {
+  } else if (object$method=="tmle") {
     method_name <- "Targeted Maximum Likelihood Estimation"
-  } else if (x$method=="ostmle") {
+  } else if (object$method=="ostmle") {
     method_name <- "One-Step Targeted Maximum Likelihood Estimation"
-  } else if (x$method=="km") {
+  } else if (object$method=="km") {
     method_name <- "Kaplan-Meier Estimator"
-  } else if (x$method=="strat_cupples") {
+  } else if (object$method=="strat_cupples") {
     method_name <- "Stratification & Weighting by Cupples et al."
-  } else if (x$method=="strat_amato") {
+  } else if (object$method=="strat_amato") {
     method_name <- "Stratification & Weighting by Amato"
-  } else if (x$method=="strat_gregory_nieto") {
+  } else if (object$method=="strat_gregory_nieto") {
     method_name <- "Stratification & Weighting by Gregory / Nieto & Coresh"
   }
 
-  times_str <- ifelse(is.null(x$call$times), "Event-Specific Times",
+  times_str <- ifelse(is.null(object$call$times), "Event-Specific Times",
                       "User-Supplied Points in Time")
 
-  if (x$method=="km") {
+  if (object$method=="km") {
     cat("Unadjusted Survival Probabilities \n")
   } else {
     cat("Confounder Adjusted Survival Probabilities \n")
@@ -743,27 +754,28 @@ print.adjustedsurv <- function(x, ...) {
   cat("   - Method: ", method_name, "\n", sep="")
   cat("   - Times: ", times_str, "\n", sep="")
 
-  if (is.null(x$call$bootstrap) ||
-      !as.logical(as.character(x$call$bootstrap))) {
-    cat("   - Bootstrapping: Not none\n", sep="")
+  if (is.null(object$call$bootstrap) ||
+      !as.logical(as.character(object$call$bootstrap))) {
+    cat("   - Bootstrapping: Not Done\n", sep="")
   } else {
-    n_boot <- ifelse(is.null(x$call$n_boot), 500, x$call$n_boot)
+    n_boot <- ifelse(is.null(object$call$n_boot), 500, object$call$n_boot)
     cat("   - Bootstrapping: Performed with ", n_boot,
         " Replications\n", sep="")
   }
 
-  if (is.null(x$call$conf_int) || !as.logical(as.character(x$call$conf_int))) {
+  if (is.null(object$call$conf_int) ||
+      !as.logical(as.character(object$call$conf_int))) {
     cat("   - Approximate CI: Not calculated\n", sep="")
   } else {
-    conf_level <- ifelse(is.null(x$call$conf_level), 0.95, x$call$conf_level)
+    conf_level <- ifelse(is.null(object$call$conf_level), 0.95,
+                         object$call$conf_level)
     cat("   - Approximate CI: Calculated with a confidence level of ",
         conf_level, "\n", sep="")
   }
 
-  if (is.null(x$mids_analyses)) {
+  if (is.null(object$mids_analyses)) {
     cat("   - Using a single dataset")
   } else {
     cat("   - Using multiply imputed dataset")
   }
-
 }

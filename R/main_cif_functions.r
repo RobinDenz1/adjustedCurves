@@ -214,6 +214,11 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
       data <- na.action(data)
     }
 
+    # edge case: there is no data left after removals
+    if (nrow(data)) {
+      stop("There is no non-missing data left after call to 'na.action'.")
+    }
+
     # define those to remove Notes in devtools::check()
     . <- i <- time <- group <- cif_b <- cif <- se <- NULL
 
@@ -606,56 +611,64 @@ plot.adjustedcif <- function(x, draw_ci=FALSE, max_t=Inf,
 ## S3 print method for adjustedcif objects
 #' @export
 print.adjustedcif <- function(x, ...) {
+  print(x$adjcif, ...)
+}
 
-  if (x$method=="direct") {
+## S3 summary method for adjustedcif objects
+#' @export
+summary.adjustedcif <- function(object, ...) {
+
+  if (object$method=="direct") {
     method_name <- "Direct Standardization"
-  } else if (x$method=="direct_pseudo") {
+  } else if (object$method=="direct_pseudo") {
     method_name <- "Direct Standardization: Pseudo-Values"
-  } else if (x$method=="iptw") {
+  } else if (object$method=="iptw") {
     method_name <- "Inverse Probability of Treatment Weighting"
-  } else if (x$method=="iptw_pseudo") {
+  } else if (object$method=="iptw_pseudo") {
     method_name <- "Inverse Probability of Treatment Weighting: Pseudo-Values"
-  } else if (x$method=="matching") {
+  } else if (object$method=="matching") {
     method_name <- "Propensity Score Matching"
-  } else if (x$method=="aiptw") {
+  } else if (object$method=="aiptw") {
     method_name <- "Augmented Inverse Probability of Treatment Weighting"
-  } else if (x$method=="aiptw_pseudo") {
+  } else if (object$method=="aiptw_pseudo") {
     method_name <- paste0("Augmented Inverse Probability of Treatment",
                           " Weighting: Pseudo-Values")
-  } else if (x$method=="tmle") {
+  } else if (object$method=="tmle") {
     method_name <- "Targeted Maximum Likelihood Estimation"
-  } else if (x$method=="aalen_johansen") {
+  } else if (object$method=="aalen_johansen") {
     method_name <- "Aalen-Johansen Estimator"
   }
 
-  times_str <- ifelse(is.null(x$call$times), "Event-Specific Times",
+  times_str <- ifelse(is.null(object$call$times), "Event-Specific Times",
                       "User-Supplied Points in Time")
 
-  if (x$method=="aalen_johansen") {
+  if (object$method=="aalen_johansen") {
     cat("Unadjusted Cumulative Incidences \n")
   } else {
     cat("Confounder Adjusted Cumulative Incidences \n")
   }
-  cat("   - Cause of Interest: ", x$call$cause, "\n", sep="")
+  cat("   - Cause of Interest: ", object$call$cause, "\n", sep="")
   cat("   - Method: ", method_name, "\n", sep="")
   cat("   - Times: ", times_str, "\n", sep="")
 
-  if (!is.null(x$boot_data)) {
-    cat("   - Bootstrapping: Performed with ", max(x$boot_data$boot),
+  if (!is.null(object$boot_data)) {
+    cat("   - Bootstrapping: Performed with ", max(object$boot_data$boot),
         " Replications\n", sep="")
   } else {
     cat("   - Bootstrapping: Not Done\n", sep="")
   }
 
-  if (is.null(x$call$conf_int) || !as.logical(as.character(x$call$conf_int))) {
+  if (is.null(object$call$conf_int) ||
+      !as.logical(as.character(object$call$conf_int))) {
     cat("   - Approximate CI: Not Calculated\n", sep="")
   } else {
-    conf_level <- ifelse(is.null(x$call$conf_level), 0.95, x$call$conf_level)
+    conf_level <- ifelse(is.null(object$call$conf_level), 0.95,
+                         object$call$conf_level)
     cat("   - Approximate CI: Calculated with a Confidence level of ",
         conf_level, "\n", sep="")
   }
 
-  if (is.null(x$mids_analyses)) {
+  if (is.null(object$mids_analyses)) {
     cat("   - Using a single dataset")
   } else {
     cat("   - Using multiply imputed dataset")

@@ -29,7 +29,7 @@ A character string specifying the variable indicating the time-to-event or time-
 A character string specifying the binary event indicator. Must be a valid column name of \code{data}.
   }
   \item{method}{
-A character string specifying the adjustment method to use. See details.
+A character string specifying the adjustment method to use. Case sensitive. See details.
   }
   \item{conf_int}{
 A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated. Not available for all methods. More information can be found in the documentation of each method. For an alternative way to get confidence intervals, see the \code{bootstrap} argument.
