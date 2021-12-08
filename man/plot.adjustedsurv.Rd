@@ -82,10 +82,10 @@ A \code{ggplot2} theme object which will be used for the plot.
 A numeric vector of length two, specifying the limits of the Y-Axis. Set to \code{NULL} to use the \code{ggplot2} default values.
   }
   \item{custom_colors}{
-A (named) vector to specify the colors of each adjusted survival curve and possibly its confidence region. Set to \code{NULL} to use the \code{ggplot2} default values.
+A (named) vector to specify the colors of each adjusted survival curve and possibly its confidence region. Set to \code{NULL} to use the \code{ggplot2} default values. Ignored if \code{color=FALSE}.
   }
   \item{custom_linetypes}{
-A (named) vector to specify the linetype of each adjusted survival curve. Set to \code{NULL} to use the \code{ggplot2} default values.
+A (named) vector to specify the linetype of each adjusted survival curve. Set to \code{NULL} to use the \code{ggplot2} default values. Ignored if \code{color=FALSE}. Ignored if \code{linetype=FALSE}.
   }
   \item{ci_draw_alpha}{
 A number indicating the level of transparency that should be used when drawing the confidence regions.

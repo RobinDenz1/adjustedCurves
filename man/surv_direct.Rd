@@ -110,6 +110,24 @@ adjsurv <- adjustedsurv(data=sim_dat,
 # plot the curves
 plot(adjsurv)
 
+## using a flexsurv() model
+library(flexsurv)
+mod_flexsurvreg <- flexsurvreg(Surv(time, event) ~ group + x1 + x2 + x5 + x6,
+                               data=sim_dat, dist="gengamma")
+
+# using it to calculate the adjusted survival curves
+adjsurv <- adjustedsurv(data=sim_dat,
+                        variable="group",
+                        ev_time="time",
+                        event="event",
+                        method="direct",
+                        outcome_model=mod_flexsurvreg,
+                        conf_int=FALSE)
+
+# plot using steps=FALSE to draw them as smooth functions, since
+# they were estimated using a parametric model
+plot(adjsurv, steps=FALSE)
+
 ## using multiple imputation
 library(mice)
 

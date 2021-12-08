@@ -235,6 +235,18 @@ print.adjusted_rmtl <- function(x, digits=5, ...) {
   print.adjusted_rmst(x=x, digits=digits, ...)
 }
 
+## summary method for the adjusted_rmst function
+#' @export
+summary.adjusted_rmst <- function(object, digits=5, ...) {
+  print.adjusted_rmst(x=object, digits=digits, ...)
+}
+
+## summary method for the adjusted_rmtl function
+#' @export
+summary.adjusted_rmtl <- function(object, digits=5, ...) {
+  print.adjusted_rmst(x=object, digits=digits, ...)
+}
+
 ## plot method for the adjusted_rmst function
 #' @importFrom rlang .data
 #' @export

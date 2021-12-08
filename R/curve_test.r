@@ -346,6 +346,12 @@ print.curve_test <- function(x, ...) {
   }
 }
 
+## summary method for curve_test objects
+#' @export
+summary.curve_test <- function(object, ...) {
+  print.curve_test(object, ...)
+}
+
 ## plot method for curve_test objects
 #' @export
 plot.curve_test <- function(x, type="curves", xlab=NULL, ylab=NULL,
@@ -524,8 +530,8 @@ all_combs_length_2 <- function(treat_labs) {
   return(combs)
 }
 
-## directly pool the p-values
-pool_p_values <- function(p_values, method="licht_rubin", tol=1e-14) {
+## directly pool the p-values using the method by Licht & Rubin
+pool_p_values <- function(p_values, tol=1e-14) {
 
   # if they are all equal, just return that value
   if (stats::var(p_values)==0) {
@@ -535,24 +541,11 @@ pool_p_values <- function(p_values, method="licht_rubin", tol=1e-14) {
   # apply tolerance to p values that are 0
   p_values[p_values==0] <- p_values[p_values==0] + tol
 
-  if (method=="licht_rubin") {
-
-    # transform to z-scale
-    z <- stats::qnorm(p_values)
-    num <- mean(z)
-    den <- sqrt(1 + stats::var(z))
-    pooled <- stats::pnorm(num / den)
-
-  } else if (method=="median") {
-
-    pooled <- stats::median(p_values)
-
-  } else if (method=="mean") {
-
-    pooled <- mean(p_values)
-
-  }
+  # transform to z-scale
+  z <- stats::qnorm(p_values)
+  num <- mean(z)
+  den <- sqrt(1 + stats::var(z))
+  pooled <- stats::pnorm(num / den)
 
   return(pooled)
-
 }

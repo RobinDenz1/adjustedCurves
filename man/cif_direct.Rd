@@ -90,6 +90,7 @@ The function itself was written by Robin Denz. When using \code{CauseSpecificCox
 \dontrun{
 library(survival)
 library(riskRegression)
+library(prodlim)
 
 # simulate some data as example
 sim_dat <- sim_confounded_crisk(n=500, max_t=5)
@@ -107,6 +108,23 @@ adjcif <- adjustedcif(data=sim_dat,
                       cause=1,
                       method="direct",
                       outcome_model=cox_mod,
+                      conf_int=FALSE)
+
+# plot the curves
+plot(adjcif)
+
+# estimate a Fine & Gray model for the outcome instead
+fgr_mod <- FGR(Hist(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
+               data=sim_dat, cause=1)
+
+# use it to calculate adjusted CIFs
+adjcif <- adjustedcif(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      cause=1,
+                      method="direct",
+                      outcome_model=fgr_mod,
                       conf_int=FALSE)
 
 # plot the curves

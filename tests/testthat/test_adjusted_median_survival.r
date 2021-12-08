@@ -21,3 +21,13 @@ test_that("median surv, with boot", {
   expect_error(adjusted_median_survival(adj, use_boot=TRUE), NA)
 })
 
+test_that("median surv, with verbose", {
+  expect_error(adjusted_median_survival(adj, verbose=TRUE), NA)
+})
+
+adj$boot_adjsurv <- NULL
+
+test_that("median surv, warning no boot", {
+  expect_warning(adjusted_median_survival(adj, use_boot=TRUE), NULL)
+})
+

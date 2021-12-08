@@ -16,7 +16,7 @@ A function to graphically display confounder-adjusted cumulative incidence funct
      ylab="Adjusted Cumulative Incidence",
      title=NULL, legend.title="Group",
      legend.position="right",
-     gg_theme=ggplot2::theme_bw(),
+     gg_theme=ggplot2::theme_classic(),
      ylim=NULL, custom_colors=NULL,
      custom_linetypes=NULL,
      ci_draw_alpha=0.4, steps=TRUE,
@@ -78,10 +78,10 @@ A \code{ggplot2} theme object which will be used for the plot.
 A numeric vector of length two, specifying the limits of the Y-Axis. Set to \code{NULL} to use the \code{ggplot2} default values.
   }
   \item{custom_colors}{
-A (named) vector to specify the colors of each CIF and possibly its confidence region. Set to \code{NULL} to use the \code{ggplot2} default values.
+A (named) vector to specify the colors of each CIF and possibly its confidence region. Set to \code{NULL} to use the \code{ggplot2} default values. Ignored if \code{color=FALSE}.
   }
   \item{custom_linetypes}{
-A (named) vector to specify the linetype of each CIF. Set to \code{NULL} to use the \code{ggplot2} default values.
+A (named) vector to specify the linetype of each CIF. Set to \code{NULL} to use the \code{ggplot2} default values. Ignored if \code{linetype=FALSE}.
   }
   \item{ci_draw_alpha}{
 A number indicating the level of transparency that should be used when drawing the confidence regions.

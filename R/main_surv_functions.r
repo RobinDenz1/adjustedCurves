@@ -36,7 +36,8 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
                             ev_time=ev_time, event=event, method=method,
                             conf_int=conf_int, conf_level=conf_level,
                             times=times, bootstrap=bootstrap,
-                            n_boot=n_boot, na.action=na.action, ...)
+                            n_boot=n_boot, na.action=na.action,
+                            clean_data=clean_data, ...)
 
   # get required packages
   three_dots <- list(...)
@@ -215,7 +216,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
     }
 
     # edge case: there is no data left after removals
-    if (nrow(data)) {
+    if (nrow(data)==0) {
       stop("There is no non-missing data left after call to 'na.action'.")
     }
 

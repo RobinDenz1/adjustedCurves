@@ -1,11 +1,34 @@
 ## for adjustedsurv function
 check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
                                       conf_int, conf_level, times, bootstrap,
-                                      n_boot, na.action, ...) {
+                                      n_boot, na.action, clean_data, ...) {
   obj <- list(...)
 
   if (!inherits(data, c("data.frame", "mids"))) {
     stop("'data' argument must be a data.frame or mids object.")
+  ## check if length of input is correct
+  } else if (length(variable) != 1) {
+    stop("'variable' must be a character string of length 1",
+         " specifying the grouping variable in 'data'.")
+  } else if (length(ev_time) != 1) {
+    stop("'ev_time' must be a character string of length 1",
+         " specifying the time until the event or censoring occured.")
+  } else if (length(event) != 1) {
+    stop("'event' must be a character string of length 1",
+         " specifying the binary event indicator.")
+  } else if (length(conf_int) != 1) {
+    stop("'conf_int' must be either TRUE or FALSE, not a vector.")
+  } else if (length(conf_level) != 1) {
+    stop("'conf_level' must be a number < 1 and > 0, not a vector.")
+  } else if (length(bootstrap) != 1) {
+    stop("'bootstrap' must be either TRUE or FALSE, not a vector.")
+  } else if (length(n_boot) != 1) {
+    stop("'n_boot' must be a positive integer > 2, not a vector.")
+  } else if (length(na.action) != 1) {
+    stop("'na.action' must be a function or a character string,",
+         " not a vector. See documentation.")
+  } else if (length(clean_data) != 1) {
+    stop("'clean_data' must be either TRUE or FALSE, not a vector.")
   # needed variables
   } else if (!is.character(variable) | !is.character(ev_time) |
              !is.character(event) | !is.character(method)) {
@@ -36,6 +59,13 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
   # times
   } else if (!is.numeric(times) & !is.null(times)) {
     stop("'times' must be a numeric vector or NULL.")
+  # na.action
+  } else if (!(is.function(na.action) | is.character(na.action))) {
+    stop("'na.action' must be a function or a single character string.",
+         " See details.")
+  # clean_data
+  } else if (!is.logical(clean_data)) {
+    stop("'clean_data' must be either TRUE or FALSE.")
   }
 
   # data.frame properties
@@ -123,6 +153,12 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     if (anyNA(as.data.frame(data$data)[,ev_time])) {
       warning("Using multiple imputation with missing values in 'ev_time'",
               " variable has not been tested yet. Use with caution.",
+              call.=FALSE)
+    }
+    # warn user when there are missing values in group variable
+    if (anyNA(as.data.frame(data$data)[,variable])) {
+      warning("Using multiple imputation with missing values in 'variable'",
+              " has not been tested yet. Use with caution.",
               call.=FALSE)
     }
   }
@@ -302,21 +338,21 @@ check_inputs_sim_fun <- function(n, lcovars, outcome_betas, surv_dist,
                                  intercept, gtol, cens_fun, cens_args,
                                  max_t, group_beta) {
 
-  if (!is.numeric(n)) {
-    stop("'n' must be a positive integer.")
+  if (!(is.numeric(n) & length(n)==1)) {
+    stop("'n' must be a single positive integer.")
   } else if (floor(n)!=n) {
-    stop("'n' must be a positive integer, not a double.")
-  } else if(!is.character(surv_dist)) {
+    stop("'n' must be a single positive integer, not a double.")
+  } else if(!(is.character(surv_dist) & length(surv_dist)==1)) {
     stop("'surv_dist' must be either 'weibull' or 'exponential'.")
   } else if (!surv_dist %in% c("weibull", "exponential")) {
     stop("'surv_dist' must be either 'weibull' or 'exponential'.")
-  } else if (!is.numeric(gamma)) {
-    stop("'gamma' must be a number. See details.")
-  } else if (!is.numeric(lambda)) {
-    stop("'lambda' must be a number. See details.")
-  } else if (!is.numeric(intercept)) {
-    stop("'intercept' must be a number. See details.")
-  } else if (!is.numeric(gtol)) {
+  } else if (!(is.numeric(gamma) & length(gamma)==1)) {
+    stop("'gamma' must be a single number. See details.")
+  } else if (!(is.numeric(lambda) & length(lambda)==1)) {
+    stop("'lambda' must be a single number. See details.")
+  } else if (!(is.numeric(intercept) & length(intercept)==1)) {
+    stop("'intercept' must be a single number. See details.")
+  } else if (!(is.numeric(gtol) & length(gtol)==1)) {
     stop("'gtol' must be a number. See details.")
   } else if (gtol > 1 | gtol < 0) {
     stop("'gtol' must be <= 1 and >= 0. See details.")
@@ -325,11 +361,11 @@ check_inputs_sim_fun <- function(n, lcovars, outcome_betas, surv_dist,
   } else if (!is.list(cens_args) & !is.null(cens_args)) {
     stop("'cens_args' must be a named list of arguments to be passed to",
          " 'cens_fun' or NULL.")
-  } else if (!is.numeric(max_t)) {
-    stop("'max_t' must be a number.")
+  } else if (!(is.numeric(max_t) & length(max_t)==1)) {
+    stop("'max_t' must be a single number.")
   } else if (max_t <= 0) {
     stop("'max_t' must be bigger than zero.")
-  } else if (!is.numeric(group_beta)) {
+  } else if (!(is.numeric(group_beta) & length(group_beta)==1)) {
     stop("'group_beta' must be a number.")
   }
 
@@ -380,8 +416,9 @@ check_inputs_sim_fun <- function(n, lcovars, outcome_betas, surv_dist,
 ## for adjusted_rmst function
 check_inputs_adj_rmst <- function(adjsurv, from, to, use_boot) {
 
-  if (!is.numeric(from) | !is.numeric(to)) {
-    stop("'from' and 'to' must be numbers.")
+  if ((!is.numeric(from) | !is.numeric(to)) &
+      length(from)==1 & length(to)==1) {
+    stop("'from' and 'to' must be numbers (one for each argument).")
   } else if (!(from >= 0 & to >= 0)) {
     stop("'from' and 'to' must be >= 0.")
   } else if (!inherits(adjsurv, "adjustedsurv")) {
@@ -389,6 +426,8 @@ check_inputs_adj_rmst <- function(adjsurv, from, to, use_boot) {
          "the 'adjustedsurv()' function.")
   } else if (from >= to) {
     stop("'from' must be smaller than 'to'.")
+  } else if (!(is.logical(use_boot) & length(use_boot)==1)) {
+    stop("'use_boot' must be either TRUE or FALSE.")
   } else if (use_boot & is.null(adjsurv$boot_adjsurv)) {
     warning("Cannot use bootstrapped estimates because",
             " they were not estimated.",
@@ -411,8 +450,9 @@ check_inputs_adj_rmst <- function(adjsurv, from, to, use_boot) {
 ## for adjusted_rmtl function
 check_inputs_adj_rmtl <- function(adj, from, to, use_boot) {
 
-  if (!is.numeric(from) | !is.numeric(to)) {
-    stop("'from' and 'to' must be numbers.")
+  if ((!is.numeric(from) | !is.numeric(to)) &
+      length(from)==1 & length(to)==1) {
+    stop("'from' and 'to' must be numbers (one for each argument).")
   } else if (!(from >= 0 & to >= 0)) {
     stop("'from' and 'to' must be >= 0.")
   } else if (!inherits(adj, c("adjustedsurv", "adjustedcif"))) {
@@ -421,6 +461,8 @@ check_inputs_adj_rmtl <- function(adj, from, to, use_boot) {
          " created using the 'adjustedcif()' function.")
   } else if (from >= to) {
     stop("'from' must be smaller than 'to'.")
+  } else if (!(is.logical(use_boot) & length(use_boot)==1)) {
+    stop("'use_boot' must be either TRUE or FALSE.")
   } else if (use_boot & is.null(adj$boot_adjsurv) & is.null(adj$boot_adjcif)) {
     warning("Cannot use bootstrapped estimates because",
             " they were not estimated.",
@@ -457,12 +499,12 @@ check_inputs_adj_test <- function(adjsurv, from, to) {
   } else if (is.null(adjsurv$boot_data)) {
     stop("Can only perform a significance test if bootstrapping was ",
          "performed (bootstrap=TRUE in adjustedsurv/adjustedcif call).")
-  } else if (!is.numeric(from)) {
-    stop("'from' must be a number >= 0.")
+  } else if (!(is.numeric(from) & length(from)==1)) {
+    stop("'from' must be a single number >= 0.")
   } else if (from < 0) {
     stop("'from' must be a number >= 0.")
-  } else if (!is.numeric(to)) {
-    stop("'to' must be a number >= 0.")
+  } else if (!(is.numeric(to) & length(to)==1)) {
+    stop("'to' must be a single number >= 0.")
   } else if (to <= from) {
     stop("'to' must be greater than 'from'.")
   }
@@ -495,11 +537,35 @@ check_inputs_adj_test <- function(adjsurv, from, to) {
 ## for adjustedcif
 check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
                                      conf_int, conf_level, times, bootstrap,
-                                     n_boot, cause=cause, na.action, ...) {
+                                     n_boot, cause=cause, na.action,
+                                     clean_data, ...) {
   obj <- list(...)
 
   if (!inherits(data, c("data.frame", "mids"))) {
     stop("'data' argument must be a data.frame or mids object.")
+  # checking input argument lengths
+  } else if (length(variable) != 1) {
+    stop("'variable' must be a character string of length 1",
+         " specifying the grouping variable in 'data'.")
+  } else if (length(ev_time) != 1) {
+    stop("'ev_time' must be a character string of length 1",
+         " specifying the time until the event or censoring occured.")
+  } else if (length(event) != 1) {
+    stop("'event' must be a character string of length 1",
+         " specifying the binary event indicator.")
+  } else if (length(conf_int) != 1) {
+    stop("'conf_int' must be either TRUE or FALSE, not a vector.")
+  } else if (length(conf_level) != 1) {
+    stop("'conf_level' must be a number < 1 and > 0, not a vector.")
+  } else if (length(bootstrap) != 1) {
+    stop("'bootstrap' must be either TRUE or FALSE, not a vector.")
+  } else if (length(n_boot) != 1) {
+    stop("'n_boot' must be a positive integer > 2, not a vector.")
+  } else if (length(na.action) != 1) {
+    stop("'na.action' must be a function or a character string,",
+         " not a vector. See documentation.")
+  } else if (length(clean_data) != 1) {
+    stop("'clean_data' must be either TRUE or FALSE, not a vector.")
   # needed variables
   } else if (!is.character(variable) | !is.character(ev_time) |
              !is.character(event) | !is.character(method)) {
@@ -533,6 +599,13 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
   # n_boot
   } else if (!is.numeric(n_boot) || n_boot < 2) {
     stop("'n_boot' must be a positive integer > 1.")
+  # na.action
+  } else if (!(is.function(na.action) | is.character(na.action))) {
+    stop("'na.action' must be a function or a single character string.",
+         " See details.")
+  # clean_data
+  } else if (!is.logical(clean_data)) {
+    stop("'clean_data' must be either TRUE or FALSE.")
   }
 
   # data.frame properties
@@ -587,6 +660,44 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
       stop("Values in '", ev_time,
            "' must be smaller than max(data[,ev_time]).",
            " No extrapolation allowed.")
+    }
+  } else {
+    # treatment_model
+    if (!is.null(obj$treatment_model) &
+        !inherits(obj$treatment_model, c("mira", "formula"))) {
+      stop("When using multiple imputation, mira objects or a formula",
+           " need to be supplied to 'treatment_model' instead of",
+           " single models. See documentation.")
+    }
+    # outcome_model
+    if (!is.null(obj$outcome_model) &
+        !inherits(obj$outcome_model, "mira")) {
+      stop("When using multiple imputation, mira objects need to be supplied",
+           " to 'outcome_model' instead of single models. See documentation.")
+    }
+    # censoring_model
+    if (!is.null(obj$censoring_model) &
+        !inherits(obj$censoring_model, "mira")) {
+      stop("When using multiple imputation, mira objects need to be supplied",
+           " to 'censoring_model' instead of single models. See documentation.")
+    }
+    # warn user when there are missing values in event variable
+    if (anyNA(as.data.frame(data$data)[,event])) {
+      warning("Using multiple imputation with missing values in 'event'",
+              " variable has not been tested yet. Use with caution.",
+              call.=FALSE)
+    }
+    # warn user when there are missing values in ev_time variable
+    if (anyNA(as.data.frame(data$data)[,ev_time])) {
+      warning("Using multiple imputation with missing values in 'ev_time'",
+              " variable has not been tested yet. Use with caution.",
+              call.=FALSE)
+    }
+    # warn user when there are missing values in group variable
+    if (anyNA(as.data.frame(data$data)[,variable])) {
+      warning("Using multiple imputation with missing values in 'variable'",
+              " has not been tested yet. Use with caution.",
+              call.=FALSE)
     }
   }
 
@@ -688,17 +799,17 @@ check_inputs_sim_crisk_fun <- function(n, lcovars, outcome_betas, gamma,
                                        intercept, gtol, cens_fun, cens_args,
                                        max_t, max_iter) {
 
-  if (!is.numeric(n)) {
-    stop("'n' must be a positive integer.")
+  if (!(is.numeric(n) & length(n)==1)) {
+    stop("'n' must be a single positive integer.")
   } else if (floor(n)!=n) {
     stop("'n' must be a positive integer, not a double.")
-  } else if (!is.numeric(gamma)) {
-    stop("'gamma' must be a number. See details.")
-  } else if (!is.numeric(lambda)) {
-    stop("'lambda' must be a number. See details.")
-  } else if (!is.numeric(intercept)) {
+  } else if (!(is.numeric(gamma) & length(gamma) > 1)) {
+    stop("'gamma' must be a numeric vector with length > 1. See details.")
+  } else if (!(is.numeric(lambda) & length(lambda) > 1)) {
+    stop("'lambda' must be a numeric vector with length > 1. See details.")
+  } else if (!(is.numeric(intercept) & length(intercept)==1)) {
     stop("'intercept' must be a number. See details.")
-  } else if (!is.numeric(gtol)) {
+  } else if (!(is.numeric(gtol) & length(gtol)==1)) {
     stop("'gtol' must be a number. See details.")
   } else if (gtol > 1 | gtol < 0) {
     stop("'gtol' must be <= 1 and >= 0. See details.")
@@ -707,12 +818,12 @@ check_inputs_sim_crisk_fun <- function(n, lcovars, outcome_betas, gamma,
   } else if (!is.list(cens_args) & !is.null(cens_args)) {
     stop("'cens_args' must be a named list of arguments to be passed to",
          " 'cens_fun' or NULL.")
-  } else if (!is.numeric(max_t)) {
+  } else if (!(is.numeric(max_t) & length(max_t)==1)) {
     stop("'max_t' must be a number.")
   } else if (max_t <= 0) {
     stop("'max_t' must be bigger than zero.")
-  } else if (!is.numeric(group_beta)) {
-    stop("'group_beta' must be a numeric vector.")
+  } else if (!(is.numeric(group_beta) & length(group_beta) > 1)) {
+    stop("'group_beta' must be a numeric vector with length > 1.")
   }
 
   if (stats::var(c(length(group_beta), length(gamma), length(lambda)))!=0) {

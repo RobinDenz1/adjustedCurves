@@ -19,6 +19,18 @@
 # to make the documentation and usage easier, while making the code itself
 # a little messier with unnecessary repetition.
 
+## S3 print method for adjustedcif.method objects
+#' @export
+print.adjustedcif.method <- function(x, ...) {
+  print(x$plotdata, ...)
+}
+
+## S3 summary method for adjustedcif.method objects
+#' @export
+summary.adjustedcif.method <- function(object, ...) {
+  summary(object$plotdata, ...)
+}
+
 ## Aalen-Johansen estimator
 #' @export
 cif_aalen_johansen <- function(data, variable, ev_time, event, cause,

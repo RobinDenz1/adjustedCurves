@@ -1,3 +1,4 @@
+library(mice)
 
 set.seed(42)
 sim_dat <- sim_confounded_crisk(n=20)
@@ -15,6 +16,7 @@ test_that("variable not in data", {
                                                         bootstrap=FALSE,
                                                         n_boot=2,
                                                         na.action="na.omit",
+                                                        clean_data=TRUE,
                                                         cause=1),
                NULL)
 })
@@ -32,6 +34,7 @@ test_that("variable has wrong type", {
                                                         bootstrap=FALSE,
                                                         n_boot=2,
                                                         na.action="na.omit",
+                                                        clean_data=TRUE,
                                                         cause=1),
                NULL)
 })
@@ -48,6 +51,7 @@ test_that("non-standard evaluation in variable", {
                                                         bootstrap=FALSE,
                                                         n_boot=2,
                                                         na.action="na.omit",
+                                                        clean_data=TRUE,
                                                         cause=1),
                NULL)
 })
@@ -64,6 +68,7 @@ test_that("ev_time not in data", {
                                                         bootstrap=FALSE,
                                                         n_boot=2,
                                                         na.action="na.omit",
+                                                        clean_data=TRUE,
                                                         cause=1),
                NULL)
 })
@@ -80,6 +85,7 @@ test_that("ev_time wrong format", {
                                                         bootstrap=FALSE,
                                                         n_boot=2,
                                                         na.action="na.omit",
+                                                        clean_data=TRUE,
                                                         cause=1),
                NULL)
 })
@@ -96,6 +102,7 @@ test_that("non-standard evaluation in ev_time", {
                                                         bootstrap=FALSE,
                                                         n_boot=2,
                                                         na.action="na.omit",
+                                                        clean_data=TRUE,
                                                         cause=1),
                NULL)
 })
@@ -112,6 +119,7 @@ test_that("event not in data", {
                                                         bootstrap=FALSE,
                                                         n_boot=2,
                                                         na.action="na.omit",
+                                                        clean_data=TRUE,
                                                         cause=1),
                NULL)
 })
@@ -128,6 +136,7 @@ test_that("event wrong format", {
                                                         bootstrap=FALSE,
                                                         n_boot=2,
                                                         na.action="na.omit",
+                                                        clean_data=TRUE,
                                                         cause=1),
                NULL)
 })
@@ -144,6 +153,7 @@ test_that("non-standard evaluation in event", {
                                                         bootstrap=FALSE,
                                                         n_boot=2,
                                                         na.action="na.omit",
+                                                        clean_data=TRUE,
                                                         cause=1),
                NULL)
 })
@@ -160,6 +170,7 @@ test_that("cause has wrong type", {
                                                         bootstrap=FALSE,
                                                         n_boot=2,
                                                         na.action="na.omit",
+                                                        clean_data=TRUE,
                                                         cause="1"),
                NULL)
 })
@@ -176,6 +187,7 @@ test_that("more than one cause supplied", {
                                                         bootstrap=FALSE,
                                                         n_boot=2,
                                                         na.action="na.omit",
+                                                        clean_data=TRUE,
                                                         cause=c(1, 2)),
                NULL)
 })
@@ -192,6 +204,7 @@ test_that("method undefined", {
                                                          bootstrap=FALSE,
                                                          n_boot=2,
                                                          na.action="na.omit",
+                                                         clean_data=TRUE,
                                                          cause=1),
                NULL)
 })
@@ -208,6 +221,7 @@ test_that("wrong conf_int", {
                                                         bootstrap=FALSE,
                                                         n_boot=2,
                                                         na.action="na.omit",
+                                                        clean_data=TRUE,
                                                         cause=1),
                NULL)
 })
@@ -224,6 +238,7 @@ test_that("wrong conf_level", {
                                                         bootstrap=FALSE,
                                                         n_boot=2,
                                                         na.action="na.omit",
+                                                        clean_data=TRUE,
                                                         cause=1),
                NULL)
 })
@@ -240,6 +255,7 @@ test_that("wrong bootstrap", {
                                                         bootstrap=1,
                                                         n_boot=2,
                                                         na.action="na.omit",
+                                                        clean_data=TRUE,
                                                         cause=1),
                NULL)
 })
@@ -256,6 +272,7 @@ test_that("wrong n_boot", {
                                                         bootstrap=TRUE,
                                                         n_boot=-2,
                                                         na.action="na.omit",
+                                                        clean_data=TRUE,
                                                         cause=1),
                NULL)
 })
@@ -272,6 +289,7 @@ test_that("wrong times", {
                                                         bootstrap=TRUE,
                                                         n_boot=2,
                                                         na.action="na.omit",
+                                                        clean_data=TRUE,
                                                         cause=1),
                NULL)
 })
@@ -288,6 +306,7 @@ test_that("no extrapolation", {
                                                         bootstrap=TRUE,
                                                         n_boot=2,
                                                         na.action="na.omit",
+                                                        clean_data=TRUE,
                                                         cause=1),
                NULL)
 })
@@ -304,6 +323,7 @@ test_that("bootstrap only with treatment_model that can be updated", {
                                                     bootstrap=TRUE,
                                                     n_boot=2,
                                                     na.action="na.omit",
+                                                    clean_data=TRUE,
                                                     treatment_model=runif(n=20),
                                                     cause=1),
                NULL)
@@ -321,6 +341,7 @@ test_that("wrong outcome_vars argument", {
                                                          bootstrap=TRUE,
                                                          n_boot=2,
                                                          na.action="na.omit",
+                                                         clean_data=TRUE,
                                                          outcome_vars=2,
                                                          cause=1),
                NULL)
@@ -338,6 +359,7 @@ test_that("wrong type_time argument", {
                                                          bootstrap=TRUE,
                                                          n_boot=2,
                                                          na.action="na.omit",
+                                                         clean_data=TRUE,
                                                          outcome_vars=c("x1"),
                                                          type_time="aha",
                                                          cause=1),
@@ -356,6 +378,7 @@ test_that("too many spline_df", {
                                                          bootstrap=TRUE,
                                                          n_boot=2,
                                                          na.action="na.omit",
+                                                         clean_data=TRUE,
                                                          outcome_vars=c("x1"),
                                                          type_time="bs",
                                                          spline_df=10,
@@ -375,6 +398,7 @@ test_that("not enough time points", {
                                                          bootstrap=TRUE,
                                                          n_boot=2,
                                                          na.action="na.omit",
+                                                         clean_data=TRUE,
                                                          outcome_vars=c("x1"),
                                                          cause=1),
                NULL)
@@ -392,6 +416,7 @@ test_that("continuous times in tmle", {
                                                          bootstrap=TRUE,
                                                          n_boot=2,
                                                          na.action="na.omit",
+                                                         clean_data=TRUE,
                                                          outcome_vars=c("x1"),
                                                          cause=1),
                NULL)
@@ -409,6 +434,7 @@ test_that("weights in matching", {
                                       bootstrap=FALSE,
                                       n_boot=2,
                                       na.action="na.omit",
+                                      clean_data=TRUE,
                                       treatment_model=runif(20, min=10, max=20),
                                       cause=1),
                NULL)
@@ -426,7 +452,137 @@ test_that("no models with method='aiptw'", {
                                                          bootstrap=FALSE,
                                                          n_boot=2,
                                                          na.action="na.omit",
+                                                         clean_data=TRUE,
                                                          cause=1),
                NULL)
 })
 
+## multiple imputation stuff
+
+sim_dat_na_time <- sim_dat_na_group <- sim_dat_na_event <- sim_dat_na_x1 <-
+  sim_dat
+
+sim_dat_na_time$time[3] <- NA
+sim_dat_na_group$group[3] <- NA
+sim_dat_na_event$event[3] <- NA
+sim_dat_na_x1$x1[3] <- NA
+
+mids_na_time <- mice::mice(sim_dat_na_time, m=2, printFlag=FALSE)
+mids_na_group <- mice::mice(sim_dat_na_group, m=2, printFlag=FALSE)
+mids_na_event <- mice::mice(sim_dat_na_event, m=2, printFlag=FALSE)
+mids_na_x1 <- mice::mice(sim_dat_na_x1, m=2, printFlag=FALSE)
+
+outcome_model <- list()
+class(outcome_model) <- "CauseSpecificCox"
+
+censoring_model <- list()
+class(censoring_model) <- "coxph"
+
+treatment_model <- list()
+class(treatment_model) <- "glm"
+
+test_that("wrong outcome_model with mira", {
+  expect_error(adjustedCurves:::check_inputs_adjustedcif(data=mids_na_x1,
+                                                   variable="group",
+                                                   ev_time="time",
+                                                   event="event",
+                                                   method="direct",
+                                                   conf_int=TRUE,
+                                                   conf_level=0.95,
+                                                   times=NULL,
+                                                   bootstrap=FALSE,
+                                                   n_boot=2,
+                                                   cause=1,
+                                                   na.action="na.omit",
+                                                   clean_data=TRUE,
+                                                   outcome_model=outcome_model),
+               NULL)
+})
+
+test_that("wrong treatment_model with mira", {
+  expect_error(adjustedCurves:::check_inputs_adjustedcif(data=mids_na_x1,
+                                              variable="group",
+                                              ev_time="time",
+                                              event="event",
+                                              method="iptw",
+                                              conf_int=TRUE,
+                                              conf_level=0.95,
+                                              times=NULL,
+                                              bootstrap=FALSE,
+                                              n_boot=2,
+                                              na.action="na.omit",
+                                              clean_data=TRUE,
+                                              cause=1,
+                                              treatment_model=treatment_model),
+               NULL)
+})
+
+test_that("wrong censoring_model with mira", {
+  expect_error(adjustedCurves:::check_inputs_adjustedcif(data=mids_na_x1,
+                                               variable="group",
+                                               ev_time="time",
+                                               event="event",
+                                               method="aiptw",
+                                               conf_int=TRUE,
+                                               conf_level=0.95,
+                                               times=NULL,
+                                               bootstrap=FALSE,
+                                               n_boot=2,
+                                               cause=1,
+                                               na.action="na.omit",
+                                               clean_data=TRUE,
+                                               censoring_model=censoring_model),
+               NULL)
+})
+
+test_that("warning with missing values in variable", {
+  expect_warning(adjustedCurves:::check_inputs_adjustedcif(data=mids_na_group,
+                                                        variable="group",
+                                                        ev_time="time",
+                                                        event="event",
+                                                        method="aalen_johansen",
+                                                        conf_int=TRUE,
+                                                        conf_level=0.95,
+                                                        times=NULL,
+                                                        bootstrap=FALSE,
+                                                        n_boot=2,
+                                                        cause=1,
+                                                        na.action="na.omit",
+                                                        clean_data=TRUE),
+                 NULL)
+})
+
+test_that("warning with missing values in ev_time", {
+  expect_warning(adjustedCurves:::check_inputs_adjustedcif(
+    data=mids_na_time,
+    variable="group",
+    ev_time="time",
+    event="event",
+    method="aalen_johansen",
+    conf_int=TRUE,
+    conf_level=0.95,
+    times=NULL,
+    bootstrap=FALSE,
+    n_boot=2,
+    cause=1,
+    na.action="na.omit",
+    clean_data=TRUE),
+    NULL)
+})
+
+test_that("warning with missing values in event", {
+  expect_warning(adjustedCurves:::check_inputs_adjustedcif(data=mids_na_event,
+                                                        variable="group",
+                                                        ev_time="time",
+                                                        event="event",
+                                                        method="aalen_johansen",
+                                                        conf_int=TRUE,
+                                                        conf_level=0.95,
+                                                        times=NULL,
+                                                        bootstrap=FALSE,
+                                                        n_boot=2,
+                                                        cause=1,
+                                                        clean_data=TRUE,
+                                                        na.action="na.omit"),
+                 NULL)
+})

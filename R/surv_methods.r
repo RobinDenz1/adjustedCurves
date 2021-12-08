@@ -16,6 +16,18 @@
 # Assign to global, to get rid off devtools::check() note
 utils::globalVariables(c("gaussian", "id"))
 
+## S3 print method for adjustedsurv.method objects
+#' @export
+print.adjustedsurv.method <- function(x, ...) {
+  print(x$plotdata, ...)
+}
+
+## S3 summary method for adjustedsurv.method objects
+#' @export
+summary.adjustedsurv.method <- function(object, ...) {
+  summary(object$plotdata, ...)
+}
+
 ## simple Kaplan-Meier estimate
 #' @export
 surv_km <- function(data, variable, ev_time, event, conf_int,
@@ -75,12 +87,9 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
 
   # get weights
   if (is.numeric(treatment_model)) {
-
     weights <- treatment_model
     weights <- trim_weights(weights=weights, trim=trim)
-
   } else {
-
     weights <- get_iptw_weights(data=data, treatment_model=treatment_model,
                                 weight_method=weight_method,
                                 variable=variable, stabilize=stabilize,
@@ -429,7 +438,7 @@ surv_g_comp <- function(outcome_model, data, variable, times,
   return(plotdata)
 }
 
-## Using propensity score matching
+## Using Propensity Score Matching
 #' @export
 surv_matching <- function(data, variable, ev_time, event, conf_int=FALSE,
                           conf_level=0.95, times, treatment_model,

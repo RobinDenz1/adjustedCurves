@@ -36,7 +36,8 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
                            event=event, cause=cause, method=method,
                            conf_int=conf_int, conf_level=conf_level,
                            times=times, bootstrap=bootstrap,
-                           n_boot=n_boot, na.action=na.action, ...)
+                           n_boot=n_boot, na.action=na.action,
+                           clean_data=clean_data, ...)
 
   # get required packages
   three_dots <- list(...)
@@ -215,7 +216,7 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
     }
 
     # edge case: there is no data left after removals
-    if (nrow(data)) {
+    if (nrow(data)==0) {
       stop("There is no non-missing data left after call to 'na.action'.")
     }
 
@@ -409,7 +410,7 @@ plot.adjustedcif <- function(x, draw_ci=FALSE, max_t=Inf,
                              ylab="Adjusted Cumulative Incidence",
                              title=NULL, legend.title="Group",
                              legend.position="right",
-                             gg_theme=ggplot2::theme_bw(),
+                             gg_theme=ggplot2::theme_classic(),
                              ylim=NULL, custom_colors=NULL,
                              custom_linetypes=NULL,
                              ci_draw_alpha=0.4, steps=TRUE,
