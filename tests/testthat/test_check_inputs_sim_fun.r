@@ -24,12 +24,46 @@ test_that("wrong n format", {
                NULL)
 })
 
+test_that("wrong n format, double", {
+  expect_error(adjustedCurves:::check_inputs_sim_fun(n=1.1,
+                                                     lcovars=NULL,
+                                                     outcome_betas=NULL,
+                                                     group_beta=-1,
+                                                     surv_dist="weibull",
+                                                     gamma=1.8,
+                                                     lambda=2,
+                                                     treatment_betas=NULL,
+                                                     intercept=-0.5,
+                                                     gtol=0.001,
+                                                     cens_fun=custom_cens,
+                                                     cens_args=list(),
+                                                     max_t=Inf),
+               NULL)
+})
+
 test_that("wrong surv_dist", {
   expect_error(adjustedCurves:::check_inputs_sim_fun(n=10,
                                                      lcovars=NULL,
                                                      outcome_betas=NULL,
                                                      group_beta=-1,
                                                      surv_dist="aha",
+                                                     gamma=1.8,
+                                                     lambda=2,
+                                                     treatment_betas=NULL,
+                                                     intercept=-0.5,
+                                                     gtol=0.001,
+                                                     cens_fun=custom_cens,
+                                                     cens_args=list(),
+                                                     max_t=Inf),
+               NULL)
+})
+
+test_that("wrong surv_dist 2", {
+  expect_error(adjustedCurves:::check_inputs_sim_fun(n=10,
+                                                     lcovars=NULL,
+                                                     outcome_betas=NULL,
+                                                     group_beta=-1,
+                                                     surv_dist=1,
                                                      gamma=1.8,
                                                      lambda=2,
                                                      treatment_betas=NULL,
@@ -102,6 +136,23 @@ test_that("wrong gtol format", {
                                                      lambda=2,
                                                      treatment_betas=NULL,
                                                      intercept=-0.5,
+                                                     gtol="10",
+                                                     cens_fun=custom_cens,
+                                                     cens_args=list(),
+                                                     max_t=Inf),
+               NULL)
+})
+
+test_that("wrong gtol format, too big", {
+  expect_error(adjustedCurves:::check_inputs_sim_fun(n=10,
+                                                     lcovars=NULL,
+                                                     outcome_betas=NULL,
+                                                     group_beta=-1,
+                                                     surv_dist="weibull",
+                                                     gamma=1.8,
+                                                     lambda=2,
+                                                     treatment_betas=NULL,
+                                                     intercept=-0.5,
                                                      gtol=10,
                                                      cens_fun=custom_cens,
                                                      cens_args=list(),
@@ -123,6 +174,40 @@ test_that("wrong cens_fun format", {
                                                      cens_fun="runif",
                                                      cens_args=list(),
                                                      max_t=Inf),
+               NULL)
+})
+
+test_that("wrong cens_args format", {
+  expect_error(adjustedCurves:::check_inputs_sim_fun(n=10,
+                                                     lcovars=NULL,
+                                                     outcome_betas=NULL,
+                                                     group_beta=-1,
+                                                     surv_dist="weibull",
+                                                     gamma=1.8,
+                                                     lambda=2,
+                                                     treatment_betas=NULL,
+                                                     intercept=-0.5,
+                                                     gtol=0.001,
+                                                     cens_fun=runif,
+                                                     cens_args="",
+                                                     max_t=Inf),
+               NULL)
+})
+
+test_that("wrong max_t length", {
+  expect_error(adjustedCurves:::check_inputs_sim_fun(n=10,
+                                                     lcovars=NULL,
+                                                     outcome_betas=NULL,
+                                                     group_beta=-1,
+                                                     surv_dist="weibull",
+                                                     gamma=1.8,
+                                                     lambda=2,
+                                                     treatment_betas=NULL,
+                                                     intercept=-0.5,
+                                                     gtol=0.001,
+                                                     cens_fun=custom_cens,
+                                                     cens_args=list(),
+                                                     max_t=c(1, 1)),
                NULL)
 })
 
@@ -157,6 +242,41 @@ test_that("only lcovars specified", {
                                                      cens_fun=custom_cens,
                                                      cens_args=list(),
                                                      max_t=Inf),
+               NULL)
+})
+
+test_that("wrong group_beta format", {
+  expect_error(adjustedCurves:::check_inputs_sim_fun(n=10,
+                                                     lcovars=NULL,
+                                                     outcome_betas=NULL,
+                                                     group_beta="-1",
+                                                     surv_dist="weibull",
+                                                     gamma=1.8,
+                                                     lambda=2,
+                                                     treatment_betas=NULL,
+                                                     intercept=-0.5,
+                                                     gtol=0.001,
+                                                     cens_fun=custom_cens,
+                                                     cens_args=list(),
+                                                     max_t=1),
+               NULL)
+})
+
+test_that("one of lcovars / outcome_betas / treatment_betas not specified", {
+  expect_error(adjustedCurves:::check_inputs_sim_fun(n=10,
+                                            lcovars=list(x1=c("rnorm", 1, 2),
+                                                         x2=c("rnorm", 3, 4)),
+                                            outcome_betas=NULL,
+                                            group_beta=-1,
+                                            surv_dist="weibull",
+                                            gamma=1.8,
+                                            lambda=2,
+                                            treatment_betas=treatment_betas,
+                                            intercept=-0.5,
+                                            gtol=0.001,
+                                            cens_fun=custom_cens,
+                                            cens_args=list(),
+                                            max_t=Inf),
                NULL)
 })
 
@@ -248,5 +368,22 @@ test_that("no names in outcome_betas", {
                                                 cens_fun=custom_cens,
                                                 cens_args=list(),
                                                 max_t=Inf),
+               NULL)
+})
+
+test_that("names not the same", {
+  expect_error(adjustedCurves:::check_inputs_sim_fun(n=10,
+                                        lcovars=lcovars,
+                                        outcome_betas=c(y1=1.1, y2=0, y3=-0.3),
+                                        group_beta=-1,
+                                        surv_dist="weibull",
+                                        gamma=1.8,
+                                        lambda=2,
+                                        treatment_betas=treatment_betas,
+                                        intercept=-0.5,
+                                        gtol=0.001,
+                                        cens_fun=custom_cens,
+                                        cens_args=list(),
+                                        max_t=Inf),
                NULL)
 })

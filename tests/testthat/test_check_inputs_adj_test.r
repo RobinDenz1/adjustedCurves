@@ -32,6 +32,13 @@ test_that("from wrong format", {
                NULL)
 })
 
+test_that("to wrong format", {
+  expect_error(adjustedCurves:::check_inputs_adj_test(adjsurv=adjsurv,
+                                                      from=0,
+                                                      to="1"),
+               NULL)
+})
+
 test_that("from not smaller than to", {
   expect_error(adjustedCurves:::check_inputs_adj_test(adjsurv=adjsurv,
                                                       from=0,

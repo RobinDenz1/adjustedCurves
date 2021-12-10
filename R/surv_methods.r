@@ -154,7 +154,6 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
   class(output) <- "adjustedsurv.method"
 
   return(output)
-
 }
 
 ## IPTW with univariate cox-model
@@ -408,9 +407,10 @@ surv_g_comp <- function(outcome_model, data, variable, times,
       # can't do predictions at 0
       times <- times[times > 0]
       times <- c(0.000001, times)
-      surv_lev <- sapply(X=times, object=outcome_model, data.val=data_temp,
+      surv_lev <- vapply(X=times, object=outcome_model, data.val=data_temp,
                    FUN=function(x, ...){
-                     stats::predict(time.pts=x, ...)$results$surv})
+                     stats::predict(time.pts=x, ...)$results$surv},
+                   FUN.VALUE=numeric(nrow(data)))
     # try to directly use S3 prediction function
     } else {
       surv_lev <- tryCatch(

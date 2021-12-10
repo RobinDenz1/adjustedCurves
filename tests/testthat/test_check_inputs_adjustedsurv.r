@@ -1,4 +1,5 @@
 library(mice)
+library(survival)
 
 set.seed(42)
 sim_dat <- sim_confounded_surv(n=20)
@@ -34,6 +35,22 @@ test_that("variable has wrong type", {
                                                           n_boot=2,
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
+               NULL)
+})
+
+test_that("variable has wrong length", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                         variable=c("x1", "x2"),
+                                                         ev_time="time",
+                                                         event="event",
+                                                         method="km",
+                                                         conf_int=FALSE,
+                                                         conf_level=0.95,
+                                                         times=NULL,
+                                                         bootstrap=FALSE,
+                                                         n_boot=2,
+                                                         na.action="na.omit",
+                                                         clean_data=TRUE),
                NULL)
 })
 
@@ -85,6 +102,22 @@ test_that("ev_time wrong format", {
                NULL)
 })
 
+test_that("ev_time wrong length", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                    variable="group",
+                                                    ev_time=c("group", "group"),
+                                                    event="event",
+                                                    method="km",
+                                                    conf_int=FALSE,
+                                                    conf_level=0.95,
+                                                    times=NULL,
+                                                    bootstrap=FALSE,
+                                                    n_boot=2,
+                                                    na.action="na.omit",
+                                                    clean_data=TRUE),
+               NULL)
+})
+
 test_that("non-standard evaluation in ev_time", {
   expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
                                                           variable="group",
@@ -133,6 +166,22 @@ test_that("event wrong format", {
                NULL)
 })
 
+test_that("event wrong length", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                      variable="group",
+                                                      ev_time="time",
+                                                      event=c("group", "group"),
+                                                      method="km",
+                                                      conf_int=FALSE,
+                                                      conf_level=0.95,
+                                                      times=NULL,
+                                                      bootstrap=FALSE,
+                                                      n_boot=2,
+                                                      na.action="na.omit",
+                                                      clean_data=TRUE),
+               NULL)
+})
+
 test_that("non-standard evaluation in event", {
   expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
                                                           variable="group",
@@ -165,7 +214,23 @@ test_that("method undefined", {
                NULL)
 })
 
-test_that("wrong conf_int", {
+test_that("method wrong length", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                          variable="group",
+                                                          ev_time="time",
+                                                          event="event",
+                                                          method=c("km", "km"),
+                                                          conf_int=FALSE,
+                                                          conf_level=0.95,
+                                                          times=NULL,
+                                                          bootstrap=FALSE,
+                                                          n_boot=2,
+                                                          na.action="na.omit",
+                                                          clean_data=TRUE),
+               NULL)
+})
+
+test_that("wrong conf_int type", {
   expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
                                                           variable="group",
                                                           ev_time="time",
@@ -178,6 +243,22 @@ test_that("wrong conf_int", {
                                                           n_boot=2,
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
+               NULL)
+})
+
+test_that("wrong conf_int length", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                         variable="group",
+                                                         ev_time="time",
+                                                         event="event",
+                                                         method="km",
+                                                         conf_int=c(TRUE, TRUE),
+                                                         conf_level=0.95,
+                                                         times=NULL,
+                                                         bootstrap=FALSE,
+                                                         n_boot=2,
+                                                         na.action="na.omit",
+                                                         clean_data=TRUE),
                NULL)
 })
 
@@ -197,7 +278,7 @@ test_that("wrong conf_level", {
                NULL)
 })
 
-test_that("wrong bootstrap", {
+test_that("wrong bootstrap type", {
   expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
                                                           variable="group",
                                                           ev_time="time",
@@ -213,7 +294,23 @@ test_that("wrong bootstrap", {
                NULL)
 })
 
-test_that("wrong n_boot", {
+test_that("wrong bootstrap length", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                        variable="group",
+                                                        ev_time="time",
+                                                        event="event",
+                                                        method="km",
+                                                        conf_int=TRUE,
+                                                        conf_level=0.95,
+                                                        times=NULL,
+                                                        bootstrap=c(TRUE, TRUE),
+                                                        n_boot=2,
+                                                        na.action="na.omit",
+                                                        clean_data=TRUE),
+               NULL)
+})
+
+test_that("wrong n_boot type", {
   expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
                                                           variable="group",
                                                           ev_time="time",
@@ -224,6 +321,22 @@ test_that("wrong n_boot", {
                                                           times=NULL,
                                                           bootstrap=TRUE,
                                                           n_boot=-2,
+                                                          na.action="na.omit",
+                                                          clean_data=TRUE),
+               NULL)
+})
+
+test_that("wrong n_boot length", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                          variable="group",
+                                                          ev_time="time",
+                                                          event="event",
+                                                          method="km",
+                                                          conf_int=TRUE,
+                                                          conf_level=0.95,
+                                                          times=NULL,
+                                                          bootstrap=TRUE,
+                                                          n_boot=c(10, 10),
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
                NULL)
@@ -242,6 +355,70 @@ test_that("wrong times", {
                                                           n_boot=2,
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
+               NULL)
+})
+
+test_that("wrong na.action type", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                          variable="group",
+                                                          ev_time="time",
+                                                          event="event",
+                                                          method="km",
+                                                          conf_int=TRUE,
+                                                          conf_level=0.95,
+                                                          times=NULL,
+                                                          bootstrap=TRUE,
+                                                          n_boot=2,
+                                                          na.action=1,
+                                                          clean_data=TRUE),
+               NULL)
+})
+
+test_that("wrong na.action length", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                          variable="group",
+                                                          ev_time="time",
+                                                          event="event",
+                                                          method="km",
+                                                          conf_int=TRUE,
+                                                          conf_level=0.95,
+                                                          times=NULL,
+                                                          bootstrap=TRUE,
+                                                          n_boot=2,
+                                                          na.action=c("1", "1"),
+                                                          clean_data=TRUE),
+               NULL)
+})
+
+test_that("wrong clean_data type", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                          variable="group",
+                                                          ev_time="time",
+                                                          event="event",
+                                                          method="km",
+                                                          conf_int=TRUE,
+                                                          conf_level=0.95,
+                                                          times=NULL,
+                                                          bootstrap=TRUE,
+                                                          n_boot=2,
+                                                          na.action="na.omit",
+                                                          clean_data=1),
+               NULL)
+})
+
+test_that("wrong clean_data length", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                     variable="group",
+                                                     ev_time="time",
+                                                     event="event",
+                                                     method="km",
+                                                     conf_int=TRUE,
+                                                     conf_level=0.95,
+                                                     times=NULL,
+                                                     bootstrap=TRUE,
+                                                     n_boot=2,
+                                                     na.action="na.omit",
+                                                     clean_data=c(TRUE, TRUE)),
                NULL)
 })
 
@@ -451,6 +628,172 @@ test_that("no models with method='aiptw'", {
                NULL)
 })
 
+outcome_model <- list()
+class(outcome_model) <- "pecRpart"
+
+test_that("bootstrapping with pecRpart", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                  variable="group",
+                                                  ev_time="time",
+                                                  event="event",
+                                                  method="direct",
+                                                  conf_int=TRUE,
+                                                  conf_level=0.95,
+                                                  times=NULL,
+                                                  bootstrap=TRUE,
+                                                  n_boot=2,
+                                                  na.action="na.omit",
+                                                  clean_data=TRUE,
+                                                  outcome_model=outcome_model),
+               NULL)
+})
+
+class(outcome_model) <- "glm"
+
+test_that("glm with censoring", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                   variable="group",
+                                                   ev_time="time",
+                                                   event="event",
+                                                   method="direct",
+                                                   conf_int=TRUE,
+                                                   conf_level=0.95,
+                                                   times=NULL,
+                                                   bootstrap=TRUE,
+                                                   n_boot=2,
+                                                   na.action="na.omit",
+                                                   clean_data=TRUE,
+                                                   outcome_model=outcome_model),
+               NULL)
+})
+
+outcome_model <- coxph(Surv(time, event) ~ 1, data=sim_dat)
+
+test_that("coxph not including 'variable'", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                  variable="group",
+                                                  ev_time="time",
+                                                  event="event",
+                                                  method="direct",
+                                                  conf_int=TRUE,
+                                                  conf_level=0.95,
+                                                  times=NULL,
+                                                  bootstrap=TRUE,
+                                                  n_boot=2,
+                                                  na.action="na.omit",
+                                                  clean_data=TRUE,
+                                                  outcome_model=outcome_model),
+               NULL)
+})
+
+sim_dat$x7 <- stats::runif(n=nrow(sim_dat))
+
+test_that("strat_cupples with continuous confounder", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                          variable="group",
+                                                          ev_time="time",
+                                                          event="event",
+                                                          method="strat_cupples",
+                                                          conf_int=FALSE,
+                                                          conf_level=0.95,
+                                                          times=NULL,
+                                                          bootstrap=TRUE,
+                                                          n_boot=2,
+                                                          na.action="na.omit",
+                                                          clean_data=TRUE,
+                                                          adjust_vars="x7"),
+               NULL)
+})
+
+test_that("adjust_vars not in data", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                      variable="group",
+                                                      ev_time="time",
+                                                      event="event",
+                                                      method="strat_amato",
+                                                      conf_int=FALSE,
+                                                      conf_level=0.95,
+                                                      times=NULL,
+                                                      bootstrap=TRUE,
+                                                      n_boot=2,
+                                                      na.action="na.omit",
+                                                      clean_data=TRUE,
+                                                      adjust_vars="x8"),
+               NULL)
+})
+
+test_that("invalid reference data", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                             variable="group",
+                                             ev_time="time",
+                                             event="event",
+                                             method="strat_amato",
+                                             conf_int=FALSE,
+                                             conf_level=0.95,
+                                             times=NULL,
+                                             bootstrap=TRUE,
+                                             n_boot=2,
+                                             na.action="na.omit",
+                                             clean_data=TRUE,
+                                             adjust_vars="x1",
+                                             reference=sim_dat[,c("x2", "x3")]),
+               NULL)
+})
+
+sim_dat$.ALL <- 1
+
+test_that("strat_cupples with '.ALL' column", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                   variable="group",
+                                                   ev_time="time",
+                                                   event="event",
+                                                   method="strat_cupples",
+                                                   conf_int=FALSE,
+                                                   conf_level=0.95,
+                                                   times=NULL,
+                                                   bootstrap=TRUE,
+                                                   n_boot=2,
+                                                   na.action="na.omit",
+                                                   clean_data=TRUE,
+                                                   adjust_vars="x1"),
+               NULL)
+})
+
+test_that("'adjust_vars' not specified with strat_ method", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                          variable="group",
+                                                          ev_time="time",
+                                                          event="event",
+                                                          method="strat_amato",
+                                                          conf_int=FALSE,
+                                                          conf_level=0.95,
+                                                          times=NULL,
+                                                          bootstrap=TRUE,
+                                                          n_boot=2,
+                                                          na.action="na.omit",
+                                                          clean_data=TRUE),
+               NULL)
+})
+
+sim_dat$.COVARS <- 1
+
+test_that("strat_amato with '.COVARS' column", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                          variable="group",
+                                                          ev_time="time",
+                                                          event="event",
+                                                          method="strat_amato",
+                                                          conf_int=FALSE,
+                                                          conf_level=0.95,
+                                                          times=NULL,
+                                                          bootstrap=TRUE,
+                                                          n_boot=2,
+                                                          na.action="na.omit",
+                                                          clean_data=TRUE,
+                                                          adjust_vars="x1"),
+               NULL)
+})
+
 ## multiple imputation stuff
 
 sim_dat_na_time <- sim_dat_na_group <- sim_dat_na_event <- sim_dat_na_x1 <-
@@ -571,3 +914,4 @@ test_that("warning with missing values in event", {
                                                             clean_data=TRUE),
                  NULL)
 })
+

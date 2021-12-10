@@ -29,6 +29,9 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
          " not a vector. See documentation.")
   } else if (length(clean_data) != 1) {
     stop("'clean_data' must be either TRUE or FALSE, not a vector.")
+  } else if (length(method) != 1) {
+    stop("'method' must be a single character string. Using multiple",
+         " methods in one call is currently not supported.")
   # needed variables
   } else if (!is.character(variable) | !is.character(ev_time) |
              !is.character(event) | !is.character(method)) {
@@ -275,8 +278,8 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
            " and an 'outcome_model' of class 'pecRpart'.")
     # only allow certain models when there is no censoring
     } else if (inherits(obj$outcome_model, c("glm", "ols", "randomForest")) &&
-               all(data[,event]==1)) {
-      stop("'outcome_models' of class c('glm', 'ols', 'randomForest') are",
+               !all(data[,event]==1)) {
+      stop("'outcome_model' of class c('glm', 'ols', 'randomForest') are",
            " only allowed when there is no censoring.")
     # don't allow selectCox if no covariates are left after selection
     } else if (inherits(obj$outcome_model, c("selectCox")) &&
@@ -296,16 +299,10 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     if (!"adjust_vars" %in% names(obj)) {
       stop("Argument 'adjust_vars' needs to be specified when using",
            " method='", method, "'.")
-    # no continuous confounders
-    } else if (inherits(data, "data.frame")) {
-      for (i in seq_len(length(obj$adjust_vars))) {
-        if (is.numeric(data[,obj$adjust_vars[i]]) &&
-            !all(floor(data[,obj$adjust_vars[i]])==data[,obj$adjust_vars[i]])) {
-          stop("Variables in 'adjust_vars' have to be integer, factor or",
-               "character variables. Continuous variables are not allowed",
-               " when using method='", method, "'.")
-        }
-      }
+    }
+    # adjust_vars not in data
+    if (!all(obj$adjust_vars %in% colnames(data))) {
+      stop("'adjust_vars' must specify valid column names in 'data'.")
     }
     # valid reference data
     if ((method=="strat_cupples" | method=="strat_amato") &
@@ -314,6 +311,26 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
         stop("If a 'reference' data.frame is supplied, it needs to contain",
              " all variables listed in 'adjust_vars'.")
       }
+    }
+    # no continuous confounders
+    if (inherits(data, "data.frame")) {
+      for (i in seq_len(length(obj$adjust_vars))) {
+        if (is.numeric(data[,obj$adjust_vars[i]]) &&
+            !all(floor(data[,obj$adjust_vars[i]])==data[,obj$adjust_vars[i]])) {
+          stop("Variables in 'adjust_vars' have to be integer, factor or",
+               " character variables. Continuous variables are not allowed",
+               " when using method='", method, "'.")
+        }
+      }
+    }
+    # forbidden column names
+    if (method=="strat_cupples" & ".ALL" %in% colnames(data)) {
+      stop("The column name '.ALL' cannot be used with method='strat_cupples'.",
+           " Please rename that variable and rerun the function.")
+    }
+    if (".COVARS" %in% colnames(data)) {
+      stop("The column name '.COVARS' cannot be used with method='",
+           method, "'. Please rename that variable and rerun the function.")
     }
   }
 
@@ -444,7 +461,6 @@ check_inputs_adj_rmst <- function(adjsurv, from, to, use_boot) {
             " estimates. Consider using a finer times grid in",
             " 'adjustedsurv'.", call.=FALSE)
   }
-
 }
 
 ## for adjusted_rmtl function
@@ -566,6 +582,9 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
          " not a vector. See documentation.")
   } else if (length(clean_data) != 1) {
     stop("'clean_data' must be either TRUE or FALSE, not a vector.")
+  } else if (length(method) != 1) {
+    stop("'method' must be a single character string. Using multiple",
+         " methods in one call is currently not supported.")
   # needed variables
   } else if (!is.character(variable) | !is.character(ev_time) |
              !is.character(event) | !is.character(method)) {

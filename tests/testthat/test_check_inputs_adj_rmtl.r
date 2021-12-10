@@ -45,3 +45,30 @@ test_that("no bootstrapping performed", {
                NULL)
 })
 
+test_that("use_boot wrong format", {
+  expect_error(adjustedCurves:::check_inputs_adj_rmst(adjsurv=adjsurv,
+                                                      from=0,
+                                                      to=1,
+                                                      use_boot=1),
+               NULL)
+})
+
+test_that("no extrapolation allowed", {
+  expect_error(adjustedCurves:::check_inputs_adj_rmst(adjsurv=adjsurv,
+                                                      from=0,
+                                                      to=200,
+                                                      use_boot=FALSE),
+               NULL)
+})
+
+adjsurv <- list(adjsurv=data.frame(time=seq(1, 3)))
+class(adjsurv) <- "adjustedsurv"
+
+test_that("too little points in time", {
+  expect_warning(adjustedCurves:::check_inputs_adj_rmst(adjsurv=adjsurv,
+                                                        from=0,
+                                                        to=1,
+                                                        use_boot=FALSE),
+                 NULL)
+})
+

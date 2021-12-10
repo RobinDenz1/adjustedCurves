@@ -39,6 +39,23 @@ test_that("variable has wrong type", {
                NULL)
 })
 
+test_that("variable has wrong length", {
+  expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
+                                                        variable=c("x1", "x2"),
+                                                        ev_time="time",
+                                                        event="event",
+                                                        method="aalen_johansen",
+                                                        conf_int=FALSE,
+                                                        conf_level=0.95,
+                                                        times=NULL,
+                                                        bootstrap=FALSE,
+                                                        n_boot=2,
+                                                        na.action="na.omit",
+                                                        clean_data=TRUE,
+                                                        cause=1),
+               NULL)
+})
+
 test_that("non-standard evaluation in variable", {
   expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
                                                         variable=group,
@@ -90,6 +107,23 @@ test_that("ev_time wrong format", {
                NULL)
 })
 
+test_that("ev_time wrong length", {
+  expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
+                                                      variable="group",
+                                                      ev_time=c("time", "time"),
+                                                      event="event",
+                                                      method="aalen_johansen",
+                                                      conf_int=FALSE,
+                                                      conf_level=0.95,
+                                                      times=NULL,
+                                                      bootstrap=FALSE,
+                                                      n_boot=2,
+                                                      na.action="na.omit",
+                                                      clean_data=TRUE,
+                                                      cause=1),
+               NULL)
+})
+
 test_that("non-standard evaluation in ev_time", {
   expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
                                                         variable="group",
@@ -138,6 +172,23 @@ test_that("event wrong format", {
                                                         na.action="na.omit",
                                                         clean_data=TRUE,
                                                         cause=1),
+               NULL)
+})
+
+test_that("event wrong length", {
+  expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
+                                                      variable="group",
+                                                      ev_time="time",
+                                                      event=c("event", "event"),
+                                                      method="aalen_johansen",
+                                                      conf_int=FALSE,
+                                                      conf_level=0.95,
+                                                      times=NULL,
+                                                      bootstrap=FALSE,
+                                                      n_boot=2,
+                                                      na.action="na.omit",
+                                                      clean_data=TRUE,
+                                                      cause=1),
                NULL)
 })
 
@@ -209,7 +260,24 @@ test_that("method undefined", {
                NULL)
 })
 
-test_that("wrong conf_int", {
+test_that("wrong method length", {
+  expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
+                                                         variable="group",
+                                                         ev_time="time",
+                                                         event="event",
+                                                         method=c("km", "km"),
+                                                         conf_int=FALSE,
+                                                         conf_level=0.95,
+                                                         times=NULL,
+                                                         bootstrap=FALSE,
+                                                         n_boot=2,
+                                                         na.action="na.omit",
+                                                         clean_data=TRUE,
+                                                         cause=1),
+               NULL)
+})
+
+test_that("wrong conf_int type", {
   expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
                                                         variable="group",
                                                         ev_time="time",
@@ -226,7 +294,24 @@ test_that("wrong conf_int", {
                NULL)
 })
 
-test_that("wrong conf_level", {
+test_that("wrong conf_int length", {
+  expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
+                                                        variable="group",
+                                                        ev_time="time",
+                                                        event="event",
+                                                        method="aalen_johansen",
+                                                        conf_int=c(TRUE, TRUE),
+                                                        conf_level=0.95,
+                                                        times=NULL,
+                                                        bootstrap=FALSE,
+                                                        n_boot=2,
+                                                        na.action="na.omit",
+                                                        clean_data=TRUE,
+                                                        cause=1),
+               NULL)
+})
+
+test_that("wrong conf_level type", {
   expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
                                                         variable="group",
                                                         ev_time="time",
@@ -243,7 +328,24 @@ test_that("wrong conf_level", {
                NULL)
 })
 
-test_that("wrong bootstrap", {
+test_that("wrong conf_level length", {
+  expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
+                                                      variable="group",
+                                                      ev_time="time",
+                                                      event="event",
+                                                      method="aalen_johansen",
+                                                      conf_int=TRUE,
+                                                      conf_level=c(0.95, 0.95),
+                                                      times=NULL,
+                                                      bootstrap=FALSE,
+                                                      n_boot=2,
+                                                      na.action="na.omit",
+                                                      clean_data=TRUE,
+                                                      cause=1),
+               NULL)
+})
+
+test_that("wrong bootstrap type", {
   expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
                                                         variable="group",
                                                         ev_time="time",
@@ -260,7 +362,24 @@ test_that("wrong bootstrap", {
                NULL)
 })
 
-test_that("wrong n_boot", {
+test_that("wrong bootstrap length", {
+  expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
+                                                        variable="group",
+                                                        ev_time="time",
+                                                        event="event",
+                                                        method="aalen_johansen",
+                                                        conf_int=TRUE,
+                                                        conf_level=0.95,
+                                                        times=NULL,
+                                                        bootstrap=c(TRUE, TRUE),
+                                                        n_boot=2,
+                                                        na.action="na.omit",
+                                                        clean_data=TRUE,
+                                                        cause=1),
+               NULL)
+})
+
+test_that("wrong n_boot type", {
   expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
                                                         variable="group",
                                                         ev_time="time",
@@ -274,6 +393,23 @@ test_that("wrong n_boot", {
                                                         na.action="na.omit",
                                                         clean_data=TRUE,
                                                         cause=1),
+               NULL)
+})
+
+test_that("wrong n_boot length", {
+  expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
+                                                         variable="group",
+                                                         ev_time="time",
+                                                         event="event",
+                                                         method="aalen_johansen",
+                                                         conf_int=TRUE,
+                                                         conf_level=0.95,
+                                                         times=NULL,
+                                                         bootstrap=TRUE,
+                                                         n_boot=c(2, 2),
+                                                         na.action="na.omit",
+                                                         clean_data=TRUE,
+                                                         cause=1),
                NULL)
 })
 
@@ -291,6 +427,74 @@ test_that("wrong times", {
                                                         na.action="na.omit",
                                                         clean_data=TRUE,
                                                         cause=1),
+               NULL)
+})
+
+test_that("wrong na.action type", {
+  expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
+                                                         variable="group",
+                                                         ev_time="time",
+                                                         event="event",
+                                                         method="aalen_johansen",
+                                                         conf_int=TRUE,
+                                                         conf_level=0.95,
+                                                         times=NULL,
+                                                         bootstrap=TRUE,
+                                                         n_boot=10,
+                                                         na.action=1,
+                                                         clean_data=TRUE,
+                                                         cause=1),
+               NULL)
+})
+
+test_that("wrong na.action length", {
+  expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
+                                              variable="group",
+                                              ev_time="time",
+                                              event="event",
+                                              method="aalen_johansen",
+                                              conf_int=TRUE,
+                                              conf_level=0.95,
+                                              times=NULL,
+                                              bootstrap=TRUE,
+                                              n_boot=10,
+                                              na.action=c("na.omit", "na.omit"),
+                                              clean_data=TRUE,
+                                              cause=1),
+               NULL)
+})
+
+test_that("wrong clean_data type", {
+  expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
+                                                        variable="group",
+                                                        ev_time="time",
+                                                        event="event",
+                                                        method="aalen_johansen",
+                                                        conf_int=TRUE,
+                                                        conf_level=0.95,
+                                                        times=NULL,
+                                                        bootstrap=TRUE,
+                                                        n_boot=10,
+                                                        na.action="na.omit",
+                                                        clean_data=1,
+                                                        cause=1),
+               NULL)
+})
+
+test_that("wrong clean_data length", {
+  expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
+                                                      variable="group",
+                                                      ev_time="time",
+                                                      event="event",
+                                                      method="aalen_johansen",
+                                                      conf_int=TRUE,
+                                                      conf_level=0.95,
+                                                      times=NULL,
+                                                      bootstrap=TRUE,
+                                                      n_boot=10,
+                                                      na.action="na.omit",
+                                                      clean_data=c(TRUE, TRUE),
+                                                      cause=1),
                NULL)
 })
 
@@ -440,7 +644,24 @@ test_that("weights in matching", {
                NULL)
 })
 
-test_that("no models with method='aiptw'", {
+test_that("no treatment_model in matching", {
+  expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
+                                      variable="group",
+                                      ev_time="time",
+                                      event="event",
+                                      method="matching",
+                                      conf_int=FALSE,
+                                      conf_level=0.95,
+                                      times=0.2,
+                                      bootstrap=FALSE,
+                                      n_boot=2,
+                                      na.action="na.omit",
+                                      clean_data=TRUE,
+                                      cause=1),
+               NULL)
+})
+
+test_that("no treatment_model with method='aiptw'", {
   expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
                                                          variable="group",
                                                          ev_time="time",
@@ -453,6 +674,81 @@ test_that("no models with method='aiptw'", {
                                                          n_boot=2,
                                                          na.action="na.omit",
                                                          clean_data=TRUE,
+                                                         outcome_model=NULL,
+                                                         cause=1),
+               NULL)
+})
+
+test_that("no outcome_model with method='aiptw'", {
+  expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
+                                                         variable="group",
+                                                         ev_time="time",
+                                                         event="event",
+                                                         method="aiptw",
+                                                         conf_int=TRUE,
+                                                         conf_level=0.95,
+                                                         times=NULL,
+                                                         bootstrap=FALSE,
+                                                         n_boot=2,
+                                                         na.action="na.omit",
+                                                         clean_data=TRUE,
+                                                         treatment_model=NULL,
+                                                         cause=1),
+               NULL)
+})
+
+test_that("no outcome_model with method='direct'", {
+  expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
+                                                         variable="group",
+                                                         ev_time="time",
+                                                         event="event",
+                                                         method="direct",
+                                                         conf_int=TRUE,
+                                                         conf_level=0.95,
+                                                         times=NULL,
+                                                         bootstrap=FALSE,
+                                                         n_boot=2,
+                                                         na.action="na.omit",
+                                                         clean_data=TRUE,
+                                                         cause=1),
+               NULL)
+})
+
+outcome_model <- list(cause=2)
+class(outcome_model) <- "FGR"
+
+test_that("cause is not the same as the cause in FGR", {
+  expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
+                                                    variable="group",
+                                                    ev_time="time",
+                                                    event="event",
+                                                    method="direct",
+                                                    conf_int=TRUE,
+                                                    conf_level=0.95,
+                                                    times=NULL,
+                                                    bootstrap=FALSE,
+                                                    n_boot=2,
+                                                    na.action="na.omit",
+                                                    clean_data=TRUE,
+                                                    outcome_model=outcome_model,
+                                                    cause=1),
+               NULL)
+})
+
+test_that("conf_int with non-supported method", {
+  expect_warning(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
+                                                         variable="group",
+                                                         ev_time="time",
+                                                         event="event",
+                                                         method="matching",
+                                                         conf_int=TRUE,
+                                                         conf_level=0.95,
+                                                         times=NULL,
+                                                         bootstrap=FALSE,
+                                                         n_boot=2,
+                                                         na.action="na.omit",
+                                                         clean_data=TRUE,
+                                                         treatment_model=NULL,
                                                          cause=1),
                NULL)
 })

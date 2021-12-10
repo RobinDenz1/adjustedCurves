@@ -27,6 +27,22 @@ test_that("wrong n format", {
                NULL)
 })
 
+test_that("wrong n format double", {
+  expect_error(adjustedCurves:::check_inputs_sim_crisk_fun(n=1.3,
+                                                           lcovars=NULL,
+                                                           outcome_betas=NULL,
+                                                           group_beta=c(1, 0),
+                                                           gamma=c(1.8, 1.8),
+                                                           lambda=c(2, 2),
+                                                           treatment_betas=NULL,
+                                                           intercept=-0.5,
+                                                           gtol=0.001,
+                                                           cens_fun=custom_cens,
+                                                           cens_args=list(),
+                                                           max_t=1.7),
+               NULL)
+})
+
 test_that("wrong gamma format", {
   expect_error(adjustedCurves:::check_inputs_sim_crisk_fun(n=10,
                                                           lcovars=NULL,
@@ -75,7 +91,7 @@ test_that("wrong intercept format", {
                NULL)
 })
 
-test_that("wrong gtol format", {
+test_that("wrong gtol too big", {
   expect_error(adjustedCurves:::check_inputs_sim_crisk_fun(n=10,
                                                            lcovars=NULL,
                                                            outcome_betas=NULL,
@@ -85,6 +101,22 @@ test_that("wrong gtol format", {
                                                            treatment_betas=NULL,
                                                            intercept=-0.5,
                                                            gtol=10,
+                                                           cens_fun=custom_cens,
+                                                           cens_args=list(),
+                                                           max_t=1.7),
+               NULL)
+})
+
+test_that("wrong gtol format", {
+  expect_error(adjustedCurves:::check_inputs_sim_crisk_fun(n=10,
+                                                           lcovars=NULL,
+                                                           outcome_betas=NULL,
+                                                           group_beta=c(1, 0),
+                                                           gamma=c(1.8, 1.8),
+                                                           lambda=c(2, 2),
+                                                           treatment_betas=NULL,
+                                                           intercept=-0.5,
+                                                           gtol="0.1",
                                                            cens_fun=custom_cens,
                                                            cens_args=list(),
                                                            max_t=1.7),
@@ -107,6 +139,22 @@ test_that("wrong cens_fun format", {
                NULL)
 })
 
+test_that("wrong cens_args format", {
+  expect_error(adjustedCurves:::check_inputs_sim_crisk_fun(n=10,
+                                                           lcovars=NULL,
+                                                           outcome_betas=NULL,
+                                                           group_beta=c(1, 0),
+                                                           gamma=c(1.8, 1.8),
+                                                           lambda=c(2, 2),
+                                                           treatment_betas=NULL,
+                                                           intercept=-0.5,
+                                                           gtol=0.001,
+                                                           cens_fun=runif,
+                                                           cens_args="list()",
+                                                           max_t=1.7),
+               NULL)
+})
+
 test_that("wrong max_t format", {
   expect_error(adjustedCurves:::check_inputs_sim_crisk_fun(n=10,
                                                            lcovars=NULL,
@@ -120,6 +168,22 @@ test_that("wrong max_t format", {
                                                            cens_fun=custom_cens,
                                                            cens_args=list(),
                                                            max_t="1.7"),
+               NULL)
+})
+
+test_that("wrong max_t length", {
+  expect_error(adjustedCurves:::check_inputs_sim_crisk_fun(n=10,
+                                                           lcovars=NULL,
+                                                           outcome_betas=NULL,
+                                                           group_beta=c(1, 0),
+                                                           gamma=c(1.8, 1.8),
+                                                           lambda=c(2, 2),
+                                                           treatment_betas=NULL,
+                                                           intercept=-0.5,
+                                                           gtol=0.001,
+                                                           cens_fun=custom_cens,
+                                                           cens_args=list(),
+                                                           max_t=c(1, 1.2)),
                NULL)
 })
 

@@ -273,6 +273,8 @@ test_that("prodlim, 2 treatments, with boot", {
                NA)
 })
 
+sim_dat$event <- 1
+
 test_that("glm, 2 treatments, no boot", {
   expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
                                             variable="group",
@@ -432,6 +434,8 @@ test_that("prodlim, > 2 treatments, with boot", {
                                             n_boot=2),
                NA)
 })
+
+sim_dat$event <- 1
 
 test_that("glm, > 2 treatments, no boot", {
   expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
