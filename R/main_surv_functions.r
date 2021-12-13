@@ -675,17 +675,22 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
     # remove if missing
     median_surv <- median_surv[!is.na(median_surv$median_surv),]
 
+    median_surv$vert_x <- 0
+    median_surv$vert_y <- 0.5
+    median_surv$vert_yend <- 0.5
+
     if (sum(is.na(median_surv$median_surv)) < nrow(median_surv)) {
 
-      # draw line on surv_p = 0.5 until it hits the last curve
-      p <- p + ggplot2::geom_segment(ggplot2::aes(x=0,
-                                              xend=max(median_surv$median_surv),
-                                              y=0.5,
-                                              yend=0.5),
+      # draw line on surv_p = 0.5 until it hits the curve
+      p <- p + ggplot2::geom_segment(ggplot2::aes(x=.data$vert_x,
+                                              xend=.data$median_surv,
+                                              y=.data$vert_y,
+                                              yend=.data$vert_yend),
                                      inherit.aes=FALSE,
                                      linetype=median_surv_linetype,
                                      size=median_surv_size,
-                                     color=median_surv_color)
+                                     color=median_surv_color,
+                                     data=median_surv)
       # draw indicator lines from middle to bottom
       p <- p + ggplot2::geom_segment(ggplot2::aes(x=.data$median_surv,
                                                   xend=.data$median_surv,

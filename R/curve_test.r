@@ -92,6 +92,7 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
                     conf_int=pooled_ci,
                     categorical=FALSE,
                     treat_labs=mids_out[[1]][[i]]$treat_labs,
+                    method=adjsurv$method,
                     call=fun_call)
         class(out) <- "curve_test"
         output[[dat$comparison[i]]] <- out
@@ -148,6 +149,7 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
                   conf_int=pooled_ci,
                   categorical=FALSE,
                   treat_labs=treat_labs,
+                  method=adjsurv$method,
                   call=fun_call)
       class(out) <- "curve_test"
 
@@ -241,6 +243,7 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
                   conf_int=conf_int,
                   categorical=FALSE,
                   treat_labs=treat_labs,
+                  method=adjsurv$method,
                   call=fun_call)
 
       ## more than one treatments -> perform pairwise comparisons
@@ -251,7 +254,6 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
       } else {
         combs <- all_combs_length_2(unique(adjsurv$adjcif$group))
       }
-
 
       out <- list()
       for (i in seq_len(length(combs))) {
@@ -312,10 +314,14 @@ print.curve_test <- function(x, ...) {
     }
 
   } else if (!x$categorical) {
-    if(x$kind=="surv") {
-     title <- "Test of the Difference between two adjusted Survival Curves\n"
-    } else {
-     title <- "Test of the Difference between two adjusted CIFs \n"
+    if (x$kind=="surv" & x$method=="km") {
+      title <- "Test of the Difference between two Survival Curves\n"
+    } else if (x$kind=="surv") {
+      title <- "Test of the Difference between two adjusted Survival Curves\n"
+    } else if (x$kind=="cif" & x$method=="aalen_johansen") {
+      title <- "Test of the Difference between two CIFs \n"
+    } else if (x$kind=="cif") {
+      title <- "Test of the Difference between two adjusted CIFs \n"
     }
 
     call_conf <- x$call$conf_level
