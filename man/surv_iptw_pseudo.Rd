@@ -47,7 +47,7 @@ Must be either a model object with \code{variable} as response variable, a vecto
 Method used in \code{WeightIt} function call. Ignored if \code{treatment_model} is not a formula object.
 }
   \item{stabilize}{
-Whether to stabilize the weights or not. Is set to \code{TRUE} by default. Stabilizing has no effect on the estimates, only on the asymptotic variance calculations and confidence intervals. Without stabilizing, those estimates are biased downward.
+Whether to stabilize the weights or not. Is set to \code{TRUE} by default. Stabilizing weights ensures that the sum of all weights is equal to the original sample size. It has no effect on point estimates, only on the asymptotic variance calculations and confidence intervals. Stabilized weights are calculated using \code{w * length(w) / sum(w)} where \code{w} is a vector of weights.
   }
   \item{trim}{
 Can be either \code{FALSE} (default) or a numeric value at which to trim the weights. If \code{FALSE}, weights are used as calculated or supplied. If a numeric value is supplied, all weights that are bigger than \code{trim} are set to \code{trim} before the analysis is carried out. Useful when some weights are extremely large.

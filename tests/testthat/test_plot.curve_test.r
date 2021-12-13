@@ -13,7 +13,7 @@ adj <- adjustedsurv(data=sim_dat,
                     bootstrap=TRUE,
                     n_boot=20)
 
-adj_test <- test_curve_equality(adjsurv=adj, from=0, to=0.5)
+adj_test <- adjusted_curve_diff(adjsurv=adj, from=0, to=0.5)
 
 # 2 treatments
 
@@ -57,7 +57,7 @@ adj <- adjustedsurv(data=sim_dat,
                     bootstrap=TRUE,
                     n_boot=20)
 
-adj_test <- test_curve_equality(adjsurv=adj, from=0, to=0.5)
+adj_test <- adjusted_curve_diff(adjsurv=adj, from=0, to=0.5)
 
 test_that("plot.curve_test, > 2 treatments, type='curves'", {
   expect_error(plot(adj_test, type="curves"), NA)

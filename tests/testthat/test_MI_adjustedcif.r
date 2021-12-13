@@ -246,7 +246,7 @@ test_that("MI, aalen_johansen, boot", {
                                            cause=1), NA)
 })
 
-### test_curve_equality
+### adjusted_curve_diff
 adjcif <- adjustedCurves::adjustedcif(data=imp,
                                       variable="group",
                                       ev_time="time",
@@ -257,8 +257,8 @@ adjcif <- adjustedCurves::adjustedcif(data=imp,
                                       na.action="na.omit",
                                       cause=1)
 
-test_that("test_curve_equality, two treatments", {
-  expect_error(adjustedCurves::test_curve_equality(adjcif, from=0, to=1), NA)
+test_that("adjusted_curve_diff, two treatments", {
+  expect_error(adjustedCurves::adjusted_curve_diff(adjcif, from=0, to=1), NA)
 })
 
 # create 3 treatments
@@ -282,7 +282,7 @@ adjcif <- adjustedCurves::adjustedcif(data=imp,
                                       na.action="na.omit",
                                       cause=1)
 
-test_that("test_curve_equality, three treatments", {
-  expect_error(adjustedCurves::test_curve_equality(adjcif, from=0, to=1), NA)
+test_that("adjusted_curve_diff, three treatments", {
+  expect_error(adjustedCurves::adjusted_curve_diff(adjcif, from=0, to=1), NA)
 })
 

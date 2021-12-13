@@ -16,7 +16,7 @@
 ## Hypothesis-Test for the equality of two adjusted survival curves
 ## or two adjusted cumulative incidence functions
 #' @export
-test_curve_equality <- function(adjsurv, to, from=0, conf_level=0.95) {
+adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
 
   # silence devtools::check() notes
   . <- comparison <- area_est <- p_val <- n_boot <- NULL
@@ -39,7 +39,7 @@ test_curve_equality <- function(adjsurv, to, from=0, conf_level=0.95) {
       mids_out <- dat <- vector(mode="list", length=len)
       for (i in seq_len(len)) {
 
-        results_imp <- test_curve_equality(adjsurv$mids_analyses[[i]],
+        results_imp <- adjusted_curve_diff(adjsurv$mids_analyses[[i]],
                                            to=to, from=from,
                                            conf_level=conf_level)
         mids_out[[i]] <- results_imp
@@ -110,7 +110,7 @@ test_curve_equality <- function(adjsurv, to, from=0, conf_level=0.95) {
                                                           length=len)
       for (i in seq_len(len)) {
 
-        results_imp <- test_curve_equality(adjsurv$mids_analyses[[i]],
+        results_imp <- adjusted_curve_diff(adjsurv$mids_analyses[[i]],
                                            to=to, from=from,
                                            conf_level=conf_level)
         mids_out[[i]] <- results_imp
@@ -285,7 +285,7 @@ test_curve_equality <- function(adjsurv, to, from=0, conf_level=0.95) {
         }
 
         # recursion call
-        pair <- test_curve_equality(adjsurv=fake_adjsurv,
+        pair <- adjusted_curve_diff(adjsurv=fake_adjsurv,
                                     from=from,
                                     to=to,
                                     conf_level=conf_level)
@@ -313,9 +313,9 @@ print.curve_test <- function(x, ...) {
 
   } else if (!x$categorical) {
     if(x$kind=="surv") {
-     title <- "Pepe-Flemming Test of Equality of Two Adjusted Survival Curves\n"
+     title <- "Test of the Difference between two adjusted Survival Curves\n"
     } else {
-     title <- "Pepe-Flemming Test of Equality of Two Adjusted CIFs \n"
+     title <- "Test of the Difference between two adjusted CIFs \n"
     }
 
     call_conf <- x$call$conf_level
@@ -330,7 +330,7 @@ print.curve_test <- function(x, ...) {
     cat("------------------------------------------------------------------\n")
     cat("Group =", toString(x$treat_labs[1]), "vs. Group =",
         toString(x$treat_labs[2]), "\n")
-    cat("The equality was tested for the time interval:", x$call$from, "to",
+    cat("The difference was tested for the time interval:", x$call$from, "to",
         x$call$to, "\n")
     cat("Observed Integral of the difference:", x$observed_diff_integral, "\n")
     cat("Bootstrap standard error:", x$integral_se, "\n")

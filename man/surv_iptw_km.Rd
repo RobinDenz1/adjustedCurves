@@ -45,7 +45,7 @@ Must be either a model object with \code{variable} as response variable, a vecto
 Method used in \code{WeightIt} function call. Ignored if \code{treatment_model} is not a formula object.
 }
   \item{stabilize}{
-Whether to stabilize the weights or not. Is set to \code{TRUE} by default. Stabilizing has no effect on the estimates, only on the asymptotic variance calculations and confidence intervals. Without stabilizing, those estimates are biased downward.
+Whether to stabilize the weights or not. Is set to \code{TRUE} by default. Stabilizing weights ensures that the sum of all weights is equal to the original sample size. It has no effect on point estimates, only on the asymptotic variance calculations and confidence intervals. Stabilized weights are calculated using \code{w * length(w) / sum(w)} where \code{w} is a vector of weights.
   }
   \item{trim}{
 Can be either \code{FALSE} (default) or a numeric value at which to trim the weights. If \code{FALSE}, weights are used as calculated or supplied. If a numeric value is supplied, all weights that are bigger than \code{trim} are set to \code{trim} before the analysis is carried out. Useful when some weights are extremely large.
@@ -70,7 +70,6 @@ Further arguments passed to \code{\link[WeightIt]{weightit}}.
 This method works by modelling the treatment assignment mechanism. Adjusted survival curves are calculated by first estimating appropriate case-weights for each observation in \code{data}. This can be done using inverse probability of treatment weights using the propensity score (usually estimated using a logistic regression model) or by some other method (see \code{?weightit}). Those weights are used in a weighted version of the Kaplan-Meier estimator proposed by Xie and Liu (2005). If the weights are correctly estimated the resulting estimates will be unbiased. The only difference to the \code{\link[=surv_iptw_cox]{iptw_cox}} method is a slightly different weighting approach.
 
 Asymptotic variances are calculated using the equations given in Xie and Liu (2005). It is also recommended to use stabilized weights by using \code{stabilize=TRUE} (the default value). More information can be found in the cited literature.
-
 }
 \value{
 Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable} and the weights used in the analysis.

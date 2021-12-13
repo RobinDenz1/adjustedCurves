@@ -371,9 +371,9 @@ test_that("adjusted_rmst, boot", {
                NA)
 })
 
-### test_curve_equality
-test_that("test_curve_equality, two treatments", {
-  expect_error(adjustedCurves::test_curve_equality(adjsurv, from=0, to=1), NA)
+### adjusted_curve_diff
+test_that("adjusted_curve_diff, two treatments", {
+  expect_error(adjustedCurves::adjusted_curve_diff(adjsurv, from=0, to=1), NA)
 })
 
 # create 3 treatments
@@ -396,6 +396,6 @@ adjsurv <- adjustedCurves::adjustedsurv(data=imp,
                                         n_boot=3,
                                         na.action="na.omit")
 
-test_that("test_curve_equality, three treatments", {
-  expect_error(adjustedCurves::test_curve_equality(adjsurv, from=0, to=1), NA)
+test_that("adjusted_curve_diff, three treatments", {
+  expect_error(adjustedCurves::adjusted_curve_diff(adjsurv, from=0, to=1), NA)
 })

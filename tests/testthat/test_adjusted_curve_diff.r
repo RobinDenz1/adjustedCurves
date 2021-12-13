@@ -19,11 +19,11 @@ adj <- adjustedsurv(data=sim_dat,
                     n_boot=10)
 
 test_that("survival, 2 treatments, no from", {
-  expect_error(test_curve_equality(adj, to=1.3), NA)
+  expect_error(adjusted_curve_diff(adj, to=1.3), NA)
 })
 
 test_that("survival, 2 treatments, with from", {
-  expect_error(test_curve_equality(adj, to=1.3, from=0.5), NA)
+  expect_error(adjusted_curve_diff(adj, to=1.3, from=0.5), NA)
 })
 
 sim_dat$group <- as.character(sim_dat$group)
@@ -42,11 +42,11 @@ adj <- adjustedsurv(data=sim_dat,
                     n_boot=10)
 
 test_that("survival, > 2 treatments, no from", {
-  expect_error(test_curve_equality(adj, to=1.3), NA)
+  expect_error(adjusted_curve_diff(adj, to=1.3), NA)
 })
 
 test_that("survival, > 2 treatments, with from", {
-  expect_error(test_curve_equality(adj, to=1.3, from=0.5), NA)
+  expect_error(adjusted_curve_diff(adj, to=1.3, from=0.5), NA)
 })
 
 # competing risks case
@@ -67,11 +67,11 @@ adj <- adjustedcif(data=sim_dat,
                    n_boot=10)
 
 test_that("CIF, 2 treatments, no from", {
-  expect_error(test_curve_equality(adj, to=1), NA)
+  expect_error(adjusted_curve_diff(adj, to=1), NA)
 })
 
 test_that("CIF, 2 treatments, with from", {
-  expect_error(test_curve_equality(adj, to=1, from=0.5), NA)
+  expect_error(adjusted_curve_diff(adj, to=1, from=0.5), NA)
 })
 
 sim_dat$group <- as.character(sim_dat$group)
@@ -91,10 +91,10 @@ adj <- adjustedcif(data=sim_dat,
                    n_boot=10)
 
 test_that("CIF, > 2 treatments, no from", {
-  expect_error(test_curve_equality(adj, to=1), NA)
+  expect_error(adjusted_curve_diff(adj, to=1), NA)
 })
 
 test_that("CIF, > 2 treatments, with from", {
-  expect_error(test_curve_equality(adj, to=1, from=0.5), NA)
+  expect_error(adjusted_curve_diff(adj, to=1, from=0.5), NA)
 })
 

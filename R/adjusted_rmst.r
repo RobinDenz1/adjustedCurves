@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## calculate area under curve of adjustedsurv, adjustedcif objects
-AUC <- function(object, from, to, use_boot, conf_level) {
+area_under_curve <- function(object, from, to, use_boot, conf_level) {
 
   mode <- ifelse(inherits(object, "adjustedsurv"), "surv", "cif")
   boot_str <- paste0("boot_adj", mode)
@@ -27,9 +27,9 @@ AUC <- function(object, from, to, use_boot, conf_level) {
                                                           length=len)
     for (i in seq_len(len)) {
 
-      results_imp <- AUC(object$mids_analyses[[i]],
-                         to=to, from=from, use_boot=use_boot,
-                         conf_level=conf_level)
+      results_imp <- area_under_curve(object$mids_analyses[[i]],
+                                      to=to, from=from, use_boot=use_boot,
+                                      conf_level=conf_level)
       mids_out[[i]] <- results_imp
       rmst_ests[[i]] <- results_imp$auc
       rmst_se[[i]] <- results_imp$auc_se
@@ -90,7 +90,8 @@ AUC <- function(object, from, to, use_boot, conf_level) {
         }
 
         # recursion call
-        adj_rmst <- AUC(fake_object, from=from, to=to, use_boot=FALSE)
+        adj_rmst <- area_under_curve(fake_object, from=from, to=to,
+                                     use_boot=FALSE)
 
         booted_rmsts[[i]] <- adj_rmst$auc
       }
@@ -160,8 +161,8 @@ adjusted_rmst <- function(adjsurv, to, from=0, use_boot=FALSE,
     use_boot <- FALSE
   }
 
-  out <- AUC(object=adjsurv, to=to, from=from, use_boot=use_boot,
-             conf_level=conf_level)
+  out <- area_under_curve(object=adjsurv, to=to, from=from,
+                          use_boot=use_boot, conf_level=conf_level)
   class(out) <- "adjusted_rmst"
   return(out)
 }
@@ -180,8 +181,8 @@ adjusted_rmtl <- function(adj, to, from=0, use_boot=FALSE,
   }
 
   # calculate area under curve
-  out <- AUC(object=adj, to=to, from=from, use_boot=use_boot,
-             conf_level=conf_level)
+  out <- area_under_curve(object=adj, to=to, from=from, use_boot=use_boot,
+                          conf_level=conf_level)
   class(out) <- "adjusted_rmtl"
 
   # take area above curve instead

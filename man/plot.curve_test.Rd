@@ -14,7 +14,7 @@ Produces either a spaghetti-plot of the bootstrapped difference curves (\code{ty
 
 \arguments{
   \item{x}{
-An object of class \code{curve_test} created by the \code{test_curve_equality} function.
+An object of class \code{curve_test} created by the \code{adjusted_curve_diff} function.
   }
   \item{type}{
 Either \code{"curves"} or \code{"integral"}, specifying what should be plotted.
@@ -50,8 +50,8 @@ Robin Denz
 }
 
 \seealso{
-\code{\link{test_curve_equality}}, \code{\link{adjustedsurv}}, \code{\link{adjusted_rmst}}
+\code{\link{adjusted_curve_diff}}, \code{\link{adjustedsurv}}, \code{\link{adjusted_rmst}}
 }
 \examples{
-# See ?test_curve_equality
+# See ?adjusted_curve_diff
 }

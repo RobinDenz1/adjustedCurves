@@ -1,14 +1,14 @@
-\name{test_curve_equality}
-\alias{test_curve_equality}
+\name{adjusted_curve_diff}
+\alias{adjusted_curve_diff}
 
 \title{
-Test for the Equality of Two Confounder-Adjusted Survival Curves or CIFs
+Test if there is a difference between two Confounder-Adjusted Survival Curves or CIFs
 }
 \description{
-This function implements a modified version of the Pepe and Flemming (1989) test for the equality of two adjusted survival curves or CIFs. In particular, the Null-Hypothesis is that the integral of the difference of the two curves in a specified time interval is not different from zero.
+This function implements a modified version of the Pepe and Flemming (1989) test for the difference of two adjusted survival curves or CIFs. In particular, the Null-Hypothesis is that the integral of the difference of the two curves in a specified time interval is equal to zero.
 }
 \usage{
-test_curve_equality(adjsurv, to, from=0, conf_level=0.95)
+adjusted_curve_diff(adjsurv, to, from=0, conf_level=0.95)
 }
 
 \arguments{
@@ -111,7 +111,7 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         n_boot=500)
 
 # test the equality of both curves in the interval 0 to 1
-adjtest <- test_curve_equality(adjsurv, from=0, to=1)
+adjtest <- adjusted_curve_diff(adjsurv, from=0, to=1)
 print(adjtest)
 
 #### Competing Risks Case with adjusted CIFs ####
@@ -140,7 +140,7 @@ adjcif <- adjustedcif(data=sim_dat,
                       cause=1)
 
 # test the equality of both curves in the interval 0 to 1
-adjtest <- test_curve_equality(adjcif, from=0, to=1)
+adjtest <- adjusted_curve_diff(adjcif, from=0, to=1)
 print(adjtest)
 
 }

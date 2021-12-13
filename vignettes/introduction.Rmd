@@ -308,9 +308,9 @@ The results can also be plotted easily:
 plot(adjrmst)
 ```
 
-## Testing the Equality of Two Survival Curves
+## Testing the Difference of Two Survival Curves
 
-In some cases the researcher might be interested to formally test the hypothesis that two adjusted survival curves or two cumulative incidence functions are equal in a certain interval. This can be done with the *test_curve_equality* function. It calculates the integral of the difference between two curves for each bootstrap estimate, shifts that distribution to be centered around 0 and calculates a p-value based on that shifted distribution:
+In some cases the researcher might be interested to formally test the hypothesis that two adjusted survival curves or two cumulative incidence functions are different in a certain interval. This can be done with the *adjusted_curve_diff* function. It calculates the integral of the difference between two curves for each bootstrap estimate, shifts that distribution to be centered around 0 and calculates a p-value based on that shifted distribution:
 
 ```{r echo=TRUE}
 # set random number generator seed to make this reproducible
@@ -335,9 +335,10 @@ adjsurv <- adjustedsurv(data=data,
                         n_boot=300)
 
 # test equality
-adjtest <- test_curve_equality(adjsurv, from=0, to=1)
+adjtest <- adjusted_curve_diff(adjsurv, from=0, to=1)
 print(adjtest)
 ```
+
 This function also offers two diagnostic plots, which can be used to graphically check the result of the test. The first simply plots all the curves of the differences in grey, with the actually observed estimate in black:
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, fig.show=TRUE, fig.width=7, fig.height=5}
