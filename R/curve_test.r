@@ -46,7 +46,7 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
         comp_names <- names(results_imp)
 
         # for each pairwise comparison, extract values
-        for (j in seq_len((length(results_imp)-1))) {
+        for (j in seq_len((length(results_imp)-2))) {
 
           row <- data.frame(area_est=results_imp[[j]]$observed_diff_integral,
                             area_se=results_imp[[j]]$integral_se,
@@ -71,8 +71,8 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
       output <- list(mids_analyses=mids_out)
       for (i in seq_len(nrow(pooled_dat))) {
 
-        pooled_ci <- confint_surv(surv=dat$area_est[i],
-                                  se=dat$area_se[i],
+        pooled_ci <- confint_surv(surv=pooled_dat$area_est[i],
+                                  se=pooled_dat$area_se[i],
                                   conf_level=conf_level,
                                   conf_type="plain")
         pooled_ci <- c(pooled_ci$left, pooled_ci$right)
@@ -83,19 +83,20 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
         fun_call$from <- from
         fun_call$to <- to
 
-        out <- list(mids_p_values=dat$p_vals,
-                    observed_diff_integral=dat$area_est[i],
-                    p_value=dat$p_val[i],
-                    n_boot=dat$n_boot[i],
+        mids_p <- dat$p_val[pooled_dat$comparison[i]==dat$comparison]
+        out <- list(mids_p_values=mids_p,
+                    observed_diff_integral=pooled_dat$area_est[i],
+                    p_value=pooled_dat$p_value[i],
+                    n_boot=pooled_dat$n_boot[i],
                     kind=est,
-                    integral_se=dat$area_se[i],
+                    integral_se=pooled_dat$area_se[i],
                     conf_int=pooled_ci,
                     categorical=FALSE,
                     treat_labs=mids_out[[1]][[i]]$treat_labs,
                     method=adjsurv$method,
                     call=fun_call)
         class(out) <- "curve_test"
-        output[[dat$comparison[i]]] <- out
+        output[[pooled_dat$comparison[i]]] <- out
 
       }
       output$categorical <- TRUE
@@ -246,7 +247,7 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
                   method=adjsurv$method,
                   call=fun_call)
 
-      ## more than one treatments -> perform pairwise comparisons
+    ## more than one treatments -> perform pairwise comparisons
     } else {
 
       if (class(adjsurv)=="adjustedsurv") {
@@ -271,7 +272,8 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
                                                 c(group_0, group_1)),]
           fake_adjsurv <- list(adjsurv=observed_dat,
                                boot_data=boot_dat,
-                               categorical=FALSE)
+                               categorical=FALSE,
+                               method=adjsurv$method)
           class(fake_adjsurv) <- "adjustedsurv"
 
         } else {
@@ -282,7 +284,8 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
                                                 c(group_0, group_1)),]
           fake_adjsurv <- list(adjcif=observed_dat,
                                boot_data=boot_dat,
-                               categorical=FALSE)
+                               categorical=FALSE,
+                               method=adjsurv$method)
           class(fake_adjsurv) <- "adjustedcif"
         }
 
@@ -291,29 +294,57 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
                                     from=from,
                                     to=to,
                                     conf_level=conf_level)
-        out[[paste(group_0, group_1)]] <- pair
+        out[[paste0(group_0, " vs. ", group_1)]] <- pair
       }
       out$categorical <- TRUE
+      out$method <- adjsurv$method
     }
     class(out) <- "curve_test"
 
     return(out)
+  }
+}
 
+## create data.frame of pairwise comparisons
+gather_pairwise_comps <- function(x) {
+
+  if (!is.null(x$mids_analyses)) {
+    sequence <- seq(2, (length(x)-1))
+  } else {
+    sequence <- seq(1, (length(x)-2))
   }
 
+  x_names <- names(x)
+  out <- vector(mode="list", length=(length(x)-2))
+  for (i in sequence) {
+
+    out[[i]] <- data.frame(comparison=x_names[[i]],
+                           diff_integral=x[[i]]$observed_diff_integral,
+                           diff_integral_se=x[[i]]$integral_se,
+                           ci_lower=x[[i]]$conf_int[1],
+                           ci_upper=x[[i]]$conf_int[2],
+                           p_value=x[[i]]$p_value)
+  }
+  out <- as.data.frame(dplyr::bind_rows(out))
+  rownames(out) <- NULL
+
+  return(out)
 }
 
 ## print method for curve_test objects
 #' @export
 print.curve_test <- function(x, ...) {
 
-  if (!is.null(x$mids_analyses) & x$categorical) {
+  if (x$categorical) {
 
-    for (i in seq(2, (length(x)-1)))  {
-      print.curve_test(x=x[[i]])
-    }
+    out <- gather_pairwise_comps(x)
+    print(out, row.names=FALSE)
 
-  } else if (!x$categorical) {
+    # also silently return that data.frame
+    return(invisible(out))
+
+  } else {
+
     if (x$kind=="surv" & x$method=="km") {
       title <- "Test of the Difference between two Survival Curves\n"
     } else if (x$kind=="surv") {
@@ -345,10 +376,6 @@ print.curve_test <- function(x, ...) {
     cat("P-Value:", x$p_value, "\n\n")
     cat("Calculated using", x$n_boot, "bootstrap replications.\n")
     cat("------------------------------------------------------------------\n")
-  } else {
-    for (i in seq_len((length(x)-1)))  {
-      print.curve_test(x=x[[i]])
-    }
   }
 }
 
@@ -380,7 +407,7 @@ plot.curve_test <- function(x, type="curves", xlab=NULL, ylab=NULL,
 
       observed_diff_integrals <- list()
       diff_integrals <- list()
-      for (i in seq_len((length(x)-1))) {
+      for (i in seq_len((length(x)-2))) {
 
         # observed diff curves
         obs_diff <- x[[i]]$observed_diff_integral
@@ -434,7 +461,7 @@ plot.curve_test <- function(x, type="curves", xlab=NULL, ylab=NULL,
 
       observed_diff_curves <- list()
       diff_curves <- list()
-      for (i in seq_len((length(x)-1))) {
+      for (i in seq_len((length(x)-2))) {
 
         # observed diff curves
         obs_diff <- x[[i]]$observed_diff_curve

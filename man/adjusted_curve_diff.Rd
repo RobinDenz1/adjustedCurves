@@ -57,6 +57,8 @@ Returns a \code{curve_test} object. If there are exactly two treatments this lis
 }
 \item{treat_labs}{The labels of all treatments/groups.
 }
+\item{method}{The adjustment method used in the original \code{adjustedsurv} or \code{adjustedcif} object.
+}
 \item{call}{The original function call.
 }
 
