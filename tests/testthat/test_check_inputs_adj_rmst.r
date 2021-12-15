@@ -18,7 +18,7 @@ test_that("from smaller 0", {
                                                       from=-10,
                                                       to=1,
                                                       use_boot=FALSE),
-               NULL)
+               "'from' and 'to' must be >= 0.")
 })
 
 test_that("from wrong format", {
@@ -34,7 +34,7 @@ test_that("from not smaller than to", {
                                                       from=0,
                                                       to=0,
                                                       use_boot=FALSE),
-               NULL)
+               "'from' must be smaller than 'to'.")
 })
 
 test_that("use_boot wrong format", {
@@ -42,7 +42,7 @@ test_that("use_boot wrong format", {
                                                       from=0,
                                                       to=1,
                                                       use_boot=1),
-               NULL)
+               "'use_boot' must be either TRUE or FALSE.")
 })
 
 test_that("no extrapolation allowed", {
@@ -50,7 +50,7 @@ test_that("no extrapolation allowed", {
                                                       from=0,
                                                       to=200,
                                                       use_boot=FALSE),
-               NULL)
+               "'to' cannot be greater than the latest observed time.")
 })
 
 test_that("no bootstrapping performed", {
@@ -58,7 +58,9 @@ test_that("no bootstrapping performed", {
                                                       from=0,
                                                       to=1,
                                                       use_boot=TRUE),
-               NULL)
+               paste0("Cannot use bootstrapped estimates because they ",
+                      "were not estimated. Need 'bootstrap=TRUE' in ",
+                      "'adjustedsurv' function call."))
 })
 
 adjsurv <- list(adjsurv=data.frame(time=seq(1, 3)))
@@ -69,7 +71,9 @@ test_that("too little points in time", {
                                                         from=0,
                                                         to=1,
                                                         use_boot=FALSE),
-                 NULL)
+                 paste0("Using only a few points in time might lead to ",
+                        "biased estimates. Consider using a finer ",
+                        "times grid in 'adjustedsurv'."))
 })
 
 

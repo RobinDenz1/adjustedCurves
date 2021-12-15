@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-## Hypothesis-Test for the equality of two adjusted survival curves
+## Hypothesis-Test for the difference between two adjusted survival curves
 ## or two adjusted cumulative incidence functions
 #' @export
 adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
@@ -22,6 +22,7 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
   . <- comparison <- area_est <- p_val <- n_boot <- NULL
 
   est <- ifelse(class(adjsurv)=="adjustedsurv", "surv", "cif")
+  adj_method <- adjsurv$method
 
   if (est=="surv") {
     treat_labs <- unique(adjsurv$adjsurv$group)
@@ -93,13 +94,14 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
                     conf_int=pooled_ci,
                     categorical=FALSE,
                     treat_labs=mids_out[[1]][[i]]$treat_labs,
-                    method=adjsurv$method,
+                    method=adj_method,
                     call=fun_call)
         class(out) <- "curve_test"
         output[[pooled_dat$comparison[i]]] <- out
 
       }
       output$categorical <- TRUE
+      output$method <- adj_method
       class(output) <- "curve_test"
 
       return(output)
@@ -150,7 +152,7 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
                   conf_int=pooled_ci,
                   categorical=FALSE,
                   treat_labs=treat_labs,
-                  method=adjsurv$method,
+                  method=adj_method,
                   call=fun_call)
       class(out) <- "curve_test"
 
@@ -244,10 +246,10 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
                   conf_int=conf_int,
                   categorical=FALSE,
                   treat_labs=treat_labs,
-                  method=adjsurv$method,
+                  method=adj_method,
                   call=fun_call)
 
-    ## more than one treatments -> perform pairwise comparisons
+    ## more than two treatments -> perform pairwise comparisons
     } else {
 
       if (class(adjsurv)=="adjustedsurv") {
@@ -273,7 +275,7 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
           fake_adjsurv <- list(adjsurv=observed_dat,
                                boot_data=boot_dat,
                                categorical=FALSE,
-                               method=adjsurv$method)
+                               method=adj_method)
           class(fake_adjsurv) <- "adjustedsurv"
 
         } else {
@@ -285,7 +287,7 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
           fake_adjsurv <- list(adjcif=observed_dat,
                                boot_data=boot_dat,
                                categorical=FALSE,
-                               method=adjsurv$method)
+                               method=adj_method)
           class(fake_adjsurv) <- "adjustedcif"
         }
 
@@ -297,7 +299,7 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
         out[[paste0(group_0, " vs. ", group_1)]] <- pair
       }
       out$categorical <- TRUE
-      out$method <- adjsurv$method
+      out$method <- adj_method
     }
     class(out) <- "curve_test"
 
@@ -306,10 +308,10 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
 }
 
 ## create data.frame of pairwise comparisons
-gather_pairwise_comps <- function(x) {
+gather_pairwise_comps <- function(x, conf_level) {
 
   if (!is.null(x$mids_analyses)) {
-    sequence <- seq(2, (length(x)-1))
+    sequence <- seq(2, (length(x)-2))
   } else {
     sequence <- seq(1, (length(x)-2))
   }
@@ -319,64 +321,95 @@ gather_pairwise_comps <- function(x) {
   for (i in sequence) {
 
     out[[i]] <- data.frame(comparison=x_names[[i]],
-                           diff_integral=x[[i]]$observed_diff_integral,
-                           diff_integral_se=x[[i]]$integral_se,
+                           ABC=x[[i]]$observed_diff_integral,
+                           ABC_SE=x[[i]]$integral_se,
                            ci_lower=x[[i]]$conf_int[1],
                            ci_upper=x[[i]]$conf_int[2],
-                           p_value=x[[i]]$p_value)
+                           p_value=x[[i]]$p_value,
+                           n_boot=x[[i]]$n_boot)
   }
   out <- as.data.frame(dplyr::bind_rows(out))
-  rownames(out) <- NULL
+  rownames(out) <- out$comparison
+  out$comparison <- NULL
+  colnames(out) <- c("ABC", "ABC SE",
+                     paste0(conf_level, "% CI (lower)"),
+                     paste0(conf_level, "% CI (upper)"),
+                     "P-Value", "N Boot")
 
   return(out)
 }
 
 ## print method for curve_test objects
 #' @export
-print.curve_test <- function(x, ...) {
+print.curve_test <- function(x, digits=4, ...) {
+
+  if (is.null(x$kind)) {
+    kind <- x[[2]]$kind
+  } else {
+    kind <- x$kind
+  }
+
+  if (kind=="surv" & x$method=="km") {
+    title <- "   Test of the Difference between two Survival Curves\n"
+  } else if (kind=="surv") {
+    title <- "   Test of the Difference between two adjusted Survival Curves\n"
+  } else if (kind=="cif" & x$method=="aalen_johansen") {
+    title <- "   Test of the Difference between two CIFs \n"
+  } else if (kind=="cif") {
+    title <- "   Test of the Difference between two adjusted CIFs \n"
+  }
+
+  if (is.null(x$call)) {
+    call_conf <- x[[2]]$call$conf_level
+  } else {
+    call_conf <- x$call$conf_level
+  }
+
+  if (is.null(call_conf) || call_conf=="conf_level") {
+    conf_level <- 95
+  } else {
+    conf_level <- call_conf * 100
+  }
 
   if (x$categorical) {
 
-    out <- gather_pairwise_comps(x)
-    print(out, row.names=FALSE)
-
-    # also silently return that data.frame
-    return(invisible(out))
-
-  } else {
-
-    if (x$kind=="surv" & x$method=="km") {
-      title <- "Test of the Difference between two Survival Curves\n"
-    } else if (x$kind=="surv") {
-      title <- "Test of the Difference between two adjusted Survival Curves\n"
-    } else if (x$kind=="cif" & x$method=="aalen_johansen") {
-      title <- "Test of the Difference between two CIFs \n"
-    } else if (x$kind=="cif") {
-      title <- "Test of the Difference between two adjusted CIFs \n"
-    }
-
-    call_conf <- x$call$conf_level
-    if (is.null(call_conf) || call_conf=="conf_level") {
-      conf_level <- 95
-    } else {
-      conf_level <- call_conf * 100
-    }
+    out <- gather_pairwise_comps(x=x, conf_level=conf_level)
 
     cat("------------------------------------------------------------------\n")
     cat(title)
     cat("------------------------------------------------------------------\n")
-    cat("Group =", toString(x$treat_labs[1]), "vs. Group =",
-        toString(x$treat_labs[2]), "\n")
-    cat("The difference was tested for the time interval:", x$call$from, "to",
-        x$call$to, "\n")
-    cat("Observed Integral of the difference:", x$observed_diff_integral, "\n")
-    cat("Bootstrap standard error:", x$integral_se, "\n")
-    cat(conf_level, "% bootstrap confidence interval: [",
-        x$conf_int["ci_lower"], ", ", x$conf_int["ci_upper"], "]\n", sep="")
-    cat("P-Value:", x$p_value, "\n\n")
-    cat("Calculated using", x$n_boot, "bootstrap replications.\n")
+    cat("\n")
+    cat("Using the interval:", x[[2]]$call$from, "to", x[[2]]$call$to, "\n")
+    cat("\n")
+    print(round(out, digits), row.names=TRUE)
+    cat("------------------------------------------------------------------\n")
+
+  } else {
+
+    out <- data.frame(ABC=x$observed_diff_integral,
+                      ABC_SE=x$integral_se,
+                      ci_lower=x$conf_int[1],
+                      ci_upper=x$conf_int[2],
+                      p_value=x$p_value,
+                      n_boot=x$n_boot)
+    colnames(out) <- c("ABC", "ABC SE",
+                       paste0(conf_level, "% CI (lower)"),
+                       paste0(conf_level, "% CI (upper)"),
+                       "P-Value", "N Boot")
+    rownames(out) <- paste0(x$treat_labs[1], " vs. ", x$treat_labs[2])
+
+    cat("------------------------------------------------------------------\n")
+    cat(title)
+    cat("------------------------------------------------------------------\n")
+    cat("\n")
+    cat("Using the interval:", x$call$from, "to", x$call$to, "\n")
+    cat("\n")
+    print(round(out, digits), row.names=TRUE)
     cat("------------------------------------------------------------------\n")
   }
+
+  # also silently return the data.frame
+  return(invisible(out))
 }
 
 ## summary method for curve_test objects

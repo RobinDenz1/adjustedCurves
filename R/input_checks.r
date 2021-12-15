@@ -453,7 +453,7 @@ check_inputs_adj_rmst <- function(adjsurv, from, to, use_boot) {
   }
 
   if (to > max(adjsurv$adjsurv$time, na.rm=TRUE)) {
-    stop("'to' can not be greater than the latest observed time.")
+    stop("'to' cannot be greater than the latest observed time.")
   }
 
   if (length(unique((adjsurv$adjsurv$time))) < 10) {
@@ -495,7 +495,7 @@ check_inputs_adj_rmtl <- function(adj, from, to, use_boot) {
   }
 
   if (to > max_t) {
-    stop("'to' can not be greater than the latest observed time.")
+    stop("'to' cannot be greater than the latest observed time.")
   }
 
   if (n_t < 10) {
@@ -527,11 +527,11 @@ check_inputs_adj_test <- function(adjsurv, from, to) {
 
   if (inherits(adjsurv, "adjustedsurv")) {
     if (to > max(adjsurv$adjsurv$time, na.rm=TRUE)) {
-      stop("'to' can not be greater than the latest observed time.")
+      stop("'to' cannot be greater than the latest observed time.")
     }
   } else {
     if (to > max(adjsurv$adjcif$time)) {
-      stop("'to' can not be greater than the latest observed time.")
+      stop("'to' cannot be greater than the latest observed time.")
     }
   }
 

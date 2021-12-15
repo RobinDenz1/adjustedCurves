@@ -21,7 +21,7 @@ test_that("wrong n format", {
                                                      cens_fun=custom_cens,
                                                      cens_args=list(),
                                                      max_t=Inf),
-               NULL)
+               "'n' must be a single positive integer.")
 })
 
 test_that("wrong n format, double", {
@@ -38,7 +38,7 @@ test_that("wrong n format, double", {
                                                      cens_fun=custom_cens,
                                                      cens_args=list(),
                                                      max_t=Inf),
-               NULL)
+               "'n' must be a single positive integer, not a double.")
 })
 
 test_that("wrong surv_dist", {
@@ -55,7 +55,7 @@ test_that("wrong surv_dist", {
                                                      cens_fun=custom_cens,
                                                      cens_args=list(),
                                                      max_t=Inf),
-               NULL)
+               "'surv_dist' must be either 'weibull' or 'exponential'.")
 })
 
 test_that("wrong surv_dist 2", {
@@ -72,7 +72,7 @@ test_that("wrong surv_dist 2", {
                                                      cens_fun=custom_cens,
                                                      cens_args=list(),
                                                      max_t=Inf),
-               NULL)
+               "'surv_dist' must be either 'weibull' or 'exponential'.")
 })
 
 test_that("wrong gamma format", {
@@ -89,7 +89,7 @@ test_that("wrong gamma format", {
                                                      cens_fun=custom_cens,
                                                      cens_args=list(),
                                                      max_t=Inf),
-               NULL)
+               "'gamma' must be a single number. See details.")
 })
 
 test_that("wrong lambda format", {
@@ -106,7 +106,7 @@ test_that("wrong lambda format", {
                                                      cens_fun=custom_cens,
                                                      cens_args=list(),
                                                      max_t=Inf),
-               NULL)
+               "'lambda' must be a single number. See details.")
 })
 
 test_that("wrong intercept format", {
@@ -123,7 +123,7 @@ test_that("wrong intercept format", {
                                                      cens_fun=custom_cens,
                                                      cens_args=list(),
                                                      max_t=Inf),
-               NULL)
+               "'intercept' must be a single number. See details.")
 })
 
 test_that("wrong gtol format", {
@@ -140,7 +140,7 @@ test_that("wrong gtol format", {
                                                      cens_fun=custom_cens,
                                                      cens_args=list(),
                                                      max_t=Inf),
-               NULL)
+               "'gtol' must be a number. See details.")
 })
 
 test_that("wrong gtol format, too big", {
@@ -157,7 +157,7 @@ test_that("wrong gtol format, too big", {
                                                      cens_fun=custom_cens,
                                                      cens_args=list(),
                                                      max_t=Inf),
-               NULL)
+               "'gtol' must be <= 1 and >= 0. See details.")
 })
 
 test_that("wrong cens_fun format", {
@@ -174,7 +174,7 @@ test_that("wrong cens_fun format", {
                                                      cens_fun="runif",
                                                      cens_args=list(),
                                                      max_t=Inf),
-               NULL)
+               "'cens_fun' must be a function with the argument 'n' or NULL.")
 })
 
 test_that("wrong cens_args format", {
@@ -191,7 +191,8 @@ test_that("wrong cens_args format", {
                                                      cens_fun=runif,
                                                      cens_args="",
                                                      max_t=Inf),
-               NULL)
+               paste0("'cens_args' must be a named list of arguments to be ",
+                      "passed to 'cens_fun' or NULL."))
 })
 
 test_that("wrong max_t length", {
@@ -208,7 +209,7 @@ test_that("wrong max_t length", {
                                                      cens_fun=custom_cens,
                                                      cens_args=list(),
                                                      max_t=c(1, 1)),
-               NULL)
+               "'max_t' must be a single number.")
 })
 
 test_that("wrong max_t format", {
@@ -225,7 +226,7 @@ test_that("wrong max_t format", {
                                                      cens_fun=custom_cens,
                                                      cens_args=list(),
                                                      max_t="aha"),
-               NULL)
+               "'max_t' must be a single number.")
 })
 
 test_that("only lcovars specified", {
@@ -242,7 +243,9 @@ test_that("only lcovars specified", {
                                                      cens_fun=custom_cens,
                                                      cens_args=list(),
                                                      max_t=Inf),
-               NULL)
+               paste0("'lcovars', 'outcome_betas' and 'treatment_betas' ",
+                      "can either all be NULL to use default values, ",
+                      "or have to be specified."))
 })
 
 test_that("wrong group_beta format", {
@@ -259,7 +262,7 @@ test_that("wrong group_beta format", {
                                                      cens_fun=custom_cens,
                                                      cens_args=list(),
                                                      max_t=1),
-               NULL)
+               "'group_beta' must be a number.")
 })
 
 test_that("one of lcovars / outcome_betas / treatment_betas not specified", {
@@ -277,7 +280,9 @@ test_that("one of lcovars / outcome_betas / treatment_betas not specified", {
                                             cens_fun=custom_cens,
                                             cens_args=list(),
                                             max_t=Inf),
-               NULL)
+               paste0("'lcovars', 'outcome_betas' and 'treatment_betas' ",
+                      "can either all be NULL to use default values, or ",
+                      "have to be specified."))
 })
 
 test_that("lcovars wrong length", {
@@ -295,7 +300,7 @@ test_that("lcovars wrong length", {
                                               cens_fun=custom_cens,
                                               cens_args=list(),
                                               max_t=Inf),
-               NULL)
+  "'outcome_betas', 'treatment_betas' and 'lcovars' must have the same length.")
 })
 
 test_that("lcovars with undefined distribution", {
@@ -314,7 +319,8 @@ test_that("lcovars with undefined distribution", {
                                           cens_fun=custom_cens,
                                           cens_args=list(),
                                           max_t=Inf),
-               NULL)
+               paste0("The first element of every vector in 'lcovars' must ",
+                      "be either 'rbinom', 'rnorm' or 'runif', not undefined."))
 })
 
 test_that("no names in lcovars", {
@@ -333,7 +339,7 @@ test_that("no names in lcovars", {
                                                cens_fun=custom_cens,
                                                cens_args=list(),
                                                max_t=Inf),
-               NULL)
+               "Elements in the 'lcovars' list must be named.")
 })
 
 test_that("no names in treatment_betas", {
@@ -351,7 +357,7 @@ test_that("no names in treatment_betas", {
                                                     cens_fun=custom_cens,
                                                     cens_args=list(),
                                                     max_t=Inf),
-               NULL)
+               "Elements in the 'treatment_betas' vector must be named.")
 })
 
 test_that("no names in outcome_betas", {
@@ -368,7 +374,7 @@ test_that("no names in outcome_betas", {
                                                 cens_fun=custom_cens,
                                                 cens_args=list(),
                                                 max_t=Inf),
-               NULL)
+               "Elements in the 'outcome_betas' vector must be named.")
 })
 
 test_that("names not the same", {
@@ -385,5 +391,7 @@ test_that("names not the same", {
                                         cens_fun=custom_cens,
                                         cens_args=list(),
                                         max_t=Inf),
-               NULL)
+               paste0("The names of the objects in 'lcovars', ",
+                      "'outcome_betas' and  'treatment_betas' ",
+                      "must be the same."))
 })

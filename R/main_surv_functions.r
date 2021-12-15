@@ -22,7 +22,7 @@
 adjustedsurv <- function(data, variable, ev_time, event, method,
                          conf_int=FALSE, conf_level=0.95, times=NULL,
                          bootstrap=FALSE, n_boot=500, n_cores=1,
-                         na.action=options("na.action")[[1]],
+                         na.action=options()$na.action,
                          clean_data=TRUE, ...) {
 
   # use data.frame methods only, no tibbles etc.
@@ -194,8 +194,8 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
 
     }
 
-  class(out_obj) <- "adjustedsurv"
-  return(out_obj)
+    class(out_obj) <- "adjustedsurv"
+    return(out_obj)
 
   ## normal method using a single data.frame
   } else {
@@ -377,15 +377,9 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
       !inherits(pass_args$outcome_model, "formula")) {
     # special case when using mexhaz
     if (inherits(pass_args$outcome_model, "mexhaz")) {
-
-      # NOTE: currently not working due to a bug in update.mexhaz
-      stop("Bootstrapping is currently not possible when using",
-           " models of class 'mexhaz' due to a bug in update.mexhaz().")
       pass_args$outcome_model <- quiet(stats::update(
                                         object=pass_args$outcome_model,
-                                        formula=pass_args$outcome_model$formula,
-                                        data=boot_samp,
-                                        base=pass_args$outcome_model$base))
+                                        data=boot_samp))
     } else {
       pass_args$outcome_model <- stats::update(pass_args$outcome_model,
                                                data=boot_samp)

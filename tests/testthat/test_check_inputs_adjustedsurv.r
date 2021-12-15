@@ -18,7 +18,7 @@ test_that("variable not in data", {
                                                           n_boot=2,
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
-               NULL)
+               "grouup is not a valid column name in 'data'.")
 })
 
 
@@ -35,7 +35,8 @@ test_that("variable has wrong type", {
                                                           n_boot=2,
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
-               NULL)
+              paste0("The column in 'data' specified by 'variable' needs to be",
+                     " a factor variable if method='km'."))
 })
 
 test_that("variable has wrong length", {
@@ -51,7 +52,8 @@ test_that("variable has wrong length", {
                                                          n_boot=2,
                                                          na.action="na.omit",
                                                          clean_data=TRUE),
-               NULL)
+                paste0("'variable' must be a character string of length 1",
+                       " specifying the grouping variable in 'data'."))
 })
 
 test_that("non-standard evaluation in variable", {
@@ -83,7 +85,7 @@ test_that("ev_time not in data", {
                                                           n_boot=2,
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
-               NULL)
+               "time2 is not a valid column name in 'data'.")
 })
 
 test_that("ev_time wrong format", {
@@ -99,7 +101,7 @@ test_that("ev_time wrong format", {
                                                           n_boot=2,
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
-               NULL)
+               "The column in 'data' specified by 'ev_time' must be numeric.")
 })
 
 test_that("ev_time wrong length", {
@@ -115,7 +117,9 @@ test_that("ev_time wrong length", {
                                                     n_boot=2,
                                                     na.action="na.omit",
                                                     clean_data=TRUE),
-               NULL)
+               paste0("'ev_time' must be a character string of length 1 ",
+                      "specifying the time until the event or ",
+                      "censoring occured."))
 })
 
 test_that("non-standard evaluation in ev_time", {
@@ -131,7 +135,9 @@ test_that("non-standard evaluation in ev_time", {
                                                           n_boot=2,
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
-               NULL)
+               paste0("Arguments 'variable', 'ev_time', 'event' and ",
+                      "'method' must be character strings, ",
+                      "specifying variables in 'data'."))
 })
 
 test_that("event not in data", {
@@ -147,7 +153,7 @@ test_that("event not in data", {
                                                           n_boot=2,
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
-               NULL)
+               "event2 is not a valid column name in 'data'.")
 })
 
 test_that("event wrong format", {
@@ -163,7 +169,7 @@ test_that("event wrong format", {
                                                           n_boot=2,
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
-               NULL)
+      "The column in 'data' specified by 'event' must be numeric or logical.")
 })
 
 test_that("event wrong length", {
@@ -179,7 +185,8 @@ test_that("event wrong length", {
                                                       n_boot=2,
                                                       na.action="na.omit",
                                                       clean_data=TRUE),
-               NULL)
+               paste0("'event' must be a character string of length 1",
+                      " specifying the binary event indicator."))
 })
 
 test_that("non-standard evaluation in event", {
@@ -195,7 +202,7 @@ test_that("non-standard evaluation in event", {
                                                           n_boot=2,
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
-               NULL)
+               paste0("object 'event' not found"))
 })
 
 test_that("method undefined", {
@@ -211,7 +218,8 @@ test_that("method undefined", {
                                                           n_boot=2,
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
-               NULL)
+               paste0("Method 'km3' is undefined. See documentation",
+                      " for details on available methods."))
 })
 
 test_that("method wrong length", {
@@ -227,7 +235,9 @@ test_that("method wrong length", {
                                                           n_boot=2,
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
-               NULL)
+               paste0("'method' must be a single character string. ",
+                      "Using multiple methods in one call is ",
+                      "currently not supported."))
 })
 
 test_that("wrong conf_int type", {
@@ -243,7 +253,7 @@ test_that("wrong conf_int type", {
                                                           n_boot=2,
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
-               NULL)
+               "'conf_int' must be either TRUE or FALSE.")
 })
 
 test_that("wrong conf_int length", {
@@ -259,7 +269,7 @@ test_that("wrong conf_int length", {
                                                          n_boot=2,
                                                          na.action="na.omit",
                                                          clean_data=TRUE),
-               NULL)
+               "'conf_int' must be either TRUE or FALSE, not a vector.")
 })
 
 test_that("wrong conf_level", {
@@ -275,7 +285,7 @@ test_that("wrong conf_level", {
                                                           n_boot=2,
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
-               NULL)
+               "'conf_level' must be a number < 1 and > 0.")
 })
 
 test_that("wrong bootstrap type", {
@@ -291,7 +301,7 @@ test_that("wrong bootstrap type", {
                                                           n_boot=2,
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
-               NULL)
+               "'bootstrap' must be either TRUE or FALSE.")
 })
 
 test_that("wrong bootstrap length", {
@@ -307,7 +317,7 @@ test_that("wrong bootstrap length", {
                                                         n_boot=2,
                                                         na.action="na.omit",
                                                         clean_data=TRUE),
-               NULL)
+               "'bootstrap' must be either TRUE or FALSE, not a vector.")
 })
 
 test_that("wrong n_boot type", {
@@ -323,7 +333,7 @@ test_that("wrong n_boot type", {
                                                           n_boot=-2,
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
-               NULL)
+               "'n_boot' must be a positive integer > 2.")
 })
 
 test_that("wrong n_boot length", {
@@ -339,7 +349,7 @@ test_that("wrong n_boot length", {
                                                           n_boot=c(10, 10),
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
-               NULL)
+               "'n_boot' must be a positive integer > 2, not a vector.")
 })
 
 test_that("wrong times", {
@@ -355,7 +365,7 @@ test_that("wrong times", {
                                                           n_boot=2,
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
-               NULL)
+               "'times' must be a numeric vector or NULL.")
 })
 
 test_that("wrong na.action type", {
@@ -371,7 +381,7 @@ test_that("wrong na.action type", {
                                                           n_boot=2,
                                                           na.action=1,
                                                           clean_data=TRUE),
-               NULL)
+  "'na.action' must be a function or a single character string. See details.")
 })
 
 test_that("wrong na.action length", {
@@ -387,7 +397,8 @@ test_that("wrong na.action length", {
                                                           n_boot=2,
                                                           na.action=c("1", "1"),
                                                           clean_data=TRUE),
-               NULL)
+               paste0("'na.action' must be a function or a character string,",
+                      " not a vector. See documentation."))
 })
 
 test_that("wrong clean_data type", {
@@ -403,7 +414,7 @@ test_that("wrong clean_data type", {
                                                           n_boot=2,
                                                           na.action="na.omit",
                                                           clean_data=1),
-               NULL)
+               "'clean_data' must be either TRUE or FALSE.")
 })
 
 test_that("wrong clean_data length", {
@@ -419,7 +430,7 @@ test_that("wrong clean_data length", {
                                                      n_boot=2,
                                                      na.action="na.omit",
                                                      clean_data=c(TRUE, TRUE)),
-               NULL)
+               "'clean_data' must be either TRUE or FALSE, not a vector.")
 })
 
 test_that("no extrapolation", {
@@ -452,7 +463,8 @@ test_that("bootstrap only with treatment_model that can be updated", {
                                                    na.action="na.omit",
                                                    clean_data=TRUE,
                                                    treatment_model=runif(n=20)),
-               NULL)
+               paste0("'treatment_model' needs to be a model that can be ",
+                      "refit or a formula object when using bootstrap=TRUE."))
 })
 
 test_that("wrong outcome_vars argument", {
@@ -469,7 +481,9 @@ test_that("wrong outcome_vars argument", {
                                                         na.action="na.omit",
                                                         clean_data=TRUE,
                                                         outcome_vars=2),
-               NULL)
+               paste0("'outcome_vars' should be a character vector of ",
+                      "column names in 'data', used to model ",
+                      "the outcome mechanism."))
 })
 
 test_that("wrong type_time argument", {
@@ -487,7 +501,7 @@ test_that("wrong type_time argument", {
                                                         clean_data=TRUE,
                                                         outcome_vars=c("x1"),
                                                         type_time="aha"),
-               NULL)
+               "'type_time' should be either 'factor', 'bs' or 'ns'.")
 })
 
 test_that("too many spline_df", {
@@ -523,7 +537,9 @@ test_that("not enough time points", {
                                                          na.action="na.omit",
                                                          clean_data=TRUE,
                                                          outcome_vars=c("x1")),
-               NULL)
+               paste0("'geese' models require at least two distinct ",
+                      "time points. Add more points in time to 'times' ",
+                      "and try again."))
 })
 
 test_that("continuous times in tmle", {
@@ -540,7 +556,8 @@ test_that("continuous times in tmle", {
                                                           na.action="na.omit",
                                                           clean_data=TRUE,
                                                           outcome_vars=c("x1")),
-               NULL)
+               paste0("Only integer time is allowed when ",
+                      "using method='tmle' or method='ostmle'."))
 })
 
 test_that("wrong treatment_vars argument", {
@@ -557,7 +574,9 @@ test_that("wrong treatment_vars argument", {
                                                         na.action="na.omit",
                                                         clean_data=TRUE,
                                                         treatment_vars=1),
-               NULL)
+               paste0("'treatment_vars' should be a character vector of ",
+                      "column names in 'data', used to model the ",
+                      "outcome mechanism."))
 })
 
 test_that("wrong moment argument", {
@@ -575,7 +594,7 @@ test_that("wrong moment argument", {
                                                         clean_data=TRUE,
                                                         treatment_vars=c("x1"),
                                                         moment=1),
-               NULL)
+               "Argument 'moment' must be either 'first' or 'second'.")
 })
 
 test_that("0/1 variables in method='emp_lik'", {
@@ -592,7 +611,9 @@ test_that("0/1 variables in method='emp_lik'", {
                                                         na.action="na.omit",
                                                         clean_data=TRUE,
                                                         treatment_vars=c("x1")),
-               NULL)
+               paste0("Dichotomous variables coded with 0 and 1 found in",
+                      "  'treatment_vars'. Consider recoding to -1 and 1 ",
+                      "to avoid estimation problems."))
 })
 
 test_that("weights in matching", {
@@ -609,7 +630,8 @@ test_that("weights in matching", {
                                      na.action="na.omit",
                                      clean_data=TRUE,
                                      treatment_model=runif(20, min=10, max=20)),
-                 NULL)
+                 paste0("Propensity Scores > 1 or < 0 not allowed. ",
+                        "Perhaps you supplied weights on accident?"))
 })
 
 test_that("no models with method='aiptw'", {
@@ -625,7 +647,7 @@ test_that("no models with method='aiptw'", {
                                                           n_boot=2,
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
-               NULL)
+    "Argument 'treatment_model' must be specified when using method='aiptw'.")
 })
 
 outcome_model <- list()
@@ -645,7 +667,9 @@ test_that("bootstrapping with pecRpart", {
                                                   na.action="na.omit",
                                                   clean_data=TRUE,
                                                   outcome_model=outcome_model),
-               NULL)
+               paste0("Bootstrapping is currently not supported with ",
+                      "method='direct' and an 'outcome_model' of ",
+                      "class 'pecRpart'."))
 })
 
 class(outcome_model) <- "glm"
@@ -683,7 +707,7 @@ test_that("coxph not including 'variable'", {
                                                   na.action="na.omit",
                                                   clean_data=TRUE,
                                                   outcome_model=outcome_model),
-               NULL)
+               "'variable' has to be included in the cox-regression model.")
 })
 
 sim_dat$x7 <- stats::runif(n=nrow(sim_dat))
@@ -702,7 +726,9 @@ test_that("strat_cupples with continuous confounder", {
                                                           na.action="na.omit",
                                                           clean_data=TRUE,
                                                           adjust_vars="x7"),
-               NULL)
+               paste0("Variables in 'adjust_vars' have to be integer, ",
+                      "factor or character variables. Continuous variables ",
+                      "are not allowed when using method='strat_cupples'."))
 })
 
 test_that("adjust_vars not in data", {
@@ -719,7 +745,7 @@ test_that("adjust_vars not in data", {
                                                       na.action="na.omit",
                                                       clean_data=TRUE,
                                                       adjust_vars="x8"),
-               NULL)
+               "'adjust_vars' must specify valid column names in 'data'.")
 })
 
 test_that("invalid reference data", {
@@ -737,7 +763,9 @@ test_that("invalid reference data", {
                                              clean_data=TRUE,
                                              adjust_vars="x1",
                                              reference=sim_dat[,c("x2", "x3")]),
-               NULL)
+               paste0("If a 'reference' data.frame is supplied, it ",
+                      "needs to contain all variables listed ",
+                      "in 'adjust_vars'."))
 })
 
 sim_dat$.ALL <- 1
@@ -756,7 +784,9 @@ test_that("strat_cupples with '.ALL' column", {
                                                    na.action="na.omit",
                                                    clean_data=TRUE,
                                                    adjust_vars="x1"),
-               NULL)
+               paste0("The column name '.ALL' cannot be used with ",
+                      "method='strat_cupples'. Please rename that ",
+                      "variable and rerun the function."))
 })
 
 test_that("'adjust_vars' not specified with strat_ method", {
@@ -772,7 +802,7 @@ test_that("'adjust_vars' not specified with strat_ method", {
                                                           n_boot=2,
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
-               NULL)
+"Argument 'adjust_vars' needs to be specified when using method='strat_amato'.")
 })
 
 sim_dat$.COVARS <- 1
@@ -791,7 +821,9 @@ test_that("strat_amato with '.COVARS' column", {
                                                           na.action="na.omit",
                                                           clean_data=TRUE,
                                                           adjust_vars="x1"),
-               NULL)
+               paste0("The column name '.COVARS' cannot be used with ",
+                      "method='strat_amato'. Please rename that variable ",
+                      "and rerun the function."))
 })
 
 ## multiple imputation stuff
@@ -829,7 +861,9 @@ test_that("wrong outcome_model with mira", {
                                                    na.action="na.omit",
                                                    clean_data=TRUE,
                                                    outcome_model=outcome_model),
-               NULL)
+               paste0("When using multiple imputation, mira objects need ",
+                      "to be supplied to 'outcome_model' instead of ",
+                      "single models. See documentation."))
 })
 
 test_that("wrong treatment_model with mira", {
@@ -846,7 +880,9 @@ test_that("wrong treatment_model with mira", {
                                                na.action="na.omit",
                                                clean_data=TRUE,
                                                treatment_model=treatment_model),
-               NULL)
+               paste0("When using multiple imputation, mira objects or a ",
+                      "formula need to be supplied to 'treatment_model' ",
+                      "instead of single models. See documentation."))
 })
 
 test_that("wrong censoring_model with mira", {
@@ -863,7 +899,9 @@ test_that("wrong censoring_model with mira", {
                                                  na.action="na.omit",
                                                  clean_data=TRUE,
                                                  censoring_model=outcome_model),
-               NULL)
+               paste0("When using multiple imputation, mira objects need to ",
+                      "be supplied to 'censoring_model' instead of single ",
+                      "models. See documentation."))
 })
 
 test_that("warning with missing values in variable", {
@@ -879,7 +917,8 @@ test_that("warning with missing values in variable", {
                                                           n_boot=2,
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
-               NULL)
+               paste0("Using multiple imputation with missing values in ",
+                      "'variable' has not been tested yet. Use with caution."))
 })
 
 test_that("warning with missing values in ev_time", {
@@ -896,7 +935,8 @@ test_that("warning with missing values in ev_time", {
     n_boot=2,
     na.action="na.omit",
     clean_data=TRUE),
-  NULL)
+  paste0("Using multiple imputation with missing values in 'ev_time' ",
+         "variable has not been tested yet. Use with caution."))
 })
 
 test_that("warning with missing values in event", {
@@ -912,6 +952,8 @@ test_that("warning with missing values in event", {
                                                             n_boot=2,
                                                             na.action="na.omit",
                                                             clean_data=TRUE),
-                 NULL)
+                 paste0("Using multiple imputation with missing values in ",
+                        "'event' variable has not been tested yet. ",
+                        "Use with caution."))
 })
 

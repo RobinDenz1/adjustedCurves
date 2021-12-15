@@ -11,7 +11,7 @@ This is one of the two main functions of this R-Package. It allows the user to c
 adjustedsurv(data, variable, ev_time, event, method,
              conf_int=FALSE, conf_level=0.95, times=NULL,
              bootstrap=FALSE, n_boot=500,
-             n_cores=1, na.action=options("na.action")[[1]],
+             n_cores=1, na.action=options()$na.action,
              clean_data=TRUE, ...)
 }
 

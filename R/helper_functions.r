@@ -36,6 +36,11 @@ get_iptw_weights <- function(data, treatment_model, weight_method,
     for (i in levels(data[,variable])) {
       weights[data[,variable] == i] <- 1/ps[data[,variable] == i, i]
     }
+  # user supplied a mira model but no mids data
+  } else if (inherits(treatment_model, "mira")) {
+    stop("If a 'mira' object is used in the 'treatment_model' argument",
+         " the 'data' argument must be a 'mids' object, not a",
+         " data.frame.", call.=FALSE)
   # nothing else allowed
   } else {
     stop("Unsuported input: '", class(treatment_model),
@@ -60,7 +65,6 @@ trim_weights <- function(weights, trim) {
     weights[weights > trim] <- trim
     return(weights)
   }
-
 }
 
 ## Computes the standard error of a weighted mean using one of

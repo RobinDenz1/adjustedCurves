@@ -22,7 +22,7 @@
 adjustedcif <- function(data, variable, ev_time, event, cause, method,
                         conf_int=FALSE, conf_level=0.95, times=NULL,
                         bootstrap=FALSE, n_boot=500, n_cores=1,
-                        na.action=options("na.action")[[1]],
+                        na.action=options()$na.action,
                         clean_data=TRUE, ...) {
 
   # use data.frame methods only, no tibbles etc.
@@ -674,5 +674,4 @@ summary.adjustedcif <- function(object, ...) {
   } else {
     cat("   - Using multiply imputed dataset")
   }
-
 }
