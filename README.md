@@ -5,7 +5,7 @@
 [![R-CMD-check](https://github.com/RobinDenz1/adjustedCurves/workflows/R-CMD-check/badge.svg)](https://github.com/RobinDenz1/adjustedCurves/actions)
 <!-- badges: end -->
 
-# adjustedCurves <img src="man/figures/logo.png" align="right" />
+# adjustedCurves <img src="man/figures/logo.png" height="240" align="right" />
 
 Author: Robin Denz
 
