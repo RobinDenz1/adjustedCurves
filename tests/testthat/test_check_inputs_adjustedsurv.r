@@ -122,6 +122,25 @@ test_that("ev_time wrong length", {
                       "censoring occured."))
 })
 
+sim_dat$time2 <- sim_dat$time
+sim_dat$time2[1] <- -1
+
+test_that("ev_time contains negative values", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                          variable="group",
+                                                          ev_time="time2",
+                                                          event="event",
+                                                          method="km",
+                                                          conf_int=FALSE,
+                                                          conf_level=0.95,
+                                                          times=NULL,
+                                                          bootstrap=FALSE,
+                                                          n_boot=2,
+                                                          na.action="na.omit",
+                                                          clean_data=TRUE),
+               "All values in the 'ev_time' variable must be >= 0.")
+})
+
 test_that("non-standard evaluation in ev_time", {
   expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
                                                           variable="group",
@@ -170,6 +189,27 @@ test_that("event wrong format", {
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
       "The column in 'data' specified by 'event' must be numeric or logical.")
+})
+
+sim_dat$event2 <- sim_dat$event
+sim_dat$event2[1] <- 2
+
+test_that("event contains more than two event types", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                          variable="group",
+                                                          ev_time="time",
+                                                          event="event2",
+                                                          method="km",
+                                                          conf_int=FALSE,
+                                                          conf_level=0.95,
+                                                          times=NULL,
+                                                          bootstrap=FALSE,
+                                                          n_boot=2,
+                                                          na.action="na.omit",
+                                                          clean_data=TRUE),
+               paste0("The 'event' variable has to be a ",
+                      "binary event indicator.", " For data with competing ",
+                      "risks, see the 'adjustedcif' function."))
 })
 
 test_that("event wrong length", {

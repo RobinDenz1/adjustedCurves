@@ -21,7 +21,7 @@ Detailed descriptions of each method can be found in the literature cited in the
 
 Currently this package is not available on CRAN, but can be installed easily using the `devtools` R-Package:
 
-```
+```R
 library(devtools)
 
 devtools::install_github("https://github.com/RobinDenz1/adjustedCurves")
@@ -29,21 +29,21 @@ devtools::install_github("https://github.com/RobinDenz1/adjustedCurves")
 
 or the `remotes` R-Package:
 
-```
+```R
 library(remotes)
 
 remotes::install_github("https://github.com/RobinDenz1/adjustedCurves")
 ```
 
-## Issues
+## Bug Reports and Feature Requests
 
-If you encounter any bugs or have any specific feature requests, please file an issue.
+If you encounter any bugs or have any specific feature requests, please file an [Issue](https://github.com/RobinDenz1/adjustedCurves/issues).
 
 ## Examples
 
 This minimal example shows how to calculate adjusted survival curves using *Direct Adjustment* with this package:
 
-```
+```R
 library(adjustedCurves)
 
 # simulate some data as example
@@ -55,7 +55,7 @@ head(sim_dat)
 
 # estimate a cox-regression for the outcome
 cox_mod <- coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
-                 data=sim_dat, x=T)
+                 data=sim_dat, x=TRUE)
 
 
 # use it to calculate adjusted survival curves
@@ -65,16 +65,16 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         event="event",
                         method="direct",
                         outcome_model=cox_mod,
-                        conf_int=T)
+                        conf_int=TRUE)
 
 # plot the curves
-plot(adjsurv, draw_ci=F)
+plot(adjsurv, draw_ci=FALSE)
 
 # also plot the confidence intervals
 plot(adjsurv)
 ```
 Here is an example of how to calculate adjusted survival curves using *Inverse Probability of Treatment Weighting*:
-```
+```R
 # estimate a treatment assignment model
 glm_mod <- glm(group ~ x1 + x2 + x3 + x4 + x5 + x6, data=sim_dat,
                family="binomial"(link="logit"))
@@ -87,13 +87,13 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         event="event",
                         method="iptw_km",
                         treatment_model=glm_mod,
-                        conf_int=T)
+                        conf_int=TRUE)
 
 # plot the curves
 plot(adjsurv, draw_ci=F)
 ```
-To test whether the two adjusted survival curves are equal, the `adjustedsurv` call has to be made with `bootstrap=TRUE`:
-```
+To test whether the two adjusted survival curves are different, the `adjustedsurv` call has to be made with `bootstrap=TRUE`:
+```R
 # use it to calculate adjusted survival curves
 adjsurv <- adjustedsurv(data=sim_dat,
                         variable="group",
@@ -101,11 +101,11 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         event="event",
                         method="direct",
                         outcome_model=cox_mod,
-                        conf_int=T,
-                        bootstrap=T,
+                        conf_int=TRUE,
+                        bootstrap=TRUE,
                         n_boot=1000)
                         
- adj_test <- test_curve_equality(adjsurv, from=0, to=1.2)
+ adj_test <- adjusted_curve_diff(adjsurv, from=0, to=1.2)
  print(adj_test)
 ```
 

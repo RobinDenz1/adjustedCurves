@@ -111,12 +111,17 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     # Check if ev_time variable has the right format
     if (!is.numeric(data[,ev_time])) {
       stop("The column in 'data' specified by 'ev_time' must be numeric.")
+    } else if (!all(data[, ev_time] >= 0, na.rm=TRUE)) {
+      stop("All values in the 'ev_time' variable must be >= 0.")
     }
 
     # Check if event variable has the right format
-    if (!is.numeric(data[,event]) & !is.logical(data[,event])) {
+    if (!is.numeric(data[, event]) & !is.logical(data[, event])) {
       stop("The column in 'data' specified by 'event' must be numeric",
            " or logical.")
+    } else if (!all(data[, event] %in% c(0, 1, NA))) {
+      stop("The 'event' variable has to be a binary event indicator.",
+           " For data with competing risks, see the 'adjustedcif' function.")
     }
 
     # No extrapolation
@@ -657,12 +662,17 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
     # Check if ev_time variable has the right format
     if (!is.numeric(data[,ev_time])) {
       stop("The column in 'data' specified by 'ev_time' must be numeric.")
+    } else if (!all(data[, ev_time] >= 0, na.rm=TRUE)) {
+      stop("All values in the 'ev_time' variable must be >= 0.")
     }
 
     # Check if event variable has the right format
     if (!is.numeric(data[,event]) & !is.logical(data[,event])) {
       stop("The column in 'data' specified by 'event' must be numeric",
            " or logical.")
+    } else if (all(data[, event] %in% c(0, 1, NA))) {
+      warning("It is recommended to use the 'adjustedsurv' function",
+              " when the 'event' variable is binary.")
     }
 
     # Check if categorical should be allowed

@@ -107,6 +107,26 @@ test_that("ev_time wrong format", {
                NULL)
 })
 
+sim_dat$time2 <- sim_dat$time
+sim_dat$time2[1] <- -1
+
+test_that("ev_time includes negative values", {
+  expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
+                                                        variable="group",
+                                                        ev_time="time2",
+                                                        event="event",
+                                                        method="aalen_johansen",
+                                                        conf_int=FALSE,
+                                                        conf_level=0.95,
+                                                        times=NULL,
+                                                        bootstrap=FALSE,
+                                                        n_boot=2,
+                                                        na.action="na.omit",
+                                                        clean_data=TRUE,
+                                                        cause=1),
+               "All values in the 'ev_time' variable must be >= 0.")
+})
+
 test_that("ev_time wrong length", {
   expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
                                                       variable="group",
@@ -173,6 +193,26 @@ test_that("event wrong format", {
                                                         clean_data=TRUE,
                                                         cause=1),
                NULL)
+})
+
+sim_dat$event2 <- sample(c(0, 1), size=nrow(sim_dat), replace=TRUE)
+
+test_that("event only includes two values", {
+  expect_warning(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
+                                                        variable="group",
+                                                        ev_time="time",
+                                                        event="event2",
+                                                        method="aalen_johansen",
+                                                        conf_int=FALSE,
+                                                        conf_level=0.95,
+                                                        times=NULL,
+                                                        bootstrap=FALSE,
+                                                        n_boot=2,
+                                                        na.action="na.omit",
+                                                        clean_data=TRUE,
+                                                        cause=1),
+               paste0("It is recommended to use the 'adjustedsurv' function",
+                      " when the 'event' variable is binary."))
 })
 
 test_that("event wrong length", {
