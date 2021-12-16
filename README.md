@@ -1,11 +1,11 @@
 <!-- badges: start -->
 [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 [![](https://www.r-pkg.org/badges/version/adjustedCurves?color=green)](https://cran.r-project.org/package=adjustedCurves)
-[![](http://cranlogs.r-pkg.org/badges/grand-total/adjustedCurves?color=green)](https://cran.r-project.org/package=adjustedCurves)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/adjustedCurves?color=blue)](https://cran.r-project.org/package=adjustedCurves)
 [![R-CMD-check](https://github.com/RobinDenz1/adjustedCurves/workflows/R-CMD-check/badge.svg)](https://github.com/RobinDenz1/adjustedCurves/actions)
 <!-- badges: end -->
 
-# adjustedCurves
+# adjustedCurves <img src="man/figures/logo.png" align="right" />
 
 Author: Robin Denz
 
@@ -47,11 +47,8 @@ This minimal example shows how to calculate adjusted survival curves using *Dire
 library(adjustedCurves)
 
 # simulate some data as example
-sim_dat <- sim_confounded_surv(n=500)
+sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
-
-# take a look at the data
-head(sim_dat)
 
 # estimate a cox-regression for the outcome
 cox_mod <- coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
@@ -68,10 +65,10 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         conf_int=TRUE)
 
 # plot the curves
-plot(adjsurv, draw_ci=FALSE)
+plot(adjsurv)
 
 # also plot the confidence intervals
-plot(adjsurv)
+plot(adjsurv, draw_ci=TRUE)
 ```
 Here is an example of how to calculate adjusted survival curves using *Inverse Probability of Treatment Weighting*:
 ```R
@@ -90,7 +87,7 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         conf_int=TRUE)
 
 # plot the curves
-plot(adjsurv, draw_ci=F)
+plot(adjsurv, draw_ci=TRUE)
 ```
 To test whether the two adjusted survival curves are different, the `adjustedsurv` call has to be made with `bootstrap=TRUE`:
 ```R
@@ -105,8 +102,8 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         bootstrap=TRUE,
                         n_boot=1000)
                         
- adj_test <- adjusted_curve_diff(adjsurv, from=0, to=1.2)
- print(adj_test)
+adj_test <- adjusted_curve_diff(adjsurv, from=0, to=1.2)
+summary(adj_test)
 ```
 
 More examples can be found in the documentation and the vignettes.
@@ -119,7 +116,7 @@ You should also cite the paper describing the method you used. The respective li
 
 ## License
 
-© 2021-2021 Robin Denz
+© 2021-2022 Robin Denz
 
 The contents of this repository are distributed under the GNU General Public License. You can find the full text of this License in this github repository. Alternatively, see <http://www.gnu.org/licenses/>.
 

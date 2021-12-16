@@ -26,7 +26,9 @@ A function to graphically display confounder-adjusted survival curves which wher
      median_surv_color="black",
      censoring_ind=FALSE,
      censoring_ind_width=NULL,
-     censoring_ind_size=0.5, cif=FALSE, ...)
+     censoring_ind_size=0.5,
+     censoring_ind_alpha=1,
+     cif=FALSE, ...)
 }
 
 \arguments{
@@ -113,6 +115,9 @@ A numeric value specifying the width of the censoring indicators. Ignored if \co
   }
   \item{censoring_ind_size}{
 A numeric value specifying the size of the censoring indicators. Ignored if \code{censoring_ind=FALSE}.
+  }
+  \item{censoring_ind_alpha}{
+A numeric value specifying the alpha level of the censoring indicators. Ignored if \code{censoring_ind=FALSE}.
   }
   \item{cif}{
 If \code{TRUE} the cumulative incidence functions are drawn instead of the survival curves. Those are calculates by taking 1 - the adjusted survival probability. If \code{FALSE} (default) the usual survival curves are shown.

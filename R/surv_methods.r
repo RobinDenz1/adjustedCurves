@@ -85,6 +85,8 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
                          weight_method="ps", stabilize=TRUE,
                          trim=FALSE, ...) {
 
+  levs <- levels(data[,variable])
+
   # get weights
   if (is.numeric(treatment_model)) {
     weights <- treatment_model
@@ -93,10 +95,8 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
     weights <- get_iptw_weights(data=data, treatment_model=treatment_model,
                                 weight_method=weight_method,
                                 variable=variable, stabilize=stabilize,
-                                trim=trim, ...)
+                                trim=trim, levs=levs, ...)
   }
-
-  levs <- levels(data[,variable])
 
   plotdata <- vector(mode="list", length=length(levs))
   for (i in seq_len(length(levs))){
@@ -167,6 +167,8 @@ surv_iptw_cox <- function(data, variable, ev_time, event, conf_int,
                           weight_method="ps", stabilize=TRUE,
                           trim=FALSE, ...) {
 
+  levs <- levels(data[,variable])
+
   # get weights
   if (is.numeric(treatment_model)) {
     weights <- treatment_model
@@ -174,7 +176,7 @@ surv_iptw_cox <- function(data, variable, ev_time, event, conf_int,
     weights <- get_iptw_weights(data=data, treatment_model=treatment_model,
                                 weight_method=weight_method,
                                 variable=variable, stabilize=stabilize,
-                                trim=trim, ...)
+                                trim=trim, levs=levs, ...)
   }
 
   # univariate, weighted cox model
@@ -221,6 +223,8 @@ surv_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
                              weight_method="ps", stabilize=TRUE,
                              trim=FALSE, se_method="cochrane",
                              censoring_vars=NULL, ipcw_method="binder", ...) {
+  levs <- levels(data[,variable])
+
   # get weights
   if (is.numeric(treatment_model)) {
     weights <- treatment_model
@@ -229,7 +233,7 @@ surv_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
     weights <- get_iptw_weights(data=data, treatment_model=treatment_model,
                                 weight_method=weight_method,
                                 variable=variable, stabilize=stabilize,
-                                trim=trim, ...)
+                                trim=trim, levs=levs, ...)
   }
 
   # estimate pseudo observations

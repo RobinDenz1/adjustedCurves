@@ -127,6 +127,8 @@ cif_iptw_pseudo <- function(data, variable, ev_time, event, cause,
                             treatment_model, weight_method="ps",
                             stabilize=TRUE, trim=FALSE,
                             se_method="cochrane", ...) {
+  levs <- levels(data[,variable])
+
   # get weights
   if (is.numeric(treatment_model)) {
 
@@ -137,7 +139,7 @@ cif_iptw_pseudo <- function(data, variable, ev_time, event, cause,
     weights <- get_iptw_weights(data=data, treatment_model=treatment_model,
                                 weight_method=weight_method,
                                 variable=variable, stabilize=stabilize,
-                                trim=trim, ...)
+                                trim=trim, levs=levs, ...)
   }
 
   # estimate pseudo observations
@@ -147,7 +149,6 @@ cif_iptw_pseudo <- function(data, variable, ev_time, event, cause,
                                times=times, cause=cause)
 
   # take weighted mean
-  levs <- levels(data[, variable])
   plotdata <- vector(mode="list", length=length(levs))
   for (i in seq_len(length(levs))) {
     cif_lev <- pseudo[data[, variable]==levs[i], ]

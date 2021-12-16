@@ -6,6 +6,8 @@ sim_dat <- adjustedCurves::sim_confounded_surv(n=50)
 sim_dat$group_num <- sim_dat$group
 sim_dat$group <- as.factor(sim_dat$group)
 
+levs <- levels(sim_dat$group)
+
 # treatment model
 treat_mod <- glm(group ~ x1 + x2 + x3 + x4 + x5 + x6, data=sim_dat,
                  family="binomial")
@@ -17,7 +19,8 @@ test_that("2 treatments, using glm", {
                                                  weight_method="ps",
                                                  variable="group",
                                                  stabilize=TRUE,
-                                                 trim=FALSE), NA)
+                                                 trim=FALSE,
+                                                 levs=levs), NA)
 })
 
 test_that("2 treatments, using weightit", {
@@ -26,7 +29,8 @@ test_that("2 treatments, using weightit", {
                                                 weight_method="ps",
                                                 variable="group",
                                                 stabilize=TRUE,
-                                                trim=FALSE), NA)
+                                                trim=FALSE,
+                                                levs=levs), NA)
 })
 
 test_that("2 treatments, using glm + trim", {
@@ -35,7 +39,8 @@ test_that("2 treatments, using glm + trim", {
                                                  weight_method="ps",
                                                  variable="group",
                                                  stabilize=TRUE,
-                                                 trim=3), NA)
+                                                 trim=3,
+                                                 levs=levs), NA)
 })
 
 test_that("2 treatments, using weightit + trim", {
@@ -44,7 +49,8 @@ test_that("2 treatments, using weightit + trim", {
                                                 weight_method="ps",
                                                 variable="group",
                                                 stabilize=TRUE,
-                                                trim=3), NA)
+                                                trim=3,
+                                                levs=levs), NA)
 })
 
 test_that("2 treatments, not using stabilize", {
@@ -53,7 +59,8 @@ test_that("2 treatments, not using stabilize", {
                                                  weight_method="ps",
                                                  variable="group",
                                                  stabilize=TRUE,
-                                                 trim=3), NA)
+                                                 trim=3,
+                                                 levs=levs), NA)
 })
 
 ## 3 treatments
@@ -66,6 +73,8 @@ sim_dat$group2 <- factor(sim_dat$group2)
 
 treat_mod <- nnet::multinom(group2 ~ x1 + x2 + x4, data=sim_dat)
 
+levs <- levels(sim_dat$group)
+
 ## Just check if function throws any errors
 test_that("3 treatments, using multinom", {
   expect_error(adjustedCurves:::get_iptw_weights(data=sim_dat,
@@ -73,7 +82,8 @@ test_that("3 treatments, using multinom", {
                                                  weight_method="ps",
                                                  variable="group2",
                                                  stabilize=TRUE,
-                                                 trim=FALSE), NA)
+                                                 trim=FALSE,
+                                                 levs=levs), NA)
 })
 
 test_that("3 treatments, using weightit", {
@@ -82,7 +92,8 @@ test_that("3 treatments, using weightit", {
                                                 weight_method="ps",
                                                 variable="group2",
                                                 stabilize=TRUE,
-                                                trim=FALSE), NA)
+                                                trim=FALSE,
+                                                levs=levs), NA)
 })
 
 test_that("3 treatments, using multinom + trim", {
@@ -91,7 +102,8 @@ test_that("3 treatments, using multinom + trim", {
                                                  weight_method="ps",
                                                  variable="group2",
                                                  stabilize=TRUE,
-                                                 trim=3), NA)
+                                                 trim=3,
+                                                 levs=levs), NA)
 })
 
 test_that("3 treatments, using weightit + trim", {
@@ -100,7 +112,8 @@ test_that("3 treatments, using weightit + trim", {
                                                 weight_method="ps",
                                                 variable="group2",
                                                 stabilize=TRUE,
-                                                trim=3), NA)
+                                                trim=3,
+                                                levs=levs), NA)
 })
 
 test_that("3 treatments, not using stabilize", {
@@ -109,6 +122,7 @@ test_that("3 treatments, not using stabilize", {
                                                  weight_method="ps",
                                                  variable="group2",
                                                  stabilize=TRUE,
-                                                 trim=3), NA)
+                                                 trim=3,
+                                                 levs=levs), NA)
 })
 

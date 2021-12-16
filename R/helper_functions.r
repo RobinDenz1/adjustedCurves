@@ -15,7 +15,7 @@
 
 ## estimate iptw weights
 get_iptw_weights <- function(data, treatment_model, weight_method,
-                             variable, stabilize=TRUE, trim, ...) {
+                             variable, stabilize=TRUE, trim, levs, ...) {
 
   # using WeightIt
   if (inherits(treatment_model, "formula")) {
@@ -26,7 +26,7 @@ get_iptw_weights <- function(data, treatment_model, weight_method,
   # using a logistic regression model
   } else if (inherits(treatment_model, "glm")) {
     ps <- stats::predict.glm(treatment_model, newdata=data, type="response")
-    weights <- ifelse(data[, variable]==1, 1 / ps, 1 / (1-ps))
+    weights <- ifelse(data[, variable]==levs[2], 1/ps, 1/(1-ps))
   # using a multinomial logistic regression model
   } else if (inherits(treatment_model, "multinom")) {
     predict.multinom <- utils::getFromNamespace("predict.multinom", "nnet")

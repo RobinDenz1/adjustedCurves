@@ -22,7 +22,8 @@ A function to graphically display confounder-adjusted cumulative incidence funct
      ci_draw_alpha=0.4, steps=TRUE,
      censoring_ind=FALSE,
      censoring_ind_width=NULL,
-     censoring_ind_size=0.5, ...)
+     censoring_ind_size=0.5,
+     censoring_ind_alpha=1, ...)
 }
 
 \arguments{
@@ -97,6 +98,9 @@ A numeric value specifying the width of the censoring indicators. Ignored if \co
   }
   \item{censoring_ind_size}{
 A numeric value specifying the size of the censoring indicators. Ignored if \code{censoring_ind=FALSE}.
+  }
+  \item{censoring_ind_alpha}{
+A numeric value specifying the alpha level of the censoring indicators. Ignored if \code{censoring_ind=FALSE}.
   }
   \item{...}{
 Currently not used.

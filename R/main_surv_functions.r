@@ -430,7 +430,8 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
                               median_surv_linetype="dashed",
                               median_surv_color="black",
                               censoring_ind=FALSE, censoring_ind_width=NULL,
-                              censoring_ind_size=0.5, cif=FALSE, ...) {
+                              censoring_ind_size=0.5, censoring_ind_alpha=1,
+                              cif=FALSE, ...) {
   requireNamespace("ggplot2")
 
   # get relevant data for the confidence interval
@@ -597,7 +598,8 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
     }
 
     p <- p + ggplot2::geom_segment(data=cens_dat, cens_map,
-                                   size=censoring_ind_size)
+                                   size=censoring_ind_size,
+                                   alpha=censoring_ind_alpha)
 
   }
 

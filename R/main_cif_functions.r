@@ -415,7 +415,8 @@ plot.adjustedcif <- function(x, draw_ci=FALSE, max_t=Inf,
                              custom_linetypes=NULL,
                              ci_draw_alpha=0.4, steps=TRUE,
                              censoring_ind=FALSE, censoring_ind_width=NULL,
-                             censoring_ind_size=0.5, ...) {
+                             censoring_ind_size=0.5, censoring_ind_alpha=1,
+                             ...) {
   requireNamespace("ggplot2")
 
   # get relevant data for the confidence interval
@@ -561,7 +562,8 @@ plot.adjustedcif <- function(x, draw_ci=FALSE, max_t=Inf,
     }
 
     p <- p + ggplot2::geom_segment(data=cens_dat, cens_map,
-                                   size=censoring_ind_size)
+                                   size=censoring_ind_size,
+                                   alpha=censoring_ind_alpha)
 
   }
 
