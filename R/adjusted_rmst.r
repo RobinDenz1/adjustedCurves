@@ -78,7 +78,7 @@ area_under_curve <- function(object, from, to, use_boot, conf_level) {
       for (i in seq_len(n_boot)) {
 
         # select one bootstrap data set each
-        boot_dat <- object$boot_data[object$boot_data$boot==i,]
+        boot_dat <- object$boot_data[object$boot_data$boot==i, ]
 
         # create fake adjustedsurv object
         if (mode=="surv") {
@@ -108,9 +108,9 @@ area_under_curve <- function(object, from, to, use_boot, conf_level) {
     for (i in seq_len(length(levs))) {
 
       if (mode=="surv") {
-        surv_dat <- object$adjsurv[object$adjsurv$group==levs[i],]
+        surv_dat <- object$adjsurv[object$adjsurv$group==levs[i], ]
       } else {
-        surv_dat <- object$adjcif[object$adjcif$group==levs[i],]
+        surv_dat <- object$adjcif[object$adjcif$group==levs[i], ]
       }
       surv_dat$group <- NULL
       surv_dat$sd <- NULL
@@ -131,7 +131,7 @@ area_under_curve <- function(object, from, to, use_boot, conf_level) {
 
     if (use_boot & !is.null(object[boot_str])) {
 
-      n_boot_rmst <- apply(booted_rmsts, 2, function(x){sum(!is.na(x))})
+      n_boot_rmst <- apply(booted_rmsts, 2, function(x) {sum(!is.na(x))})
       names(n_boot_rmst) <- levs
 
       out$conf_level <- conf_level

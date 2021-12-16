@@ -36,12 +36,12 @@ summary.adjustedcif.method <- function(object, ...) {
 cif_aalen_johansen <- function(data, variable, ev_time, event, cause,
                                conf_int, conf_level=0.95, times=NULL, ...) {
 
-  cif <- cmprsk::cuminc(ftime=data[,ev_time],
-                        fstatus=data[,event],
-                        group=data[,variable],
+  cif <- cmprsk::cuminc(ftime=data[, ev_time],
+                        fstatus=data[, event],
+                        group=data[, variable],
                         ...)
 
-  levs <- unique(data[,variable])
+  levs <- unique(data[, variable])
   cif_names <- paste(levs, cause)
   plotdata <- vector(mode="list", length=length(cif_names))
   for (i in seq_len(length(cif_names))) {
@@ -147,12 +147,12 @@ cif_iptw_pseudo <- function(data, variable, ev_time, event, cause,
                                times=times, cause=cause)
 
   # take weighted mean
-  levs <- levels(data[,variable])
+  levs <- levels(data[, variable])
   plotdata <- vector(mode="list", length=length(levs))
   for (i in seq_len(length(levs))) {
-    cif_lev <- pseudo[data[,variable]==levs[i],]
+    cif_lev <- pseudo[data[, variable]==levs[i], ]
     cif_lev <- apply(cif_lev, 2, stats::weighted.mean,
-                     w=weights[data[,variable]==levs[i]],
+                     w=weights[data[, variable]==levs[i]],
                      na.rm=TRUE)
 
     data_temp <- data.frame(time=times, cif=cif_lev, group=levs[i])
@@ -160,10 +160,10 @@ cif_iptw_pseudo <- function(data, variable, ev_time, event, cause,
     if (conf_int) {
       # approximate variance by calculating a
       # weighted version of the variance
-      cif_lev <- pseudo[data[,variable]==levs[i],]
+      cif_lev <- pseudo[data[, variable]==levs[i], ]
 
       cif_sd <- apply(cif_lev, 2, weighted.var.se,
-                      w=weights[data[,variable]==levs[i]],
+                      w=weights[data[, variable]==levs[i]],
                       na.rm=TRUE, se_method=se_method)
       data_temp$se <- sqrt(cif_sd)
 
@@ -250,13 +250,13 @@ cif_g_comp <- function(outcome_model, data, variable, times,
   row_creation <- TRUE
 
   # perform G-Computation
-  levs <- levels(data[,variable])
+  levs <- levels(data[, variable])
   data_temp <- data
   plotdata <- vector(mode="list", length=length(levs))
   for (i in seq_len(length(levs))) {
 
     # set variable to one level each
-    data_temp[,variable] <- factor(levs[i], levels=levs)
+    data_temp[, variable] <- factor(levs[i], levels=levs)
 
     # use user-supplied custom prediction function
     if (!is.null(predict_fun)) {
@@ -285,11 +285,11 @@ cif_g_comp <- function(outcome_model, data, variable, times,
       mod_form <- paste0(" ~ ", paste0(mod_vars, collapse=" + "))
       mod_data <- as.data.frame(stats::model.matrix(
         stats::as.formula(mod_form), data=data_temp))
-      mod_data <- mod_data[,2:ncol(mod_data)]
+      mod_data <- mod_data[, 2:ncol(mod_data)]
 
       # calculate average CIF
-      rel_cols <- colnames(outcome_model$df[,3:ncol(outcome_model$df)])
-      surv_lev <- average_CIF_fccr(outcome_model, mod_data[,rel_cols])
+      rel_cols <- colnames(outcome_model$df[, 3:ncol(outcome_model$df)])
+      surv_lev <- average_CIF_fccr(outcome_model, mod_data[, rel_cols])
       row <- data.frame(time=outcome_model$uftime,
                         cif=surv_lev,
                         group=levs[i])
@@ -307,10 +307,12 @@ cif_g_comp <- function(outcome_model, data, variable, times,
                              times=times,
                              cause=cause,
                              ...)},
-        error=function(e){stop("The following error occured using",
-                               " the default S3 predict method: '", e,
-                               "' Specify a valid 'predict_fun' or",
-                               " use a different model. See details.")}
+        error=function(e) {
+          stop("The following error occured using",
+               " the default S3 predict method: '", e,
+               "' Specify a valid 'predict_fun' or",
+               " use a different model. See details.")
+          }
       )
     }
 
@@ -335,11 +337,11 @@ cif_matching <- function(data, variable, ev_time, event, cause, conf_int,
                          gtol=0.001, ...) {
 
   # if it's a factor, turn it into numeric
-  if (is.factor(data[,variable])) {
-    levs <- levels(data[,variable])
-    data[,variable] <- ifelse(data[,variable]==levs[1], 0, 1)
+  if (is.factor(data[, variable])) {
+    levs <- levels(data[, variable])
+    data[, variable] <- ifelse(data[, variable]==levs[1], 0, 1)
   } else {
-    levs <- unique(data[,variable])
+    levs <- unique(data[, variable])
   }
 
   if (is.numeric(treatment_model)) {
@@ -446,7 +448,7 @@ cif_direct_pseudo <- function(data, variable, ev_time, event, cause,
   # some constants
   len <- length(times)
   n <- nrow(data)
-  group <- data[,variable]
+  group <- data[, variable]
 
   # create data for geese
   Sdata <- data.frame(yi=1-c(pseudo),
@@ -518,7 +520,7 @@ cif_aiptw_pseudo <- function(data, variable, ev_time, event, cause,
   # some constants
   len <- length(times)
   n <- nrow(data)
-  group <- data[,variable]
+  group <- data[, variable]
 
   if (is.numeric(treatment_model)) {
     ps_score <- treatment_model
@@ -542,7 +544,7 @@ cif_aiptw_pseudo <- function(data, variable, ev_time, event, cause,
 
   outcome_vars <- outcome_vars[outcome_vars != variable]
   for (col in outcome_vars) {
-    Sdata[,col] <- rep(data[,col], len)
+    Sdata[,col] <- rep(data[, col], len)
   }
 
   if (type_time=="factor") {
@@ -563,7 +565,7 @@ cif_aiptw_pseudo <- function(data, variable, ev_time, event, cause,
                               mean.link="cloglog", corstr="independence")
 
   # get direct adjustment estimates
-  levs <- levels(data[,variable])
+  levs <- levels(data[, variable])
   plotdata <- vector(mode="list", length=length(levs))
 
   for (i in seq_len(length(levs))) {
@@ -576,15 +578,15 @@ cif_aiptw_pseudo <- function(data, variable, ev_time, event, cause,
     # augment estimates using propensity score
     if (length(levs) > 2) {
       group_ind <- ifelse(group==levs[i], 1, 0)
-      ps_score_lev <- ps_score[,levs[i]]
+      ps_score_lev <- ps_score[, levs[i]]
 
       dr <- (pseudo*group_ind-(group_ind-ps_score_lev)*m)/ps_score_lev
     # if binary, use equation from the paper directly
     } else if (i == 1) {
-      group <- ifelse(data[,variable]==levs[1], 0, 1)
+      group <- ifelse(data[, variable]==levs[1], 0, 1)
       dr <- (pseudo*(1-group)+(group-ps_score)*m)/(1-ps_score)
     } else if (i == 2) {
-      group <- ifelse(data[,variable]==levs[1], 0, 1)
+      group <- ifelse(data[, variable]==levs[1], 0, 1)
       dr <- (pseudo*group-(group-ps_score)*m)/ps_score
     }
 
@@ -628,20 +630,20 @@ cif_tmle <- function(data, variable, ev_time, event, cause, conf_int,
                      glm.ftime=NULL, glm.ctime=NULL, glm.trt=NULL,
                             ...) {
   # if it's a factor, turn it into numeric
-  if (is.factor(data[,variable])) {
-    levs <- levels(data[,variable])
-    data[,variable] <- ifelse(data[,variable]==levs[1], 0, 1)
+  if (is.factor(data[, variable])) {
+    levs <- levels(data[, variable])
+    data[, variable] <- ifelse(data[, variable]==levs[1], 0, 1)
   } else {
-    levs <- unique(data[,variable])
+    levs <- unique(data[, variable])
   }
 
   # gather needed data
   if (is.null(adjust_vars)) {
     all_covars <- colnames(data)
     all_covars <- all_covars[!all_covars %in% c(variable, ev_time, event)]
-    adjust_vars <- data[,all_covars]
+    adjust_vars <- data[, all_covars]
   } else {
-    adjust_vars <- data[,adjust_vars]
+    adjust_vars <- data[, adjust_vars]
   }
 
   # TMLE fit

@@ -26,15 +26,15 @@ get_iptw_weights <- function(data, treatment_model, weight_method,
   # using a logistic regression model
   } else if (inherits(treatment_model, "glm")) {
     ps <- stats::predict.glm(treatment_model, newdata=data, type="response")
-    weights <- ifelse(data[, variable]==1, 1/ps, 1/(1-ps))
+    weights <- ifelse(data[, variable]==1, 1 / ps, 1 / (1-ps))
   # using a multinomial logistic regression model
   } else if (inherits(treatment_model, "multinom")) {
     predict.multinom <- utils::getFromNamespace("predict.multinom", "nnet")
     ps <- predict.multinom(treatment_model, newdata=data, type="probs")
 
     weights <- rep(0, nrow(data))
-    for (i in levels(data[,variable])) {
-      weights[data[,variable] == i] <- 1/ps[data[,variable] == i, i]
+    for (i in levels(data[, variable])) {
+      weights[data[, variable] == i] <- 1/ps[data[, variable] == i, i]
     }
   # user supplied a mira model but no mids data
   } else if (inherits(treatment_model, "mira")) {

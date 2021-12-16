@@ -398,18 +398,18 @@ test_that("wrong n_boot type", {
 
 test_that("wrong n_boot length", {
   expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
-                                                         variable="group",
-                                                         ev_time="time",
-                                                         event="event",
-                                                         method="aalen_johansen",
-                                                         conf_int=TRUE,
-                                                         conf_level=0.95,
-                                                         times=NULL,
-                                                         bootstrap=TRUE,
-                                                         n_boot=c(2, 2),
-                                                         na.action="na.omit",
-                                                         clean_data=TRUE,
-                                                         cause=1),
+                                                        variable="group",
+                                                        ev_time="time",
+                                                        event="event",
+                                                        method="aalen_johansen",
+                                                        conf_int=TRUE,
+                                                        conf_level=0.95,
+                                                        times=NULL,
+                                                        bootstrap=TRUE,
+                                                        n_boot=c(2, 2),
+                                                        na.action="na.omit",
+                                                        clean_data=TRUE,
+                                                        cause=1),
                NULL)
 })
 
@@ -432,18 +432,18 @@ test_that("wrong times", {
 
 test_that("wrong na.action type", {
   expect_error(adjustedCurves:::check_inputs_adjustedcif(data=sim_dat,
-                                                         variable="group",
-                                                         ev_time="time",
-                                                         event="event",
-                                                         method="aalen_johansen",
-                                                         conf_int=TRUE,
-                                                         conf_level=0.95,
-                                                         times=NULL,
-                                                         bootstrap=TRUE,
-                                                         n_boot=10,
-                                                         na.action=1,
-                                                         clean_data=TRUE,
-                                                         cause=1),
+                                                        variable="group",
+                                                        ev_time="time",
+                                                        event="event",
+                                                        method="aalen_johansen",
+                                                        conf_int=TRUE,
+                                                        conf_level=0.95,
+                                                        times=NULL,
+                                                        bootstrap=TRUE,
+                                                        n_boot=10,
+                                                        na.action=1,
+                                                        clean_data=TRUE,
+                                                        cause=1),
                NULL)
 })
 

@@ -76,8 +76,8 @@ test_that("CIF, 2 treatments, with from", {
 
 sim_dat$group <- as.character(sim_dat$group)
 sim_dat$group[sim_dat$group=="1"] <- sample(x=c(1, 2),
-                                            size=nrow(sim_dat[sim_dat$group=="1",]),
-                                            replace=TRUE)
+                                      size=nrow(sim_dat[sim_dat$group=="1",]),
+                                      replace=TRUE)
 sim_dat$group <- as.factor(sim_dat$group)
 
 adj <- adjustedcif(data=sim_dat,
