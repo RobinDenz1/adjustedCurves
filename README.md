@@ -13,7 +13,7 @@ Author: Robin Denz
 
 `adjustedCurves` is an R-Package which can be used to calculate and plot confounder-adjusted survival curves + confidence intervals as well as cause-specific confounder-adjusted cumulative incidence functions + confidence intervals using a variety of methods.
 It provides an convenient wrapper around existing R-Packages on the topic and adds additional methods and functionality on top of it.
-Those additional features include the calculation of adjusted restricted mean survival time and testing the equality of two confounder-adjusted survival curves.
+Those additional features include the calculation of adjusted restricted mean survival times and testing whether two confounder-adjusted survival curves are different in a given interval.
 
 Detailed descriptions of each method can be found in the literature cited in the documentation. 
 
@@ -41,19 +41,19 @@ If you encounter any bugs or have any specific feature requests, please file an 
 
 ## Examples
 
-This minimal example shows how to calculate adjusted survival curves using *Direct Adjustment* with this package:
+This minimal example shows how to calculate and plot adjusted survival curves using *Direct Adjustment* with this package:
 
 ```R
 library(adjustedCurves)
 
 # simulate some data as example
-sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+set.seed(31)
+sim_dat <- sim_confounded_surv(n=250, max_t=1.2, group_beta=0)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # estimate a cox-regression for the outcome
-cox_mod <- coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
+cox_mod <- coxph(Surv(time, event) ~ x1 + x2 + x4 + x5 + group,
                  data=sim_dat, x=TRUE)
-
 
 # use it to calculate adjusted survival curves
 adjsurv <- adjustedsurv(data=sim_dat,
@@ -64,16 +64,15 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         outcome_model=cox_mod,
                         conf_int=TRUE)
 
-# plot the curves
-plot(adjsurv)
-
-# also plot the confidence intervals
+# plot with confidence intervals
 plot(adjsurv, draw_ci=TRUE)
 ```
-Here is an example of how to calculate adjusted survival curves using *Inverse Probability of Treatment Weighting*:
+<img src="man/figures/example_direct.png" />
+
+Here is an example of how to calculate and plot adjusted survival curves using *Inverse Probability of Treatment Weighting*:
 ```R
 # estimate a treatment assignment model
-glm_mod <- glm(group ~ x1 + x2 + x3 + x4 + x5 + x6, data=sim_dat,
+glm_mod <- glm(group ~ x2 + x3 + x5 + x6, data=sim_dat,
                family="binomial"(link="logit"))
 
 
@@ -86,12 +85,13 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         treatment_model=glm_mod,
                         conf_int=TRUE)
 
-# plot the curves
+# plot with confidence intervals
 plot(adjsurv, draw_ci=TRUE)
 ```
-To test whether the two adjusted survival curves are different, the `adjustedsurv` call has to be made with `bootstrap=TRUE`:
+<img src="man/figures/example_iptw_km.png" />
+
+To test whether the two adjusted survival curves are different in a specified interval (here 0 to 0.75), the `adjustedsurv` call has to be made with `bootstrap=TRUE`:
 ```R
-# use it to calculate adjusted survival curves
 adjsurv <- adjustedsurv(data=sim_dat,
                         variable="group",
                         ev_time="time",
@@ -101,8 +101,8 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         conf_int=TRUE,
                         bootstrap=TRUE,
                         n_boot=1000)
-                        
-adj_test <- adjusted_curve_diff(adjsurv, from=0, to=1.2)
+
+adj_test <- adjusted_curve_diff(adjsurv, from=0, to=0.75)
 summary(adj_test)
 ```
 

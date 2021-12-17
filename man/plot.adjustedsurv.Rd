@@ -19,6 +19,7 @@ A function to graphically display confounder-adjusted survival curves which wher
      gg_theme=ggplot2::theme_classic(),
      ylim=NULL, custom_colors=NULL,
      custom_linetypes=NULL,
+     single_color=NULL, single_linetype=NULL,
      ci_draw_alpha=0.4, steps=TRUE,
      median_surv_lines=FALSE,
      median_surv_size=0.5,
@@ -88,6 +89,12 @@ A (named) vector to specify the colors of each adjusted survival curve and possi
   }
   \item{custom_linetypes}{
 A (named) vector to specify the linetype of each adjusted survival curve. Set to \code{NULL} to use the \code{ggplot2} default values. Ignored if \code{color=FALSE}. Ignored if \code{linetype=FALSE}.
+  }
+  \item{single_color}{
+A single color to use for every survival curve, irrespective of group status. If \code{color} is specified as well this argument will override it, but also generate a warning. Set to \code{NULL} (default) to ignore this argument.
+  }
+  \item{single_linetype}{
+A single linetype to use for every survival curve, irrespective of group status. If \code{linetype} is specified as well this argument will override it, but also generate a warning. Set to \code{NULL} (default) to ignore this argument.
   }
   \item{ci_draw_alpha}{
 A number indicating the level of transparency that should be used when drawing the confidence regions.

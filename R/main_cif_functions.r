@@ -413,6 +413,7 @@ plot.adjustedcif <- function(x, draw_ci=FALSE, max_t=Inf,
                              gg_theme=ggplot2::theme_classic(),
                              ylim=NULL, custom_colors=NULL,
                              custom_linetypes=NULL,
+                             single_color=NULL, single_linetype=NULL,
                              ci_draw_alpha=0.4, steps=TRUE,
                              censoring_ind=FALSE, censoring_ind_width=NULL,
                              censoring_ind_size=0.5, censoring_ind_alpha=1,
@@ -474,10 +475,30 @@ plot.adjustedcif <- function(x, draw_ci=FALSE, max_t=Inf,
   p <- ggplot2::ggplot(plotdata, mapping)
 
   if (steps) {
-    p <- p + ggplot2::geom_step(size=line_size)
+    line_obj <- ggplot2::geom_step(size=line_size)
   } else {
-    p <- p + ggplot2::geom_line(size=line_size)
+    line_obj <- ggplot2::geom_line(size=line_size)
   }
+
+  # override color using just one color
+  if (!is.null(single_color)) {
+    if (color) {
+      warning("Argument 'color' will be overwritten by argument",
+              " 'single_color'.", call.=FALSE)
+    }
+    line_obj$aes_params$colour <- single_color
+  }
+  # override color using just one color
+  if (!is.null(single_linetype)) {
+    if (linetype) {
+      warning("Argument 'linetype' will be overwritten by argument",
+              " 'single_linetype'.", call.=FALSE)
+    }
+    line_obj$aes_params$linetype <- single_linetype
+  }
+
+  # add steps / lines to plot
+  p <- p + line_obj
 
   # don't use the word "adjusted" with standard Kaplan-Meier
   if (ylab=="Adjusted Cumulative Incidence" & x$method=="aalen_johansen") {
@@ -561,9 +582,16 @@ plot.adjustedcif <- function(x, draw_ci=FALSE, max_t=Inf,
       cens_map$linetype <- NULL
     }
 
-    p <- p + ggplot2::geom_segment(data=cens_dat, cens_map,
-                                   size=censoring_ind_size,
-                                   alpha=censoring_ind_alpha)
+    cens_geom <- ggplot2::geom_segment(data=cens_dat, cens_map,
+                                       size=censoring_ind_size,
+                                       alpha=censoring_ind_alpha)
+    if (!is.null(single_color)) {
+      cens_geom$aes_params$colour <- single_color
+    }
+    if (!is.null(single_linetype)) {
+      cens_geom$aes_params$linetype <- single_linetype
+    }
+    p <- p + cens_geom
 
   }
 
@@ -589,8 +617,8 @@ plot.adjustedcif <- function(x, draw_ci=FALSE, max_t=Inf,
         ci_map$fill <- NULL
       }
 
-      p <- p + pammtools::geom_stepribbon(ci_map, alpha=ci_draw_alpha,
-                                          inherit.aes=FALSE)
+      ribbon <- pammtools::geom_stepribbon(ci_map, alpha=ci_draw_alpha,
+                                           inherit.aes=FALSE)
       # plot using linear interpolation
     } else {
       ci_map <- ggplot2::aes(ymin=.data$ci_lower,
@@ -604,9 +632,13 @@ plot.adjustedcif <- function(x, draw_ci=FALSE, max_t=Inf,
         ci_map$fill <- NULL
       }
 
-      p <- p + ggplot2::geom_ribbon(ci_map, alpha=ci_draw_alpha,
-                                    inherit.aes=FALSE)
+      ribbon <- ggplot2::geom_ribbon(ci_map, alpha=ci_draw_alpha,
+                                     inherit.aes=FALSE)
     }
+    if (!is.null(single_color)) {
+      ribbon$aes_params$fill <- single_color
+    }
+    p <- p + ribbon
   }
   return(p)
 }
