@@ -69,8 +69,8 @@ test_that("2 treatments, no conf_int, no boot, with times", {
 
 sim_dat <- adjustedCurves::sim_confounded_surv(n=90)
 sim_dat$group[sim_dat$group==1] <- sample(c(1, 2),
-                                          size=nrow(sim_dat[sim_dat$group==1,]),
-                                          replace=TRUE)
+                                        size=nrow(sim_dat[sim_dat$group==1, ]),
+                                        replace=TRUE)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # outcome model
@@ -304,8 +304,8 @@ set.seed(42)
 
 sim_dat <- adjustedCurves::sim_confounded_surv(n=110)
 sim_dat$group[sim_dat$group==1] <- sample(c(1, 2),
-                                          size=nrow(sim_dat[sim_dat$group==1,]),
-                                          replace=TRUE)
+                                        size=nrow(sim_dat[sim_dat$group==1, ]),
+                                        replace=TRUE)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # fit some models

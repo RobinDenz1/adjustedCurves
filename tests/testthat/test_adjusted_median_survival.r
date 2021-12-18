@@ -30,4 +30,3 @@ adj$boot_adjsurv <- NULL
 test_that("median surv, warning no boot", {
   expect_warning(adjusted_median_survival(adj, use_boot=TRUE), NULL)
 })
-

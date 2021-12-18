@@ -74,8 +74,8 @@ test_that("2 treatments, two confounders, with boot", {
 
 ## more than two treatments
 sim_dat$group[sim_dat$group==1] <- sample(c(1, 2),
-                                          size=nrow(sim_dat[sim_dat$group==1,]),
-                                          replace=TRUE)
+                                        size=nrow(sim_dat[sim_dat$group==1, ]),
+                                        replace=TRUE)
 sim_dat$group <- factor(sim_dat$group)
 
 test_that("> 2 treatments, one confounder", {

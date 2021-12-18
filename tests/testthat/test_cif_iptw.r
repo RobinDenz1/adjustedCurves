@@ -78,8 +78,8 @@ sim_dat <- adjustedCurves::sim_confounded_surv(n=150)
 sim_dat$event[sim_dat$event==1] <- sample(c(1, 2), size=sum(sim_dat$event),
                                           replace=TRUE)
 sim_dat$group[sim_dat$group==1] <- sample(c(1, 2),
-                                          size=nrow(sim_dat[sim_dat$group==1,]),
-                                          replace=TRUE)
+                                        size=nrow(sim_dat[sim_dat$group==1, ]),
+                                        replace=TRUE)
 sim_dat$group <- as.factor(sim_dat$group)
 
 mod <- nnet::multinom(group ~ x1 + x2 + x3 + x4 + x5 + x6, data=sim_dat)

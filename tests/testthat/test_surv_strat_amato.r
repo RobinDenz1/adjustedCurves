@@ -11,7 +11,7 @@ sim_dat <- sim_confounded_surv(n=200, list(x1=c("rbinom", 1, 0.5),
                                group_beta=0)
 sim_dat$group2 <- factor(sim_dat$group)
 
-reference <- sim_dat[,c("x1", "x2", "x3")]
+reference <- sim_dat[, c("x1", "x2", "x3")]
 
 ## Just check if function throws any errors
 test_that("2 treatments, one confounder, no boot", {
@@ -56,8 +56,8 @@ test_that("2 treatments, two confounders, no boot, using reference data", {
 
 ## more than two treatments
 sim_dat$group[sim_dat$group==1] <- sample(c(1, 2),
-                                          size=nrow(sim_dat[sim_dat$group==1,]),
-                                          replace=TRUE)
+                                        size=nrow(sim_dat[sim_dat$group==1, ]),
+                                        replace=TRUE)
 sim_dat$group <- factor(sim_dat$group)
 
 test_that("> 2 treatments, one confounder, no boot", {

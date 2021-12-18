@@ -75,5 +75,3 @@ test_that("too little points in time", {
                         "biased estimates. Consider using a finer ",
                         "times grid in 'adjustedsurv'."))
 })
-
-

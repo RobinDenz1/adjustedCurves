@@ -49,8 +49,8 @@ test_that("2 treatments, no conf_int, no boot, with times", {
                                             type_time="factor"), NA)
 })
 
-test_that("2 treatments, no conf_int, no boot, with times, type_time='factor'",
-          {
+test_that(
+  "2 treatments, no conf_int, no boot, with times, type_time='factor'", {
   expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
                                             variable="group",
                                             ev_time="time",

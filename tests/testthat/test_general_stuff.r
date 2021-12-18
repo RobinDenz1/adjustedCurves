@@ -52,4 +52,3 @@ test_that("adjustedcif, tibbles, with boot", {
                                            conf_int=FALSE,
                                            cause=1), NA)
 })
-

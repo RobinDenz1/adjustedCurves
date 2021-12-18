@@ -175,7 +175,7 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
       for (i in seq_len(max(adjsurv$boot_data$boot))) {
 
         # select one bootstrap data set each
-        boot_dat <- adjsurv$boot_data[adjsurv$boot_data$boot==i,]
+        boot_dat <- adjsurv$boot_data[adjsurv$boot_data$boot==i, ]
 
         # every relevant point in time
         times <- sort(unique(boot_dat$time))
@@ -269,9 +269,9 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
         if (class(adjsurv)=="adjustedsurv") {
 
           observed_dat <- adjsurv$adjsurv[which(adjsurv$adjsurv$group %in%
-                                                  c(group_0, group_1)),]
+                                                  c(group_0, group_1)), ]
           boot_dat <- adjsurv$boot_data[which(adjsurv$boot_data$group %in%
-                                                c(group_0, group_1)),]
+                                                c(group_0, group_1)), ]
           fake_adjsurv <- list(adjsurv=observed_dat,
                                boot_data=boot_dat,
                                categorical=FALSE,
@@ -281,9 +281,9 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
         } else {
 
           observed_dat <- adjsurv$adjcif[which(adjsurv$adjcif$group %in%
-                                                 c(group_0, group_1)),]
+                                                 c(group_0, group_1)), ]
           boot_dat <- adjsurv$boot_data[which(adjsurv$boot_data$group %in%
-                                                c(group_0, group_1)),]
+                                                c(group_0, group_1)), ]
           fake_adjsurv <- list(adjcif=observed_dat,
                                boot_data=boot_dat,
                                categorical=FALSE,

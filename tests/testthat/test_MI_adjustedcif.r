@@ -264,7 +264,7 @@ test_that("adjusted_curve_diff, two treatments", {
 # create 3 treatments
 sim_dat$group2 <- 0
 sim_dat$group2[sim_dat$group==1] <-
-  sample(c(1, 2), size=nrow(sim_dat[sim_dat$group==1,]), replace=T)
+  sample(c(1, 2), size=nrow(sim_dat[sim_dat$group==1, ]), replace=T)
 sim_dat$group2 <- ifelse(sim_dat$group2==1, "Placebo",
                          ifelse(sim_dat$group2==2, "Chemo", "OP"))
 sim_dat$group2 <- factor(sim_dat$group2)
@@ -285,4 +285,3 @@ adjcif <- adjustedCurves::adjustedcif(data=imp,
 test_that("adjusted_curve_diff, three treatments", {
   expect_error(adjustedCurves::adjusted_curve_diff(adjcif, from=0, to=1), NA)
 })
-

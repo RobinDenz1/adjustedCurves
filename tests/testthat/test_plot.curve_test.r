@@ -45,7 +45,7 @@ test_that("plot.curve_test, 2 treatments, type='integral' + labs", {
 
 sim_dat$group <- as.character(sim_dat$group)
 sim_dat$group[sim_dat$group=="1"] <- sample(c(1, 2),
-                                      size=nrow(sim_dat[sim_dat$group=="1",]),
+                                      size=nrow(sim_dat[sim_dat$group=="1", ]),
                                       replace=TRUE)
 sim_dat$group <- factor(sim_dat$group)
 

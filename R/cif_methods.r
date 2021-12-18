@@ -127,7 +127,7 @@ cif_iptw_pseudo <- function(data, variable, ev_time, event, cause,
                             treatment_model, weight_method="ps",
                             stabilize=TRUE, trim=FALSE,
                             se_method="cochrane", ...) {
-  levs <- levels(data[,variable])
+  levs <- levels(data[, variable])
 
   # get weights
   if (is.numeric(treatment_model)) {
@@ -358,7 +358,7 @@ cif_matching <- function(data, variable, ev_time, event, cause, conf_int,
 
   # perform matching
   rr <- Matching::Match(Tr=data[, variable], X=ps_score, estimand="ATE", ...)
-  m_dat <- rbind(data[rr$index.treated,], data[rr$index.control,])
+  m_dat <- rbind(data[rr$index.treated, ], data[rr$index.control, ])
 
   # estimate cif
   plotdata <- cif_aalen_johansen(data=m_dat,
@@ -457,7 +457,7 @@ cif_direct_pseudo <- function(data, variable, ev_time, event, cause,
                       vtime=rep(times, rep(n, len)),
                       id=rep(1:n, len))
   for (col in outcome_vars) {
-    Sdata[,col] <- rep(data[,col], len)
+    Sdata[, col] <- rep(data[, col], len)
   }
 
   if (type_time=="factor") {
@@ -486,7 +486,7 @@ cif_direct_pseudo <- function(data, variable, ev_time, event, cause,
                               mean.link="cloglog", corstr="independence")
 
   # initialize outcome df list
-  levs <- levels(data[,variable])
+  levs <- levels(data[, variable])
   plotdata <- vector(mode="list", length=length(levs))
 
   # do direct adjustment
@@ -545,7 +545,7 @@ cif_aiptw_pseudo <- function(data, variable, ev_time, event, cause,
 
   outcome_vars <- outcome_vars[outcome_vars != variable]
   for (col in outcome_vars) {
-    Sdata[,col] <- rep(data[, col], len)
+    Sdata[, col] <- rep(data[, col], len)
   }
 
   if (type_time=="factor") {
@@ -696,8 +696,8 @@ cif_tmle <- function(data, variable, ev_time, event, cause, conf_int,
                                                    "survtmle")
     survtmle_ci <- confint.tp.survtmle(tpfit, level=conf_level)
 
-    plotdata$ci_lower <- c(survtmle_ci$`0 1`[,1], survtmle_ci$`1 1`[,1])
-    plotdata$ci_upper <- c(survtmle_ci$`0 1`[,2], survtmle_ci$`1 1`[,2])
+    plotdata$ci_lower <- c(survtmle_ci$`0 1`[, 1], survtmle_ci$`1 1`[, 1])
+    plotdata$ci_upper <- c(survtmle_ci$`0 1`[, 2], survtmle_ci$`1 1`[, 2])
 
   }
 

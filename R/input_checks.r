@@ -85,7 +85,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     }
 
     # Check if categorical should be allowed
-    levs_len <- length(unique(data[,variable]))
+    levs_len <- length(unique(data[, variable]))
     if (levs_len < 2) {
       stop("There have to be at least two groups in 'variable'.")
     } else if (levs_len > 2 & method %in% c("matching", "emp_lik", "tmle",
@@ -96,20 +96,20 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
 
     # Check if the group variable has the right format
     if (method %in% c("matching", "emp_lik", "tmle", "ostmle") &
-        !is.factor(data[,variable]) & !is.numeric(data[,variable])) {
+        !is.factor(data[, variable]) & !is.numeric(data[, variable])) {
       stop("The column in 'data' specified by 'variable' needs to be ",
            "a factor or a dichotomous integer variable if method='",
            method, "'.")
     }
 
     if (!method %in% c("matching", "emp_lik", "tmle", "ostmle") &
-        !is.factor(data[,variable])) {
+        !is.factor(data[, variable])) {
       stop("The column in 'data' specified by 'variable' needs to be ",
            "a factor variable if method='", method, "'.")
     }
 
     # Check if ev_time variable has the right format
-    if (!is.numeric(data[,ev_time])) {
+    if (!is.numeric(data[, ev_time])) {
       stop("The column in 'data' specified by 'ev_time' must be numeric.")
     } else if (!all(data[, ev_time] >= 0, na.rm=TRUE)) {
       stop("All values in the 'ev_time' variable must be >= 0.")
@@ -125,7 +125,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     }
 
     # No extrapolation
-    if (!is.null(times) && (max(times) > max(data[,ev_time]))) {
+    if (!is.null(times) && (max(times) > max(data[, ev_time]))) {
       stop("Values in '", ev_time,
            "' must be smaller than max(data[,ev_time]).",
            " No extrapolation allowed.")
@@ -152,19 +152,19 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
            " to 'censoring_model' instead of single models. See documentation.")
     }
     # warn user when there are missing values in event variable
-    if (anyNA(as.data.frame(data$data)[,event])) {
+    if (anyNA(as.data.frame(data$data)[, event])) {
       warning("Using multiple imputation with missing values in 'event'",
               " variable has not been tested yet. Use with caution.",
               call.=FALSE)
     }
     # warn user when there are missing values in ev_time variable
-    if (anyNA(as.data.frame(data$data)[,ev_time])) {
+    if (anyNA(as.data.frame(data$data)[, ev_time])) {
       warning("Using multiple imputation with missing values in 'ev_time'",
               " variable has not been tested yet. Use with caution.",
               call.=FALSE)
     }
     # warn user when there are missing values in group variable
-    if (anyNA(as.data.frame(data$data)[,variable])) {
+    if (anyNA(as.data.frame(data$data)[, variable])) {
       warning("Using multiple imputation with missing values in 'variable'",
               " has not been tested yet. Use with caution.",
               call.=FALSE)
@@ -240,7 +240,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
       }
 
       for (col in obj$treatment_vars) {
-        if (paste0(unique(data[,col]), collapse="") %in% c("10", "01")) {
+        if (paste0(unique(data[, col]), collapse="") %in% c("10", "01")) {
           warning("Dichotomous variables coded with 0 and 1 found in ",
                   " 'treatment_vars'. Consider recoding to -1 and 1",
                   " to avoid estimation problems.", call.=FALSE)
@@ -283,7 +283,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
            " and an 'outcome_model' of class 'pecRpart'.")
     # only allow certain models when there is no censoring
     } else if (inherits(obj$outcome_model, c("glm", "ols", "randomForest")) &&
-               !all(data[,event]==1)) {
+               !all(data[, event]==1)) {
       stop("'outcome_model' of class c('glm', 'ols', 'randomForest') are",
            " only allowed when there is no censoring.")
     # don't allow selectCox if no covariates are left after selection
@@ -320,8 +320,9 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     # no continuous confounders
     if (inherits(data, "data.frame")) {
       for (i in seq_len(length(obj$adjust_vars))) {
-        if (is.numeric(data[,obj$adjust_vars[i]]) &&
-            !all(floor(data[,obj$adjust_vars[i]])==data[,obj$adjust_vars[i]])) {
+        if (is.numeric(data[, obj$adjust_vars[i]]) &&
+            !all(floor(data[, obj$adjust_vars[i]])==
+                 data[, obj$adjust_vars[i]])) {
           stop("Variables in 'adjust_vars' have to be integer, factor or",
                " character variables. Continuous variables are not allowed",
                " when using method='", method, "'.")
@@ -647,27 +648,27 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
 
     # Check if the group variable has the right format
     if (method %in% c("matching", "tmle") &
-        !is.factor(data[,variable]) & !is.numeric(data[,variable])) {
+        !is.factor(data[, variable]) & !is.numeric(data[, variable])) {
       stop("The column in 'data' specified by 'variable' needs to be ",
            "a dichotomous integer variable or a factor variable if method='",
            method, "'.")
     }
 
     if (!method %in% c("matching", "tmle") &
-        !is.factor(data[,variable])) {
+        !is.factor(data[, variable])) {
       stop("The column in 'data' specified by 'variable' needs to be ",
            "a factor variable if method='", method, "'.")
     }
 
     # Check if ev_time variable has the right format
-    if (!is.numeric(data[,ev_time])) {
+    if (!is.numeric(data[, ev_time])) {
       stop("The column in 'data' specified by 'ev_time' must be numeric.")
     } else if (!all(data[, ev_time] >= 0, na.rm=TRUE)) {
       stop("All values in the 'ev_time' variable must be >= 0.")
     }
 
     # Check if event variable has the right format
-    if (!is.numeric(data[,event]) & !is.logical(data[,event])) {
+    if (!is.numeric(data[, event]) & !is.logical(data[, event])) {
       stop("The column in 'data' specified by 'event' must be numeric",
            " or logical.")
     } else if (all(data[, event] %in% c(0, 1, NA))) {
@@ -676,7 +677,7 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
     }
 
     # Check if categorical should be allowed
-    levs_len <- length(unique(data[,variable]))
+    levs_len <- length(unique(data[, variable]))
     if (levs_len < 2) {
       stop("There have to be at least two groups in 'variable'.")
     } else if (levs_len > 2 & method %in% c("matching", "tmle", "aiptw")) {
@@ -685,7 +686,7 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
     }
 
     # No extrapolation
-    if (!is.null(times) && (max(times) > max(data[,ev_time]))) {
+    if (!is.null(times) && (max(times) > max(data[, ev_time]))) {
       stop("Values in '", ev_time,
            "' must be smaller than max(data[,ev_time]).",
            " No extrapolation allowed.")
@@ -711,19 +712,19 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
            " to 'censoring_model' instead of single models. See documentation.")
     }
     # warn user when there are missing values in event variable
-    if (anyNA(as.data.frame(data$data)[,event])) {
+    if (anyNA(as.data.frame(data$data)[, event])) {
       warning("Using multiple imputation with missing values in 'event'",
               " variable has not been tested yet. Use with caution.",
               call.=FALSE)
     }
     # warn user when there are missing values in ev_time variable
-    if (anyNA(as.data.frame(data$data)[,ev_time])) {
+    if (anyNA(as.data.frame(data$data)[, ev_time])) {
       warning("Using multiple imputation with missing values in 'ev_time'",
               " variable has not been tested yet. Use with caution.",
               call.=FALSE)
     }
     # warn user when there are missing values in group variable
-    if (anyNA(as.data.frame(data$data)[,variable])) {
+    if (anyNA(as.data.frame(data$data)[, variable])) {
       warning("Using multiple imputation with missing values in 'variable'",
               " has not been tested yet. Use with caution.",
               call.=FALSE)

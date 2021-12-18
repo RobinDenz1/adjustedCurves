@@ -60,7 +60,7 @@ surv_km <- function(data, variable, ev_time, event, conf_int,
   # ensure that it starts with 0
   } else if (!0 %in% plotdata$time) {
     if (conf_int) {
-      levs <- unique(data[,variable])
+      levs <- unique(data[, variable])
 
       row_0 <- data.frame(time=0, group=NA, surv=1, se=0, ci_lower=1,
                           ci_upper=1)
@@ -85,7 +85,7 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
                          weight_method="ps", stabilize=TRUE,
                          trim=FALSE, ...) {
 
-  levs <- levels(data[,variable])
+  levs <- levels(data[, variable])
 
   # get weights
   if (is.numeric(treatment_model)) {
@@ -101,15 +101,15 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
   plotdata <- vector(mode="list", length=length(levs))
   for (i in seq_len(length(levs))){
 
-    dat_group <- data[data[,variable]==levs[i],]
-    weights_group <- weights[data[,variable]==levs[i]]
+    dat_group <- data[data[, variable]==levs[i], ]
+    weights_group <- weights[data[, variable]==levs[i]]
 
     # calculate weighted risk set and events
-    tj <- c(0, sort(unique(dat_group[,ev_time][dat_group[,event]==1])))
-    dj <- vapply(tj, function(x){sum(weights_group[dat_group[,ev_time]==x &
-                                                   dat_group[,event]==1])},
+    tj <- c(0, sort(unique(dat_group[, ev_time][dat_group[, event]==1])))
+    dj <- vapply(tj, function(x){sum(weights_group[dat_group[, ev_time]==x &
+                                                   dat_group[, event]==1])},
                  FUN.VALUE=numeric(1))
-    yj <- vapply(tj, function(x){sum(weights_group[dat_group[,ev_time]>=x])},
+    yj <- vapply(tj, function(x){sum(weights_group[dat_group[, ev_time]>=x])},
                  FUN.VALUE=numeric(1))
     st <- cumprod(1 - (dj / yj))
 
@@ -120,7 +120,7 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
 
       # variance calculation based of Xie et al.
       m <- vapply(tj, FUN.VALUE=numeric(1),
-                  function(x){sum((weights_group[dat_group[,ev_time]>=x])^2)})
+                  function(x){sum((weights_group[dat_group[, ev_time]>=x])^2)})
       mj <- ((yj^2) / m)
       fracj <- dj / (mj * (yj - dj))
       fracj_cumsum <- cumsum(fracj)
@@ -220,7 +220,7 @@ surv_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
                              weight_method="ps", stabilize=TRUE,
                              trim=FALSE, se_method="cochrane",
                              censoring_vars=NULL, ipcw_method="binder", ...) {
-  levs <- levels(data[,variable])
+  levs <- levels(data[, variable])
 
   # get weights
   if (is.numeric(treatment_model)) {
@@ -242,12 +242,12 @@ surv_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
                              ipcw.method=ipcw_method)
 
   # take weighted mean
-  levs <- levels(data[,variable])
+  levs <- levels(data[, variable])
   plotdata <- vector(mode="list", length=length(levs))
   for (i in seq_len(length(levs))) {
-    surv_lev <- pseudo[data[,variable]==levs[i],]
+    surv_lev <- pseudo[data[, variable]==levs[i], ]
     surv_lev <- apply(surv_lev, 2, stats::weighted.mean,
-                      w=weights[data[,variable]==levs[i]],
+                      w=weights[data[, variable]==levs[i]],
                       na.rm=TRUE)
 
     data_temp <- data.frame(time=times, surv=surv_lev, group=levs[i])
@@ -255,10 +255,10 @@ surv_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
     if (conf_int) {
       # approximate variance by calculating a
       # weighted version of the variance
-      surv_lev <- pseudo[data[,variable]==levs[i],]
+      surv_lev <- pseudo[data[, variable]==levs[i], ]
 
       surv_sd <- apply(surv_lev, 2, weighted.var.se,
-                       w=weights[data[,variable]==levs[i]],
+                       w=weights[data[, variable]==levs[i]],
                        na.rm=TRUE, se_method=se_method)
       data_temp$se <- sqrt(surv_sd)
 
@@ -339,13 +339,13 @@ surv_g_comp <- function(outcome_model, data, variable, times,
                         predict_fun, ...) {
 
   # perform G-Computation
-  levs <- levels(data[,variable])
+  levs <- levels(data[, variable])
   data_temp <- data
   plotdata <- vector(mode="list", length=length(levs))
   for (i in seq_len(length(levs))) {
 
     # set variable to one level each
-    data_temp[,variable] <- factor(levs[i], levels=levs)
+    data_temp[, variable] <- factor(levs[i], levels=levs)
 
     # use user-supplied custom prediction function
     if (!is.null(predict_fun)) {
@@ -446,11 +446,11 @@ surv_matching <- function(data, variable, ev_time, event, conf_int=FALSE,
                           gtol=0.001, ...) {
 
   # if it's a factor, turn it into numeric
-  if (is.factor(data[,variable])) {
-    levs <- levels(data[,variable])
-    data[,variable] <- ifelse(data[,variable]==levs[1], 0, 1)
+  if (is.factor(data[, variable])) {
+    levs <- levels(data[, variable])
+    data[, variable] <- ifelse(data[,variable]==levs[1], 0, 1)
   } else {
-    levs <- sort(unique(data[,variable]))
+    levs <- sort(unique(data[, variable]))
   }
 
   if (is.numeric(treatment_model)) {
@@ -466,7 +466,7 @@ surv_matching <- function(data, variable, ev_time, event, conf_int=FALSE,
 
   # perform matching
   rr <- Matching::Match(Tr=data[, variable], X=ps_score, estimand="ATE", ...)
-  m_dat <- rbind(data[rr$index.treated,], data[rr$index.control,])
+  m_dat <- rbind(data[rr$index.treated, ], data[rr$index.control, ])
 
   weights <- rr$weights
   m_dat$match_weights <- c(weights, weights)
@@ -561,7 +561,7 @@ surv_direct_pseudo <- function(data, variable, ev_time, event,
   # some constants
   len <- length(times)
   n <- nrow(data)
-  group <- data[,variable]
+  group <- data[, variable]
 
   # create data for geese
   Sdata <- data.frame(yi=1 - c(pseudo),
@@ -569,7 +569,7 @@ surv_direct_pseudo <- function(data, variable, ev_time, event,
                       vtime=rep(times, rep(n, len)),
                       id=rep(1:n, len))
   for (col in outcome_vars) {
-    Sdata[,col] <- rep(data[,col], len)
+    Sdata[, col] <- rep(data[, col], len)
   }
 
   if (type_time=="factor") {
@@ -593,7 +593,7 @@ surv_direct_pseudo <- function(data, variable, ev_time, event,
   }
 
   # remove rows where pseudo-values are NA for geese
-  Sdata_fit <- Sdata[!is.na(Sdata$yi),]
+  Sdata_fit <- Sdata[!is.na(Sdata$yi), ]
 
   # call geese
   geese_mod <- geepack::geese(stats::as.formula(geese_formula), scale.fix=TRUE,
@@ -602,7 +602,7 @@ surv_direct_pseudo <- function(data, variable, ev_time, event,
                               corstr="independence")
 
   # initialize outcome df list
-  levs <- levels(data[,variable])
+  levs <- levels(data[, variable])
   plotdata <- vector(mode="list", length=length(levs))
 
   # do direct adjustment
@@ -638,7 +638,7 @@ surv_aiptw_pseudo <- function(data, variable, ev_time, event, conf_int,
   # some constants
   len <- length(times)
   n <- nrow(data)
-  group <- data[,variable]
+  group <- data[, variable]
 
   if (is.numeric(treatment_model)) {
     ps_score <- treatment_model
@@ -664,7 +664,7 @@ surv_aiptw_pseudo <- function(data, variable, ev_time, event, conf_int,
 
   outcome_vars <- outcome_vars[outcome_vars != variable]
   for (col in outcome_vars) {
-    Sdata[,col] <- rep(data[,col], len)
+    Sdata[, col] <- rep(data[, col], len)
   }
 
   if (type_time=="factor") {
@@ -680,7 +680,7 @@ surv_aiptw_pseudo <- function(data, variable, ev_time, event, conf_int,
   }
 
   # remove rows where pseudo-values are NA for geese
-  Sdata_fit <- Sdata[!is.na(Sdata$yi),]
+  Sdata_fit <- Sdata[!is.na(Sdata$yi), ]
 
   # call geese
   geese_mod <- geepack::geese(stats::as.formula(geese_formula), scale.fix=TRUE,
@@ -689,7 +689,7 @@ surv_aiptw_pseudo <- function(data, variable, ev_time, event, conf_int,
                               corstr="independence")
 
   # get direct adjustment estimates
-  levs <- levels(data[,variable])
+  levs <- levels(data[, variable])
   plotdata <- vector(mode="list", length=length(levs))
 
   for (i in seq_len(length(levs))) {
@@ -702,15 +702,15 @@ surv_aiptw_pseudo <- function(data, variable, ev_time, event, conf_int,
     # augment estimates using propensity score
     if (length(levs) > 2) {
       group_ind <- ifelse(group==levs[i], 1, 0)
-      ps_score_lev <- ps_score[,levs[i]]
+      ps_score_lev <- ps_score[, levs[i]]
 
       dr <- (pseudo*group_ind-(group_ind-ps_score_lev)*m)/ps_score_lev
     # if binary, use equation from the paper directly
     } else if (i == 1) {
-      group <- ifelse(data[,variable]==levs[1], 0, 1)
+      group <- ifelse(data[, variable]==levs[1], 0, 1)
       dr <- (pseudo*(1-group)+(group-ps_score)*m)/(1-ps_score)
     } else if (i == 2) {
-      group <- ifelse(data[,variable]==levs[1], 0, 1)
+      group <- ifelse(data[, variable]==levs[1], 0, 1)
       dr <- (pseudo*group-(group-ps_score)*m)/ps_score
     }
 
@@ -754,11 +754,11 @@ surv_emp_lik <- function(data, variable, ev_time, event, conf_int=FALSE,
                          max_iter=100, newton_tol=1.0e-06) {
 
   # if it's a factor, turn it into numeric
-  if (is.factor(data[,variable])) {
-    levs <- levels(data[,variable])
-    data[,variable] <- ifelse(data[,variable]==levs[1], 0, 1)
+  if (is.factor(data[, variable])) {
+    levs <- levels(data[, variable])
+    data[, variable] <- ifelse(data[, variable]==levs[1], 0, 1)
   } else {
-    levs <- sort(unique(data[,variable]))
+    levs <- sort(unique(data[, variable]))
   }
 
   el_0 <- el.est(y=data[, ev_time],
@@ -805,20 +805,20 @@ surv_tmle <- function(data, variable, ev_time, event, conf_int,
                       ...) {
 
   # if it's a factor, turn it into numeric
-  if (is.factor(data[,variable])) {
-    levs <- levels(data[,variable])
-    data[,variable] <- ifelse(data[,variable]==levs[1], 0, 1)
+  if (is.factor(data[, variable])) {
+    levs <- levels(data[, variable])
+    data[,variable] <- ifelse(data[, variable]==levs[1], 0, 1)
   } else {
-    levs <- unique(data[,variable])
+    levs <- unique(data[, variable])
   }
 
   # gather needed data
   if (is.null(adjust_vars)) {
     all_covars <- colnames(data)
     all_covars <- all_covars[!all_covars %in% c(variable, ev_time, event)]
-    adjust_vars <- data[,all_covars]
+    adjust_vars <- data[, all_covars]
   } else {
-    adjust_vars <- data[,adjust_vars]
+    adjust_vars <- data[, adjust_vars]
   }
 
   # TMLE fit
@@ -870,8 +870,8 @@ surv_tmle <- function(data, variable, ev_time, event, conf_int,
                                                    "survtmle")
     survtmle_ci <- confint.tp.survtmle(tpfit, level=conf_level)
 
-    plotdata$ci_lower <- 1 - c(survtmle_ci$`0 1`[,1], survtmle_ci$`1 1`[,1])
-    plotdata$ci_upper <- 1 - c(survtmle_ci$`0 1`[,2], survtmle_ci$`1 1`[,2])
+    plotdata$ci_lower <- 1 - c(survtmle_ci$`0 1`[, 1], survtmle_ci$`1 1`[, 1])
+    plotdata$ci_upper <- 1 - c(survtmle_ci$`0 1`[, 2], survtmle_ci$`1 1`[, 2])
 
   }
 
@@ -893,11 +893,11 @@ surv_ostmle <- function(data, variable, ev_time, event, conf_int,
                         gtol=1e-3) {
 
   # if it's a factor, turn it into numeric
-  if (is.factor(data[,variable])) {
-    levs <- levels(data[,variable])
-    data[,variable] <- ifelse(data[,variable]==levs[1], 0, 1)
+  if (is.factor(data[, variable])) {
+    levs <- levels(data[, variable])
+    data[, variable] <- ifelse(data[, variable]==levs[1], 0, 1)
   } else {
-    levs <- unique(data[,variable])
+    levs <- unique(data[, variable])
   }
 
   # gather needed data
@@ -910,7 +910,7 @@ surv_ostmle <- function(data, variable, ev_time, event, conf_int,
   }
 
   # time point grid
-  k_grid <- 1:max(data[,ev_time])
+  k_grid <- 1:max(data[, ev_time])
 
   # create initial fit object
   sl_fit <- initial_sl_fit(
@@ -918,7 +918,7 @@ surv_ostmle <- function(data, variable, ev_time, event, conf_int,
     Delta=data[, event],
     A=data[, variable],
     W=adjust_vars,
-    t_max=max(data[,ev_time]),
+    t_max=max(data[, ev_time]),
     sl_treatment=SL.trt,
     sl_censoring=SL.ctime,
     sl_failure=SL.ftime,
@@ -978,7 +978,7 @@ surv_ostmle <- function(data, variable, ev_time, event, conf_int,
                          group=c(rep(levs[1], length(k_grid)),
                                  rep(levs[2], length(k_grid))))
   # keep only time points in times
-  plotdata <- plotdata[which(plotdata$time %in% times),]
+  plotdata <- plotdata[which(plotdata$time %in% times), ]
 
   if (conf_int) {
 
@@ -1042,11 +1042,11 @@ surv_strat_cupples <- function(data, variable, ev_time, event,
   # additional variables needed
   # NOTE: This code assumes that there is no column named .ALL or .COVARS
   #       and that there are no tabs in the column names
-  data$.ALL <- interaction(data[,c(variable, adjust_vars)], sep="\t")
+  data$.ALL <- interaction(data[, c(variable, adjust_vars)], sep="\t")
   if (is.null(reference)) {
     reference <- data
   }
-  reference$.COVARS <- interaction(reference[,adjust_vars], sep="\t")
+  reference$.COVARS <- interaction(reference[, adjust_vars], sep="\t")
 
   # Kaplan-Meier survival curve for each possible strata at
   # every event time
@@ -1080,7 +1080,7 @@ surv_strat_cupples <- function(data, variable, ev_time, event,
 
   # remove NAs
   if (na.rm) {
-    plotdata <- plotdata[!is.na(plotdata$surv),]
+    plotdata <- plotdata[!is.na(plotdata$surv), ]
   }
 
   output <- list(plotdata=as.data.frame(plotdata))
@@ -1104,43 +1104,43 @@ surv_strat_amato <- function(data, variable, ev_time, event,
   if (is.null(reference)) {
     reference <- data
   }
-  reference$.COVARS <- interaction(reference[,adjust_vars])
+  reference$.COVARS <- interaction(reference[, adjust_vars])
   Pjs <- prop.table(table(reference$.COVARS))
 
   # also calculate strata variable in data
-  data$.COVARS <- interaction(data[,adjust_vars])
+  data$.COVARS <- interaction(data[, adjust_vars])
 
-  levs <- levels(data[,variable])
+  levs <- levels(data[, variable])
   levs_adjust_var <- levels(data$.COVARS)
   out <- list()
   for (i in seq_len(length(levs))) {
 
     # data for treatment i
-    dat_I <- data[data[,variable]==levs[i],]
-    times <- c(0, sort(unique(dat_I[,ev_time][dat_I[,event]==1])))
+    dat_I <- data[data[, variable]==levs[i], ]
+    times <- c(0, sort(unique(dat_I[, ev_time][dat_I[, event]==1])))
 
     for (j in seq_len(length(levs_adjust_var))) {
 
       # data for treatment i and only strata j
-      dat_IJ <- dat_I[dat_I$.COVARS==levs_adjust_var[j],]
+      dat_IJ <- dat_I[dat_I$.COVARS==levs_adjust_var[j], ]
 
       # weights for these individuals
       ajn <- nrow(dat_I) * Pjs[levs_adjust_var[j]] / nrow(dat_IJ)
 
       # people observed to fail
-      Ndj <- vapply(times, FUN=function(x) {sum(dat_IJ[,ev_time] <= x &
-                                                dat_IJ[,event]==1)},
+      Ndj <- vapply(times, FUN=function(x) {sum(dat_IJ[, ev_time] <= x &
+                                                dat_IJ[, event]==1)},
                     FUN.VALUE=numeric(1))
-      delta_Ndj <- vapply(times, FUN=function(x) {sum(dat_IJ[,ev_time] == x &
-                                                      dat_IJ[,event]==1)},
+      delta_Ndj <- vapply(times, FUN=function(x) {sum(dat_IJ[, ev_time] == x &
+                                                      dat_IJ[, event]==1)},
                           FUN.VALUE=numeric(1))
 
       # people censored
-      Ncj <- vapply(times, FUN=function(x) {sum(dat_IJ[,ev_time] <= x &
-                                                dat_IJ[,event]==0)},
+      Ncj <- vapply(times, FUN=function(x) {sum(dat_IJ[, ev_time] <= x &
+                                                dat_IJ[, event]==0)},
                     FUN.VALUE=numeric(1))
       # people at risk
-      Nrj <- vapply(times, FUN=function(x) {sum(dat_IJ[,ev_time] >= x)},
+      Nrj <- vapply(times, FUN=function(x) {sum(dat_IJ[, ev_time] >= x)},
                     FUN.VALUE=numeric(1))
 
       # put together
@@ -1199,40 +1199,40 @@ surv_strat_gregory_nieto <- function(data, variable, ev_time, event,
   # silence checks
   . <- time <- group <- frac <- est_var <- wji <- var_j <- NULL
 
-  data$.COVARS <- interaction(data[,adjust_vars])
+  data$.COVARS <- interaction(data[, adjust_vars])
   times_input <- times
 
   # needed levels
-  levs <- levels(data[,variable])
+  levs <- levels(data[, variable])
   levs_adjust_var <- levels(data$.COVARS)
 
   out <- list()
   for (i in seq_len(length(levs))) {
 
-    dat_X <- data[data[,variable]==levs[i],]
+    dat_X <- data[data[, variable]==levs[i], ]
 
     # 1.)
-    tj <- c(0, sort(unique(dat_X[,ev_time][dat_X[,event]==1])))
+    tj <- c(0, sort(unique(dat_X[, ev_time][dat_X[, event]==1])))
 
     for (j in seq_len(length(levs_adjust_var))) {
 
       # data at X, Z
-      dat_XZ <- data[data[,variable]==levs[i] &
-                       data$.COVARS==levs_adjust_var[j],]
+      dat_XZ <- data[data[, variable]==levs[i] &
+                       data$.COVARS==levs_adjust_var[j], ]
 
       # 2.)
-      nxzj <- vapply(tj, function(x){sum(dat_XZ[,ev_time]>=x)},
+      nxzj <- vapply(tj, function(x) {sum(dat_XZ[, ev_time]>=x)},
                      FUN.VALUE=numeric(1))
-      axzj <- vapply(tj, function(x){sum(dat_XZ[,ev_time]==x &
-                                           dat_XZ[,event]==1)},
+      axzj <- vapply(tj, function(x) {sum(dat_XZ[, ev_time]==x &
+                                           dat_XZ[, event]==1)},
                      FUN.VALUE=numeric(1))
       # 3.)
       qxzj <- axzj / nxzj
 
       # 4.) but modified, calculating n at risk in strata overall instead
       #     of using the control group
-      dat_Z <- data[data$.COVARS==levs_adjust_var[j],]
-      nz <- vapply(tj, function(x){sum(dat_Z[,ev_time]>=x)},
+      dat_Z <- data[data$.COVARS==levs_adjust_var[j], ]
+      nz <- vapply(tj, function(x) {sum(dat_Z[, ev_time]>=x)},
                    FUN.VALUE=numeric(1))
 
       out[[length(out)+1]] <- data.frame(time=tj, nxzj=nxzj, axzj=axzj,
@@ -1245,8 +1245,8 @@ surv_strat_gregory_nieto <- function(data, variable, ev_time, event,
   # appendix 1
   if (conf_int) {
     # calculate total nj (n at risk) in full data
-    tj_overall <- c(0, sort(unique(data[,ev_time][data[,event]==1])))
-    nj <- vapply(tj_overall, function(x){sum(data[,ev_time]>=x)},
+    tj_overall <- c(0, sort(unique(data[, ev_time][data[, event]==1])))
+    nj <- vapply(tj_overall, function(x) {sum(data[, ev_time]>=x)},
                  FUN.VALUE=numeric(1))
     dat_nj <- data.frame(time=tj_overall, nj=nj)
 
@@ -1262,7 +1262,7 @@ surv_strat_gregory_nieto <- function(data, variable, ev_time, event,
       dplyr::mutate(sum_wq=sum(wji * qxzj))
 
     # stratum specific variance
-    out$var_j <- out$wji^2 * ( ((1 - out$qxzj)*out$qxzj) / out$nxzj ) *
+    out$var_j <- out$wji^2 * (((1 - out$qxzj)*out$qxzj) / out$nxzj) *
       (1 / (1 - out$sum_wq)^2)
   } else {
     out$var_j <- 0
@@ -1271,7 +1271,7 @@ surv_strat_gregory_nieto <- function(data, variable, ev_time, event,
   # 5.) + 6.) and variance from appendix
   plotdata <- out %>%
     dplyr::group_by(., time, group) %>%
-    dplyr::summarise(frac=(sum(qxzj * nz)) / sum(nz),
+    dplyr::summarise(frac= (sum(qxzj * nz)) / sum(nz),
                      est_var=sum(var_j),
                      .groups="drop_last") %>%
     dplyr::group_by(., group) %>%
@@ -1299,7 +1299,7 @@ surv_strat_gregory_nieto <- function(data, variable, ev_time, event,
 
   # remove NAs
   if (na.rm) {
-    plotdata <- plotdata[!is.na(plotdata$surv),]
+    plotdata <- plotdata[!is.na(plotdata$surv), ]
   }
 
   output <- list(plotdata=plotdata)

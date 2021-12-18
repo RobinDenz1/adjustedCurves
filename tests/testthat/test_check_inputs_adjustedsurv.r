@@ -790,19 +790,19 @@ test_that("adjust_vars not in data", {
 
 test_that("invalid reference data", {
   expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
-                                             variable="group",
-                                             ev_time="time",
-                                             event="event",
-                                             method="strat_amato",
-                                             conf_int=FALSE,
-                                             conf_level=0.95,
-                                             times=NULL,
-                                             bootstrap=TRUE,
-                                             n_boot=2,
-                                             na.action="na.omit",
-                                             clean_data=TRUE,
-                                             adjust_vars="x1",
-                                             reference=sim_dat[,c("x2", "x3")]),
+                                            variable="group",
+                                            ev_time="time",
+                                            event="event",
+                                            method="strat_amato",
+                                            conf_int=FALSE,
+                                            conf_level=0.95,
+                                            times=NULL,
+                                            bootstrap=TRUE,
+                                            n_boot=2,
+                                            na.action="na.omit",
+                                            clean_data=TRUE,
+                                            adjust_vars="x1",
+                                            reference=sim_dat[, c("x2", "x3")]),
                paste0("If a 'reference' data.frame is supplied, it ",
                       "needs to contain all variables listed ",
                       "in 'adjust_vars'."))
@@ -996,4 +996,3 @@ test_that("warning with missing values in event", {
                         "'event' variable has not been tested yet. ",
                         "Use with caution."))
 })
-

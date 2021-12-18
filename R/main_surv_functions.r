@@ -61,10 +61,10 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
     }
 
     # levels of the group variable
-    if (is.numeric(data$data[,variable])) {
-      levs <- unique(data$data[,variable])
+    if (is.numeric(data$data[, variable])) {
+      levs <- unique(data$data[, variable])
     } else {
-      levs <- levels(data$data[,variable])
+      levs <- levels(data$data[, variable])
     }
 
     # transform to long format
@@ -100,7 +100,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
     out <- vector(mode="list", length=max(mids$.imp))
     for (i in seq_len(max(mids$.imp))) {
 
-      imp_data <- mids[mids$.imp==i,]
+      imp_data <- mids[mids$.imp==i, ]
 
       # NOTE: need to add the data to the model object or ate() fails
       if (!is.null(treatment_models) &
@@ -221,7 +221,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
     }
 
     # define those to remove Notes in devtools::check()
-    . <- i <- time <- group <- surv_b <- surv <- se <- NULL
+    . <- i <- time <- group <- surv <- se <- NULL
 
     # get event specific times
     times_input <- times
@@ -358,7 +358,7 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
 
   # draw sample
   indices <- sample(x=rownames(data), size=nrow(data), replace=TRUE)
-  boot_samp <- data[indices,]
+  boot_samp <- data[indices, ]
 
   # perform na.action
   if (is.function(na.action)) {
@@ -446,7 +446,7 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
   plotdata$group <- factor(plotdata$group)
 
   # shortcut to only show curves up to a certain time
-  plotdata <- plotdata[which(plotdata$time <= max_t),]
+  plotdata <- plotdata[which(plotdata$time <= max_t), ]
 
   # in some methods estimates can be outside the 0, 1 bounds,
   # if specified set those to 0 or 1 respectively
@@ -463,7 +463,7 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
          " values in the final survival estimates.")
   } else if (iso_reg) {
     for (lev in levels(plotdata$group)) {
-      temp <- plotdata[plotdata$group==lev,]
+      temp <- plotdata[plotdata$group==lev, ]
       # to surv estimates
       new <- rev(stats::isoreg(rev(temp$surv))$yf)
       plotdata$surv[plotdata$group==lev] <- new
@@ -591,7 +591,7 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
     cens_dat <- vector(mode="list", length=length(levs))
     for (i in seq_len(length(levs))) {
 
-      x$data <- x$data[which(x$data[,x$call$ev_time] <= max_t),]
+      x$data <- x$data[which(x$data[, x$call$ev_time] <= max_t), ]
       cens_times <- sort(unique(x$data[, x$call$ev_time][
         x$data[, x$call$event]==0 & x$data[, x$call$variable]==levs[i]]))
       adjsurv_temp <- plotdata[plotdata$group==levs[i], ]
@@ -602,7 +602,7 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
 
     }
     cens_dat <- dplyr::bind_rows(cens_dat)
-    cens_dat <- cens_dat[!is.na(cens_dat$surv) ,]
+    cens_dat <- cens_dat[!is.na(cens_dat$surv), ]
 
     cens_map <- ggplot2::aes(x=.data$time,
                              y=.data$surv-(censoring_ind_width/2),
@@ -702,7 +702,7 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
     }
 
     # remove if missing
-    median_surv <- median_surv[!is.na(median_surv$median_surv),]
+    median_surv <- median_surv[!is.na(median_surv$median_surv), ]
 
     median_surv$vert_x <- 0
     median_surv$vert_y <- 0.5

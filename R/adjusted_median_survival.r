@@ -20,7 +20,7 @@ adjusted_median_survival <- function(adjsurv, use_boot=FALSE,
                                      verbose=TRUE) {
 
   # define those to remove Notes in devtools::check()
-  . <- i <- time <- group <- median_surv_i <- boot <- surv <- NULL
+  . <- time <- group <- surv <- NULL
 
   if (use_boot & is.null(adjsurv$boot_adjsurv)) {
     warning("Cannot use bootstrapped estimates as they were not estimated.",

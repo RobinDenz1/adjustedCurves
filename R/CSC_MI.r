@@ -27,7 +27,7 @@ CSC_MI <- function(mids, formula, ...) {
   outc_mod <- list()
   for (i in seq_len(max(imp_long$.imp))) {
     mod <- riskRegression::CSC(formula,
-                               data=imp_long[imp_long$.imp==i,],
+                               data=imp_long[imp_long$.imp==i, ],
                                ...)
     mod$call$formula <- formula
     outc_mod[[i]] <- mod

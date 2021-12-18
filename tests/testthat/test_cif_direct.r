@@ -207,8 +207,8 @@ test_that("prodlim, 2 treatments, with boot", {
 set.seed(34)
 sim_dat <- adjustedCurves::sim_confounded_surv(n=160)
 sim_dat$group[sim_dat$group==1] <- sample(c(1, 2),
-                                          size=nrow(sim_dat[sim_dat$group==1,]),
-                                          replace=T)
+                                        size=nrow(sim_dat[sim_dat$group==1, ]),
+                                        replace=T)
 sim_dat$group <- as.factor(sim_dat$group)
 sim_dat$event[sim_dat$event==1] <- sample(c(1, 2), size=sum(sim_dat$event),
                                           replace=TRUE)

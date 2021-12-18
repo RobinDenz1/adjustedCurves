@@ -157,13 +157,13 @@ sim_confounded_surv <- function(n=500, lcovars=NULL, outcome_betas=NULL,
   covars <- data.frame(id=1:n)
   for (col in names(lcovars)) {
     if (lcovars[[col]][1]=="rnorm") {
-      covars[,col] <- stats::rnorm(n, as.numeric(lcovars[[col]][2]),
+      covars[, col] <- stats::rnorm(n, as.numeric(lcovars[[col]][2]),
                                    as.numeric(lcovars[[col]][3]))
     } else if (lcovars[[col]][1]=="runif") {
-      covars[,col] <- stats::runif(n, as.numeric(lcovars[[col]][2]),
+      covars[, col] <- stats::runif(n, as.numeric(lcovars[[col]][2]),
                                    as.numeric(lcovars[[col]][3]))
     } else if (lcovars[[col]][1]=="rbinom") {
-      covars[,col] <- stats::rbinom(n, as.numeric(lcovars[[col]][2]),
+      covars[, col] <- stats::rbinom(n, as.numeric(lcovars[[col]][2]),
                                     as.numeric(lcovars[[col]][3]))
     }
   }
@@ -171,10 +171,10 @@ sim_confounded_surv <- function(n=500, lcovars=NULL, outcome_betas=NULL,
 
   # assign binary treatment using logistic regression
   if (length(treatment_betas)==1) {
-    group_p <- intercept + (treatment_betas * covars[,names(treatment_betas)])
+    group_p <- intercept + (treatment_betas * covars[, names(treatment_betas)])
   } else {
     group_p <- intercept + rowSums(treatment_betas *
-                                     covars[,names(treatment_betas)])
+                                     covars[, names(treatment_betas)])
   }
   group_p <- 1/(1 + exp(-group_p))
 
@@ -251,13 +251,13 @@ sim_confounded_crisk <- function(n=500, lcovars=NULL, outcome_betas=NULL,
   covars <- data.frame(id=1:n)
   for (col in names(lcovars)) {
     if (lcovars[[col]][1]=="rnorm") {
-      covars[,col] <- stats::rnorm(n, as.numeric(lcovars[[col]][2]),
+      covars[, col] <- stats::rnorm(n, as.numeric(lcovars[[col]][2]),
                                    as.numeric(lcovars[[col]][3]))
     } else if (lcovars[[col]][1]=="runif") {
-      covars[,col] <- stats::runif(n, as.numeric(lcovars[[col]][2]),
+      covars[, col] <- stats::runif(n, as.numeric(lcovars[[col]][2]),
                                    as.numeric(lcovars[[col]][3]))
     } else if (lcovars[[col]][1]=="rbinom") {
-      covars[,col] <- stats::rbinom(n, as.numeric(lcovars[[col]][2]),
+      covars[, col] <- stats::rbinom(n, as.numeric(lcovars[[col]][2]),
                                     as.numeric(lcovars[[col]][3]))
     }
   }
@@ -265,10 +265,10 @@ sim_confounded_crisk <- function(n=500, lcovars=NULL, outcome_betas=NULL,
 
   # assign binary treatment using logistic regression
   if (length(treatment_betas)==1) {
-    group_p <- intercept + (treatment_betas * covars[,names(treatment_betas)])
+    group_p <- intercept + (treatment_betas * covars[, names(treatment_betas)])
   } else {
     group_p <- intercept + rowSums(treatment_betas *
-                                     covars[,names(treatment_betas)])
+                                     covars[, names(treatment_betas)])
   }
   group_p <- 1/(1 + exp(-group_p))
 

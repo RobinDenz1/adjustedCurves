@@ -77,8 +77,8 @@ test_that("2 treatments, no conf_int, no boot, with times, factor time", {
 
 sim_dat <- adjustedCurves::sim_confounded_surv(n=50)
 sim_dat$group[sim_dat$group==1] <- sample(c(1, 2),
-                                          size=nrow(sim_dat[sim_dat$group==1,]),
-                                          replace=TRUE)
+                                        size=nrow(sim_dat[sim_dat$group==1, ]),
+                                        replace=TRUE)
 sim_dat$group <- as.factor(sim_dat$group)
 sim_dat$event[sim_dat$event==1] <- sample(c(1, 2), size=sum(sim_dat$event),
                                           replace=TRUE)

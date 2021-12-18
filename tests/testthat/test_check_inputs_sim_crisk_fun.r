@@ -1,5 +1,7 @@
 
-custom_cens <- function(n){stats::rweibull(n, 1, 2)}
+custom_cens <- function(n) {
+  stats::rweibull(n, 1, 2)
+}
 
 outcome_betas <- list(c(0.03, 0.4),
                       c(1.1, 0.8),

@@ -131,4 +131,3 @@ test_that("2 treatments, no conf_int, no boot, with times, gtol", {
                                              times=c(1, 2, 3, 4),
                                              gtol=0.1)), NA)
 })
-

@@ -84,7 +84,7 @@ test_that("3 ways of iptw calculation are equal", {
 
   # calculate iptw curves in all 3 ways
   ps <- predict(mod, newdata=sim_dat, type="response")
-  weights <- ifelse(sim_dat$group=="Treatment", 1/ps, 1/(1-ps))
+  weights <- ifelse(sim_dat$group=="Treatment", 1/ps, 1/ (1-ps))
 
   adj_w <- adjustedsurv(data=sim_dat,
                         variable="group",
@@ -147,8 +147,8 @@ test_that("3 ways of iptw calculation are equal", {
 
 sim_dat <- adjustedCurves::sim_confounded_surv(n=50)
 sim_dat$group[sim_dat$group==1] <- sample(c(1, 2),
-                                          size=nrow(sim_dat[sim_dat$group==1,]),
-                                          replace=TRUE)
+                                        size=nrow(sim_dat[sim_dat$group==1, ]),
+                                        replace=TRUE)
 sim_dat$group <- as.factor(sim_dat$group)
 
 mod <- nnet::multinom(group ~ x1 + x2 + x3 + x4 + x5 + x6, data=sim_dat)
@@ -222,7 +222,3 @@ test_that("> 2 treatments, no conf_int, with user-weights", {
                                                                   max=2))
                , NA)
 })
-
-
-
-

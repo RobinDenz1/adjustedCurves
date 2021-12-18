@@ -91,7 +91,7 @@ test_that("3 ways of iptw calculation are equal", {
 
   # calculate iptw curves in all 3 ways
   ps <- predict(mod, newdata=sim_dat, type="response")
-  weights <- ifelse(sim_dat$group=="Treatment", 1/ps, 1/(1-ps))
+  weights <- ifelse(sim_dat$group=="Treatment", 1/ps, 1/ (1-ps))
 
   adj_w <- adjustedcif(data=sim_dat,
                        variable="group",
@@ -157,8 +157,8 @@ test_that("3 ways of iptw calculation are equal", {
 
 sim_dat <- adjustedCurves::sim_confounded_surv(n=100)
 sim_dat$group[sim_dat$group==1] <- sample(c(1, 2),
-                                          size=nrow(sim_dat[sim_dat$group==1,]),
-                                          replace=TRUE)
+                                        size=nrow(sim_dat[sim_dat$group==1, ]),
+                                        replace=TRUE)
 sim_dat$event[sim_dat$event==1] <- sample(c(1, 2), size=sum(sim_dat$event),
                                           replace=TRUE)
 sim_dat$group <- as.factor(sim_dat$group)
@@ -239,4 +239,3 @@ test_that("> 2 treatments, no conf_int, with user-weights", {
                                            cause=1)
                , NA)
 })
-

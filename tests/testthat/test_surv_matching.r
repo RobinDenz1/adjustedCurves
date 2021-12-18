@@ -1,4 +1,3 @@
-#library(adjustedCurves)
 library(Matching)
 
 set.seed(42)

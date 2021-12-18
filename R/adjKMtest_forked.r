@@ -131,7 +131,7 @@ estamtor <- function(treat, x, psix, a, tau, d, max_iter, newton_tol) {
 estimator.pi <- function(y, delta, treat, x, psix, max_iter, newton_tol) {
 
   dd <- ncol(psix)
-  tau0 <- array(rep(0, dd),dim=c(dd, 1))
+  tau0 <- array(rep(0, dd), dim=c(dd, 1))
   a0 <- array(rep(0, dd), dim=c(dd, 1))
 
   n <- length(y)
@@ -213,4 +213,3 @@ el.est <- function(y, delta, treat, x, psix_moment=c("first", "second"),
 
   return(suvdf)
 }
-

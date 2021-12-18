@@ -24,4 +24,3 @@ test_that("print.curve_test, default", {
 test_that("summary.curve_test, default", {
   expect_error(summary(adj_test), NA)
 })
-

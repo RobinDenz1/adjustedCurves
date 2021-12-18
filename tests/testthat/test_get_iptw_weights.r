@@ -59,7 +59,7 @@ test_that("2 treatments, not using stabilize", {
 ## 3 treatments
 sim_dat$group2 <- 0
 sim_dat$group2[sim_dat$group_num==1] <-
-  sample(c(1, 2), size=nrow(sim_dat[sim_dat$group_num==1,]), replace=TRUE)
+  sample(c(1, 2), size=nrow(sim_dat[sim_dat$group_num==1, ]), replace=TRUE)
 sim_dat$group2 <- ifelse(sim_dat$group2==1, "Placebo",
                          ifelse(sim_dat$group2==2, "Chemo", "OP"))
 sim_dat$group2 <- factor(sim_dat$group2)
@@ -111,4 +111,3 @@ test_that("3 treatments, not using stabilize", {
                                                  stabilize=TRUE,
                                                  trim=3), NA)
 })
-

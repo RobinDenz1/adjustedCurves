@@ -379,7 +379,7 @@ test_that("adjusted_curve_diff, two treatments", {
 # create 3 treatments
 sim_dat$group2 <- 0
 sim_dat$group2[sim_dat$group==1] <-
-  sample(c(1, 2), size=nrow(sim_dat[sim_dat$group==1,]), replace=TRUE)
+  sample(c(1, 2), size=nrow(sim_dat[sim_dat$group==1, ]), replace=TRUE)
 sim_dat$group2 <- ifelse(sim_dat$group2==1, "Placebo",
                          ifelse(sim_dat$group2==2, "Chemo", "OP"))
 sim_dat$group2 <- factor(sim_dat$group2)

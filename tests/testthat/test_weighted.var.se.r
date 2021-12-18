@@ -39,4 +39,3 @@ test_that("simple", {
   expect_length(results, 1)
   expect_gt(results, 0)
 })
-

@@ -27,7 +27,7 @@ FGR_MI <- function(mids, formula, cause=1, ...) {
   outc_mod <- list()
   for (i in seq_len(max(imp_long$.imp))) {
     mod <- riskRegression::FGR(formula,
-                               data=imp_long[imp_long$.imp==i,],
+                               data=imp_long[imp_long$.imp==i, ],
                                cause=cause,
                                ...)
     mod$call$formula <- formula

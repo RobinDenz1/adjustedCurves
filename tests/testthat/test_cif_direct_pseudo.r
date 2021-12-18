@@ -52,8 +52,8 @@ test_that("2 treatments, no conf_int, no boot, with times", {
                                            cause=1), NA)
 })
 
-test_that("2 treatments, no conf_int, no boot, with times, type_time='factor'",
-          {
+test_that(
+  "2 treatments, no conf_int, no boot, with times, type_time='factor'", {
   expect_error(adjustedCurves::adjustedcif(data=sim_dat,
                                            variable="group",
                                            ev_time="time",
@@ -70,8 +70,8 @@ test_that("2 treatments, no conf_int, no boot, with times, type_time='factor'",
 
 sim_dat <- adjustedCurves::sim_confounded_surv(n=60)
 sim_dat$group[sim_dat$group==1] <- sample(c(1, 2),
-                                          size=nrow(sim_dat[sim_dat$group==1,]),
-                                          replace=TRUE)
+                                        size=nrow(sim_dat[sim_dat$group==1, ]),
+                                        replace=TRUE)
 sim_dat$group <- as.factor(sim_dat$group)
 sim_dat$event[sim_dat$event==1] <- sample(c(1, 2), size=sum(sim_dat$event),
                                           replace=TRUE)
@@ -133,4 +133,3 @@ test_that("> 2 treatments, no conf_int, no boot, with times, type_time='factor'"
                                            type_time="factor",
                                            cause=1), NA)
 })
-

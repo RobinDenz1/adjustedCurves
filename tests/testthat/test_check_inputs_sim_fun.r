@@ -1,5 +1,7 @@
 
-custom_cens <- function(n){stats::rweibull(n, 1, 2)}
+custom_cens <- function(n) {
+  stats::rweibull(n, 1, 2)
+}
 
 lcovars <- list(x1=c("rnorm", 1, 2),
                 x2=c("rnorm", 3, 4),

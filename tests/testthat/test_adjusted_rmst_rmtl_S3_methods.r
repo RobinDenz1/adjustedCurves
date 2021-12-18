@@ -118,4 +118,3 @@ test_that("plot.adjusted_rmtl, xlab + ylab + title", {
 test_that("plot.adjusted_rmtl, ggplot theme", {
   expect_error(plot(adj_rmtl, gg_theme=ggplot2::theme_bw()), NA)
 })
-

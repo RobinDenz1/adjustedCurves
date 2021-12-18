@@ -567,7 +567,6 @@ survival_curve <- R6::R6Class("survival_curve",
           gg <- ggplot(df, aes(x = t, y = s)) +
             geom_line() +
             theme_bw()
-          # ylim(c(-.1, 1.1))
         }
       }
       if (type == "hazard") {
