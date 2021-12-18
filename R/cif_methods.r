@@ -139,7 +139,7 @@ cif_iptw_pseudo <- function(data, variable, ev_time, event, cause,
     weights <- get_iptw_weights(data=data, treatment_model=treatment_model,
                                 weight_method=weight_method,
                                 variable=variable, stabilize=stabilize,
-                                trim=trim, levs=levs, ...)
+                                trim=trim, ...)
   }
 
   # estimate pseudo observations

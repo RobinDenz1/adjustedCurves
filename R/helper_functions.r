@@ -15,7 +15,8 @@
 
 ## estimate iptw weights
 get_iptw_weights <- function(data, treatment_model, weight_method,
-                             variable, stabilize=TRUE, trim, levs, ...) {
+                             variable, stabilize=TRUE, trim, ...) {
+  levs <- levels(data[, variable])
 
   # using WeightIt
   if (inherits(treatment_model, "formula")) {
@@ -33,7 +34,7 @@ get_iptw_weights <- function(data, treatment_model, weight_method,
     ps <- predict.multinom(treatment_model, newdata=data, type="probs")
 
     weights <- rep(0, nrow(data))
-    for (i in levels(data[, variable])) {
+    for (i in levs) {
       weights[data[, variable] == i] <- 1/ps[data[, variable] == i, i]
     }
   # user supplied a mira model but no mids data

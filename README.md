@@ -45,6 +45,7 @@ This minimal example shows how to calculate and plot adjusted survival curves us
 
 ```R
 library(adjustedCurves)
+library(survival)
 
 # simulate some data as example
 set.seed(31)
