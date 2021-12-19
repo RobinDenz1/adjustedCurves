@@ -76,7 +76,6 @@ Here is an example of how to calculate and plot adjusted survival curves using *
 glm_mod <- glm(group ~ x2 + x3 + x5 + x6, data=sim_dat,
                family="binomial"(link="logit"))
 
-
 # use it to calculate adjusted survival curves
 adjsurv <- adjustedsurv(data=sim_dat,
                         variable="group",

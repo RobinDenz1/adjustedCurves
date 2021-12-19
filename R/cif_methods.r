@@ -61,14 +61,14 @@ cif_aalen_johansen <- function(data, variable, ev_time, event, cause,
     plotdata$se <- NULL
   }
 
-  if (!is.null(times)) {
-    plotdata <- specific_times(plotdata, times, cif=TRUE)
-  }
-
   # remove weird structure in cmprsk::cuminc call
   ids <- seq(2, nrow(plotdata), 2)
   ids <- ids[1:(length(ids-1))]
   plotdata <- plotdata[ids, ]
+
+  if (!is.null(times)) {
+    plotdata <- specific_times(plotdata, times, cif=TRUE)
+  }
 
   output <- list(plotdata=plotdata,
                  cuminc_object=cif)

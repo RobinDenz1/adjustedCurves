@@ -107,11 +107,12 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
         treatment_models[[i]]$data <- imp_data
       }
 
-      args2 <- c(variable=variable, ev_time=ev_time, event=event,
-                 cause=cause, method=method, conf_int=conf_int,
-                 conf_level=conf_level, times=times,
-                 bootstrap=bootstrap, n_boot=n_boot, n_cores=n_cores,
-                 na.action="na.pass", args)
+      args2 <- list(variable=variable, ev_time=ev_time, event=event,
+                    cause=cause, method=method, conf_int=conf_int,
+                    conf_level=conf_level, times=times,
+                    bootstrap=bootstrap, n_boot=n_boot, n_cores=n_cores,
+                    na.action="na.pass", clean_data=clean_data)
+      args2 <- c(args2, args)
       args2$data <- imp_data
       args2$outcome_model <- outcome_models[[i]]
       args2$treatment_model <- treatment_models[[i]]
@@ -294,25 +295,21 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
 
       # keep factor ordering the same
       boot_data$group <- factor(boot_data$group, levels=levs)
-      colnames(boot_data) <- c("time", "cif_b", "group", "boot")
 
       # calculate some statistics
       boot_stats <- boot_data %>%
         dplyr::group_by(., time, group) %>%
-        dplyr::summarise(cif=mean(cif_b, na.rm=TRUE),
-                         se=stats::sd(cif_b, na.rm=TRUE),
-                         ci_lower=stats::quantile(cif_b,
+        dplyr::summarise(boot_cif=mean(cif, na.rm=TRUE),
+                         se=stats::sd(cif, na.rm=TRUE),
+                         ci_lower=stats::quantile(cif,
                                                   probs=(1-conf_level)/2,
                                                   na.rm=TRUE),
-                         ci_upper=stats::quantile(cif_b,
+                         ci_upper=stats::quantile(cif,
                                                   probs=1-((1-conf_level)/2),
                                                   na.rm=TRUE),
-                         n_boot=sum(!is.na(cif_b)),
+                         n_boot=sum(!is.na(cif)),
                          .groups="drop_last")
       boot_stats$group <- factor(boot_stats$group, levels=levs)
-
-      # get names back
-      colnames(boot_data) <- c("time", "cif", "group", "boot")
     }
 
     # core of the function
@@ -333,7 +330,21 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
 
     if (bootstrap) {
       out$boot_data <- boot_data
-      out$boot_adjcif <- as.data.frame(boot_stats)
+
+      # relevant estimates
+      plotdata_temp <- dplyr::select(plotdata, c("time", "group", "cif"))
+      plotdata_temp <- as.data.frame(plotdata_temp)
+      boot_stats <- as.data.frame(boot_stats)
+
+      # order both data.frames
+      plotdata_temp <- plotdata_temp[order(plotdata_temp$group,
+                                           plotdata_temp$time),]
+      boot_stats <- boot_stats[order(boot_stats$group,
+                                     boot_stats$time),]
+
+      # put together
+      boot_stats$cif <- plotdata_temp$cif
+      out$boot_adjcif <- boot_stats
     }
 
     # add method-specific objects to output

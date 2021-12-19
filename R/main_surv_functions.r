@@ -108,11 +108,12 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
         treatment_models[[i]]$data <- imp_data
       }
 
-      args2 <- c(variable=variable, ev_time=ev_time,
-                 event=event, method=method, conf_int=conf_int,
-                 conf_level=conf_level, times=times,
-                 bootstrap=bootstrap, n_boot=n_boot, n_cores=n_cores,
-                 na.action="na.pass", args)
+      args2 <- list(variable=variable, ev_time=ev_time,
+                    event=event, method=method, conf_int=conf_int,
+                    conf_level=conf_level, times=times,
+                    bootstrap=bootstrap, n_boot=n_boot, n_cores=n_cores,
+                    na.action="na.pass", clean_data=clean_data)
+      args2 <- c(args2, args)
       args2$data <- imp_data
       args2$outcome_model <- outcome_models[[i]]
       args2$treatment_model <- treatment_models[[i]]
@@ -334,11 +335,20 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
     if (bootstrap) {
       out$boot_data <- boot_data
 
-      # merge observed surv estimates to booted estimates
+      # relevant estimates
       plotdata_temp <- dplyr::select(plotdata, c("time", "group", "surv"))
-      boot_stats <- merge(boot_stats, plotdata_temp, by=c("time", "group"))
+      plotdata_temp <- as.data.frame(plotdata_temp)
+      boot_stats <- as.data.frame(boot_stats)
 
-      out$boot_adjsurv <- as.data.frame(boot_stats)
+      # order both data.frames
+      plotdata_temp <- plotdata_temp[order(plotdata_temp$group,
+                                           plotdata_temp$time),]
+      boot_stats <- boot_stats[order(boot_stats$group,
+                                     boot_stats$time),]
+
+      # put together
+      boot_stats$surv <- plotdata_temp$surv
+      out$boot_adjsurv <- boot_stats
     }
 
     # add method-specific objects to output
