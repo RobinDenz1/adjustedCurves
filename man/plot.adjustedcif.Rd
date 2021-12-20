@@ -12,7 +12,7 @@ A function to graphically display confounder-adjusted cumulative incidence funct
      iso_reg=FALSE, force_bounds=FALSE,
      use_boot=FALSE, color=TRUE,
      linetype=FALSE, facet=FALSE,
-     line_size=1, xlab="Time",
+     line_size=1, line_alpha=1, xlab="Time",
      ylab="Adjusted Cumulative Incidence",
      title=NULL, legend.title="Group",
      legend.position="right",
@@ -21,10 +21,12 @@ A function to graphically display confounder-adjusted cumulative incidence funct
      custom_linetypes=NULL,
      single_color=NULL, single_linetype=NULL,
      ci_draw_alpha=0.4, steps=TRUE,
-     censoring_ind=FALSE,
-     censoring_ind_width=NULL,
+     censoring_ind="none",
      censoring_ind_size=0.5,
-     censoring_ind_alpha=1, ...)
+     censoring_ind_alpha=1,
+     censoring_ind_shape=17,
+     censoring_ind_width=NULL,
+     ...)
 }
 
 \arguments{
@@ -47,16 +49,19 @@ A logical variable indicating whether the 0 and 1 bounds of the CIFs should be f
 A logical variable denoting whether the bootstrapped estimates should be used for the curves and their confidence intervals. Can only be used if they were calculated. See \code{\link[adjustedCurves]{adjustedcif}}.
   }
   \item{color}{
-A logical variable indicating whether the curves should be colored differently.
+A logical variable indicating whether the curves should be colored differently. The \code{custom_colors} argument can be used to directly specify which colors to use. Alternatively the \code{single_color} argument can be used if evertyhing should have the same color.
   }
   \item{linetype}{
-A logical variable indicating whether the curves should have different linetypes.
+A logical variable indicating whether the curves should have different linetypes. The \code{custom_linetypes} argument can be used to directly specify which linetypes to use. Alternatively the \code{single_linetype} argument can be used if all curves should have the same linetype.
   }
   \item{facet}{
 A logical variable indicating whether the curves should be in different facets.
   }
   \item{line_size}{
 A number controlling the thickness of the curves.
+  }
+  \item{line_alpha}{
+A number controlling the transparency level of the curves.
   }
   \item{xlab}{
 A character string to be used as the X-Axis label of the plot.
@@ -98,16 +103,19 @@ A number indicating the level of transparency that should be used when drawing t
 A logical variable indicating whether the CIFs should be plotted as a step function or using straight lines. Straight lines should not be used with a simple Aalen-Joahnsen estimator. It is recommended to only use straight lines when a sufficiently fine grid of time points was used in the estimation step.
   }
   \item{censoring_ind}{
-Whether to draw small lines indicating censored individuals on the survival curves. Those will be affected by \code{linetype} and \code{color} as well.
-  }
-  \item{censoring_ind_width}{
-A numeric value specifying the width of the censoring indicators. Ignored if \code{censoring_ind=FALSE}. By default (\code{censoring_ind_width=NULL}) the width of the censoring indicators is equal to 5 percent of the plot height.
+What kind of indicator to plot for censored observations on the CIFs. Must be one of \code{"none"} (plotting no indicators at all, the default), \code{"lines"} (plotting small vertical lines) and \code{"points"} (plotting points). Those will be affected by \code{linetype} and \code{color} as well. Observations who failed due to a competing event are not considered as censored here.
   }
   \item{censoring_ind_size}{
-A numeric value specifying the size of the censoring indicators. Ignored if \code{censoring_ind=FALSE}.
+A numeric value specifying the size of the censoring indicators. Ignored if \code{censoring_ind="none"}.
   }
   \item{censoring_ind_alpha}{
-A numeric value specifying the alpha level of the censoring indicators. Ignored if \code{censoring_ind=FALSE}.
+A numeric value specifying the alpha level of the censoring indicators. Ignored if \code{censoring_ind="none"}.
+  }
+  \item{censoring_ind_shape}{
+A numeric value specifying the shape of the censoring indicators when using \code{censoring_ind="points"}. Ignored otherwise. For available shapes see \code{?geom_point}.
+  }
+  \item{censoring_ind_width}{
+A numeric value specifying the width of the censoring indicators. Ignored unless \code{censoring_ind="lines"}. By default (\code{censoring_ind_width=NULL}) the width of the censoring indicators is equal to 5 percent of the plot height.
   }
   \item{...}{
 Currently not used.
@@ -135,6 +143,8 @@ Robin Denz
 }
 \examples{
 \dontrun{
+library(riskRegression)
+library(prodlim)
 library(survival)
 library(ggplot2)
 
@@ -142,7 +152,11 @@ library(ggplot2)
 sim_dat <- sim_confounded_crisk(n=500)
 sim_dat$group <- as.factor(sim_dat$group)
 
-# use it to calculate adjusted survival curves with bootstrapping
+# calculate a Cause-Specific-Cox model
+cox_mod <- CSC(Hist(time, event) ~ x1 + x3 + x5 + group,
+               data=sim_dat)
+
+# use it to calculate adjusted CIFs with bootstrapping (for cause = 1)
 adjcif <- adjustedcif(data=sim_dat,
                       variable="group",
                       ev_time="time",
@@ -151,35 +165,36 @@ adjcif <- adjustedcif(data=sim_dat,
                       outcome_model=cox_mod,
                       conf_int=TRUE,
                       bootstrap=TRUE,
-                      n_boot=500)
+                      n_boot=500,
+                      cause=1)
 
 # plot the curves with default values
-plot(adjsurv)
+plot(adjcif)
 
 # plot after applying isotonic regression
-plot(adjsurv, iso_reg=TRUE)
+plot(adjcif, iso_reg=TRUE)
 
 # plot with confidence intervals estimated using asymptotic variances
-plot(adjsurv, draw_ci=TRUE)
+plot(adjcif, draw_ci=TRUE)
 
 # plot with confidence intervals estimated using bootstrapping
-plot(adjsurv, draw_ci=TRUE, use_boot=TRUE)
+plot(adjcif, draw_ci=TRUE, use_boot=TRUE)
 
 # plot with different linetypes only
-plot(adjsurv, linetype=TRUE, color=FALSE, facet=FALSE)
+plot(adjcif, linetype=TRUE, color=FALSE, facet=FALSE)
 
 # plot with different facets only
-plot(adjsurv, linetype=FALSE, color=FALSE, facet=TRUE)
+plot(adjcif, linetype=FALSE, color=FALSE, facet=TRUE)
 
 # plot with different linetypes and different colors
-plot(adjsurv, linetype=TRUE, color=TRUE, facet=FALSE)
+plot(adjcif, linetype=TRUE, color=TRUE, facet=FALSE)
 
 # plot with some custom characteristics
-plot(adjsurv, legend.position="bottom", linetype=TRUE,
+plot(adjcif, legend.position="bottom", linetype=TRUE,
      custom_colors=c("green", "blue"), legend.title="Custom",
      title="Custom Plot", draw_ci=TRUE, linesize=0.5)
 
-# plot with not directly included ggplot2 functionality
-plot(adjsurv) + theme_classic()
+# adding further ggplot2 elements
+plot(adjcif) + theme_bw()
 }
 }

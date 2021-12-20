@@ -486,7 +486,9 @@ test_that("no extrapolation", {
                                                           n_boot=2,
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
-               NULL)
+               paste0("Values in 'time' must be smaller than ",
+                      "max(data[,ev_time]). No extrapolation allowed."),
+               fixed=TRUE)
 })
 
 test_that("bootstrap only with treatment_model that can be updated", {
@@ -507,6 +509,23 @@ test_that("bootstrap only with treatment_model that can be updated", {
                       "refit or a formula object when using bootstrap=TRUE."))
 })
 
+test_that("no outcome_vars argument", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                         variable="group",
+                                                         ev_time="time",
+                                                         event="event",
+                                                         method="direct_pseudo",
+                                                         conf_int=FALSE,
+                                                         conf_level=0.95,
+                                                         times=NULL,
+                                                         bootstrap=TRUE,
+                                                         n_boot=2,
+                                                         na.action="na.omit",
+                                                         clean_data=TRUE),
+               paste0("Argument 'outcome_vars' must be specified when using ",
+                      "method='direct_pseudo'. See documentation."))
+})
+
 test_that("wrong outcome_vars argument", {
   expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
                                                         variable="group",
@@ -524,6 +543,45 @@ test_that("wrong outcome_vars argument", {
                paste0("'outcome_vars' should be a character vector of ",
                       "column names in 'data', used to model ",
                       "the outcome mechanism."))
+})
+
+test_that("ps_scores > 1 or < 0", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                         variable="group",
+                                         ev_time="time",
+                                         event="event",
+                                         method="aiptw_pseudo",
+                                         conf_int=FALSE,
+                                         conf_level=0.95,
+                                         times=NULL,
+                                         bootstrap=TRUE,
+                                         n_boot=2,
+                                         na.action="na.omit",
+                                         clean_data=TRUE,
+                                         outcome_vars=c("x1"),
+                                         treatment_model=rep(2, nrow(sim_dat))),
+               paste0("Propensity Scores supplied using the 'treatment_model' ",
+                      "argument must be smaller than 1 and bigger than 0."))
+})
+
+test_that("ps_scores wrong length", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                   variable="group",
+                                                   ev_time="time",
+                                                   event="event",
+                                                   method="aiptw_pseudo",
+                                                   conf_int=FALSE,
+                                                   conf_level=0.95,
+                                                   times=NULL,
+                                                   bootstrap=TRUE,
+                                                   n_boot=2,
+                                                   na.action="na.omit",
+                                                   clean_data=TRUE,
+                                                   outcome_vars=c("x1"),
+                                                   treatment_model=c(0.1, 0.2)),
+               paste0("The vector of propensity score supplied in the ",
+                      "'treatment_model' argument must be of ",
+                      "length nrow(data)."), fixed=TRUE)
 })
 
 test_that("wrong type_time argument", {
@@ -560,7 +618,8 @@ test_that("too many spline_df", {
                                                          outcome_vars=c("x1"),
                                                          type_time="bs",
                                                          spline_df=10),
-               NULL)
+               "'spline_df' > len(times) might lead to problems.",
+               fixed=TRUE)
 })
 
 test_that("not enough time points", {
@@ -598,6 +657,23 @@ test_that("continuous times in tmle", {
                                                           outcome_vars=c("x1")),
                paste0("Only integer time is allowed when ",
                       "using method='tmle' or method='ostmle'."))
+})
+
+test_that("missing treatment_vars argument", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                          variable="group",
+                                                          ev_time="time",
+                                                          event="event",
+                                                          method="emp_lik",
+                                                          conf_int=TRUE,
+                                                          conf_level=0.95,
+                                                          times=NULL,
+                                                          bootstrap=TRUE,
+                                                          n_boot=2,
+                                                          na.action="na.omit",
+                                                          clean_data=TRUE),
+               paste0("Argument 'treatment_vars' has to be specified when ",
+                      "using method='emp_lik'."))
 })
 
 test_that("wrong treatment_vars argument", {
@@ -728,7 +804,9 @@ test_that("glm with censoring", {
                                                    na.action="na.omit",
                                                    clean_data=TRUE,
                                                    outcome_model=outcome_model),
-               NULL)
+               paste0("'outcome_model' of class c('glm', 'ols', ",
+                      "'randomForest') are only allowed when there ",
+                      "is no censoring."), fixed=TRUE)
 })
 
 outcome_model <- coxph(Surv(time, event) ~ 1, data=sim_dat)
@@ -864,6 +942,82 @@ test_that("strat_amato with '.COVARS' column", {
                paste0("The column name '.COVARS' cannot be used with ",
                       "method='strat_amato'. Please rename that variable ",
                       "and rerun the function."))
+})
+
+test_that("no 'treatment_model' with iptw_km / iptw_cox", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                          variable="group",
+                                                          ev_time="time",
+                                                          event="event",
+                                                          method="iptw_km",
+                                                          conf_int=FALSE,
+                                                          conf_level=0.95,
+                                                          times=NULL,
+                                                          bootstrap=TRUE,
+                                                          n_boot=2,
+                                                          na.action="na.omit",
+                                                          clean_data=TRUE),
+               paste0("Argument 'treatment_model' must be defined when ",
+                      "using method='iptw_km'. See documentation."))
+})
+
+treat_mod <- list()
+class(treat_mod) <- "gam"
+
+test_that("wrong 'treatment_model' with iptw_km / iptw_cox", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                     variable="group",
+                                                     ev_time="time",
+                                                     event="event",
+                                                     method="iptw_km",
+                                                     conf_int=FALSE,
+                                                     conf_level=0.95,
+                                                     times=NULL,
+                                                     bootstrap=TRUE,
+                                                     n_boot=2,
+                                                     na.action="na.omit",
+                                                     clean_data=TRUE,
+                                                     treatment_model=treat_mod),
+               paste0("'treatment_model' must be a glm or multinom object, ",
+                      "a formula or a numeric vector of weights. ",
+                      "See documentation."))
+})
+
+test_that("wrong weights length with iptw_km / iptw_cox", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                                       variable="group",
+                                                       ev_time="time",
+                                                       event="event",
+                                                       method="iptw_km",
+                                                       conf_int=FALSE,
+                                                       conf_level=0.95,
+                                                       times=NULL,
+                                                       bootstrap=TRUE,
+                                                       n_boot=2,
+                                                       na.action="na.omit",
+                                                       clean_data=TRUE,
+                                                       treatment_model=c(1, 2)),
+               paste0("If weights are supplied directly in the ",
+                      "'treatment_model' argument, they must be of ",
+                      "length nrow(data)."), fixed=TRUE)
+})
+
+test_that("negative weights with iptw_km / iptw_cox", {
+  expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
+                                        variable="group",
+                                        ev_time="time",
+                                        event="event",
+                                        method="iptw_km",
+                                        conf_int=FALSE,
+                                        conf_level=0.95,
+                                        times=NULL,
+                                        bootstrap=TRUE,
+                                        n_boot=2,
+                                        na.action="na.omit",
+                                        clean_data=TRUE,
+                                        treatment_model=rep(-1, nrow(sim_dat))),
+               paste0("Weights supplied directly to the 'treatment_model' ",
+                      "argument must be positive."))
 })
 
 ## multiple imputation stuff

@@ -43,7 +43,7 @@ A numeric vector of time points at which the survival probability should be esti
 A character vector of column names specifying variables to be used when modeling the outcome mechanism using \code{\link[geepack]{geese}}. See details and examples.
 }
   \item{treatment_model}{
-Must be a \code{glm} or \code{multinom} model object with \code{variable} as response variable. See details and examples.
+Must be a \code{glm} or \code{multinom} model object with \code{variable} as response variable. Alternatively you can supply a numeric vector of propensity scores directly. See details and examples.
 }
   \item{type_time}{
 A character string specifying how the time should be modeled. See details.

@@ -426,9 +426,9 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
 #' @export
 plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
                               iso_reg=FALSE, force_bounds=FALSE,
-                              use_boot=FALSE, color=TRUE,
-                              linetype=FALSE, facet=FALSE,
-                              line_size=1, xlab="Time",
+                              use_boot=FALSE, cif=FALSE,
+                              color=TRUE, linetype=FALSE, facet=FALSE,
+                              line_size=1, line_alpha=1, xlab="Time",
                               ylab="Adjusted Survival Probability",
                               title=NULL, legend.title="Group",
                               legend.position="right",
@@ -437,12 +437,15 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
                               custom_linetypes=NULL,
                               single_color=NULL, single_linetype=NULL,
                               ci_draw_alpha=0.4, steps=TRUE,
-                              median_surv_lines=FALSE, median_surv_size=0.5,
+                              median_surv_lines=FALSE,
+                              median_surv_size=0.5,
                               median_surv_linetype="dashed",
                               median_surv_color="black",
-                              censoring_ind=FALSE, censoring_ind_width=NULL,
+                              median_surv_alpha=1,
+                              censoring_ind="none",
                               censoring_ind_size=0.5, censoring_ind_alpha=1,
-                              cif=FALSE, ...) {
+                              censoring_ind_shape=17, censoring_ind_width=NULL,
+                              ...) {
   requireNamespace("ggplot2")
 
   # get relevant data for the confidence interval
@@ -515,9 +518,9 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
   p <- ggplot2::ggplot(plotdata, mapping)
 
   if (steps) {
-    line_obj <- ggplot2::geom_step(size=line_size)
+    line_obj <- ggplot2::geom_step(size=line_size, alpha=line_alpha)
   } else {
-    line_obj <- ggplot2::geom_line(size=line_size)
+    line_obj <- ggplot2::geom_line(size=line_size, alpha=line_alpha)
   }
 
   # override color using just one color
@@ -577,7 +580,7 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
   }
 
   ## Censoring indicators
-  if (censoring_ind) {
+  if (censoring_ind!="none") {
 
     if (is.null(censoring_ind_width)) {
 
@@ -586,9 +589,7 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
       } else {
         ystart <- 1 - ylim[1]
       }
-
       censoring_ind_width <- ystart * 0.05
-
     }
 
     if (is.factor(plotdata$group)) {
@@ -614,13 +615,25 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
     cens_dat <- dplyr::bind_rows(cens_dat)
     cens_dat <- cens_dat[!is.na(cens_dat$surv), ]
 
-    cens_map <- ggplot2::aes(x=.data$time,
-                             y=.data$surv-(censoring_ind_width/2),
-                             xend=.data$time,
-                             yend=.data$surv+(censoring_ind_width/2),
-                             group=.data$group,
-                             color=.data$group,
-                             linetype=.data$group)
+    # either points or lines
+    if (censoring_ind=="points") {
+      cens_map <- ggplot2::aes(x=.data$time,
+                               y=.data$surv,
+                               group=.data$group,
+                               color=.data$group)
+    } else if (censoring_ind=="lines") {
+      cens_map <- ggplot2::aes(x=.data$time,
+                               y=.data$surv-(censoring_ind_width/2),
+                               xend=.data$time,
+                               yend=.data$surv+(censoring_ind_width/2),
+                               group=.data$group,
+                               color=.data$group,
+                               linetype=.data$group)
+    } else {
+      stop("Argument 'censoring_ind' must be either 'none', 'lines' or",
+           " points. See documentation.")
+    }
+
     if (!color) {
       cens_map$colour <- NULL
     }
@@ -628,9 +641,17 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
       cens_map$linetype <- NULL
     }
 
-    cens_geom <- ggplot2::geom_segment(data=cens_dat, cens_map,
+    if (censoring_ind=="points") {
+      cens_geom <- ggplot2::geom_point(data=cens_dat, cens_map,
                                        size=censoring_ind_size,
-                                       alpha=censoring_ind_alpha)
+                                       alpha=censoring_ind_alpha,
+                                       shape=censoring_ind_shape)
+    } else if (censoring_ind=="lines") {
+      cens_geom <- ggplot2::geom_segment(data=cens_dat, cens_map,
+                                         size=censoring_ind_size,
+                                         alpha=censoring_ind_alpha)
+    }
+
     if (!is.null(single_color)) {
       cens_geom$aes_params$colour <- single_color
     }
@@ -660,7 +681,6 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
                              fill=.data$group,
                              x=.data$time,
                              y=.data$surv)
-
       if (!color) {
         ci_map$fill <- NULL
       }
@@ -675,7 +695,6 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
                              fill=.data$group,
                              x=.data$time,
                              y=.data$surv)
-
       if (!color) {
         ci_map$fill <- NULL
       }
@@ -729,6 +748,7 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
                                      linetype=median_surv_linetype,
                                      size=median_surv_size,
                                      color=median_surv_color,
+                                     alpha=median_surv_alpha,
                                      data=median_surv)
       # draw indicator lines from middle to bottom
       p <- p + ggplot2::geom_segment(ggplot2::aes(x=.data$median_surv,
@@ -739,6 +759,7 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
                                      linetype=median_surv_linetype,
                                      size=median_surv_size,
                                      color=median_surv_color,
+                                     alpha=median_surv_alpha,
                                      data=median_surv)
     }
   }

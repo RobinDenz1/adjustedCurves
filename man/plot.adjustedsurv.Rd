@@ -10,9 +10,9 @@ A function to graphically display confounder-adjusted survival curves which wher
 \usage{
 \method{plot}{adjustedsurv}(x, draw_ci=FALSE, max_t=Inf,
      iso_reg=FALSE, force_bounds=FALSE,
-     use_boot=FALSE, color=TRUE,
+     use_boot=FALSE, cif=FALSE, color=TRUE,
      linetype=FALSE, facet=FALSE,
-     line_size=1, xlab="Time",
+     line_size=1, line_alpha=1, xlab="Time",
      ylab="Adjusted Survival Probability",
      title=NULL, legend.title="Group",
      legend.position="right",
@@ -25,11 +25,13 @@ A function to graphically display confounder-adjusted survival curves which wher
      median_surv_size=0.5,
      median_surv_linetype="dashed",
      median_surv_color="black",
-     censoring_ind=FALSE,
-     censoring_ind_width=NULL,
+     median_surv_alpha=1,
+     censoring_ind="none",
      censoring_ind_size=0.5,
      censoring_ind_alpha=1,
-     cif=FALSE, ...)
+     censoring_ind_shape=17,
+     censoring_ind_width=NULL,
+     ...)
 }
 
 \arguments{
@@ -51,17 +53,23 @@ A logical variable indicating whether the 0 and 1 bounds of the survival probabi
   \item{use_boot}{
 A logical variable denoting whether the bootstrapped estimates should be used for the curves and their confidence intervals. Can only be used if they were calculated. See \code{\link[adjustedCurves]{adjustedsurv}}.
   }
+  \item{cif}{
+If \code{TRUE} the cumulative incidence functions are drawn instead of the survival curves. Those are calculated by taking 1 - the adjusted survival probability. If \code{FALSE} (default) the usual survival curves are shown.
+  }
   \item{color}{
-A logical variable indicating whether the curves should be colored differently.
+A logical variable indicating whether the curves should be colored differently. The \code{custom_colors} argument can be used to directly specify which colors to use. Alternatively the \code{single_color} argument can be used if evertyhing should have the same color.
   }
   \item{linetype}{
-A logical variable indicating whether the curves should have different linetypes.
+A logical variable indicating whether the curves should have different linetypes. The \code{custom_linetypes} argument can be used to directly specify which linetypes to use. Alternatively the \code{single_linetype} argument can be used if all curves should have the same linetype.
   }
   \item{facet}{
 A logical variable indicating whether the curves should be in different facets.
   }
   \item{line_size}{
 A number controlling the thickness of the survival curves.
+  }
+  \item{line_alpha}{
+A number controlling the transparency level of the survival curves.
   }
   \item{xlab}{
 A character string to be used as the X-Axis label of the plot.
@@ -114,20 +122,23 @@ The linetype of the median survival indicator lines. Ignored if \code{median_sur
   \item{median_surv_color}{
 The color of the median survival indicator lines. Ignored if \code{median_surv_lines=FALSE}.
   }
-  \item{censoring_ind}{
-Whether to draw small lines indicating censored individuals on the survival curves. Those will be affected by \code{linetype} and \code{color} as well.
+  \item{median_surv_alpha}{
+The transparency level of the median survival indicator lines. Ignored if \code{median_surv_lines=FALSE}.
   }
-  \item{censoring_ind_width}{
-A numeric value specifying the width of the censoring indicators. Ignored if \code{censoring_ind=FALSE}. By default (\code{censoring_ind_width=NULL}) the width of the censoring indicators is equal to 5 percent of the plot height.
+  \item{censoring_ind}{
+What kind of indicator to plot for censored observations on the survival curves. Must be one of \code{"none"} (plotting no indicators at all, the default), \code{"lines"} (plotting small vertical lines) and \code{"points"} (plotting points). Those will be affected by \code{linetype} and \code{color} as well.
   }
   \item{censoring_ind_size}{
-A numeric value specifying the size of the censoring indicators. Ignored if \code{censoring_ind=FALSE}.
+A numeric value specifying the size of the censoring indicators. Ignored if \code{censoring_ind="none"}.
   }
   \item{censoring_ind_alpha}{
-A numeric value specifying the alpha level of the censoring indicators. Ignored if \code{censoring_ind=FALSE}.
+A numeric value specifying the alpha level of the censoring indicators. Ignored if \code{censoring_ind="none"}.
   }
-  \item{cif}{
-If \code{TRUE} the cumulative incidence functions are drawn instead of the survival curves. Those are calculates by taking 1 - the adjusted survival probability. If \code{FALSE} (default) the usual survival curves are shown.
+  \item{censoring_ind_shape}{
+A numeric value specifying the shape of the censoring indicators when using \code{censoring_ind="points"}. Ignored otherwise. For available shapes see \code{?geom_point}.
+  }
+  \item{censoring_ind_width}{
+A numeric value specifying the width of the censoring indicators. Ignored unless \code{censoring_ind="lines"}. By default (\code{censoring_ind_width=NULL}) the width of the censoring indicators is equal to 5 percent of the plot height.
   }
   \item{...}{
 Currently not used.
@@ -206,7 +217,7 @@ plot(adjsurv, legend.position="bottom", linetype=TRUE,
      custom_colors=c("green", "blue"), legend.title="Custom",
      title="Custom Plot", draw_ci=TRUE, linesize=0.5)
 
-# plot with not directly included ggplot2 functionality
+# adding further ggplot2 elements
 plot(adjsurv) + theme_classic()
 }
 }

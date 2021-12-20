@@ -103,10 +103,10 @@ Instead of using colors to differentiate the curves we can also use different li
 plot(adjsurv, linetype=TRUE, color=FALSE)
 ```
 
-We can also add indicators for censored observations using `censoring_ind=TRUE`:
+We can also add small indicator lines for censored observations using `censoring_ind="lines"`:
 
 ```{r echo=TRUE, fig.show=TRUE, fig.width=7, fig.height=5}
-plot(adjsurv, color=TRUE, censoring_ind=TRUE)
+plot(adjsurv, color=TRUE, censoring_ind="lines")
 ```
 
 Indicator lines for the median survival time can be added using `median_surv_lines=TRUE`:

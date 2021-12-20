@@ -31,10 +31,20 @@ test_that("plot, using iso_reg", {
   expect_error(plot(adj, iso_reg=TRUE), NA)
 })
 
-test_that("plot, using censoring indicators", {
-  expect_error(plot(adj, iso_reg=TRUE, censoring_ind=TRUE,
+test_that("plot, using censoring indicators (lines)", {
+  expect_error(plot(adj, iso_reg=TRUE,
+                    censoring_ind="lines",
                     censoring_ind_width=0.1,
-                    censoring_ind_size=1), NA)
+                    censoring_ind_size=1,
+                    censoring_ind_alpha=0.5), NA)
+})
+
+test_that("plot, using censoring indicators (points)", {
+  expect_error(plot(adj, iso_reg=TRUE,
+                    censoring_ind="points",
+                    censoring_ind_size=1,
+                    censoring_ind_alpha=0.5,
+                    censoring_ind_shape=15), NA)
 })
 
 test_that("plot, using max_t", {
@@ -104,7 +114,7 @@ test_that("plot, using many many things", {
                     custom_linetypes=c("solid", "dashed"),
                     ci_draw_alpha=0.4,
                     steps=TRUE,
-                    censoring_ind=TRUE,
+                    censoring_ind="lines",
                     censoring_ind_width=0.1,
                     censoring_ind_size=0.6), NA)
 })

@@ -175,8 +175,15 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
   if (method=="direct_pseudo" | method=="aiptw_pseudo" |
       method=="iptw_pseudo") {
 
-    # outcome_vars
-    if ("outcome_vars" %in% names(obj) && (!is.character(obj$outcome_vars))) {
+    # need outcome vars
+    if ((method=="direct_pseudo" | method=="aiptw_pseudo") &
+        (!"outcome_vars" %in% names(obj))) {
+      stop("Argument 'outcome_vars' must be specified when using",
+           " method='", method, "'. See documentation.")
+    }
+    # outcome_vars right format
+    if ((method=="direct_pseudo" | method=="aiptw_pseudo") &
+        !is.character(obj$outcome_vars)) {
       stop("'outcome_vars' should be a character vector of column names ",
            "in 'data', used to model the outcome mechanism.")
     }
@@ -185,12 +192,27 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
                                         c("factor", "bs", "ns"))) {
       stop("'type_time' should be either 'factor', 'bs' or 'ns'.")
     }
-    # treatment_model
-    if ("treatment_model" %in% names(obj) && method=="aiptw_pseudo" &
-        (!(is.numeric(obj$treatment_model) |
-           inherits(obj$treatment_model, c("glm", "multinom", "mira"))))) {
+    # need treatment model
+    if ((method=="iptw_pseudo" | method=="aiptw_pseudo") &
+        (!"treatment_model" %in% names(obj))) {
+      stop("Argument 'treatment_model' must be specified when using",
+           " method='", method, "'. See documentation.")
+    }
+    # treatment_model right format
+    if (method=="aiptw_pseudo" & (!(is.numeric(obj$treatment_model) |
+        inherits(obj$treatment_model, c("glm", "multinom", "mira"))))) {
       stop("Argument 'treatment_model' must be one of: 'glm',",
            " 'multinom', 'mira' or a numeric vector of propensity scores.")
+    }
+    # propensity scores right format
+    if (method=="aiptw_pseudo" & is.numeric(obj$treatment_model)) {
+      if (length(obj$treatment_model) != nrow(data)) {
+        stop("The vector of propensity score supplied in the 'treatment_model'",
+             " argument must be of length nrow(data).")
+      } else if (any(obj$treatment_model > 1 | obj$treatment_model < 0)) {
+        stop("Propensity Scores supplied using the 'treatment_model'",
+             " argument must be smaller than 1 and bigger than 0.")
+      }
     }
 
     if (method %in% c("aiptw_pseudo", "direct_pseudo") & !is.null(times)) {
@@ -218,9 +240,12 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     }
   ## Empirical Likelihood
   } else if (method=="emp_lik") {
-
-    # treatment_vars
-    if (!is.character(obj$treatment_vars)) {
+    # need treatment_vars
+    if (!"treatment_vars" %in% names(obj)) {
+      stop("Argument 'treatment_vars' has to be specified when using",
+           " method='emp_lik'.")
+    # treatment_vars right format
+    } else if (!is.character(obj$treatment_vars)) {
       stop("'treatment_vars' should be a character vector of column names ",
            "in 'data', used to model the outcome mechanism.")
     # moment
@@ -232,7 +257,6 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
                (!is.logical(obj$standardize))) {
       stop("Argument 'standardize' must be either TRUE or FALSE.")
     } else if (inherits(data, "data.frame")) {
-
       # treatment_vars
       if (!all(obj$treatment_vars %in% colnames(data))) {
         stop("'treatment_vars' should be a character vector of column names ",
@@ -246,11 +270,9 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
                   " to avoid estimation problems.", call.=FALSE)
         }
       }
-
     }
   ## Matching
   } else if (method=="matching") {
-
     # treatment model
     if (!"treatment_model" %in% names(obj)) {
       stop("Argument 'treatment_model' must be specified when using",
@@ -337,6 +359,29 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     if (".COVARS" %in% colnames(data)) {
       stop("The column name '.COVARS' cannot be used with method='",
            method, "'. Please rename that variable and rerun the function.")
+    }
+  ## IPTW KM, IPW COX
+  } else if (method=="iptw_km" | method=="iptw_cox") {
+    # need treatment_model
+    if (!"treatment_model" %in% names(obj)) {
+      stop("Argument 'treatment_model' must be defined when using",
+           " method='", method, "'. See documentation.")
+    # treatment_model wrong format
+    } else if (!inherits(obj$treatment_model, c("glm", "multinom",
+                                                "numeric", "formula",
+                                                "mira"))) {
+      stop("'treatment_model' must be a glm or multinom object,",
+           " a formula or a numeric vector of weights. See documentation.")
+    # check length of weights
+    } else if (is.numeric(obj$treatment_model) &&
+               length(obj$treatment_model) != nrow(data)) {
+      stop("If weights are supplied directly in the 'treatment_model'",
+           " argument, they must be of length nrow(data).")
+    # check if weights are positive
+    } else if (is.numeric(obj$treatment_model) &&
+               any(obj$treatment_model < 0)) {
+      stop("Weights supplied directly to the 'treatment_model' argument",
+           " must be positive.")
     }
   }
 
