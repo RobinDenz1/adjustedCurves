@@ -8,6 +8,7 @@ Inverse Probability of Treatment Weighted CIFs using Pseudo-Values
 
 This page explains the details of estimating inverse probability of treatment weighted cumulative incidence functions using Pseudo-Values in a competing risks setting. The function is called internally when using \code{method="iptw_pseudo"} in the \code{\link[=adjustedcif]{adjustedcif}} function. It is highly recommended to use \code{\link[=adjustedcif]{adjustedcif}} instead of calling this function directly.
 
+When using \code{method="iptw_pseudo"} the \code{treatment_model} argument has to be specified in the \code{adjustedcif} call.
 }
 \usage{
 cif_iptw_pseudo(data, variable, ev_time, event, cause,

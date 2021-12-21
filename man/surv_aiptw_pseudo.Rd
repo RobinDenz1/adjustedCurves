@@ -8,6 +8,7 @@ Augmented Inverse Probability of Treatment Weighted Survival Curves using Pseudo
 
 This page explains the details of estimating augmented inverse probability of treatment weighted survival curves using Pseudo-Values for single event time-to-event data. The function is called internally when using \code{method="aiptw_pseudo"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function. It is highly recommended to use \code{\link[=adjustedsurv]{adjustedsurv}} instead of calling this function directly.
 
+When using \code{method="aiptw_pseudo"} the \code{treatment_model} argument and the \code{outcome_vars} argument have to be specified in the \code{adjustedsurv} call.
 }
 \usage{
 surv_aiptw_pseudo(data, variable, ev_time, event, conf_int,

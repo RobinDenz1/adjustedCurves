@@ -8,6 +8,8 @@ Targeted Maximum Likelihood Estimation for Adjusted Survival Curves
 
 This page explains the details of estimating adjusted survival curves using the targeted maximum likelihood methodology for single event time-to-event data. The function is called internally when using \code{method="tmle"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function. It is highly recommended to use \code{\link[=adjustedsurv]{adjustedsurv}} instead of calling this function directly.
 
+When using \code{method="tmle"} you have to specify either \code{SL.ftime} or \code{glm.ftime}, \code{SL.ctime} or \code{glm.ctime} and \code{SL.trt} or \code{glm.trt} in the \code{adjustedsurv} call.
+
 }
 \usage{
 surv_tmle(data, variable, ev_time, event, conf_int,

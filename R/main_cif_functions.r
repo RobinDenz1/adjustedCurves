@@ -49,7 +49,6 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
   if (inherits(data, "mids")) {
 
     # get event specific times
-    times_input <- times
     if (is.null(times)) {
       times <- sort(unique(data$data[, ev_time][data$data[, event]>=1]))
 
@@ -225,7 +224,6 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
     . <- i <- time <- group <- cif_b <- cif <- se <- NULL
 
     # get event specific times
-    times_input <- times
     if (is.null(times) & !bootstrap & method=="aalen_johansen") {
       times <- NULL
     } else if (is.null(times)) {
@@ -270,9 +268,9 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
                                     .export=export_objs) %dorng% {
 
           adjustedcif_boot(data=data, variable=variable, ev_time=ev_time,
-                           event=event, method=method, times_input=times_input,
-                           times=times, i=i, cif_fun=cif_fun,
-                           levs=levs, cause=cause, na.action=na.action, ...)
+                           event=event, method=method, times=times, i=i,
+                           cif_fun=cif_fun, levs=levs, cause=cause,
+                           na.action=na.action, ...)
         }
         parallel::stopCluster(cl)
 
@@ -283,7 +281,6 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
           boot_out[[i]] <- adjustedcif_boot(data=data, variable=variable,
                                             ev_time=ev_time, event=event,
                                             method=method,
-                                            times_input=times_input,
                                             times=times, i=i, cause=cause,
                                             cif_fun=cif_fun, levs=levs,
                                             na.action=na.action, ...)
@@ -358,8 +355,7 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
 
 ## perform one bootstrap iteration
 adjustedcif_boot <- function(data, variable, ev_time, event, cause, method,
-                             times_input, times, i, cif_fun, levs,
-                             na.action, ...) {
+                             times, i, cif_fun, levs, na.action, ...) {
 
   # draw sample
   indices <- sample(x=rownames(data), size=nrow(data), replace=TRUE)

@@ -6,6 +6,19 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
 
   if (!inherits(data, c("data.frame", "mids"))) {
     stop("'data' argument must be a data.frame or mids object.")
+  ## check if non-standard evaluation is used
+  } else if (inherits(substitute(variable), "name") &&
+             !exists(toString(substitute(variable)))) {
+    stop("'variable' must be a character string specifying a variable",
+         " in 'data'.")
+  } else if (inherits(substitute(ev_time), "name") &&
+             !exists(toString(substitute(ev_time)))) {
+    stop("'ev_time' must be a character string specifying a variable",
+         " in 'data'.")
+  } else if (inherits(substitute(event), "name") &&
+             !exists(toString(substitute(event)))) {
+    stop("'event' must be a character string specifying a variable",
+         " in 'data'.")
   ## check if length of input is correct
   } else if (length(variable) != 1) {
     stop("'variable' must be a character string of length 1",
@@ -604,22 +617,35 @@ check_inputs_adj_test <- function(adjsurv, from, to) {
 ## for adjustedcif
 check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
                                      conf_int, conf_level, times, bootstrap,
-                                     n_boot, cause=cause, na.action,
+                                     n_boot, cause, na.action,
                                      clean_data, ...) {
   obj <- list(...)
 
   if (!inherits(data, c("data.frame", "mids"))) {
     stop("'data' argument must be a data.frame or mids object.")
-  # checking input argument lengths
+  ## check for non-standard evaluation
+  } else if (inherits(substitute(variable), "name") &&
+             !exists(toString(substitute(variable)))) {
+    stop("'variable' must be a character string specifying a variable",
+         " in 'data'.")
+  } else if (inherits(substitute(ev_time), "name") &&
+             !exists(toString(substitute(ev_time)))) {
+    stop("'ev_time' must be a character string specifying a variable",
+         " in 'data'.")
+  } else if (inherits(substitute(event), "name") &&
+             !exists(toString(substitute(event)))) {
+    stop("'event' must be a character string specifying a variable",
+         " in 'data'.")
+  ## checking input argument lengths
   } else if (length(variable) != 1) {
     stop("'variable' must be a character string of length 1",
          " specifying the grouping variable in 'data'.")
   } else if (length(ev_time) != 1) {
     stop("'ev_time' must be a character string of length 1",
-         " specifying the time until the event or censoring occured.")
+         " specifying the time until an event or censoring occured.")
   } else if (length(event) != 1) {
     stop("'event' must be a character string of length 1",
-         " specifying the binary event indicator.")
+         " specifying the numeric event indicator.")
   } else if (length(conf_int) != 1) {
     stop("'conf_int' must be either TRUE or FALSE, not a vector.")
   } else if (length(conf_level) != 1) {
@@ -713,9 +739,8 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
     }
 
     # Check if event variable has the right format
-    if (!is.numeric(data[, event]) & !is.logical(data[, event])) {
-      stop("The column in 'data' specified by 'event' must be numeric",
-           " or logical.")
+    if (!is.numeric(data[, event])) {
+      stop("The column in 'data' specified by 'event' must be numeric.")
     } else if (all(data[, event] %in% c(0, 1, NA))) {
       warning("It is recommended to use the 'adjustedsurv' function",
               " when the 'event' variable is binary.")
@@ -780,22 +805,45 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
   if (method=="direct_pseudo" | method=="aiptw_pseudo" |
       method=="iptw_pseudo") {
 
-    # outcome_vars
-    if ("outcome_vars" %in% names(obj) && (!is.character(obj$outcome_vars))) {
-      stop("'outcome_vars' should be a character vector of column names",
-           " in 'data', used to model the outcome mechanism.")
+    # need outcome vars
+    if ((method=="direct_pseudo" | method=="aiptw_pseudo") &
+        (!"outcome_vars" %in% names(obj))) {
+      stop("Argument 'outcome_vars' must be specified when using",
+           " method='", method, "'. See documentation.")
+    }
+    # outcome_vars right format
+    if ((method=="direct_pseudo" | method=="aiptw_pseudo") &
+        !is.character(obj$outcome_vars)) {
+      stop("'outcome_vars' should be a character vector of column names ",
+           "in 'data', used to model the outcome mechanism.")
     }
     # type_time
     if ("type_time" %in% names(obj) && (!obj$type_time %in%
                                         c("factor", "bs", "ns"))) {
       stop("'type_time' should be either 'factor', 'bs' or 'ns'.")
     }
-    # treatment_model
-    if ("treatment_model" %in% names(obj) && method=="aiptw_pseudo" &
-        (!(is.numeric(obj$treatment_model) |
-           inherits(obj$treatment_model, c("glm", "multinom", "mira"))))) {
-      stop("Argument 'treatment_model' must be one of",
-           " glm, multinom or mira or a numeric vector of propensity scores.")
+    # need treatment model
+    if ((method=="iptw_pseudo" | method=="aiptw_pseudo") &
+        (!"treatment_model" %in% names(obj))) {
+      stop("Argument 'treatment_model' must be specified when using",
+           " method='", method, "'. See documentation.")
+    }
+    # treatment_model right format
+    if (method=="aiptw_pseudo" & (!(is.numeric(obj$treatment_model) |
+                                    inherits(obj$treatment_model,
+                                             c("glm", "multinom", "mira"))))) {
+      stop("Argument 'treatment_model' must be one of: 'glm',",
+           " 'multinom', 'mira' or a numeric vector of propensity scores.")
+    }
+    # propensity scores right format
+    if (method=="aiptw_pseudo" & is.numeric(obj$treatment_model)) {
+      if (length(obj$treatment_model) != nrow(data)) {
+        stop("The vector of propensity score supplied in the 'treatment_model'",
+             " argument must be of length nrow(data).")
+      } else if (any(obj$treatment_model > 1 | obj$treatment_model < 0)) {
+        stop("Propensity Scores supplied using the 'treatment_model'",
+             " argument must be smaller than 1 and bigger than 0.")
+      }
     }
 
     if (method %in% c("aiptw_pseudo", "direct_pseudo") & !is.null(times)) {
@@ -851,6 +899,17 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
         cause != obj$outcome_model$cause) {
       stop("The FGR model needs to be fit with the same 'cause' as specified",
            " in the 'cause' argument.")
+    }
+  ## IPTW
+  } else if (method=="iptw" & !inherits(data, "mids")) {
+    # need treatment_model
+    if (!"treatment_model" %in% names(obj)) {
+      stop("Argument 'treatment_model' must be defined when using",
+           " method='iptw'. See documentation.")
+    # treatment_model wrong format
+    } else if (!inherits(obj$treatment_model, c("glm", "multinom"))) {
+      stop("'treatment_model' must be a glm or multinom object.",
+           " See documentation.")
     }
   }
 

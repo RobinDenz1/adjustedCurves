@@ -8,6 +8,8 @@ Using Matching to Calculate Adjusted CIFs
 
 This page explains the details of estimating adjusted cumulative incidence functions using propensity-score matching in a competing risks setting. The function is called internally when using \code{method="matching"} in the \code{\link[=adjustedcif]{adjustedcif}} function. It is highly recommended to use \code{\link[=adjustedcif]{adjustedcif}} instead of calling this function directly.
 
+When using \code{method="matching"} the \code{treatment_model} argument has to be specified in the \code{adjustedcif} call.
+
 }
 \usage{
 cif_matching(data, variable, ev_time, event, cause,

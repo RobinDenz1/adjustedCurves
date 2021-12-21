@@ -8,6 +8,8 @@ Augmented Inverse Probability of Treatment Weighted CIFs
 
 This page explains the details of estimating augmented inverse probability of treatment weighted cumulative incidence functions for competing risks data. The function is called internally when using \code{method="aiptw"} in the \code{\link[=adjustedcif]{adjustedcif}} function. It is highly recommended to use \code{\link[=adjustedcif]{adjustedcif}} instead of calling this function directly.
 
+When using \code{method="aiptw"} the \code{treatment_model} argument and the \code{outcome_model} argument have to be specified in the \code{adjustedcif} call.
+
 }
 \usage{
 cif_aiptw(data, variable, ev_time, event, cause,

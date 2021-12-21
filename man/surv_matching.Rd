@@ -8,6 +8,8 @@ Using Matching to Calculate Adjusted Survival Curves
 
 This page explains the details of estimating adjusted survival curves using propensity-score matching for single event time-to-event data. The function is called internally when using \code{method="matching"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function. It is highly recommended to use \code{\link[=adjustedsurv]{adjustedsurv}} instead of calling this function directly.
 
+When using \code{method="matching"} the \code{treatment_model} argument has to be specified in the \code{adjustedsurv} call.
+
 }
 \usage{
 surv_matching(data, variable, ev_time, event, conf_int=FALSE,

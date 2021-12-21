@@ -8,6 +8,8 @@ Targeted Maximum Likelihood Estimation for CIFs
 
 This page explains the details of estimating adjusted cumulative incidence functions using the targeted maximum likelihood methodology in a competing risks setting. The function is called internally when using \code{method="tmle"} in the \code{\link[=adjustedcif]{adjustedcif}} function. It is highly recommended to use \code{\link[=adjustedcif]{adjustedcif}} instead of calling this function directly.
 
+When using \code{method="tmle"} you have to specify either \code{SL.ftime} or \code{glm.ftime}, \code{SL.ctime} or \code{glm.ctime} and \code{SL.trt} or \code{glm.trt} in the \code{adjustedcif} call.
+
 }
 \usage{
 cif_tmle(data, variable, ev_time, event, cause,

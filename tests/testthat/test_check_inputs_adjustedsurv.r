@@ -69,7 +69,8 @@ test_that("non-standard evaluation in variable", {
                                                           n_boot=2,
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
-               NULL)
+               paste0("'variable' must be a character string specifying ",
+                      "a variable in 'data'."))
 })
 
 test_that("ev_time not in data", {
@@ -144,7 +145,7 @@ test_that("ev_time contains negative values", {
 test_that("non-standard evaluation in ev_time", {
   expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
                                                           variable="group",
-                                                          ev_time=time,
+                                                          ev_time=time3,
                                                           event="event",
                                                           method="km",
                                                           conf_int=FALSE,
@@ -154,9 +155,8 @@ test_that("non-standard evaluation in ev_time", {
                                                           n_boot=2,
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
-               paste0("Arguments 'variable', 'ev_time', 'event' and ",
-                      "'method' must be character strings, ",
-                      "specifying variables in 'data'."))
+               paste0("'ev_time' must be a character string specifying a ",
+                      "variable in 'data'."))
 })
 
 test_that("event not in data", {
@@ -233,7 +233,7 @@ test_that("non-standard evaluation in event", {
   expect_error(adjustedCurves:::check_inputs_adjustedsurv(data=sim_dat,
                                                           variable="group",
                                                           ev_time="time",
-                                                          event=event,
+                                                          event=status,
                                                           method="km",
                                                           conf_int=FALSE,
                                                           conf_level=0.95,
@@ -242,7 +242,8 @@ test_that("non-standard evaluation in event", {
                                                           n_boot=2,
                                                           na.action="na.omit",
                                                           clean_data=TRUE),
-               paste0("object 'event' not found"))
+               paste0("'event' must be a character string specifying ",
+                      "a variable in 'data'."))
 })
 
 test_that("method undefined", {

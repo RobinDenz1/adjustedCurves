@@ -8,6 +8,7 @@ Direct Adjusted Cumulative Incidence Functions
 
 This page explains the details of estimating confounder-adjusted CIFs using a previously fit model to describe the outcome mechanism in a competing risks setting. The function is called internally when using \code{method="direct"} in the \code{\link[=adjustedcif]{adjustedcif}} function. It is highly recommended to use \code{\link[=adjustedcif]{adjustedcif}} instead of calling this function directly.
 
+When using \code{method="direct"} the \code{outcome_model} argument has to be specified in the \code{adjustedcif} call.
 }
 \usage{
 cif_direct(data, variable, ev_time, event, cause,

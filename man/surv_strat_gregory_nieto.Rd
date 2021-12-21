@@ -8,6 +8,8 @@ Adjusted Survival Curves for Categorical Confounders using the Method by Gregory
 
 This page explains the details of estimating confounder-adjusted survival curves using a weighted average of stratified Kaplan-Meier estimates using the method described in Gregory (1988) and Nieto & Coresh (1996). The function is called internally when using \code{method="strat_gregory_nieto"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function. It is highly recommended to use \code{\link[=adjustedsurv]{adjustedsurv}} instead of calling this function directly.
 
+When using \code{method="strat_gregory_nieto"} the \code{adjust_vars} argument has to be specified in the \code{adjustedsurv} call.
+
 }
 \usage{
 surv_strat_gregory_nieto(data, variable, ev_time, event,

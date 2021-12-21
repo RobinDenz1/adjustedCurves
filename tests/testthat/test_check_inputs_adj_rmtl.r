@@ -10,7 +10,10 @@ test_that("not an adjustedsurv/adjustedcif object", {
                                                       from=0,
                                                       to=1,
                                                       use_boot=FALSE),
-               NULL)
+               paste0("'adj' must be an 'adjustedsurv' object created ",
+                      "using the 'adjustedsurv()' function or an ",
+                      "'adjustedcif' object created using the ",
+                      "'adjustedcif()' function."), fixed=TRUE)
 })
 
 test_that("from smaller 0", {
@@ -26,7 +29,8 @@ test_that("from wrong format", {
                                                       from="0",
                                                       to=1,
                                                       use_boot=FALSE),
-               NULL)
+               "'from' and 'to' must be numbers (one for each argument).",
+               fixed=TRUE)
 })
 
 test_that("from not smaller than to", {

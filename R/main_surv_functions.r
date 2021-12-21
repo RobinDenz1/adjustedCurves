@@ -50,7 +50,6 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
   if (inherits(data, "mids")) {
 
     # get event specific times
-    times_input <- times
     if (is.null(times)) {
       times <- sort(unique(data$data[, ev_time][data$data[, event]==1]))
 
@@ -225,7 +224,6 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
     . <- i <- time <- group <- surv <- se <- NULL
 
     # get event specific times
-    times_input <- times
     if (is.null(times) & !bootstrap & method %in% c("km", "iptw_km",
                                                     "iptw_cox",
                                                     "strat_amato",
@@ -274,7 +272,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
                                      .export=export_objs) %dorng% {
 
           adjustedsurv_boot(data=data, variable=variable, ev_time=ev_time,
-                            event=event, method=method, times_input=times_input,
+                            event=event, method=method,
                             times=times, i=i, surv_fun=surv_fun,
                             levs=levs, na.action=na.action, ...)
                                      }
@@ -287,7 +285,6 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
           boot_out[[i]] <- adjustedsurv_boot(data=data, variable=variable,
                                              ev_time=ev_time, event=event,
                                              method=method,
-                                             times_input=times_input,
                                              times=times, i=i,
                                              surv_fun=surv_fun, levs=levs,
                                              na.action=na.action, ...)
@@ -363,8 +360,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
 
 ## perform one bootstrap iteration
 adjustedsurv_boot <- function(data, variable, ev_time, event, method,
-                              times_input, times, i, surv_fun, levs,
-                              na.action, ...) {
+                              times, i, surv_fun, levs, na.action, ...) {
 
   # draw sample
   indices <- sample(x=rownames(data), size=nrow(data), replace=TRUE)
@@ -437,11 +433,9 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
                               custom_linetypes=NULL,
                               single_color=NULL, single_linetype=NULL,
                               ci_draw_alpha=0.4, steps=TRUE,
-                              median_surv_lines=FALSE,
-                              median_surv_size=0.5,
+                              median_surv_lines=FALSE, median_surv_size=0.5,
                               median_surv_linetype="dashed",
-                              median_surv_color="black",
-                              median_surv_alpha=1,
+                              median_surv_color="black", median_surv_alpha=1,
                               censoring_ind="none",
                               censoring_ind_size=0.5, censoring_ind_alpha=1,
                               censoring_ind_shape=17, censoring_ind_width=NULL,

@@ -8,6 +8,8 @@ Empirical Likelihood Estimation Survival Curves
 
 This page explains the details of estimating adjusted survival curves using the empirical likelihood estimation methodology introduced by Wang et al. (2019) for single event time-to-event data. The function is called internally when using \code{method="emp_lik"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function. It is highly recommended to use \code{\link[=adjustedsurv]{adjustedsurv}} instead of calling this function directly.
 
+When using \code{method="emp_lik"} the \code{treatment_vars} argument has to be specified in the \code{adjustedsurv} call.
+
 }
 \usage{
 surv_emp_lik(data, variable, ev_time, event, conf_int=FALSE,

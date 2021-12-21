@@ -8,6 +8,8 @@ Augmented Inverse Probability of Treatment Weighted CIFs using Pseudo-Values
 
 This page explains the details of estimating augmented inverse probability of treatment weighted CIFs using pseudo-values in a competing risks setting. The function is called internally when using \code{method="aiptw_pseudo"} in the \code{\link[=adjustedcif]{adjustedcif}} function. It is highly recommended to use \code{\link[=adjustedcif]{adjustedcif}} instead of calling this function directly.
 
+When using \code{method="aiptw_pseudo"} the \code{treatment_model} argument and the \code{outcome_vars} argument have to be specified in the \code{adjustedcif} call.
+
 }
 \usage{
 cif_aiptw_pseudo(data, variable, ev_time, event, cause,

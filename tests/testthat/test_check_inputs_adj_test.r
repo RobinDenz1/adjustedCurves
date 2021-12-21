@@ -52,7 +52,10 @@ test_that("no bootstrapping performed", {
   expect_error(adjustedCurves:::check_inputs_adj_test(adjsurv=adjsurv_no_boot,
                                                         from=0,
                                                         to=1),
-                 NULL)
+               paste0("Can only perform a significance test if bootstrapping ",
+                      "was performed (bootstrap=TRUE in ",
+                      "adjustedsurv/adjustedcif call)."),
+               fixed=TRUE)
 })
 
 test_that("to larger than last time", {
