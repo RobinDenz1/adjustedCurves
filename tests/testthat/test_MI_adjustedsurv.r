@@ -347,14 +347,7 @@ adjsurv <- adjustedCurves::adjustedsurv(data=imp,
                                         na.action="na.omit")
 
 test_that("adjusted_median_survival, no boot", {
-  expect_error(adjustedCurves::adjusted_median_survival(adjsurv,
-                                                        use_boot=FALSE),
-               NA)
-})
-
-test_that("adjusted_median_survival, boot", {
-  expect_error(adjustedCurves::adjusted_median_survival(adjsurv,
-                                                        use_boot=TRUE),
+  expect_error(adjustedCurves::adjusted_median_survival(adjsurv),
                NA)
 })
 

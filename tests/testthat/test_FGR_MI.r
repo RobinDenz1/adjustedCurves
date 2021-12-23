@@ -1,4 +1,3 @@
-library(survival)
 library(riskRegression)
 library(prodlim)
 library(mice)
@@ -13,14 +12,13 @@ sim_dat$x1 <- ifelse(stats::runif(n=100)<0.5, NA, sim_dat$x1)
 mids <- mice::mice(data=sim_dat, m=3, method="pmm", printFlag=FALSE)
 
 test_that("no additional args", {
-  expect_error(adjustedCurves::FGR_MI(mids=mids,
-                                      formula=Hist(time, event) ~ x1 + x2), NA)
+  mod <- FGR_MI(mids=mids, formula=Hist(time, event) ~ x1 + x2)
+  expect_s3_class(mod, "mira")
 })
 
 test_that("with additional args", {
-  expect_error(adjustedCurves::FGR_MI(mids=mids,
-                                      formula=Hist(time, event) ~ x1 + x2,
-                                      cause=1), NA)
+  mod <- FGR_MI(mids=mids, formula=Hist(time, event) ~ x1 + x2, cause=1)
+  expect_s3_class(mod, "mira")
 })
 
 test_that("trying to use data", {
@@ -28,5 +26,6 @@ test_that("trying to use data", {
                                       formula=Hist(time, event) ~ x1 + x2,
                                       cause=1,
                                       data=sim_dat),
-               NULL)
+               paste0("The 'data' argument cannot be used here. ",
+                      "It is replaced by the'mids' argument."))
 })

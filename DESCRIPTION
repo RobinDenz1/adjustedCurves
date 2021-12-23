@@ -16,7 +16,7 @@ Description: Estimate and plot confounder-adjusted survival curves using either 
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Imports: 
 	dplyr (>= 1.0.0),
 	R.utils,
@@ -26,6 +26,7 @@ Imports:
 	foreach
 Suggests: 
     testthat (>= 3.0.0),
+	vdiffr (>= 3.0.0),
 	survival (>= 3.0.0),
 	ggplot2 (>= 3.0.0),
 	Matching (>= 4.9),

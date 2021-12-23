@@ -176,11 +176,11 @@ read_from_step_function <- function(x, step_data, est="surv") {
 }
 
 ## calculate difference between two step functions
-exact_stepfun_difference <- function(adjsurv, times, est="surv") {
+exact_stepfun_difference <- function(adj, times, est="surv") {
 
-  levs <- unique(adjsurv$group)
-  adjsurv_0 <- adjsurv[which(adjsurv$group==levs[1]), ]
-  adjsurv_1 <- adjsurv[which(adjsurv$group==levs[2]), ]
+  levs <- unique(adj$group)
+  adjsurv_0 <- adj[which(adj$group==levs[1]), ]
+  adjsurv_1 <- adj[which(adj$group==levs[2]), ]
 
   if (nrow(adjsurv_0)==nrow(adjsurv_1)) {
 

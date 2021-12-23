@@ -91,10 +91,10 @@ More importantly however, we can plot the survival curves directly using the `pl
 ```{r echo=TRUE, fig.show=TRUE, fig.width=7, fig.height=5}
 plot(adjsurv)
 ```
-This plot function comes with many options which are listed in the documentation. To plot the pointwise confidence intervals, we can set the argument `draw_ci` to TRUE:
+This plot function comes with many options which are listed in the documentation. To plot the pointwise confidence intervals, we can set the argument `conf_int` to TRUE:
 
 ```{r echo=TRUE, fig.show=TRUE, fig.width=7, fig.height=5}
-plot(adjsurv, draw_ci=TRUE)
+plot(adjsurv, conf_int=TRUE)
 ```
 
 Instead of using colors to differentiate the curves we can also use different linetypes, by setting the `linetype` argument to TRUE and the `color` argument to `FALSE`:
@@ -162,7 +162,7 @@ adjsurv <- adjustedsurv(data=data,
                         outcome_model=outcome_model,
                         conf_int=TRUE)
 
-plot(adjsurv, draw_ci=TRUE)
+plot(adjsurv, conf_int=TRUE)
 ```
 
 ## Adjusted Cumulative Incidence Functions
@@ -287,7 +287,7 @@ adjsurv <- adjustedsurv(data=data,
                         method="iptw_km",
                         treatment_model=treatment_model,
                         conf_int=TRUE)
-plot(adjsurv, draw_ci=TRUE)
+plot(adjsurv, conf_int=TRUE)
 ```
 
 ## Calculating the adjusted restricted mean survival time

@@ -8,13 +8,13 @@ Plot Confounder-Adjusted Survival Curves
 A function to graphically display confounder-adjusted survival curves which where previously estimated using the \code{\link[adjustedCurves]{adjustedsurv}} function. The user can customize the plot using a variety of options. Internally it uses the \pkg{ggplot2} package, so additional not implemented features can be added using the standard \code{ggplot2} syntax. This function also includes the option to use isotonic regression on the survival curves, which is of benefit if the estimated curves are not monotone.
 }
 \usage{
-\method{plot}{adjustedsurv}(x, draw_ci=FALSE, max_t=Inf,
+\method{plot}{adjustedsurv}(x, conf_int=FALSE, max_t=Inf,
      iso_reg=FALSE, force_bounds=FALSE,
      use_boot=FALSE, cif=FALSE, color=TRUE,
      linetype=FALSE, facet=FALSE,
      line_size=1, line_alpha=1, xlab="Time",
      ylab="Adjusted Survival Probability",
-     title=NULL, legend.title="Group",
+     title=NULL, subtitle=NULL, legend.title="Group",
      legend.position="right",
      gg_theme=ggplot2::theme_classic(),
      ylim=NULL, custom_colors=NULL,
@@ -38,7 +38,7 @@ A function to graphically display confounder-adjusted survival curves which wher
   \item{x}{
 An \code{adjustedsurv} object created using the \code{\link[adjustedCurves]{adjustedsurv}} function.
   }
-  \item{draw_ci}{
+  \item{conf_int}{
 A logical variable indicating whether the confidence intervals should be drawn.
   }
   \item{max_t}{
@@ -79,6 +79,9 @@ A character string to be used as the Y-Axis label of the plot.
   }
   \item{title}{
 A character string to be used as the title of the plot. Set to \code{NULL} if no title should be used.
+  }
+  \item{subtitle}{
+A character string to be used as the subtitle of the plot. Set to \code{NULL} if no subtitle should be used.
   }
   \item{legend.title}{
 A character string to be used as the title of the legend. Set to \code{NULL} if no legend should be included.
@@ -198,10 +201,10 @@ plot(adjsurv)
 plot(adjsurv, iso_reg=TRUE)
 
 # plot with confidence intervals estimated using asymptotic variances
-plot(adjsurv, draw_ci=TRUE)
+plot(adjsurv, conf_int=TRUE)
 
 # plot with confidence intervals estimated using bootstrapping
-plot(adjsurv, draw_ci=TRUE, use_boot=TRUE)
+plot(adjsurv, conf_int=TRUE, use_boot=TRUE)
 
 # plot with different linetypes only
 plot(adjsurv, linetype=TRUE, color=FALSE, facet=FALSE)
@@ -215,7 +218,7 @@ plot(adjsurv, linetype=TRUE, color=TRUE, facet=FALSE)
 # plot with some custom characteristics
 plot(adjsurv, legend.position="bottom", linetype=TRUE,
      custom_colors=c("green", "blue"), legend.title="Custom",
-     title="Custom Plot", draw_ci=TRUE, linesize=0.5)
+     title="Custom Plot", conf_int=TRUE, linesize=0.5)
 
 # adding further ggplot2 elements
 plot(adjsurv) + theme_classic()

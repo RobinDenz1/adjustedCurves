@@ -12,48 +12,63 @@ treat_mod <- glm(group ~ x1 + x2 + x3 + x4 + x5 + x6, data=sim_dat,
 
 ## Just check if function throws any errors
 test_that("2 treatments, using glm", {
-  expect_error(adjustedCurves:::get_iptw_weights(data=sim_dat,
-                                                 treatment_model=treat_mod,
-                                                 weight_method="ps",
-                                                 variable="group",
-                                                 stabilize=TRUE,
-                                                 trim=FALSE), NA)
+  weights <- adjustedCurves:::get_iptw_weights(data=sim_dat,
+                                               treatment_model=treat_mod,
+                                               weight_method="ps",
+                                               variable="group",
+                                               stabilize=TRUE,
+                                               trim=FALSE)
+  expect_true(is.numeric(weights))
+  expect_true(all(weights > 0))
+  expect_true(length(weights)==nrow(sim_dat))
 })
 
 test_that("2 treatments, using weightit", {
-  expect_error(adjustedCurves:::get_iptw_weights(data=sim_dat,
-                                                treatment_model=group ~ x2 + x3,
-                                                weight_method="ps",
-                                                variable="group",
-                                                stabilize=TRUE,
-                                                trim=FALSE), NA)
+  weights <- adjustedCurves:::get_iptw_weights(data=sim_dat,
+                                               treatment_model=group ~ x2 + x3,
+                                               weight_method="ps",
+                                               variable="group",
+                                               stabilize=TRUE,
+                                               trim=FALSE)
+  expect_true(is.numeric(weights))
+  expect_true(all(weights > 0))
+  expect_true(length(weights)==nrow(sim_dat))
 })
 
 test_that("2 treatments, using glm + trim", {
-  expect_error(adjustedCurves:::get_iptw_weights(data=sim_dat,
-                                                 treatment_model=treat_mod,
-                                                 weight_method="ps",
-                                                 variable="group",
-                                                 stabilize=TRUE,
-                                                 trim=3), NA)
+  weights <- adjustedCurves:::get_iptw_weights(data=sim_dat,
+                                               treatment_model=treat_mod,
+                                               weight_method="ps",
+                                               variable="group",
+                                               stabilize=TRUE,
+                                               trim=3)
+  expect_true(is.numeric(weights))
+  expect_true(all(weights > 0))
+  expect_true(length(weights)==nrow(sim_dat))
 })
 
 test_that("2 treatments, using weightit + trim", {
-  expect_error(adjustedCurves:::get_iptw_weights(data=sim_dat,
-                                                treatment_model=group ~ x2 + x3,
-                                                weight_method="ps",
-                                                variable="group",
-                                                stabilize=TRUE,
-                                                trim=3), NA)
+  weights <- adjustedCurves:::get_iptw_weights(data=sim_dat,
+                                               treatment_model=group ~ x2 + x3,
+                                               weight_method="ps",
+                                               variable="group",
+                                               stabilize=TRUE,
+                                               trim=3)
+  expect_true(is.numeric(weights))
+  expect_true(all(weights > 0))
+  expect_true(length(weights)==nrow(sim_dat))
 })
 
 test_that("2 treatments, not using stabilize", {
-  expect_error(adjustedCurves:::get_iptw_weights(data=sim_dat,
-                                                 treatment_model=treat_mod,
-                                                 weight_method="ps",
-                                                 variable="group",
-                                                 stabilize=TRUE,
-                                                 trim=3), NA)
+  weights <- adjustedCurves:::get_iptw_weights(data=sim_dat,
+                                               treatment_model=treat_mod,
+                                               weight_method="ps",
+                                               variable="group",
+                                               stabilize=TRUE,
+                                               trim=3)
+  expect_true(is.numeric(weights))
+  expect_true(all(weights > 0))
+  expect_true(length(weights)==nrow(sim_dat))
 })
 
 ## 3 treatments
@@ -68,46 +83,61 @@ treat_mod <- nnet::multinom(group2 ~ x1 + x2 + x4, data=sim_dat)
 
 ## Just check if function throws any errors
 test_that("3 treatments, using multinom", {
-  expect_error(adjustedCurves:::get_iptw_weights(data=sim_dat,
-                                                 treatment_model=treat_mod,
-                                                 weight_method="ps",
-                                                 variable="group2",
-                                                 stabilize=TRUE,
-                                                 trim=FALSE), NA)
+  weights <- adjustedCurves:::get_iptw_weights(data=sim_dat,
+                                               treatment_model=treat_mod,
+                                               weight_method="ps",
+                                               variable="group2",
+                                               stabilize=TRUE,
+                                               trim=FALSE)
+  expect_true(is.numeric(weights))
+  expect_true(all(weights > 0))
+  expect_true(length(weights)==nrow(sim_dat))
 })
 
 test_that("3 treatments, using weightit", {
-  expect_error(adjustedCurves:::get_iptw_weights(data=sim_dat,
-                                                treatment_model=group ~ x2 + x3,
-                                                weight_method="ps",
-                                                variable="group2",
-                                                stabilize=TRUE,
-                                                trim=FALSE), NA)
+  weights <- adjustedCurves:::get_iptw_weights(data=sim_dat,
+                                               treatment_model=group ~ x2 + x3,
+                                               weight_method="ps",
+                                               variable="group2",
+                                               stabilize=TRUE,
+                                               trim=FALSE)
+  expect_true(is.numeric(weights))
+  expect_true(all(weights > 0))
+  expect_true(length(weights)==nrow(sim_dat))
 })
 
 test_that("3 treatments, using multinom + trim", {
-  expect_error(adjustedCurves:::get_iptw_weights(data=sim_dat,
-                                                 treatment_model=treat_mod,
-                                                 weight_method="ps",
-                                                 variable="group2",
-                                                 stabilize=TRUE,
-                                                 trim=3), NA)
+  weights <- adjustedCurves:::get_iptw_weights(data=sim_dat,
+                                               treatment_model=treat_mod,
+                                               weight_method="ps",
+                                               variable="group2",
+                                               stabilize=TRUE,
+                                               trim=3)
+  expect_true(is.numeric(weights))
+  expect_true(all(weights > 0))
+  expect_true(length(weights)==nrow(sim_dat))
 })
 
 test_that("3 treatments, using weightit + trim", {
-  expect_error(adjustedCurves:::get_iptw_weights(data=sim_dat,
-                                                treatment_model=group ~ x2 + x3,
-                                                weight_method="ps",
-                                                variable="group2",
-                                                stabilize=TRUE,
-                                                trim=3), NA)
+  weights <- adjustedCurves:::get_iptw_weights(data=sim_dat,
+                                               treatment_model=group ~ x2 + x3,
+                                               weight_method="ps",
+                                               variable="group2",
+                                               stabilize=TRUE,
+                                               trim=3)
+  expect_true(is.numeric(weights))
+  expect_true(all(weights > 0))
+  expect_true(length(weights)==nrow(sim_dat))
 })
 
 test_that("3 treatments, not using stabilize", {
-  expect_error(adjustedCurves:::get_iptw_weights(data=sim_dat,
-                                                 treatment_model=treat_mod,
-                                                 weight_method="ps",
-                                                 variable="group2",
-                                                 stabilize=TRUE,
-                                                 trim=3), NA)
+  weights <- adjustedCurves:::get_iptw_weights(data=sim_dat,
+                                               treatment_model=treat_mod,
+                                               weight_method="ps",
+                                               variable="group2",
+                                               stabilize=TRUE,
+                                               trim=3)
+  expect_true(is.numeric(weights))
+  expect_true(all(weights > 0))
+  expect_true(length(weights)==nrow(sim_dat))
 })

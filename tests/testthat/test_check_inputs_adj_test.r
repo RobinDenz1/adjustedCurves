@@ -12,44 +12,44 @@ not_adjsurv <- list()
 class(not_adjsurv) <- "something"
 
 test_that("not an adjustedsurv/adjustedcif object", {
-  expect_error(adjustedCurves:::check_inputs_adj_test(adjsurv=not_adjsurv,
+  expect_error(adjustedCurves:::check_inputs_adj_test(adj=not_adjsurv,
                                                       from=0,
                                                       to=1),
-               paste0("'adjsurv' must be an 'adjustedsurv' or ",
+               paste0("'adj' must be an 'adjustedsurv' or ",
                       "'adjustedcif' object,created using the ",
                       "adjustedsurv or adjustedcif function."))
 })
 
 test_that("from smaller 0", {
-  expect_error(adjustedCurves:::check_inputs_adj_test(adjsurv=adjsurv,
+  expect_error(adjustedCurves:::check_inputs_adj_test(adj=adjsurv,
                                                       from=-10,
                                                       to=1),
                "'from' must be a number >= 0.")
 })
 
 test_that("from wrong format", {
-  expect_error(adjustedCurves:::check_inputs_adj_test(adjsurv=adjsurv,
+  expect_error(adjustedCurves:::check_inputs_adj_test(adj=adjsurv,
                                                       from="0",
                                                       to=1),
                "'from' must be a single number >= 0.")
 })
 
 test_that("to wrong format", {
-  expect_error(adjustedCurves:::check_inputs_adj_test(adjsurv=adjsurv,
+  expect_error(adjustedCurves:::check_inputs_adj_test(adj=adjsurv,
                                                       from=0,
                                                       to="1"),
                "'to' must be a single number >= 0.")
 })
 
 test_that("from not smaller than to", {
-  expect_error(adjustedCurves:::check_inputs_adj_test(adjsurv=adjsurv,
+  expect_error(adjustedCurves:::check_inputs_adj_test(adj=adjsurv,
                                                       from=0,
                                                       to=0),
                "'to' must be greater than 'from'.")
 })
 
 test_that("no bootstrapping performed", {
-  expect_error(adjustedCurves:::check_inputs_adj_test(adjsurv=adjsurv_no_boot,
+  expect_error(adjustedCurves:::check_inputs_adj_test(adj=adjsurv_no_boot,
                                                         from=0,
                                                         to=1),
                paste0("Can only perform a significance test if bootstrapping ",
@@ -59,7 +59,7 @@ test_that("no bootstrapping performed", {
 })
 
 test_that("to larger than last time", {
-  expect_error(adjustedCurves:::check_inputs_adj_test(adjsurv=adjsurv,
+  expect_error(adjustedCurves:::check_inputs_adj_test(adj=adjsurv,
                                                       from=0,
                                                       to=2),
                "'to' cannot be greater than the latest observed time.")
@@ -70,7 +70,7 @@ adjsurv <- list(boot_data=data.frame(a=1),
 class(adjsurv) <- "adjustedsurv"
 
 test_that("not enough points in time", {
-  expect_warning(adjustedCurves:::check_inputs_adj_test(adjsurv=adjsurv,
+  expect_warning(adjustedCurves:::check_inputs_adj_test(adj=adjsurv,
                                                         from=0,
                                                         to=0.2),
                paste0("Using only a few points in time might lead to ",

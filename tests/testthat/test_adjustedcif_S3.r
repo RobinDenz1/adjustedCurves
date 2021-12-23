@@ -1,5 +1,5 @@
-library(survival)
 
+set.seed(42)
 sim_dat <- sim_confounded_crisk(n=20)
 sim_dat$group <- as.factor(sim_dat$group)
 
@@ -11,67 +11,67 @@ adj <- adjustedcif(data=sim_dat,
                    cause=1)
 
 test_that("print.adjustedcif", {
-  expect_error(print(adj), NA)
+  expect_snapshot_output(print(adj))
 })
 
 test_that("summary.adjustedcif, aalen_johansen", {
-  expect_error(summary(adj), NA)
+  expect_snapshot_output(summary(adj))
 })
 
 adj$method <- "direct"
 test_that("summary.adjustedcif, direct", {
-  expect_error(summary(adj), NA)
+  expect_snapshot_output(summary(adj))
 })
 
 adj$method <- "direct_pseudo"
 test_that("summary.adjustedcif, direct_pseudo", {
-  expect_error(summary(adj), NA)
+  expect_snapshot_output(summary(adj))
 })
 
 adj$method <- "iptw"
 test_that("summary.adjustedcif, iptw", {
-  expect_error(summary(adj), NA)
+  expect_snapshot_output(summary(adj))
 })
 
 adj$method <- "iptw_pseudo"
 test_that("summary.adjustedcif, iptw_pseudo", {
-  expect_error(summary(adj), NA)
+  expect_snapshot_output(summary(adj))
 })
 
 adj$method <- "matching"
 test_that("summary.adjustedcif, matching", {
-  expect_error(summary(adj), NA)
+  expect_snapshot_output(summary(adj))
 })
 
 adj$method <- "aiptw"
 test_that("summary.adjustedcif, aiptw", {
-  expect_error(summary(adj), NA)
+  expect_snapshot_output(summary(adj))
 })
 
 adj$method <- "aiptw_pseudo"
 test_that("summary.adjustedcif, aiptw_pseudo", {
-  expect_error(summary(adj), NA)
+  expect_snapshot_output(summary(adj))
 })
 
 adj$method <- "tmle"
 test_that("summary.adjustedcif, tmle", {
-  expect_error(summary(adj), NA)
+  expect_snapshot_output(summary(adj))
 })
 
 adj$call$bootstrap <- TRUE
 
 test_that("summary.adjustedcif, with boot", {
-  expect_error(summary(adj), NA)
+  expect_snapshot_output(summary(adj))
 })
 
 adj$call$conf_int <- TRUE
 
 test_that("summary.adjustedcif, with conf_int", {
-  expect_error(summary(adj), NA)
+  expect_snapshot_output(summary(adj))
 })
 
 adj$mids_analyses <- 1
 
 test_that("summary.adjustedcif, with mids", {
-  expect_error(summary(adj), NA)
+  expect_snapshot_output(summary(adj))
 })

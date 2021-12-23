@@ -275,7 +275,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
         stop("'treatment_vars' should be a character vector of column names ",
              "in 'data', used to model the outcome mechanism.")
       }
-
+      # 0/1 variables in data
       for (col in obj$treatment_vars) {
         if (paste0(unique(data[, col]), collapse="") %in% c("10", "01")) {
           warning("Dichotomous variables coded with 0 and 1 found in ",
@@ -570,13 +570,13 @@ check_inputs_adj_rmtl <- function(adj, from, to, use_boot) {
 }
 
 ## for adjustedsurv_test
-check_inputs_adj_test <- function(adjsurv, from, to) {
+check_inputs_adj_test <- function(adj, from, to) {
 
-  if (!(inherits(adjsurv, "adjustedsurv") |
-        inherits(adjsurv, "adjustedcif"))) {
-    stop("'adjsurv' must be an 'adjustedsurv' or 'adjustedcif' object,",
+  if (!(inherits(adj, "adjustedsurv") |
+        inherits(adj, "adjustedcif"))) {
+    stop("'adj' must be an 'adjustedsurv' or 'adjustedcif' object,",
          "created using the adjustedsurv or adjustedcif function.")
-  } else if (is.null(adjsurv$boot_data)) {
+  } else if (is.null(adj$boot_data)) {
     stop("Can only perform a significance test if bootstrapping was ",
          "performed (bootstrap=TRUE in adjustedsurv/adjustedcif call).")
   } else if (!(is.numeric(from) & length(from)==1)) {
@@ -589,24 +589,24 @@ check_inputs_adj_test <- function(adjsurv, from, to) {
     stop("'to' must be greater than 'from'.")
   }
 
-  if (inherits(adjsurv, "adjustedsurv")) {
-    if (to > max(adjsurv$adjsurv$time, na.rm=TRUE)) {
+  if (inherits(adj, "adjustedsurv")) {
+    if (to > max(adj$adjsurv$time, na.rm=TRUE)) {
       stop("'to' cannot be greater than the latest observed time.")
     }
   } else {
-    if (to > max(adjsurv$adjcif$time)) {
+    if (to > max(adj$adjcif$time)) {
       stop("'to' cannot be greater than the latest observed time.")
     }
   }
 
-  if (inherits(adjsurv, "adjustedsurv")) {
-    if (length(unique((adjsurv$adjsurv$time))) < 10) {
+  if (inherits(adj, "adjustedsurv")) {
+    if (length(unique((adj$adjsurv$time))) < 10) {
       warning("Using only a few points in time might lead to biased",
               " estimates. Consider using a finer times grid in",
               " 'adjustedsurv'.", call.=FALSE)
     }
   } else {
-    if (length(unique((adjsurv$adjcif$time))) < 10) {
+    if (length(unique((adj$adjcif$time))) < 10) {
       warning("Using only a few points in time might lead to biased",
               " estimates. Consider using a finer times grid in",
               " 'adjustedcif'.", call.=FALSE)

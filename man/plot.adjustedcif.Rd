@@ -8,13 +8,13 @@ Plot Confounder-Adjusted Cumulative Incidence Functions
 A function to graphically display confounder-adjusted cumulative incidence functions which where previously estimated using the \code{\link[adjustedCurves]{adjustedcif}} function. The user can customize the plot using a variety of options. Internally it uses the \pkg{ggplot2} package, so additional not implemented features can be added using the standard \pkg{ggplot2} syntax. This function also includes the option to use isotonic regression on the CIFs, which is of benefit if the estimated curves are not monotone.
 }
 \usage{
-\method{plot}{adjustedcif}(x, draw_ci=FALSE, max_t=Inf,
+\method{plot}{adjustedcif}(x, conf_int=FALSE, max_t=Inf,
      iso_reg=FALSE, force_bounds=FALSE,
      use_boot=FALSE, color=TRUE,
      linetype=FALSE, facet=FALSE,
      line_size=1, line_alpha=1, xlab="Time",
      ylab="Adjusted Cumulative Incidence",
-     title=NULL, legend.title="Group",
+     title=NULL, subtitle=NULL, legend.title="Group",
      legend.position="right",
      gg_theme=ggplot2::theme_classic(),
      ylim=NULL, custom_colors=NULL,
@@ -33,7 +33,7 @@ A function to graphically display confounder-adjusted cumulative incidence funct
   \item{x}{
 An \code{adjustedcif} object created using the \code{\link[adjustedCurves]{adjustedcif}} function.
   }
-  \item{draw_ci}{
+  \item{conf_int}{
 A logical variable indicating whether the confidence intervals should be drawn.
   }
   \item{max_t}{
@@ -70,7 +70,10 @@ A character string to be used as the X-Axis label of the plot.
 A character string to be used as the Y-Axis label of the plot.
   }
   \item{title}{
-A character string to be used as the title of the plot. Set to \code{NULL} if no title should be used.
+A character string to be used as the title of the plot. Set to \code{NULL} (default) if no title should be used.
+  }
+  \item{subtitle}{
+A character string to be used as the subtitle of the plot. Set to \code{NULL} (default) if no subtitle should be used.
   }
   \item{legend.title}{
 A character string to be used as the title of the legend. Set to \code{NULL} if no legend should be included.
@@ -175,10 +178,10 @@ plot(adjcif)
 plot(adjcif, iso_reg=TRUE)
 
 # plot with confidence intervals estimated using asymptotic variances
-plot(adjcif, draw_ci=TRUE)
+plot(adjcif, conf_int=TRUE)
 
 # plot with confidence intervals estimated using bootstrapping
-plot(adjcif, draw_ci=TRUE, use_boot=TRUE)
+plot(adjcif, conf_int=TRUE, use_boot=TRUE)
 
 # plot with different linetypes only
 plot(adjcif, linetype=TRUE, color=FALSE, facet=FALSE)
@@ -192,7 +195,7 @@ plot(adjcif, linetype=TRUE, color=TRUE, facet=FALSE)
 # plot with some custom characteristics
 plot(adjcif, legend.position="bottom", linetype=TRUE,
      custom_colors=c("green", "blue"), legend.title="Custom",
-     title="Custom Plot", draw_ci=TRUE, linesize=0.5)
+     title="Custom Plot", conf_int=TRUE, linesize=0.5)
 
 # adding further ggplot2 elements
 plot(adjcif) + theme_bw()

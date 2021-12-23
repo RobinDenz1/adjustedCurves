@@ -14,20 +14,20 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## calculate area under curve of adjustedsurv, adjustedcif objects
-area_under_curve <- function(object, from, to, use_boot, conf_level) {
+area_under_curve <- function(adj, from, to, use_boot, conf_level) {
 
-  mode <- ifelse(inherits(object, "adjustedsurv"), "surv", "cif")
+  mode <- ifelse(inherits(adj, "adjustedsurv"), "surv", "cif")
   boot_str <- paste0("boot_adj", mode)
 
   ## Using multiple imputation
-  if (!is.null(object$mids_analyses)) {
+  if (!is.null(adj$mids_analyses)) {
 
-    len <- length(object$mids_analyses)
+    len <- length(adj$mids_analyses)
     mids_out <- rmst_ests <- rmst_se <- n_boots <- vector(mode="list",
                                                           length=len)
     for (i in seq_len(len)) {
 
-      results_imp <- area_under_curve(object$mids_analyses[[i]],
+      results_imp <- area_under_curve(adj$mids_analyses[[i]],
                                       to=to, from=from, use_boot=use_boot,
                                       conf_level=conf_level)
       mids_out[[i]] <- results_imp
@@ -70,15 +70,15 @@ area_under_curve <- function(object, from, to, use_boot, conf_level) {
   ## single analysis
   } else {
 
-    if (use_boot & !is.null(object[boot_str])) {
+    if (use_boot & !is.null(adj[boot_str])) {
 
-      n_boot <- max(object$boot_data$boot)
+      n_boot <- max(adj$boot_data$boot)
       booted_rmsts <- vector(mode="list", length=n_boot)
 
       for (i in seq_len(n_boot)) {
 
         # select one bootstrap data set each
-        boot_dat <- object$boot_data[object$boot_data$boot==i, ]
+        boot_dat <- adj$boot_data[adj$boot_data$boot==i, ]
 
         # create fake adjustedsurv object
         if (mode=="surv") {
@@ -98,19 +98,19 @@ area_under_curve <- function(object, from, to, use_boot, conf_level) {
       booted_rmsts <- as.data.frame(dplyr::bind_rows(booted_rmsts))
     }
 
-    if (inherits(object, "adjustedsurv")) {
-      levs <- unique(object$adjsurv$group)
+    if (inherits(adj, "adjustedsurv")) {
+      levs <- unique(adj$adjsurv$group)
     } else {
-      levs <- unique(object$adjcif$group)
+      levs <- unique(adj$adjcif$group)
     }
 
     rmsts <- vector(mode="numeric", length=length(levs))
     for (i in seq_len(length(levs))) {
 
       if (mode=="surv") {
-        surv_dat <- object$adjsurv[object$adjsurv$group==levs[i], ]
+        surv_dat <- adj$adjsurv[adj$adjsurv$group==levs[i], ]
       } else {
-        surv_dat <- object$adjcif[object$adjcif$group==levs[i], ]
+        surv_dat <- adj$adjcif[adj$adjcif$group==levs[i], ]
       }
       surv_dat$group <- NULL
       surv_dat$sd <- NULL
@@ -129,7 +129,7 @@ area_under_curve <- function(object, from, to, use_boot, conf_level) {
                 from=from,
                 to=to)
 
-    if (use_boot & !is.null(object[boot_str])) {
+    if (use_boot & !is.null(adj[boot_str])) {
 
       n_boot_rmst <- apply(booted_rmsts, 2, function(x) {sum(!is.na(x))})
       names(n_boot_rmst) <- levs
@@ -161,7 +161,7 @@ adjusted_rmst <- function(adjsurv, to, from=0, use_boot=FALSE,
     use_boot <- FALSE
   }
 
-  out <- area_under_curve(object=adjsurv, to=to, from=from,
+  out <- area_under_curve(adj=adjsurv, to=to, from=from,
                           use_boot=use_boot, conf_level=conf_level)
   class(out) <- "adjusted_rmst"
   return(out)
@@ -181,7 +181,7 @@ adjusted_rmtl <- function(adj, to, from=0, use_boot=FALSE,
   }
 
   # calculate area under curve
-  out <- area_under_curve(object=adj, to=to, from=from, use_boot=use_boot,
+  out <- area_under_curve(adj=adj, to=to, from=from, use_boot=use_boot,
                           conf_level=conf_level)
   class(out) <- "adjusted_rmtl"
 
@@ -251,7 +251,7 @@ summary.adjusted_rmtl <- function(object, digits=5, ...) {
 ## plot method for the adjusted_rmst function
 #' @importFrom rlang .data
 #' @export
-plot.adjusted_rmst <- function(x, draw_ci=TRUE, color=TRUE, point_size=2,
+plot.adjusted_rmst <- function(x, conf_int=TRUE, color=TRUE, point_size=2,
                                ci_size=1, ci_width=0.7, xlab="",
                                ylab="Adjusted RMST", title=NULL,
                                gg_theme=ggplot2::theme_classic(), ...) {
@@ -270,7 +270,7 @@ plot.adjusted_rmst <- function(x, draw_ci=TRUE, color=TRUE, point_size=2,
     mapping$colour <- NULL
   }
 
-  if (!is.null(x$auc_ci_lower) & draw_ci) {
+  if (!is.null(x$auc_ci_lower) & conf_int) {
 
     p <- ggplot2::ggplot(plotdata, mapping) +
       ggplot2::geom_errorbar(ggplot2::aes(ymin=.data$ci_lower,
@@ -301,11 +301,11 @@ plot.adjusted_rmst <- function(x, draw_ci=TRUE, color=TRUE, point_size=2,
 ## plot method for the adjusted_rmst function
 #' @importFrom rlang .data
 #' @export
-plot.adjusted_rmtl <- function(x, draw_ci=TRUE, color=TRUE, point_size=2,
+plot.adjusted_rmtl <- function(x, conf_int=TRUE, color=TRUE, point_size=2,
                                ci_size=1, ci_width=0.7, xlab="",
                                ylab="Adjusted RMTL", title=NULL,
                                gg_theme=ggplot2::theme_classic(), ...) {
-  plot.adjusted_rmst(x=x, draw_ci=draw_ci, color=color,
+  plot.adjusted_rmst(x=x, conf_int=conf_int, color=color,
                      point_size=point_size, ci_size=ci_size, ci_width=ci_width,
                      xlab=xlab, ylab=ylab, title=title, gg_theme=gg_theme,
                      ...)

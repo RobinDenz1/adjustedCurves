@@ -125,6 +125,6 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         conf_int=TRUE)
 
 # plot the curves
-plot(adjsurv, draw_ci=TRUE)
+plot(adjsurv, conf_int=TRUE)
 }
 }

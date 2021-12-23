@@ -1,4 +1,5 @@
 library(survival)
+library(vdiffr)
 
 set.seed(42)
 
@@ -15,121 +16,174 @@ adj <- adjustedsurv(data=sim_dat,
                     n_boot=2)
 
 test_that("plot, no arguments", {
-  expect_error(plot(adj), NA)
+  plt <- plot(adj)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, no arguments", fig=plt)
 })
 
 test_that("plot, with conf_int", {
-  expect_error(plot(adj, draw_ci=TRUE), NA)
+  plt <- plot(adj, conf_int=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, with conf_int", fig=plt)
 })
 
 test_that("plot, using boot", {
-  expect_error(plot(adj, draw_ci=TRUE, use_boot=TRUE), NA)
+  plt <- plot(adj, conf_int=TRUE, use_boot=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, using boot", fig=plt)
 })
 
 test_that("plot, using iso_reg", {
-  expect_error(plot(adj, iso_reg=TRUE), NA)
+  plt <- plot(adj, iso_reg=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, using iso_reg", fig=plt)
 })
 
 test_that("plot, using censoring indicators (lines)", {
-  expect_error(plot(adj, iso_reg=TRUE,
-                    censoring_ind="lines",
-                    censoring_ind_width=0.1,
-                    censoring_ind_size=1,
-                    censoring_ind_alpha=0.5), NA)
+  plt <- plot(adj, iso_reg=TRUE,
+              censoring_ind="lines",
+              censoring_ind_width=0.1,
+              censoring_ind_size=1,
+              censoring_ind_alpha=0.5)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, using censoring indicators (lines)",
+                              fig=plt)
 })
 
 test_that("plot, using censoring indicators (points)", {
-  expect_error(plot(adj, iso_reg=TRUE,
-                    censoring_ind="points",
-                    censoring_ind_shape=10,
-                    censoring_ind_size=5,
-                    censoring_ind_alpha=0.5), NA)
+  plt <- plot(adj, iso_reg=TRUE,
+              censoring_ind="points",
+              censoring_ind_shape=10,
+              censoring_ind_size=5,
+              censoring_ind_alpha=0.5)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, using censoring indicators (points)",
+                              fig=plt)
 })
 
 test_that("plot, using median surv lines", {
-  expect_error(plot(adj, iso_reg=TRUE,
-                    median_surv_lines=TRUE,
-                    median_surv_size=1,
-                    median_surv_linetype="solid",
-                    median_surv_color="red"), NA)
+  plt <- plot(adj, iso_reg=TRUE,
+              median_surv_lines=TRUE,
+              median_surv_size=1,
+              median_surv_linetype="solid",
+              median_surv_color="red")
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, using median surv lines", fig=plt)
 })
 
 test_that("plot, using max_t", {
-  expect_error(plot(adj, max_t=0.2), NA)
+  plt <- plot(adj, max_t=0.2)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, using max_t", fig=plt)
 })
 
 test_that("plot, using force_bounds", {
-  expect_error(plot(adj, force_bounds=TRUE), NA)
+  plt <- plot(adj, force_bounds=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, using force_bounds", fig=plt)
 })
 
 test_that("plot, using linetype + facets + color", {
-  expect_error(plot(adj, color=TRUE, linetype=TRUE, facet=TRUE), NA)
+  plt <- plot(adj, color=TRUE, linetype=TRUE, facet=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, using linetype + facets + color", fig=plt)
 })
 
 test_that("plot, using labs + title", {
-  expect_error(plot(adj, xlab="X", ylab="Y", title="Title"), NA)
+  plt <- plot(adj, xlab="X", ylab="Y", title="Title")
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, using labs + title", fig=plt)
 })
 
 test_that("plot, using legend.title + legend.position", {
-  expect_error(plot(adj, legend.title="A", legend.position="bottom"), NA)
+  plt <- plot(adj, legend.title="A", legend.position="bottom")
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, using legend.title + legend.position",
+                              fig=plt)
 })
 
 test_that("plot, using ggplot theme", {
-  expect_error(plot(adj, gg_theme=ggplot2::theme_bw()), NA)
+  plt <- plot(adj, gg_theme=ggplot2::theme_bw())
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, using ggplot theme", fig=plt)
 })
 
 test_that("plot, using ylim", {
-  expect_error(plot(adj, ylim=c(0, 1)), NA)
+  plt <- plot(adj, ylim=c(0, 1))
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, using ylim", fig=plt)
 })
 
 test_that("plot, using custom_colors", {
-  expect_error(plot(adj, custom_colors=c("red", "blue")), NA)
+  plt <- plot(adj, custom_colors=c("red", "blue"))
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, using custom_colors", fig=plt)
 })
 
 test_that("plot, using custom_linetypes", {
-  expect_error(plot(adj, custom_linetypes=c("dashed", "solid"),
-                    linetype=TRUE), NA)
+  plt <- plot(adj, custom_linetypes=c("dashed", "solid"), linetype=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, using custom_linetypes", fig=plt)
+})
+
+test_that("plot, using single_color", {
+  plt <- plot(adj, color=FALSE, single_color="blue")
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, using single_color", fig=plt)
+})
+
+test_that("plot, using single_linetype", {
+  plt <- plot(adj, linetype=FALSE, color=FALSE, single_linetype="blue")
+  expect_s3_class(plt, "ggplot")
 })
 
 test_that("plot, using ci_draw_alpha", {
-  expect_error(plot(adj, draw_ci=TRUE, ci_draw_alpha=0.1), NA)
+  plt <- plot(adj, conf_int=TRUE, ci_draw_alpha=0.1)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, using ci_draw_alpha", fig=plt)
 })
 
 test_that("plot, using steps", {
-  expect_error(plot(adj, steps=FALSE), NA)
+  plt <- plot(adj, steps=FALSE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, using steps", fig=plt)
 })
 
 test_that("plot, using cif", {
-  expect_error(plot(adj, cif=TRUE), NA)
+  plt <- plot(adj, cif=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, using cif", fig=plt)
 })
 
 test_that("plot, using many many things", {
-  expect_error(plot(adj,
-                    draw_ci=TRUE,
-                    max_t=0.8,
-                    use_boot=FALSE,
-                    force_bounds=TRUE,
-                    iso_reg=TRUE,
-                    color=TRUE,
-                    linetype=TRUE,
-                    facet=TRUE,
-                    line_size=1.2,
-                    xlab="X",
-                    ylab="Y",
-                    title="Title",
-                    legend.title="Legend Title",
-                    legend.position="bottom",
-                    gg_theme=ggplot2::theme_bw(),
-                    ylim=c(0, 1),
-                    custom_colors=c("red", "blue"),
-                    custom_linetypes=c("solid", "dashed"),
-                    ci_draw_alpha=0.4,
-                    steps=TRUE,
-                    median_surv_lines=TRUE,
-                    median_surv_size=1.2,
-                    median_surv_linetype="solid",
-                    median_surv_color="red",
-                    censoring_ind="lines",
-                    censoring_ind_width=0.1,
-                    censoring_ind_size=0.6), NA)
+  plt <- plot(adj,
+              conf_int=TRUE,
+              max_t=0.8,
+              use_boot=FALSE,
+              force_bounds=TRUE,
+              iso_reg=TRUE,
+              color=TRUE,
+              linetype=TRUE,
+              facet=TRUE,
+              line_size=1.2,
+              xlab="X",
+              ylab="Y",
+              title="Title",
+              legend.title="Legend Title",
+              legend.position="bottom",
+              gg_theme=ggplot2::theme_bw(),
+              ylim=c(0, 1),
+              custom_colors=c("red", "blue"),
+              custom_linetypes=c("solid", "dashed"),
+              ci_draw_alpha=0.4,
+              steps=TRUE,
+              median_surv_lines=TRUE,
+              median_surv_size=1.2,
+              median_surv_linetype="solid",
+              median_surv_color="red",
+              censoring_ind="lines",
+              censoring_ind_width=0.1,
+              censoring_ind_size=0.6)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, using many many things", fig=plt)
 })

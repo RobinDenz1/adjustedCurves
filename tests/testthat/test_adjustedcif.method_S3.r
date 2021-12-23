@@ -1,6 +1,7 @@
-library(survival)
+
 library(riskRegression)
 
+set.seed(42)
 sim_dat <- sim_confounded_crisk(n=20)
 sim_dat$group <- as.factor(sim_dat$group)
 
@@ -12,9 +13,9 @@ adj <- cif_aalen_johansen(data=sim_dat,
                           cause=1)
 
 test_that("print.adjustedcif.method", {
-  expect_error(print(adj), NA)
+  expect_snapshot_output(print(adj))
 })
 
 test_that("summary.adjustedcif.method", {
-  expect_error(summary(adj), NA)
+  expect_snapshot_output(summary(adj))
 })

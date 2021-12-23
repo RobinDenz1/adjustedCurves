@@ -37,11 +37,23 @@ The adjusted restricted mean survival times (RMST) are calculated by integrating
 
 It can be interpreted as the mean survival time of individuals in group \eqn{Z = z}. Note however that simply subtracting the estimates from each other does not give a correct estimate of the area between the survival curves if the respective curves cross at some point. The \code{\link{adjusted_curve_diff}} function can be used to calculate the actual area between the curves instead. See \code{?adjusted_curve_diff} for more information.
 
-Since the estimated survival functions are step functions the integrals are calculated exactly instead of relying on trapezoid approximations.
+The associated \code{print} and \code{summary} methods can be used to obtain a neat data.frame of the most important quantities. There is also a small \code{plot} method to graphically display the results.
+
+\strong{\emph{Confidence Intervals}}
 
 If the \code{adjsurv} object was created with \code{bootstrap = TRUE} in the \code{\link{adjustedsurv}} function, bootstrap confidence intervals and standard errors for the RMSTs can be approximated by setting \code{use_boot} to \code{TRUE}. If bootstrap samples occur where the survival function is not estimated up to \code{to}, the bootstrap sample is discarded and not used in further calculations. Approximate variance calculations not relying on the bootstrap estimates are currently not implemented.
 
+\strong{\emph{Multiple Imputation}}
+
 If multiple imputation was used when creating the \code{adjsurv} object, the analysis is carries out on all multiply imputed dataset and pooled using Rubins Rule. When bootstrapping was carried out as well, the pooled standard error over all imputed datasets is used in combination with the normal approximation to re-calculate the bootstrap confidence intervals.
+
+\strong{\emph{Competing Risks}}
+
+This function cannot be used with \code{adjustedcif} objects, because the survival probability cannot be estimated in an unbiased way when competing risks are present. However, a very similar quantity, the \emph{adjusted restricted mean time lost}, can be calculated using the \code{\link{adjusted_rmtl}} function.
+
+\strong{\emph{Computational Details}}
+
+Since the estimated survival functions are step functions the integrals are calculated exactly instead of relying on trapezoid approximations.
 
 }
 \value{

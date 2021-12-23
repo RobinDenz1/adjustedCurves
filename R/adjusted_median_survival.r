@@ -16,21 +16,12 @@
 ## calculate confounder adjusted median survival times
 #' @importFrom dplyr %>%
 #' @export
-adjusted_median_survival <- function(adjsurv, use_boot=FALSE,
-                                     verbose=TRUE) {
+adjusted_median_survival <- function(adjsurv, verbose=TRUE) {
 
   # define those to remove Notes in devtools::check()
   . <- time <- group <- surv <- NULL
 
-  if (use_boot & is.null(adjsurv$boot_adjsurv)) {
-    warning("Cannot use bootstrapped estimates as they were not estimated.",
-            " Need bootstrap=TRUE in adjustedsurv() call.")
-    plotdata <- adjsurv$adjsurv
-  } else if (use_boot) {
-    plotdata <- adjsurv$boot_adjsurv
-  } else {
-    plotdata <- adjsurv$adjsurv
-  }
+  plotdata <- adjsurv$adjsurv
 
   out <- plotdata %>%
     dplyr::group_by(., group) %>%

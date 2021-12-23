@@ -79,9 +79,19 @@ The primary purpose of the \code{adjustedcif} function is to provide a convenien
 
 A short description of each method is contained in the documentation of the respective \code{cif_method} function. For more detailed descriptions the cited literature in that same documentation can be used. The documentation for \code{method="direct"} for example can be accessed using \code{?cif_direct}.
 
+\strong{\emph{Required & Optional Arguments}}
+
+Every method requires the specification of the \code{data}, \code{variable}, \code{ev_time}, \code{event}, \code{cause} and \code{method} arguments. All other arguments mentioned on this page are optional and work for all methods. Depending on the method used, other arguments are required as well. Those can be found on the top of the help page of the respective method. The help pages also list additional optional arguments.
+
+\strong{\emph{Confidence Intervals}}
+
 For most methods approximations for the asymptotic variance of point estimates of the CIF have been proposed in the literature. Where available, those can be calculated and added to the output object using \code{conf_int=TRUE}. It is however recommended to use bootstrapping to estimate the variance instead, which can be done by setting \code{bootstrap=TRUE}. The \code{n_boot} argument is set to 500 by default. This number was chosen because it worked well in simulations but it does not guarantee convergence in practice. Users are recommended to inspect the bootstrapped estimates and adjust the number of replications accordingly. To allow faster bootstrapping the user can choose to run the function on multiple CPU cores in parallel using the \code{n_cores} argument.
 
+\strong{\emph{Multiple Imputation}}
+
 This function also allows multiple imputation via the \pkg{mice} package. Instead of supplying a single data.frame, the user should create a \code{mids} object using the \code{mice} function and directly pass this to the \code{data} argument. When methods are used which rely on previously estimated treatment or outcome models such as \code{direct} or \code{aiptw}, the user is required to supply a \code{mira} object instead of a single model. In other words: the models have to be fit on every imputed dataset before supplying them to this function. See \code{?mice} and the associated documentation for more information on how to use multiple imputation. When using \code{bootstrap=TRUE} and multiple imputation, the bootstrapping is performed on every imputed dataset separately. Cumulative Incidences are simply averaged across the imputed datasets according to Rubins Rule. Confidence intervals are calculated by first averaging the standard errors over all imputed datasets and afterwards using this pooled value to obtain a new confidence interval with the normal approximation. This method has only been tested with missing values in covariates. It is not clear how good this works with missing values in \code{ev_time} or \code{event} so users should be cautious in those cases.
+
+\strong{\emph{Competing Risks}}
 
 If the data does not contain competing-events, it is recommended to use the \code{adjustedsurv} function instead. It does not calculate the CIF directly, but the CIF can be calculated from the survival using CIF = 1 - \eqn{S(t)}. This can be done automatically in the \code{plot.adjustedsurv} function using \code{cif=TRUE}.
 }

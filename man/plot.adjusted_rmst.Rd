@@ -8,7 +8,7 @@ Plot Method for \code{adjusted_rmst} Objects
 Plots the adjusted restricted mean survival times next to each other.
 }
 \usage{
-\method{plot}{adjusted_rmst}(x, draw_ci=TRUE, color=TRUE, point_size=2,
+\method{plot}{adjusted_rmst}(x, conf_int=TRUE, color=TRUE, point_size=2,
      ci_size=1, ci_width=0.7, xlab="",
      ylab="Adjusted RMST", title=NULL,
      gg_theme=ggplot2::theme_classic(), ...)
@@ -18,7 +18,7 @@ Plots the adjusted restricted mean survival times next to each other.
   \item{x}{
 An object of class \code{adjusted_rmst} created by the \code{adjusted_rmst} function.
   }
-  \item{draw_ci}{
+  \item{conf_int}{
 Whether to draw the confidence intervals or not. Ignored if \code{use_boot=FALSE} in original call to the \code{adjusted_rmst} function. See \code{?adjusted_rmst} to get more information on confidence interval calculations.
   }
   \item{color}{
@@ -28,10 +28,10 @@ Whether to color the points (and if applicable confidence intervals) differently
 The size of the points which will be drawn.
   }
   \item{ci_size}{
-The size of the confidence interval bars. Ignored if \code{draw_ci=FALSE}.
+The size of the confidence interval bars. Ignored if \code{conf_int=FALSE}.
   }
   \item{ci_width}{
-The width of the confidence interval bars. Ignored if \code{draw_ci=FALSE}.
+The width of the confidence interval bars. Ignored if \code{conf_int=FALSE}.
   }
   \item{xlab}{
 The label of the X-Axis. Empty by default.

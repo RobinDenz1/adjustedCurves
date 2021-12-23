@@ -1,5 +1,5 @@
-library(survival)
 
+set.seed(42)
 sim_dat <- sim_confounded_surv(n=20)
 sim_dat$group <- as.factor(sim_dat$group)
 
@@ -10,9 +10,9 @@ adj <- surv_km(data=sim_dat,
                conf_int=FALSE)
 
 test_that("print.adjustedsurv.method", {
-  expect_error(print(adj), NA)
+  expect_snapshot_output(print(adj))
 })
 
 test_that("summary.adjustedsurv.method", {
-  expect_error(summary(adj), NA)
+  expect_snapshot_output(summary(adj))
 })

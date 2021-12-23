@@ -1,4 +1,3 @@
-library(survival)
 
 set.seed(42)
 sim_dat <- sim_confounded_surv(n=50, max_t=1.5)
@@ -10,23 +9,13 @@ adj <- adjustedsurv(data=sim_dat,
                     event="event",
                     method="km",
                     conf_int=TRUE,
-                    bootstrap=TRUE,
-                    n_boot=10)
+                    bootstrap=FALSE)
 
 test_that("median surv, no boot", {
-  expect_error(adjusted_median_survival(adj, use_boot=FALSE), NA)
-})
-
-test_that("median surv, with boot", {
-  expect_error(adjusted_median_survival(adj, use_boot=TRUE), NA)
+  adj_med <- adjusted_median_survival(adj)
+  expect_equal(round(adj_med$median_surv, 4), c(0.4681, 0.6178))
 })
 
 test_that("median surv, with verbose", {
-  expect_error(adjusted_median_survival(adj, verbose=TRUE), NA)
-})
-
-adj$boot_adjsurv <- NULL
-
-test_that("median surv, warning no boot", {
-  expect_warning(adjusted_median_survival(adj, use_boot=TRUE), NULL)
+  expect_error(adjusted_median_survival(adj, verbose=FALSE), NA)
 })

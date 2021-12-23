@@ -1,4 +1,3 @@
-library(survival)
 library(riskRegression)
 library(prodlim)
 
@@ -18,19 +17,27 @@ adj <- adjustedsurv(data=sim_dat,
                     n_boot=10)
 
 test_that("rmtl surv, no boot", {
-  expect_error(adjusted_rmtl(adj, to=1.1), NA)
+  adj_rmtl <- adjusted_rmtl(adj, to=1.1)
+  expect_equal(as.vector(round(adj_rmtl$auc, 4)), c(0.5789, 0.4279))
 })
 
 test_that("rmtl surv, with boot", {
-  expect_error(adjusted_rmtl(adj, to=1.1, use_boot=TRUE), NA)
+  adj_rmtl <- adjusted_rmtl(adj, to=1.1, use_boot=TRUE)
+  expect_equal(as.vector(round(adj_rmtl$auc, 4)), c(0.5789, 0.4279))
+  expect_equal(as.vector(round(adj_rmtl$auc_se, 4)), c(0.0551, 0.0474))
+  expect_equal(as.vector(adj_rmtl$n_boot), c(9, 8))
 })
 
 test_that("rmtl surv, no boot, using from", {
-  expect_error(adjusted_rmtl(adj, to=1.1, from=0.3), NA)
+  adj_rmtl <- adjusted_rmtl(adj, to=1.1, from=0.3)
+  expect_equal(as.vector(round(adj_rmtl$auc, 4)), c(0.5435, 0.4191))
 })
 
 test_that("rmtl surv, with boot, using from", {
-  expect_error(adjusted_rmtl(adj, to=1.1, from=0.3, use_boot=TRUE), NA)
+  adj_rmtl <- adjusted_rmtl(adj, to=1.1, from=0.3, use_boot=TRUE)
+  expect_equal(as.vector(round(adj_rmtl$auc, 4)), c(0.5435, 0.4191))
+  expect_equal(as.vector(round(adj_rmtl$auc_se, 4)), c(0.0449, 0.0436))
+  expect_equal(as.vector(adj_rmtl$n_boot), c(9, 8))
 })
 
 ### using competing risks data
@@ -50,17 +57,25 @@ adj <- adjustedcif(data=sim_dat,
                    cause=1)
 
 test_that("rmtl cif, no boot", {
-  expect_error(adjusted_rmtl(adj, to=1.1), NA)
+  adj_rmtl <- adjusted_rmtl(adj, to=1.1)
+  expect_equal(as.vector(round(adj_rmtl$auc, 4)), c(0.1856, 0.1599))
 })
 
 test_that("rmtl cif, with boot", {
-  expect_error(adjusted_rmtl(adj, to=1.1, use_boot=TRUE), NA)
+  adj_rmtl <- adjusted_rmtl(adj, to=1.1, use_boot=TRUE)
+  expect_equal(as.vector(round(adj_rmtl$auc, 4)), c(0.1856, 0.1599))
+  expect_equal(as.vector(round(adj_rmtl$auc_se, 4)), c(0.1185, 0.0775))
+  expect_equal(as.vector(adj_rmtl$n_boot), c(10, 10))
 })
 
 test_that("rmtl cif, no boot, using from", {
-  expect_error(adjusted_rmtl(adj, to=1.1, from=0.3), NA)
+  adj_rmtl <- adjusted_rmtl(adj, to=1.1, from=0.3)
+  expect_equal(as.vector(round(adj_rmtl$auc, 4)), c(0.1650, 0.1536))
 })
 
 test_that("rmtl cif, with boot, using from", {
-  expect_error(adjusted_rmtl(adj, to=1.1, from=0.3, use_boot=TRUE), NA)
+  adj_rmtl <- adjusted_rmtl(adj, to=1.1, from=0.3, use_boot=TRUE)
+  expect_equal(as.vector(round(adj_rmtl$auc, 4)), c(0.1650, 0.1536))
+  expect_equal(as.vector(round(adj_rmtl$auc_se, 4)), c(0.1104, 0.0664))
+  expect_equal(as.vector(adj_rmtl$n_boot), c(10, 10))
 })

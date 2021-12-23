@@ -409,13 +409,13 @@ adjustedcif_boot <- function(data, variable, ev_time, event, cause, method,
 ## plot the cumulative incidence functions
 #' @importFrom rlang .data
 #' @export
-plot.adjustedcif <- function(x, draw_ci=FALSE, max_t=Inf,
+plot.adjustedcif <- function(x, conf_int=FALSE, max_t=Inf,
                              iso_reg=FALSE, force_bounds=FALSE,
                              use_boot=FALSE, color=TRUE,
                              linetype=FALSE, facet=FALSE,
                              line_size=1, line_alpha=1, xlab="Time",
                              ylab="Adjusted Cumulative Incidence",
-                             title=NULL, legend.title="Group",
+                             title=NULL, subtitle=NULL, legend.title="Group",
                              legend.position="right",
                              gg_theme=ggplot2::theme_classic(),
                              ylim=NULL, custom_colors=NULL,
@@ -461,7 +461,7 @@ plot.adjustedcif <- function(x, draw_ci=FALSE, max_t=Inf,
       new <- stats::isoreg(temp$cif)$yf
       plotdata$cif[plotdata$group==lev] <- new
 
-      if (draw_ci & "ci_lower" %in% colnames(temp)) {
+      if (conf_int & "ci_lower" %in% colnames(temp)) {
         diff <- temp$cif - new
 
         plotdata$ci_lower[plotdata$group==lev] <- temp$ci_lower - diff
@@ -515,14 +515,12 @@ plot.adjustedcif <- function(x, draw_ci=FALSE, max_t=Inf,
 
   p <- p + gg_theme +
     ggplot2::labs(x=xlab, y=ylab, color=legend.title,
-                  linetype=legend.title, fill=legend.title) +
+                  linetype=legend.title, fill=legend.title,
+                  title=title, subtitle=subtitle) +
     ggplot2::theme(legend.position=legend.position)
 
   if (facet) {
     p <- p + ggplot2::facet_wrap(~group)
-  }
-  if (!is.null(title)) {
-    p <- p + ggplot2::ggtitle(title)
   }
   if (!is.null(ylim)) {
     p <- p + ggplot2::ylim(ylim)
@@ -577,14 +575,14 @@ plot.adjustedcif <- function(x, draw_ci=FALSE, max_t=Inf,
     # either points or lines
     if (censoring_ind=="points") {
       cens_map <- ggplot2::aes(x=.data$time,
-                               y=.data$surv,
+                               y=.data$cif,
                                group=.data$group,
                                color=.data$group)
     } else if (censoring_ind=="lines") {
       cens_map <- ggplot2::aes(x=.data$time,
-                               y=.data$surv-(censoring_ind_width/2),
+                               y=.data$cif-(censoring_ind_width/2),
                                xend=.data$time,
-                               yend=.data$surv+(censoring_ind_width/2),
+                               yend=.data$cif+(censoring_ind_width/2),
                                group=.data$group,
                                color=.data$group,
                                linetype=.data$group)
@@ -622,13 +620,13 @@ plot.adjustedcif <- function(x, draw_ci=FALSE, max_t=Inf,
   }
 
   ## Confidence intervals
-  if (draw_ci & use_boot & is.null(x$boot_adjcif)) {
+  if (conf_int & use_boot & is.null(x$boot_adjcif)) {
     warning("Cannot use bootstrapped estimates as they were not estimated.",
             " Need bootstrap=TRUE in adjustedcif() call.")
-  } else if (draw_ci & !use_boot & !"ci_lower" %in% colnames(plotdata)) {
+  } else if (conf_int & !use_boot & !"ci_lower" %in% colnames(plotdata)) {
     warning("Cannot draw confidence intervals. Either set 'conf_int=TRUE' in",
             " 'adjustedcif()' call or use bootstrap estimates.")
-  } else if (draw_ci) {
+  } else if (conf_int) {
 
     # plot using step-function interpolation
     if (steps) {

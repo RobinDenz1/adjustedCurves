@@ -1,4 +1,5 @@
 library(ggplot2)
+library(vdiffr)
 
 set.seed(42)
 
@@ -13,32 +14,36 @@ adj <- adjustedsurv(data=sim_dat,
                     bootstrap=TRUE,
                     n_boot=20)
 
-adj_test <- adjusted_curve_diff(adjsurv=adj, from=0, to=0.5)
+adj_test <- adjusted_curve_diff(adj=adj, from=0, to=0.5)
 
 # 2 treatments
 
 test_that("plot.curve_test, 2 treatments, type='curves'", {
-  expect_error(plot(adj_test, type="curves"), NA)
+  plt <- plot(adj_test, type="curves")
+  expect_s3_class(plt, "ggplot")
 })
 
 test_that("plot.curve_test, 2 treatments, type='curves' + labs", {
-  expect_error(plot(adj_test,
-                    type="curves",
-                    xlab="X",
-                    ylab="Y",
-                    title="Title"), NA)
+  plt <- plot(adj_test,
+              type="curves",
+              xlab="X",
+              ylab="Y",
+              title="Title")
+  expect_s3_class(plt, "ggplot")
 })
 
 test_that("plot.curve_test, 2 treatments, type='integral'", {
-  expect_error(plot(adj_test, type="integral"), NA)
+  plt <- plot(adj_test, type="integral")
+  expect_s3_class(plt, "ggplot")
 })
 
 test_that("plot.curve_test, 2 treatments, type='integral' + labs", {
-  expect_error(plot(adj_test,
-                    type="integral",
-                    xlab="X",
-                    ylab="Y",
-                    title="Title"), NA)
+  plt <- plot(adj_test,
+              type="integral",
+              xlab="X",
+              ylab="Y",
+              title="Title")
+  expect_s3_class(plt, "ggplot")
 })
 
 # > 2 treatments
@@ -57,28 +62,32 @@ adj <- adjustedsurv(data=sim_dat,
                     bootstrap=TRUE,
                     n_boot=20)
 
-adj_test <- adjusted_curve_diff(adjsurv=adj, from=0, to=0.5)
+adj_test <- adjusted_curve_diff(adj=adj, from=0, to=0.5)
 
 test_that("plot.curve_test, > 2 treatments, type='curves'", {
-  expect_error(plot(adj_test, type="curves"), NA)
+  plt <- plot(adj_test, type="curves")
+  expect_s3_class(plt, "ggplot")
 })
 
 test_that("plot.curve_test, > 2 treatments, type='curves' + labs", {
-  expect_error(plot(adj_test,
-                    type="curves",
-                    xlab="X",
-                    ylab="Y",
-                    title="Title"), NA)
+  plt <- plot(adj_test,
+              type="curves",
+              xlab="X",
+              ylab="Y",
+              title="Title")
+  expect_s3_class(plt, "ggplot")
 })
 
 test_that("plot.curve_test, > 2 treatments, type='integral'", {
-  expect_error(plot(adj_test, type="integral"), NA)
+  plt <- plot(adj_test, type="integral")
+  expect_s3_class(plt, "ggplot")
 })
 
 test_that("plot.curve_test, > 2 treatments, type='integral' + labs", {
-  expect_error(plot(adj_test,
-                    type="integral",
-                    xlab="X",
-                    ylab="Y",
-                    title="Title"), NA)
+  plt <- plot(adj_test,
+              type="integral",
+              xlab="X",
+              ylab="Y",
+              title="Title")
+  expect_s3_class(plt, "ggplot")
 })

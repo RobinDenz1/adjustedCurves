@@ -420,13 +420,13 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
 ## plot the survival curves
 #' @importFrom rlang .data
 #' @export
-plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
+plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
                               iso_reg=FALSE, force_bounds=FALSE,
                               use_boot=FALSE, cif=FALSE,
                               color=TRUE, linetype=FALSE, facet=FALSE,
                               line_size=1, line_alpha=1, xlab="Time",
                               ylab="Adjusted Survival Probability",
-                              title=NULL, legend.title="Group",
+                              title=NULL, subtitle=NULL, legend.title="Group",
                               legend.position="right",
                               gg_theme=ggplot2::theme_classic(),
                               ylim=NULL, custom_colors=NULL,
@@ -475,7 +475,7 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
       new <- rev(stats::isoreg(rev(temp$surv))$yf)
       plotdata$surv[plotdata$group==lev] <- new
       # shift confidence intervals accordingly
-      if (draw_ci & "ci_lower" %in% colnames(temp)) {
+      if (conf_int & "ci_lower" %in% colnames(temp)) {
         diff <- temp$surv - new
 
         plotdata$ci_lower[plotdata$group==lev] <- temp$ci_lower - diff
@@ -551,14 +551,12 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
 
   p <- p + gg_theme +
     ggplot2::labs(x=xlab, y=ylab, color=legend.title,
-                  linetype=legend.title, fill=legend.title) +
+                  linetype=legend.title, fill=legend.title,
+                  title=title, subtitle=subtitle) +
     ggplot2::theme(legend.position=legend.position)
 
   if (facet) {
     p <- p + ggplot2::facet_wrap(~group)
-  }
-  if (!is.null(title)) {
-    p <- p + ggplot2::ggtitle(title)
   }
   if (!is.null(ylim)) {
     p <- p + ggplot2::ylim(ylim)
@@ -657,13 +655,13 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
   }
 
   ## Confidence intervals
-  if (draw_ci & use_boot & is.null(x$boot_adjsurv)) {
+  if (conf_int & use_boot & is.null(x$boot_adjsurv)) {
     warning("Cannot use bootstrapped estimates as they were not estimated.",
             " Need bootstrap=TRUE in adjustedsurv() call.", call.=FALSE)
-  } else if (draw_ci & !use_boot & !"ci_lower" %in% colnames(x$adjsurv)) {
+  } else if (conf_int & !use_boot & !"ci_lower" %in% colnames(x$adjsurv)) {
     warning("Cannot draw confidence intervals. Either set 'conf_int=TRUE' in",
             " adjustedsurv() call or use bootstrap estimates.", call.=FALSE)
-  } else if (draw_ci) {
+  } else if (conf_int) {
 
     # plot using step-function interpolation
     if (steps) {
@@ -712,8 +710,7 @@ plot.adjustedsurv <- function(x, draw_ci=FALSE, max_t=Inf,
     # calculate median survival and add other needed values
     fake_adjsurv <- x
     fake_adjsurv$adjsurv <- plotdata
-    median_surv <- adjusted_median_survival(fake_adjsurv, use_boot=FALSE,
-                                            verbose=FALSE)
+    median_surv <- adjusted_median_survival(fake_adjsurv, verbose=FALSE)
     median_surv$y <- 0.5
     # set to NA if not in plot
     median_surv$median_surv[median_surv$median_surv > max_t] <- NA

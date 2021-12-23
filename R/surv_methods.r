@@ -268,7 +268,6 @@ surv_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
       data_temp$ci_upper <- surv_cis$right
 
     }
-
     plotdata[[i]] <- data_temp
   }
   plotdata <- dplyr::bind_rows(plotdata)

@@ -16,31 +16,31 @@
 ## Hypothesis-Test for the difference between two adjusted survival curves
 ## or two adjusted cumulative incidence functions
 #' @export
-adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
+adjusted_curve_diff <- function(adj, to, from=0, conf_level=0.95) {
 
   # silence devtools::check() notes
   . <- comparison <- area_est <- p_val <- n_boot <- NULL
 
-  est <- ifelse(class(adjsurv)=="adjustedsurv", "surv", "cif")
-  adj_method <- adjsurv$method
+  est <- ifelse(class(adj)=="adjustedsurv", "surv", "cif")
+  adj_method <- adj$method
 
   if (est=="surv") {
-    treat_labs <- unique(adjsurv$adjsurv$group)
+    treat_labs <- unique(adj$adjsurv$group)
   } else {
-    treat_labs <- unique(adjsurv$adjcif$group)
+    treat_labs <- unique(adj$adjcif$group)
   }
 
   ## using multiply imputed results
-  if (!is.null(adjsurv$mids_analyses)) {
+  if (!is.null(adj$mids_analyses)) {
 
-    if (adjsurv$categorical) {
+    if (adj$categorical) {
 
       # call function once on every adjsurv object, extract values
-      len <- length(adjsurv$mids_analyses)
+      len <- length(adj$mids_analyses)
       mids_out <- dat <- vector(mode="list", length=len)
       for (i in seq_len(len)) {
 
-        results_imp <- adjusted_curve_diff(adjsurv$mids_analyses[[i]],
+        results_imp <- adjusted_curve_diff(adj$mids_analyses[[i]],
                                            to=to, from=from,
                                            conf_level=conf_level)
         mids_out[[i]] <- results_imp
@@ -108,13 +108,13 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
 
     } else {
 
-      len <- length(adjsurv$mids_analyses)
+      len <- length(adj$mids_analyses)
       mids_out <- vector(mode="list", length=len)
       area_ests <- area_se <- p_vals <- n_boots <- vector(mode="numeric",
                                                           length=len)
       for (i in seq_len(len)) {
 
-        results_imp <- adjusted_curve_diff(adjsurv$mids_analyses[[i]],
+        results_imp <- adjusted_curve_diff(adj$mids_analyses[[i]],
                                            to=to, from=from,
                                            conf_level=conf_level)
         mids_out[[i]] <- results_imp
@@ -163,25 +163,25 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
   ## using regular results
   } else {
 
-    check_inputs_adj_test(adjsurv=adjsurv, from=from, to=to)
+    check_inputs_adj_test(adj=adj, from=from, to=to)
 
     # just two treatments, standard procedure
-    if (!adjsurv$categorical) {
+    if (!adj$categorical) {
 
       # calculate the integral of the difference for every bootstrap sample
-      stats_vec <- vector(mode="numeric", length=max(adjsurv$boot_data$boot))
-      curve_list <- vector(mode="list", length=max(adjsurv$boot_data$boot))
+      stats_vec <- vector(mode="numeric", length=max(adj$boot_data$boot))
+      curve_list <- vector(mode="list", length=max(adj$boot_data$boot))
 
-      for (i in seq_len(max(adjsurv$boot_data$boot))) {
+      for (i in seq_len(max(adj$boot_data$boot))) {
 
         # select one bootstrap data set each
-        boot_dat <- adjsurv$boot_data[adjsurv$boot_data$boot==i, ]
+        boot_dat <- adj$boot_data[adj$boot_data$boot==i, ]
 
         # every relevant point in time
         times <- sort(unique(boot_dat$time))
 
         # new curve of the difference
-        surv_diff <- exact_stepfun_difference(adjsurv=boot_dat, times=times,
+        surv_diff <- exact_stepfun_difference(adj=boot_dat, times=times,
                                               est=est)
 
         # integral of that curve
@@ -202,12 +202,12 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
 
       # actually observed values
       if (est=="surv") {
-        times <- sort(unique(adjsurv$adjsurv$time))
-        observed_diff_curve <- exact_stepfun_difference(adjsurv=adjsurv$adjsurv,
+        times <- sort(unique(adj$adjsurv$time))
+        observed_diff_curve <- exact_stepfun_difference(adj=adj$adjsurv,
                                                         times=times, est=est)
       } else {
-        times <- sort(unique(adjsurv$adjcif$time))
-        observed_diff_curve <- exact_stepfun_difference(adjsurv=adjsurv$adjcif,
+        times <- sort(unique(adj$adjcif$time))
+        observed_diff_curve <- exact_stepfun_difference(adj=adj$adjcif,
                                                         times=times, est=est)
       }
 
@@ -252,10 +252,10 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
     ## more than two treatments -> perform pairwise comparisons
     } else {
 
-      if (class(adjsurv)=="adjustedsurv") {
-        combs <- all_combs_length_2(unique(adjsurv$adjsurv$group))
+      if (class(adj)=="adjustedsurv") {
+        combs <- all_combs_length_2(unique(adj$adjsurv$group))
       } else {
-        combs <- all_combs_length_2(unique(adjsurv$adjcif$group))
+        combs <- all_combs_length_2(unique(adj$adjcif$group))
       }
 
       out <- list()
@@ -266,12 +266,12 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
         group_1 <- strsplit(combs[i], "\t")[[1]][2]
 
         # create pseudo adjustedsurv, adjustedcif object
-        if (class(adjsurv)=="adjustedsurv") {
+        if (class(adj)=="adjustedsurv") {
 
-          observed_dat <- adjsurv$adjsurv[which(adjsurv$adjsurv$group %in%
-                                                  c(group_0, group_1)), ]
-          boot_dat <- adjsurv$boot_data[which(adjsurv$boot_data$group %in%
-                                                c(group_0, group_1)), ]
+          observed_dat <- adj$adjsurv[which(adj$adjsurv$group %in%
+                                            c(group_0, group_1)), ]
+          boot_dat <- adj$boot_data[which(adj$boot_data$group %in%
+                                          c(group_0, group_1)), ]
           fake_adjsurv <- list(adjsurv=observed_dat,
                                boot_data=boot_dat,
                                categorical=FALSE,
@@ -280,10 +280,10 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
 
         } else {
 
-          observed_dat <- adjsurv$adjcif[which(adjsurv$adjcif$group %in%
-                                                 c(group_0, group_1)), ]
-          boot_dat <- adjsurv$boot_data[which(adjsurv$boot_data$group %in%
-                                                c(group_0, group_1)), ]
+          observed_dat <- adj$adjcif[which(adj$adjcif$group %in%
+                                           c(group_0, group_1)), ]
+          boot_dat <- adj$boot_data[which(adj$boot_data$group %in%
+                                          c(group_0, group_1)), ]
           fake_adjsurv <- list(adjcif=observed_dat,
                                boot_data=boot_dat,
                                categorical=FALSE,
@@ -292,7 +292,7 @@ adjusted_curve_diff <- function(adjsurv, to, from=0, conf_level=0.95) {
         }
 
         # recursion call
-        pair <- adjusted_curve_diff(adjsurv=fake_adjsurv,
+        pair <- adjusted_curve_diff(adj=fake_adjsurv,
                                     from=from,
                                     to=to,
                                     conf_level=conf_level)

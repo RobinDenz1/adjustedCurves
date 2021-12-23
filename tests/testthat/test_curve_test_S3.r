@@ -18,9 +18,9 @@ adj <- adjustedsurv(data=sim_dat,
 adj_test <- adjusted_curve_diff(adj, to=0.2)
 
 test_that("print.curve_test, default", {
-  expect_error(print(adj_test), NA)
+  expect_snapshot_output(print(adj_test), NA)
 })
 
 test_that("summary.curve_test, default", {
-  expect_error(summary(adj_test), NA)
+  expect_snapshot_output(summary(adj_test), NA)
 })

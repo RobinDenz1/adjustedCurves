@@ -66,7 +66,7 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         conf_int=TRUE)
 
 # plot with confidence intervals
-plot(adjsurv, draw_ci=TRUE)
+plot(adjsurv, conf_int=TRUE)
 ```
 <img src="man/figures/example_direct.png" />
 
@@ -86,7 +86,7 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         conf_int=TRUE)
 
 # plot with confidence intervals
-plot(adjsurv, draw_ci=TRUE)
+plot(adjsurv, conf_int=TRUE)
 ```
 <img src="man/figures/example_iptw_km.png" />
 

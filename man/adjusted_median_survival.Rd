@@ -8,16 +8,12 @@ Calculate Confounder-Adjusted Median Survival Times
 This function can be utilized to calculate the confounder-adjusted median survival time, given previously estimated adjusted survival curves.
 }
 \usage{
-adjusted_median_survival(adjsurv, use_boot=FALSE,
-                         verbose=TRUE)
+adjusted_median_survival(adjsurv, verbose=TRUE)
 }
 
 \arguments{
   \item{adjsurv}{
 An \code{adjustedsurv} object created using the \code{adjustedsurv} function.
-  }
-  \item{use_boot}{
-Whether to use the survival curves calculated using bootstrapping or not.
   }
   \item{verbose}{
 Whether to print the output or not.
@@ -64,11 +60,10 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         method="direct",
                         outcome_model=cox_mod,
                         conf_int=FALSE,
-                        bootstrap=TRUE,
-                        n_boot=500)
+                        bootstrap=FALSE)
 
 # calculate adjusted median survival times
-adjusted_median_survival(adjsurv, use_boot=FALSE)
+adjusted_median_survival(adjsurv)
 
 }
 }

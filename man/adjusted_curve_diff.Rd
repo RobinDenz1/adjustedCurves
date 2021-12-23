@@ -5,14 +5,14 @@
 Test if there is a difference between two Confounder-Adjusted Survival Curves or CIFs
 }
 \description{
-This function implements a modified version of the Pepe and Flemming (1989) test for the difference of two adjusted survival curves or CIFs. In particular, the Null-Hypothesis is that the integral of the difference of the two curves in a specified time interval is equal to zero.
+This function implements a modified version of the Pepe and Flemming (1989) test for the difference between two adjusted survival curves or CIFs. In particular, the Null-Hypothesis is that the integral of the difference of the two curves in a specified time interval is equal to zero.
 }
 \usage{
-adjusted_curve_diff(adjsurv, to, from=0, conf_level=0.95)
+adjusted_curve_diff(adj, to, from=0, conf_level=0.95)
 }
 
 \arguments{
-  \item{adjsurv}{
+  \item{adj}{
 An \code{adjustedsurv} object created using the \code{adjustedsurv} function, or a \code{adjustedcif} object created using the \code{adjustedcif} function, with \code{bootstap=TRUE} in the original function call.
   }
     \item{to}{
@@ -27,11 +27,21 @@ A number specifying the confidence level of the bootstrap confidence intervals.
 }
 \details{
 
-The \code{adjustedsurv} and \code{adjustedcif} functions with \code{bootstrap=TRUE} draw \code{n_boot} bootstrap samples and estimate the adjusted curves for each one. This function uses those estimates and calculates the integral of the difference between two curves (just the two when there are two curves and pairwise comparisons if there are > 2 curves) in the interval defined by \code{to} and \code{from}. If the curves are approximately equal, this quantity should be close to zero. The direct variance calculation of this is quantity is quite involved even in the non-adjusted case and has not been proposed for adjusted survival curves or adjusted CIFs yet. We can however use the distribution of the integrals over all bootstrap samples to approximate the variation. By shifting the bootstrap distribution to be centered around 0 we approximate the distribution of the integral under the Null-Hypothesis. The P-Value can then be calculated by taking the proportion of cases where the absolute of the integral observed in the actual curves is smaller or equal to the shifted bootstrap values.
+The \code{adjustedsurv} and \code{adjustedcif} functions with \code{bootstrap=TRUE} draw \code{n_boot} bootstrap samples and estimate the adjusted curves for each one. This function uses those estimates and calculates the integral of the difference between two curves in the interval defined by \code{to} and \code{from}. If the curves are approximately equal, this quantity should be close to zero. The direct variance calculation of this is quantity is quite involved even in the non-adjusted case and has not been proposed for adjusted survival curves or adjusted CIFs yet. We can however use the distribution of the integrals over all bootstrap samples to approximate the variation. By shifting the bootstrap distribution to be centered around 0 we approximate the distribution of the integral under the Null-Hypothesis. The p-value can then be calculated by taking the proportion of cases where the absolute of the integral observed in the actual curves is smaller or equal to the shifted bootstrap values.
+
+The associated \code{print} and \code{summary} methods can be used to obtain a neat data.frame of the most important quantities. We also recommend checking the test assumptions using the \code{\link[=plot.curve_test]{plot}} method.
+
+\strong{\emph{Pairwise Comparisons}}
+
+When there are more than two survival curves or CIFs this function automatically performs pairwise comparisons between those. It is recommended to adjust the p-values obtained using this method for multiple testing. See \code{?p.adjust} for more information.
+
+\strong{\emph{Multiple Imputation}}
+
+When the \code{adjustedsurv} or \code{adjustedcif} object was fitted using multiply imputed datasets, the tests are performed separately for each dataset. The estimates for the integral of the difference are combined using Rubins Rule. The confidence intervals for this quantity are calculated by pooling the bootstrap standard errors and recalculating the confidence interval using the normal approximation. The p-values are also pooled using a method described in Licht (2010). It is recommended to check if the pooled p-value is in agreement with the pooled confidence interval.
+
+\strong{\emph{Computational Details}}
 
 Instead of relying on numerical integration, this function uses step-function interpolation, treating all supplied curves as step functions. The integral is then calculated using a simple sum of the squares defined by each step.
-
-When the \code{adjustedsurv} or \code{adjustedcif} object was fitted using multiply imputed datasets, the tests are performed separately for each dataset. The estimates for the integral of the difference are combined using Rubins Rule. The confidence intervals for this quantity are calculated by pooling the bootstrap standard errors and recalculating the confidence interval using the normal approximation. The P-Values are also pooled using a method described in Licht (2010). It is recommended to check if the pooled P-Value is in agreement with the pooled confidence interval.
 
 }
 \value{
@@ -45,7 +55,9 @@ Returns a \code{curve_test} object. If there are exactly two treatments this lis
 }
 \item{observed_diff_integral}{The integral of the curve in \code{observed_diff_curve}.
 }
-\item{p_value}{The P-Value for the modified Pepe-Fleming Test. See details.
+\item{integral_se}{The bootstrap standard error of the difference integral.
+}
+\item{p_value}{The p-value for the modified Pepe-Fleming Test. See details.
 }
 \item{n_boot}{The number of bootstrap repetitions used.
 }
@@ -64,7 +76,7 @@ Returns a \code{curve_test} object. If there are exactly two treatments this lis
 
 If there are more than two treatment groups the object returned is a list of these objects with one list for each pairwise comparison.
 
-If multiply imputed datasets where used, the object also includes a \code{mids_analyses} object, including a \code{curve_test} object for each imputed dataset. It also includes a \code{mids_p_values} object containing the separately estimated P-Values.
+If multiply imputed datasets where used, the object also includes a \code{mids_analyses} object, including a \code{curve_test} object for each imputed dataset. It also includes a \code{mids_p_values} object containing the separately estimated p-values.
 
 }
 \references{
