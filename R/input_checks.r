@@ -4,10 +4,8 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
                                       n_boot, na.action, clean_data, ...) {
   obj <- list(...)
 
-  if (!inherits(data, c("data.frame", "mids"))) {
-    stop("'data' argument must be a data.frame or mids object.")
   ## check if non-standard evaluation is used
-  } else if (inherits(substitute(variable), "name") &&
+  if (inherits(substitute(variable), "name") &&
              !exists(toString(substitute(variable)))) {
     stop("'variable' must be a character string specifying a variable",
          " in 'data'.")
@@ -237,9 +235,9 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
       } else if (!is.null(obj$spline_df) && (obj$spline_df > length(times))) {
         warning("'spline_df' > len(times) might lead to problems.",
                 call.=FALSE)
-      } else if (!is.null(obj$type_time) && (5 > length(times) &
-                                             obj$type_time!="factor")) {
-        warning("'spline_df' > length(times)=5 might lead to problems when",
+      } else if (is.null(obj$spline_df) && (5 > length(times)) &&
+                 !is.null(obj$type_time) && obj$type_time!="factor") {
+        warning("'spline_df' > length(times) might lead to problems when",
                   " type_time!='factor'.", call.=FALSE)
       }
     }
@@ -621,10 +619,8 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
                                      clean_data, ...) {
   obj <- list(...)
 
-  if (!inherits(data, c("data.frame", "mids"))) {
-    stop("'data' argument must be a data.frame or mids object.")
   ## check for non-standard evaluation
-  } else if (inherits(substitute(variable), "name") &&
+  if (inherits(substitute(variable), "name") &&
              !exists(toString(substitute(variable)))) {
     stop("'variable' must be a character string specifying a variable",
          " in 'data'.")
@@ -855,10 +851,10 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
       } else if (!is.null(obj$spline_df) && (obj$spline_df > length(times))) {
         warning("'spline_df' > len(times) might lead to problems.",
                 call.=FALSE)
-      } else if (!is.null(obj$type_time) &&
-                 (5 > length(times) & obj$type_time!="factor")) {
-        warning("'spline_df' > len(times) might lead to problems.",
-                call.=FALSE)
+      } else if (is.null(obj$spline_df) && (5 > length(times)) &&
+                 !is.null(obj$type_time) && obj$type_time!="factor") {
+        warning("'spline_df' > length(times) might lead to problems when",
+                " type_time!='factor'.", call.=FALSE)
       }
     }
 
@@ -978,8 +974,8 @@ check_inputs_sim_crisk_fun <- function(n, lcovars, outcome_betas, gamma,
          " the same length.")
   }
 
-  if (!is.null(outcome_betas) && stats::var(vapply(outcome_betas, length,
-                                                   FUN.VALUE=numeric(1)))!=0) {
+  if (!is.null(outcome_betas) && length(outcome_betas) > 1 &&
+      stats::var(vapply(outcome_betas, length, FUN.VALUE=numeric(1)))!=0) {
     stop("The vectors supplied in 'outcome_betas' all need to have,",
          " the same length.")
   }

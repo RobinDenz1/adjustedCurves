@@ -1,4 +1,6 @@
 
+suppressMessages(requireNamespace("survival"))
+
 set.seed(42)
 sim_dat <- sim_confounded_surv(n=50, max_t=1.5)
 sim_dat$group <- factor(sim_dat$group)
@@ -12,8 +14,18 @@ adj <- adjustedsurv(data=sim_dat,
                     bootstrap=TRUE,
                     n_boot=10)
 
+adj_no_boot <- adj
+adj_no_boot$boot_data <- NULL
+adj_no_boot$boot_adjsurv <- NULL
+
 test_that("rmst 2 treatments, no boot", {
   adj_rmst <- adjusted_rmst(adj, to=1.1)
+  expect_equal(as.vector(round(adj_rmst$auc, 4)), c(0.5211, 0.6721))
+})
+
+test_that("rmst 2 treatments, no boot but use_boot=TRUE", {
+  adj_rmst <- suppressWarnings(adjusted_rmst(adj_no_boot, to=1.1,
+                                             use_boot=TRUE))
   expect_equal(as.vector(round(adj_rmst$auc, 4)), c(0.5211, 0.6721))
 })
 

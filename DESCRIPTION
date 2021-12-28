@@ -1,51 +1,58 @@
 Package: adjustedCurves
-Title: Confounder-Adjusted Survival Curves and Cumulative Incidence Functions
+Title: Confounder-Adjusted Survival Curves and Cumulative Incidence
+    Functions
 Version: 0.9.0
 Authors@R: 
-    person(given = "Robin",
-           family = "Denz",
-           role = c("aut", "cre"),
-           email = "robin.denz@rub.de")
+    person("Robin", "Denz", , "robin.denz@rub.de", role = c("aut", "cre"))
 Maintainer: Robin Denz <robin.denz@rub.de>
+Description: Estimate and plot confounder-adjusted survival curves using
+    either 'Direct Adjustment', 'Direct Adjustment with Pseudo-Values',
+    various forms of 'Inverse Probability of Treatment Weighting', two
+    forms of 'Augmented Inverse Probability of Treatment Weighting',
+    'Empirical Likelihood Estimation' and 'Targeted Maximum Likelihood
+    Estimation'. Also includes a significance test for the difference
+    between two adjusted survival curves and the calculation of adjusted
+    restricted mean survival times.  Additionally enables the user to
+    estimate and plot cause-specific confounder-adjusted cumulative
+    incidence functions in the competing risks setting using the same
+    methods (with some exceptions).
+License: GPL (>= 3)
 URL: https://github.com/RobinDenz1/
 BugReports: https://github.com/RobinDenz1/
+Imports: 
+    R.utils,
+    doParallel,
+    doRNG,
+    dplyr (>= 1.0.0),
+    foreach,
+    rlang
+Suggests: 
+    MASS,
+    Matching (>= 4.9),
+    R6,
+    SuperLearner (>= 2.0.0),
+    WeightIt (>= 0.11.0),
+    cmprsk (>= 2.2),
+    eventglm (>= 1.1.1),
+    geepack (>= 1.3),
+    ggplot2 (>= 3.0.0),
+    knitr,
+    mice (>= 3.0.0),
+    nnet,
+    pammtools (>= 0.5),
+    pec (>= 2020.11.17),
+    prodlim (>= 2019.11.13),
+    riskRegression (>= 2020.12.08),
+    rmarkdown,
+    survival (>= 3.0.0),
+    survtmle (>= 1.1),
+    testthat (>= 3.0.0),
+    tidyr,
+    vdiffr (>= 3.0.0)
+VignetteBuilder: 
+    knitr
+Config/testthat/edition: 3
 Contact: <robin.denz@rub.de>
-Description: Estimate and plot confounder-adjusted survival curves using either 'Direct Adjustment', 'Direct Adjustment with Pseudo-Values', various forms of 'Inverse Probability of Treatment Weighting', two forms of 'Augmented Inverse Probability of Treatment Weighting',
- 'Empirical Likelihood Estimation' and 'Targeted Maximum Likelihood Estimation'. Also includes a significance test for the difference between two adjusted survival curves and the calculation of adjusted restricted mean survival times.
- Additionally enables the user to estimate and plot cause-specific confounder-adjusted cumulative incidence functions in the competing risks setting using the same methods (with some exceptions).
-License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
-Imports: 
-	dplyr (>= 1.0.0),
-	R.utils,
-	rlang,
-	doParallel,
-	doRNG,
-	foreach
-Suggests: 
-    testthat (>= 3.0.0),
-	vdiffr (>= 3.0.0),
-	survival (>= 3.0.0),
-	ggplot2 (>= 3.0.0),
-	Matching (>= 4.9),
-	WeightIt (>= 0.11.0),
-	prodlim (>= 2019.11.13),
-	survtmle (>= 1.1),
-	R6,
-	MASS,
-	tidyr,
-	riskRegression (>= 2020.12.08),
-	pec (>= 2020.11.17),
-	geepack (>= 1.3),
-	nnet,
-	cmprsk (>= 2.2),
-	eventglm (>= 1.1.1),
-	SuperLearner (>= 2.0.0),
-	pammtools (>= 0.5),
-	knitr,
-	rmarkdown,
-	mice (>= 3.0.0)
-Config/testthat/edition: 3
-VignetteBuilder: knitr

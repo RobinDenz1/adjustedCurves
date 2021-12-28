@@ -1,4 +1,6 @@
 
+suppressMessages(requireNamespace("survival"))
+
 # survival case
 set.seed(42)
 
@@ -28,6 +30,12 @@ test_that("survival, 2 treatments, with from", {
   expect_equal(round(adj_test$integral_se, 4), 0.0394)
   expect_equal(round(adj_test$p_value, 4), 0)
   expect_equal(adj_test$n_boot, 10)
+})
+
+test_that("survival, 2 treatments, S3 methods", {
+  adj_test <- adjusted_curve_diff(adj, to=1.3, from=0.5)
+  expect_snapshot_output(print(adj_test))
+  expect_snapshot_output(summary(adj_test))
 })
 
 sim_dat$group <- as.character(sim_dat$group)
@@ -61,6 +69,13 @@ test_that("survival, > 2 treatments, with from", {
   expect_equal(adj_test$`0 vs. 1`$n_boot, 9)
 })
 
+test_that("survival, > 2 treatments, S3 method", {
+  adj_test <- adjusted_curve_diff(adj, to=1.3, from=0.5)
+  adj_test$method <- "iptw_km"
+  expect_snapshot_output(print(adj_test))
+  expect_snapshot_output(summary(adj_test))
+})
+
 # competing risks case
 
 sim_dat <- sim_confounded_crisk(n=200, max_t=1.5)
@@ -90,6 +105,13 @@ test_that("CIF, 2 treatments, with from", {
   expect_equal(round(adj_test$integral_se, 4), 0.068)
   expect_equal(round(adj_test$p_value, 4), 0.2)
   expect_equal(adj_test$n_boot, 10)
+})
+
+test_that("CIF, 2 treatments, S3 methods", {
+  adj_test <- adjusted_curve_diff(adj, to=1.3, from=0.5)
+  adj_test$method <- "iptw"
+  expect_snapshot_output(print(adj_test))
+  expect_snapshot_output(summary(adj_test))
 })
 
 sim_dat$group <- as.character(sim_dat$group)
@@ -122,4 +144,10 @@ test_that("CIF, > 2 treatments, with from", {
   expect_equal(round(adj_test$`1 vs. 0`$integral_se, 4), 0.0838)
   expect_equal(round(adj_test$`1 vs. 0`$p_value, 4), 0.3)
   expect_equal(adj_test$`1 vs. 0`$n_boot, 10)
+})
+
+test_that("CIF, > 2 treatments, S3 methods", {
+  adj_test <- adjusted_curve_diff(adj, to=1.3, from=0.5)
+  expect_snapshot_output(print(adj_test))
+  expect_snapshot_output(summary(adj_test))
 })

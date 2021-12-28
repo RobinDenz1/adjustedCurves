@@ -1,8 +1,9 @@
-library(nnet)
 
 set.seed(42)
 
-sim_dat <- adjustedCurves::sim_confounded_surv(n=50)
+sim_dat <- readRDS(system.file("testdata",
+                               "d_sim_surv_n_50.Rds",
+                               package="adjustedCurves"))
 sim_dat$group <- ifelse(sim_dat$group==0, "Control", "Treatment")
 sim_dat$group <- as.factor(sim_dat$group)
 
@@ -11,72 +12,88 @@ mod <- glm(group ~ x1 + x2 + x3 + x4 + x5 + x6, data=sim_dat,
 
 ## Just check if function throws any errors
 test_that("2 treatments, no conf_int, no boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="iptw_km",
-                                            conf_int=FALSE,
-                                            treatment_model=mod), NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="iptw_km",
+                      conf_int=FALSE,
+                      treatment_model=mod)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, with conf_int, no boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="iptw_km",
-                                            conf_int=TRUE,
-                                            treatment_model=mod), NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="iptw_km",
+                      conf_int=TRUE,
+                      treatment_model=mod)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, no conf_int, with boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="iptw_km",
-                                            conf_int=FALSE,
-                                            bootstrap=TRUE,
-                                            n_boot=2,
-                                            treatment_model=mod), NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="iptw_km",
+                      conf_int=FALSE,
+                      bootstrap=TRUE,
+                      n_boot=2,
+                      treatment_model=mod)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, with conf_int, with boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="iptw_km",
-                                            conf_int=TRUE,
-                                            bootstrap=TRUE,
-                                            n_boot=2,
-                                            treatment_model=mod), NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="iptw_km",
+                      conf_int=TRUE,
+                      bootstrap=TRUE,
+                      n_boot=2,
+                      treatment_model=mod)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, no conf_int, with WeightIt", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="iptw_km",
-                                            conf_int=FALSE,
-                                            bootstrap=FALSE,
-                                            treatment_model=group ~ x1 + x2,
-                                            weight_method="ps"), NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="iptw_km",
+                      conf_int=FALSE,
+                      bootstrap=FALSE,
+                      treatment_model=group ~ x1 + x2,
+                      weight_method="ps")
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, no conf_int, with user-weights", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="iptw_km",
-                                            conf_int=FALSE,
-                                            bootstrap=FALSE,
-                                            treatment_model=runif(n=50, min=1,
-                                                                  max=2))
-               , NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="iptw_km",
+                      conf_int=FALSE,
+                      bootstrap=FALSE,
+                      treatment_model=runif(n=50, min=1, max=2))
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("3 ways of iptw calculation are equal", {
@@ -144,56 +161,70 @@ test_that("3 ways of iptw calculation are equal", {
 
 })
 
-sim_dat <- adjustedCurves::sim_confounded_surv(n=50)
+sim_dat <- readRDS(system.file("testdata",
+                               "d_sim_surv_n_50.Rds",
+                               package="adjustedCurves"))
 sim_dat$group[sim_dat$group==1] <- sample(c(1, 2),
                                         size=nrow(sim_dat[sim_dat$group==1, ]),
                                         replace=TRUE)
 sim_dat$group <- as.factor(sim_dat$group)
 
-mod <- nnet::multinom(group ~ x1 + x2 + x3 + x4 + x5 + x6, data=sim_dat)
+mod <- quiet(nnet::multinom(group ~ x1 + x2 + x3 + x4 + x5 + x6, data=sim_dat))
 
 test_that("> 2 treatments, no conf_int, no boot, no ...", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="iptw_km",
-                                            conf_int=FALSE,
-                                            treatment_model=mod), NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="iptw_km",
+                      conf_int=FALSE,
+                      treatment_model=mod)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("> 2 treatments, with conf_int, no boot, no ...", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="iptw_km",
-                                            conf_int=TRUE,
-                                            treatment_model=mod), NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="iptw_km",
+                      conf_int=TRUE,
+                      treatment_model=mod)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("> 2 treatments, no conf_int, with boot, no ...", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="iptw_km",
-                                            conf_int=FALSE,
-                                            bootstrap=TRUE,
-                                            n_boot=2,
-                                            treatment_model=mod), NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="iptw_km",
+                      conf_int=FALSE,
+                      bootstrap=TRUE,
+                      n_boot=2,
+                      treatment_model=mod)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("> 2 treatments, with conf_int, with boot, no ...", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="iptw_km",
-                                            conf_int=TRUE,
-                                            bootstrap=TRUE,
-                                            n_boot=2,
-                                            treatment_model=mod), NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="iptw_km",
+                      conf_int=TRUE,
+                      bootstrap=TRUE,
+                      n_boot=2,
+                      treatment_model=mod)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 # DONT RUN: would require package dependency on "mlogit"
@@ -210,14 +241,15 @@ test_that("> 2 treatments, with conf_int, with boot, no ...", {
 #})
 
 test_that("> 2 treatments, no conf_int, with user-weights", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="iptw_km",
-                                            conf_int=FALSE,
-                                            bootstrap=FALSE,
-                                            treatment_model=runif(n=50, min=1,
-                                                                  max=2))
-               , NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="iptw_km",
+                      conf_int=FALSE,
+                      bootstrap=FALSE,
+                      treatment_model=runif(n=50, min=1, max=2))
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })

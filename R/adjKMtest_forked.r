@@ -83,6 +83,9 @@ est.a.tau <- function(treat, x, psix, a, tau, d) {
 #     maximum number of iterations allowed
 #   - changed 1:max_iter in for loop to seq_len(max_iter)
 #   - minor changes to the code layout
+# CHANGES BY ROBIN DENZ (27.12.2021):
+#   - added warning if the algorithm did not converge
+#   - made sure this function still returns something in that case
 estamtor <- function(treat, x, psix, a, tau, d, max_iter, newton_tol) {
 
   n <- length(treat)
@@ -123,6 +126,14 @@ estamtor <- function(treat, x, psix, a, tau, d, max_iter, newton_tol) {
     dfvalue <- jacob.fun(treat, x, psix, a0, tau0, d)
   }
 
+  warning("Algorithm did not converge.",
+          " Increasing the max_iter value or decreasing the newton_tol",
+          " value might help.",
+          call.=FALSE)
+
+  return(list(a=as.matrix(para1[1:d]),
+              tau=as.matrix(para1[-(1:d)]),
+              converge=converge))
 }
 
 # CHANGES ROBIN DENZ (21.05.2021):

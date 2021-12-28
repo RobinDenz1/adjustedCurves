@@ -38,3 +38,21 @@ test_that("sim, custom values", {
   expect_true(length(unique(sim_dat$event))==3)
   expect_true(length(unique(sim_dat$group))==2)
 })
+
+test_that("sim, just one covariate", {
+  outcome_betas <- list(c(0.03, 0.4))
+
+  treatment_betas <- c(x1=0)
+
+  lcovars <- list(x1=c("runif", 1, 10))
+
+  sim_dat <- sim_confounded_crisk(n=15,
+                                  treatment_betas=treatment_betas,
+                                  outcome_betas=outcome_betas,
+                                  lcovars=lcovars)
+  expect_true(nrow(sim_dat)==15)
+  expect_true(ncol(sim_dat)==4)
+  expect_true(all(apply(sim_dat, 2, is.numeric)))
+  expect_true(length(unique(sim_dat$event))==3)
+  expect_true(length(unique(sim_dat$group))==2)
+})

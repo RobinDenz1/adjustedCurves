@@ -58,6 +58,7 @@ surv_km <- function(data, variable, ev_time, event, conf_int,
   if (!is.null(times)) {
     plotdata <- specific_times(plotdata, times)
   # ensure that it starts with 0
+  # TODO: rework pls
   } else if (!0 %in% plotdata$time) {
     if (conf_int) {
       levs <- unique(data[, variable])
@@ -573,15 +574,9 @@ surv_direct_pseudo <- function(data, variable, ev_time, event,
 
   if (type_time=="factor") {
     Sdata$vtime <- as.factor(Sdata$vtime)
-
-    if (length(times)==1) {
-      geese_formula <- paste("yi ~ ", paste(outcome_vars, collapse=" + "),
-                             " + group")
-    } else {
-      geese_formula <- paste("yi ~ vtime + ",
-                             paste(outcome_vars, collapse=" + "),
-                             " + group")
-    }
+    geese_formula <- paste("yi ~ vtime + ",
+                           paste(outcome_vars, collapse=" + "),
+                           " + group")
 
   } else if (type_time=="bs") {
     geese_formula <- paste("yi ~ splines::bs(vtime, df=", spline_df, ") + ",
@@ -948,7 +943,6 @@ surv_ostmle <- function(data, variable, ev_time, event, conf_int,
     epsilon=epsilon,
     max_num_interation=max_num_iteration,
     tmle_tolerance=tmle_tolerance,
-    verbose=FALSE,
     method=psi_moss_method
   )
 
@@ -967,7 +961,6 @@ surv_ostmle <- function(data, variable, ev_time, event, conf_int,
     epsilon=epsilon,
     max_num_interation=max_num_iteration,
     tmle_tolerance=tmle_tolerance,
-    verbose=FALSE,
     method=psi_moss_method
   )
 

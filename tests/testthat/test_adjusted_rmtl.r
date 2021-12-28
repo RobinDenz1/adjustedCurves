@@ -1,5 +1,5 @@
-library(riskRegression)
-library(prodlim)
+
+suppressMessages(requireNamespace("survival"))
 
 ### using single-event data
 
@@ -16,8 +16,18 @@ adj <- adjustedsurv(data=sim_dat,
                     bootstrap=TRUE,
                     n_boot=10)
 
+adj_no_boot <- adj
+adj_no_boot$boot_data <- NULL
+adj_no_boot$boot_adjsurv <- NULL
+
 test_that("rmtl surv, no boot", {
   adj_rmtl <- adjusted_rmtl(adj, to=1.1)
+  expect_equal(as.vector(round(adj_rmtl$auc, 4)), c(0.5789, 0.4279))
+})
+
+test_that("rmtl surv, no boot but use_boot=TRUE", {
+  adj_rmtl <- suppressWarnings(adjusted_rmtl(adj_no_boot, to=1.1,
+                                             use_boot=TRUE))
   expect_equal(as.vector(round(adj_rmtl$auc, 4)), c(0.5789, 0.4279))
 })
 

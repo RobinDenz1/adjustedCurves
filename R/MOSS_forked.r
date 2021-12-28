@@ -4,23 +4,43 @@
 # github repository: https://github.com/wilsoncai1992/MOSS
 # I made a few tiny changes but the main reason this copy is here is that
 # CRAN does not allow dependencies on packages that are not on CRAN.
-# Since MOSS runs under a GPL-2 license and the adjustedCurves package
-# does so as well, this is completely fine legally speaking
+# MOSS runs under a GPL-2 license
 
-# Copyright (C) 2021  Robin Denz
+# Additional License information from original repository:
+
+# BSD 3-Clause License
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# Copyright (c) 2017, Wilson Cai
+# All rights reserved.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
 #
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# * Redistributions of source code must retain the above copyright notice,
+# this list of conditions and the following disclaimer.
+#
+# * Redistributions in binary form must reproduce the above copyright notice,
+# this list of conditions and the following disclaimer in the documentation
+# and/or other materials provided with the distribution.
+#
+# * Neither the name of the copyright holder nor the names of its
+# contributors may be used to endorse or promote products derived from
+# this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+# CHANGES BY ROBIN DENZ (28.12.2021)
+# - removed all instances of "verbose"
 
 utils::globalVariables(c("Q1Haz", "G_dC"))
 
@@ -196,8 +216,7 @@ MOSS_hazard <- R6::R6Class("MOSS_hazard",
       method = "l2",
       epsilon = 1e0,
       max_num_interation = 1e2,
-      tmle_tolerance = NULL,
-      verbose = FALSE
+      tmle_tolerance = NULL
     ) {
       self$epsilon <- epsilon
       self$max_num_interation <- max_num_interation
@@ -227,13 +246,6 @@ MOSS_hazard <- R6::R6Class("MOSS_hazard",
         mean_eic_inner_prod_current >= self$tmle_tolerance * sqrt(max(k_grid)) &
         to_iterate
       ) {
-        if (verbose) {
-          df_debug <- data.frame(num_iteration,
-                                 sqrt(sum(mean_eic ^ 2)),
-                                 mean(psi_n))
-          colnames(df_debug) <- NULL
-          print(df_debug)
-        }
         # update
         self$density_failure <- self$fit_epsilon(
           method = method, clipping = self$epsilon
@@ -264,14 +276,6 @@ MOSS_hazard <- R6::R6Class("MOSS_hazard",
       # always output the best candidate for final result
       self$density_failure <- self$q_best
       psi_n <- colMeans(self$density_failure$survival)
-      if (verbose) {
-        message(paste(
-          "Pn(EIC)=",
-          formatC(mean_eic_inner_prod_best, format = "e", digits = 2),
-          "Psi=",
-          formatC(mean(psi_n), format = "e", digits = 2)
-        ))
-      }
       return(psi_n)
     }
   )
@@ -300,7 +304,6 @@ compute_se_moss <- function(eic_fit, alpha) {
   q <- compute_q(corr=sigma, B=1e3, alpha=alpha)
   return(sqrt(variance_marginal) / sqrt(n) * q)
 }
-
 
 initial_sl_fit <- function(
   T_tilde,

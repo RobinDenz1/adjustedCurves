@@ -1,9 +1,8 @@
-library(survival)
-library(ggplot2)
-library(vdiffr)
 
 set.seed(42)
-sim_dat <- sim_confounded_surv(n=50, max_t=1.5)
+sim_dat <- readRDS(system.file("testdata",
+                               "d_sim_surv_n_50.Rds",
+                               package="adjustedCurves"))
 sim_dat$group <- factor(sim_dat$group)
 
 adj <- adjustedsurv(data=sim_dat,
@@ -18,40 +17,75 @@ adj <- adjustedsurv(data=sim_dat,
 adj_rmst <- adjusted_rmst(adjsurv=adj, to=1.1, from=0, use_boot=TRUE)
 adj_rmtl <- adjusted_rmtl(adj=adj, to=1.1, from=0, use_boot=TRUE)
 
+adj_rmst_no_ci <- adjusted_rmst(adjsurv=adj, to=1.1, from=0, use_boot=FALSE)
+adj_rmtl_no_ci <- adjusted_rmtl(adj=adj, to=1.1, from=0, use_boot=FALSE)
+
 ## print methods
 
-test_that("print.adjusted_rmst, default", {
+test_that("print.adjusted_rmst no boot, default", {
+  expect_snapshot_output(print(adj_rmst_no_ci))
+})
+
+test_that("print.adjusted_rmst no boot, digits", {
+  expect_snapshot_output(print(adj_rmst_no_ci, digits=2))
+})
+
+test_that("print.adjusted_rmtl no boot, default", {
+  expect_snapshot_output(print(adj_rmtl_no_ci))
+})
+
+test_that("print.adjusted_rmtl no boot, digits", {
+  expect_snapshot_output(print(adj_rmtl_no_ci, digits=2))
+})
+
+test_that("print.adjusted_rmst with boot, default", {
   expect_snapshot_output(print(adj_rmst))
 })
 
-test_that("print.adjusted_rmst, digits", {
-  expect_snapshot_output(print(adj_rmst, digits=2), NA)
+test_that("print.adjusted_rmst with boot, digits", {
+  expect_snapshot_output(print(adj_rmst, digits=2))
 })
 
-test_that("print.adjusted_rmtl, default", {
-  expect_snapshot_output(print(adj_rmtl), NA)
+test_that("print.adjusted_rmtl with boot, default", {
+  expect_snapshot_output(print(adj_rmtl))
 })
 
-test_that("print.adjusted_rmtl, digits", {
-  expect_snapshot_output(print(adj_rmtl, digits=2), NA)
+test_that("print.adjusted_rmtl with boot, digits", {
+  expect_snapshot_output(print(adj_rmtl, digits=2))
 })
 
 ## summary methods
 
-test_that("summary.adjusted_rmst, default", {
-  expect_snapshot_output(summary(adj_rmst), NA)
+test_that("summary.adjusted_rmst no boot, default", {
+  expect_snapshot_output(summary(adj_rmst_no_ci))
 })
 
-test_that("summary.adjusted_rmst, digits", {
-  expect_snapshot_output(summary(adj_rmst, digits=2), NA)
+test_that("summary.adjusted_rmst no boot, digits", {
+  expect_snapshot_output(summary(adj_rmst_no_ci, digits=2))
 })
 
-test_that("summary.adjusted_rmtl, default", {
-  expect_snapshot_output(print(adj_rmst), NA)
+test_that("summary.adjusted_rmtl no boot, default", {
+  expect_snapshot_output(summary(adj_rmtl_no_ci))
 })
 
-test_that("summary.adjusted_rmtl, digits", {
-  expect_snapshot_output(print(adj_rmst, digits=2), NA)
+test_that("summary.adjusted_rmtl no boot, digits", {
+  expect_snapshot_output(summary(adj_rmtl_no_ci, digits=2))
+})
+
+test_that("summary.adjusted_rmst with boot, default", {
+  expect_snapshot_output(summary(adj_rmst))
+})
+
+test_that("summary.adjusted_rmst with boot, digits", {
+  expect_snapshot_output(summary(adj_rmst, digits=2))
+})
+
+test_that("summary.adjusted_rmtl with boot, default", {
+  expect_snapshot_output(summary(adj_rmtl))
+})
+
+test_that("summary.adjusted_rmtl with boot, digits", {
+  expect_snapshot_output(summary(adj_rmtl, digits=2))
 })
 
 ## plot methods

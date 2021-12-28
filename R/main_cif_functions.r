@@ -29,7 +29,7 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
   if (inherits(data, "data.frame")) {
     data <- as.data.frame(data)
   } else if (!inherits(data, "mids")) {
-    stop("'data' needs to be either a data.frame or mids object.")
+    stop("'data' must be either a data.frame or mids object.")
   }
 
   check_inputs_adjustedcif(data=data, variable=variable, ev_time=ev_time,
@@ -83,9 +83,6 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
     } else if (inherits(args$treatment_model, "formula")) {
       treatment_models <- rep(list(args$treatment_model), max(mids$.imp))
       args$treatment_model <- NULL
-    } else if (is.numeric(args$treatment_model)) {
-      stop("Supplying weights or propensity scores directly",
-           " is not allowed when using multiple imputation.")
     } else {
       treatment_models <- NULL
     }
@@ -195,7 +192,6 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
 
     class(out_obj) <- "adjustedcif"
     return(out_obj)
-
 
   ## normal method using a single data.frame
   } else {
@@ -362,12 +358,7 @@ adjustedcif_boot <- function(data, variable, ev_time, event, cause, method,
   boot_samp <- data[indices, ]
 
   # perform na.action
-  if (is.function(na.action)) {
-    boot_samp <- na.action(boot_samp)
-  } else {
-    na.action <- get(na.action)
-    boot_samp <- na.action(boot_samp)
-  }
+  boot_samp <- na.action(boot_samp)
 
   # IMPORTANT: keeps SL in tmle methods from failing
   row.names(boot_samp) <- seq_len(nrow(data))
@@ -548,11 +539,7 @@ plot.adjustedcif <- function(x, conf_int=FALSE, max_t=Inf,
       censoring_ind_width <- ystart * 0.05
     }
 
-    if (is.factor(plotdata$group)) {
-      levs <- levels(plotdata$group)
-    } else {
-      levs <- unique(plotdata$group)
-    }
+    levs <- levels(plotdata$group)
 
     # calculate needed data
     cens_dat <- vector(mode="list", length=length(levs))
@@ -588,7 +575,7 @@ plot.adjustedcif <- function(x, conf_int=FALSE, max_t=Inf,
                                linetype=.data$group)
     } else {
       stop("Argument 'censoring_ind' must be either 'none', 'lines' or",
-           " points. See documentation.")
+           " 'points'. See documentation.")
     }
 
     if (!color) {
@@ -625,7 +612,7 @@ plot.adjustedcif <- function(x, conf_int=FALSE, max_t=Inf,
             " Need bootstrap=TRUE in adjustedcif() call.")
   } else if (conf_int & !use_boot & !"ci_lower" %in% colnames(plotdata)) {
     warning("Cannot draw confidence intervals. Either set 'conf_int=TRUE' in",
-            " 'adjustedcif()' call or use bootstrap estimates.")
+            " adjustedcif() call or use bootstrap estimates.")
   } else if (conf_int) {
 
     # plot using step-function interpolation
@@ -708,11 +695,13 @@ summary.adjustedcif <- function(object, ...) {
   cat("   - Method: ", method_name, "\n", sep="")
   cat("   - Times: ", times_str, "\n", sep="")
 
-  if (!is.null(object$boot_data)) {
-    cat("   - Bootstrapping: Performed with ", max(object$boot_data$boot),
-        " Replications\n", sep="")
-  } else {
+  if (is.null(object$call$bootstrap) ||
+      !as.logical(as.character(object$call$bootstrap))) {
     cat("   - Bootstrapping: Not Done\n", sep="")
+  } else {
+    n_boot <- ifelse(is.null(object$call$n_boot), 500, object$call$n_boot)
+    cat("   - Bootstrapping: Performed with ", n_boot,
+        " Replications\n", sep="")
   }
 
   if (is.null(object$call$conf_int) ||

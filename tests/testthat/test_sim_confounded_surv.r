@@ -30,3 +30,21 @@ test_that("sim, custom values", {
   expect_true(length(unique(sim_dat$event))==2)
   expect_true(length(unique(sim_dat$group))==2)
 })
+
+test_that("sim, only one covariate", {
+  lcovars <- list(x1=c("runif", 1, 10))
+  outcome_betas <- c(x1=0.2)
+  treatment_betas <- c(x1=0.2)
+  sim_dat <- sim_confounded_surv(n=20,
+                                 lcovars=lcovars,
+                                 outcome_betas=outcome_betas,
+                                 treatment_betas=treatment_betas,
+                                 group_beta=0.2,
+                                 surv_dist="exponential")
+
+  expect_true(nrow(sim_dat)==20)
+  expect_true(ncol(sim_dat)==4)
+  expect_true(all(apply(sim_dat, 2, is.numeric)))
+  expect_true(length(unique(sim_dat$event))==2)
+  expect_true(length(unique(sim_dat$group))==2)
+})

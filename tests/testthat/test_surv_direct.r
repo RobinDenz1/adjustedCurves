@@ -2,7 +2,9 @@ library(survival)
 
 set.seed(42)
 
-sim_dat <- adjustedCurves::sim_confounded_surv(n=50)
+sim_dat <- readRDS(system.file("testdata",
+                               "d_sim_surv_n_50.Rds",
+                               package="adjustedCurves"))
 sim_dat$group <- as.factor(sim_dat$group)
 
 # outcome model
@@ -11,63 +13,80 @@ mod <- survival::coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
 
 ## Just check if function throws any errors
 test_that("2 treatments, no conf_int, no boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            outcome_model=mod), NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      outcome_model=mod)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, with conf_int, no boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=TRUE,
-                                            outcome_model=mod), NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=TRUE,
+                      outcome_model=mod)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, no conf_int, with boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            bootstrap=TRUE,
-                                            n_boot=2,
-                                            outcome_model=mod), NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      bootstrap=TRUE,
+                      n_boot=2,
+                      outcome_model=mod)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, with conf_int, with boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=TRUE,
-                                            bootstrap=TRUE,
-                                            n_boot=2,
-                                            outcome_model=mod), NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=TRUE,
+                      bootstrap=TRUE,
+                      n_boot=2,
+                      outcome_model=mod)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, no conf_int, no boot, with times", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=TRUE,
-                                            bootstrap=TRUE,
-                                            n_boot=2,
-                                            outcome_model=mod,
-                                            times=c(0.8, 0.9)), NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=TRUE,
+                      bootstrap=TRUE,
+                      n_boot=2,
+                      outcome_model=mod,
+                      times=c(0.8, 0.9))
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
-sim_dat <- adjustedCurves::sim_confounded_surv(n=90)
+sim_dat <- readRDS(system.file("testdata",
+                               "d_sim_surv_n_100.Rds",
+                               package="adjustedCurves"))
 sim_dat$group[sim_dat$group==1] <- sample(c(1, 2),
                                         size=nrow(sim_dat[sim_dat$group==1, ]),
                                         replace=TRUE)
@@ -79,71 +98,86 @@ mod <- survival::coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + group,
 
 
 test_that("> 2 treatments, no conf_int, no boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            outcome_model=mod), NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      outcome_model=mod)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("> 2 treatments, with conf_int, no boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=TRUE,
-                                            outcome_model=mod), NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=TRUE,
+                      outcome_model=mod)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("> 2 treatments, no conf_int, with boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            bootstrap=TRUE,
-                                            n_boot=2,
-                                            outcome_model=mod), NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      bootstrap=TRUE,
+                      n_boot=2,
+                      outcome_model=mod)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("> 2 treatments, with conf_int, with boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=TRUE,
-                                            bootstrap=TRUE,
-                                            n_boot=2,
-                                            outcome_model=mod), NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=TRUE,
+                      bootstrap=TRUE,
+                      n_boot=2,
+                      outcome_model=mod)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("> 2 treatments, no conf_int, no boot, with times", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            bootstrap=FALSE,
-                                            n_boot=2,
-                                            outcome_model=mod,
-                                            times=c(0.8, 0.9)), NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      bootstrap=FALSE,
+                      n_boot=2,
+                      outcome_model=mod,
+                      times=c(0.8, 0.9))
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 ####################### Models other than coxph ################################
 
-library(riskRegression)
 library(prodlim)
-library(pec)
 
-set.seed(42)
+set.seed(41)
 
-sim_dat <- adjustedCurves::sim_confounded_surv(n=110)
+sim_dat <- readRDS(system.file("testdata",
+                               "d_sim_surv_n_150.Rds",
+                               package="adjustedCurves"))
 sim_dat$group <- as.factor(sim_dat$group)
 
 # fit some models
@@ -167,142 +201,166 @@ mod_glm <- stats::glm(time ~ group + x1, data=sim_dat, family="gaussian")
 
 # run tests for each model
 test_that("riskRegression, 2 treatments, no boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            outcome_model=mod_riskRegression),
-               NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      outcome_model=mod_riskRegression)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("riskRegression, 2 treatments, with boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            outcome_model=mod_riskRegression,
-                                            bootstrap=TRUE,
-                                            n_boot=2),
-               NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      outcome_model=mod_riskRegression,
+                      bootstrap=TRUE,
+                      n_boot=2)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("ARR, 2 treatments, no boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            outcome_model=mod_ARR),
-               NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      outcome_model=mod_ARR)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("ARR, 2 treatments, with boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            outcome_model=mod_ARR,
-                                            bootstrap=TRUE,
-                                            n_boot=2),
-               NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      outcome_model=mod_ARR,
+                      bootstrap=TRUE,
+                      n_boot=2)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("selectCox, 2 treatments, no boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            outcome_model=mod_selectCox),
-               NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      outcome_model=mod_selectCox)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("selectCox, 2 treatments, with boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            outcome_model=mod_selectCox,
-                                            bootstrap=TRUE,
-                                            n_boot=2),
-               NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      outcome_model=mod_selectCox,
+                      bootstrap=TRUE,
+                      n_boot=2)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("pecRpart, 2 treatments, no boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            outcome_model=mod_pecRpart),
-               NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      outcome_model=mod_pecRpart)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("prodlim, 2 treatments, no boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            outcome_model=mod_prodlim),
-               NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      outcome_model=mod_prodlim)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("prodlim, 2 treatments, with boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            outcome_model=mod_prodlim,
-                                            bootstrap=TRUE,
-                                            n_boot=2),
-               NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      outcome_model=mod_prodlim,
+                      bootstrap=TRUE,
+                      n_boot=2)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 sim_dat$event <- 1
 
 test_that("glm, 2 treatments, no boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            outcome_model=mod_glm),
-               NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      outcome_model=mod_glm)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("glm, 2 treatments, with boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            outcome_model=mod_glm,
-                                            bootstrap=TRUE,
-                                            n_boot=2),
-               NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      outcome_model=mod_glm,
+                      bootstrap=TRUE,
+                      n_boot=2)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 ### using > 2 treatments
 set.seed(42)
 
-sim_dat <- adjustedCurves::sim_confounded_surv(n=110)
+sim_dat <- readRDS(system.file("testdata",
+                               "d_sim_surv_n_150.Rds",
+                               package="adjustedCurves"))
 sim_dat$group[sim_dat$group==1] <- sample(c(1, 2),
                                         size=nrow(sim_dat[sim_dat$group==1, ]),
                                         replace=TRUE)
@@ -329,136 +387,158 @@ mod_glm <- stats::glm(time ~ group + x1, data=sim_dat, family="gaussian")
 
 # run tests
 test_that("riskRegression, > 2 treatments, no boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            outcome_model=mod_riskRegression),
-               NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      outcome_model=mod_riskRegression)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("riskRegression, > 2 treatments, with boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            outcome_model=mod_riskRegression,
-                                            bootstrap=TRUE,
-                                            n_boot=2),
-               NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      outcome_model=mod_riskRegression,
+                      bootstrap=TRUE,
+                      n_boot=2)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("ARR, 2 treatments, no boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            outcome_model=mod_ARR),
-               NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      outcome_model=mod_ARR)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("ARR, 2 treatments, with boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            outcome_model=mod_ARR,
-                                            bootstrap=TRUE,
-                                            n_boot=2),
-               NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      outcome_model=mod_ARR,
+                      bootstrap=TRUE,
+                      n_boot=2)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("selectCox, > 2 treatments, no boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            outcome_model=mod_selectCox),
-               NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      outcome_model=mod_selectCox)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("selectCox, > 2 treatments, with boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            outcome_model=mod_selectCox,
-                                            bootstrap=TRUE,
-                                            n_boot=2),
-               NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      outcome_model=mod_selectCox,
+                      bootstrap=TRUE,
+                      n_boot=2)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("pecRpart, > 2 treatments, no boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            outcome_model=mod_pecRpart),
-               NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      outcome_model=mod_pecRpart)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("prodlim, > 2 treatments, no boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            outcome_model=mod_prodlim),
-               NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      outcome_model=mod_prodlim)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("prodlim, > 2 treatments, with boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            outcome_model=mod_prodlim,
-                                            bootstrap=TRUE,
-                                            n_boot=2),
-               NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      outcome_model=mod_prodlim,
+                      bootstrap=TRUE,
+                      n_boot=2)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 sim_dat$event <- 1
 
 test_that("glm, > 2 treatments, no boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            outcome_model=mod_glm),
-               NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      outcome_model=mod_glm)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 test_that("glm, > 2 treatments, with boot", {
-  expect_error(adjustedCurves::adjustedsurv(data=sim_dat,
-                                            variable="group",
-                                            ev_time="time",
-                                            event="event",
-                                            method="direct",
-                                            conf_int=FALSE,
-                                            outcome_model=mod_glm,
-                                            bootstrap=TRUE,
-                                            n_boot=2),
-               NA)
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="direct",
+                      conf_int=FALSE,
+                      outcome_model=mod_glm,
+                      bootstrap=TRUE,
+                      n_boot=2)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
 ################################################################################

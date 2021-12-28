@@ -103,7 +103,7 @@
        - Cause of Interest: 1
        - Method: Targeted Maximum Likelihood Estimation
        - Times: Event-Specific Times
-       - Bootstrapping: Not Done
+       - Bootstrapping: Performed with 500 Replications
        - Approximate CI: Not Calculated
        - Using a single dataset
 
@@ -113,7 +113,7 @@
        - Cause of Interest: 1
        - Method: Targeted Maximum Likelihood Estimation
        - Times: Event-Specific Times
-       - Bootstrapping: Not Done
+       - Bootstrapping: Performed with 500 Replications
        - Approximate CI: Calculated with a Confidence level of 0.95
        - Using a single dataset
 
@@ -123,7 +123,7 @@
        - Cause of Interest: 1
        - Method: Targeted Maximum Likelihood Estimation
        - Times: Event-Specific Times
-       - Bootstrapping: Not Done
+       - Bootstrapping: Performed with 500 Replications
        - Approximate CI: Calculated with a Confidence level of 0.95
        - Using multiply imputed dataset
 

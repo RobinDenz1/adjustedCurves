@@ -1,7 +1,10 @@
-library(survival)
+
+suppressMessages(requireNamespace("survival"))
 
 set.seed(42)
-sim_dat <- sim_confounded_surv(n=20)
+sim_dat <- readRDS(system.file("testdata",
+                               "d_sim_surv_n_20.Rds",
+                               package="adjustedCurves"))
 sim_dat$group <- as.factor(sim_dat$group)
 
 adj <- adjustedsurv(data=sim_dat,

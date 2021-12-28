@@ -140,11 +140,6 @@ confint_surv <- function(surv, se, conf_level, conf_type="plain") {
     error <- z_val * se
     left <- surv * exp(-error)
     right <- surv * exp(error)
-  } else if (conf_type=="log-log") {
-    xx <- ifelse(surv==0 | surv==1, NA, surv)
-    se2 <- z_val * se/log(xx)
-    left <- exp(-exp(log(-log(xx)) - se2))
-    right <- exp(-exp(log(-log(xx)) + se2))
   }
 
   return(list(left=left, right=right))
@@ -304,10 +299,6 @@ survtmle.timepoints <- function(object, times, returnModels=FALSE,
                                 SL.trt, SL.ctime, SL.ftime,
                                 glm.trt, glm.ctime, glm.ftime) {
 
-  if (is.null(object$trtMod)) {
-    stop("object must have returnModels = TRUE")
-  }
-
   callList <- as.list(object$call)[-1]
   cglm <- any(class(object$ctimeMod) %in% c("glm", "speedglm")) |
     any(class(object$ctimeMod) == "noCens")
@@ -414,7 +405,7 @@ calc_pseudo_surv <- function(data, ev_time, event, times, censoring_vars,
                      type="survival",
                      formula.censoring=cens_formula,
                      ipcw.method=ipcw.method,
-                     FUN.VALUE=numeric(1))
+                     FUN.VALUE=numeric(nrow(data)))
 
   }
   return(pseudo)

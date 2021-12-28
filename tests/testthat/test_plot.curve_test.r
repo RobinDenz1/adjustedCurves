@@ -1,9 +1,9 @@
-library(ggplot2)
-library(vdiffr)
 
 set.seed(42)
 
-sim_dat <- sim_confounded_surv(n=20)
+sim_dat <- readRDS(system.file("testdata",
+                               "d_sim_surv_n_20.Rds",
+                               package="adjustedCurves"))
 sim_dat$group <- as.factor(sim_dat$group)
 
 adj <- adjustedsurv(data=sim_dat,
@@ -17,6 +17,8 @@ adj <- adjustedsurv(data=sim_dat,
 adj_test <- adjusted_curve_diff(adj=adj, from=0, to=0.5)
 
 # 2 treatments
+# NOTE: I am not using snapshots + expect_doppelganger here
+#       because it did not work very well with these kinds of plots
 
 test_that("plot.curve_test, 2 treatments, type='curves'", {
   plt <- plot(adj_test, type="curves")

@@ -84,9 +84,6 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
     } else if (inherits(args$treatment_model, "formula")) {
       treatment_models <- rep(list(args$treatment_model), max(mids$.imp))
       args$treatment_model <- NULL
-    } else if (is.numeric(args$treatment_model)) {
-      stop("Supplying weights or propensity scores directly is not allowed",
-           " when using multiple imputation.")
     } else {
       treatment_models <- NULL
     }
@@ -367,12 +364,7 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
   boot_samp <- data[indices, ]
 
   # perform na.action
-  if (is.function(na.action)) {
-    boot_samp <- na.action(boot_samp)
-  } else {
-    na.action <- get(na.action)
-    boot_samp <- na.action(boot_samp)
-  }
+  boot_samp <- na.action(boot_samp)
 
   # IMPORTANT: keeps SL in tmle methods from failing
   row.names(boot_samp) <- seq_len(nrow(data))
@@ -573,9 +565,7 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
 
   ## Censoring indicators
   if (censoring_ind!="none") {
-
     if (is.null(censoring_ind_width)) {
-
       if (is.null(ylim)) {
         ystart <- 1 - ggplot2::layer_scales(p)$y$range$range[1]
       } else {
@@ -584,11 +574,7 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
       censoring_ind_width <- ystart * 0.05
     }
 
-    if (is.factor(plotdata$group)) {
-      levs <- levels(plotdata$group)
-    } else {
-      levs <- unique(plotdata$group)
-    }
+    levs <- levels(plotdata$group)
 
     # calculate needed data
     cens_dat <- vector(mode="list", length=length(levs))
@@ -623,7 +609,7 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
                                linetype=.data$group)
     } else {
       stop("Argument 'censoring_ind' must be either 'none', 'lines' or",
-           " points. See documentation.")
+           " 'points'. See documentation.")
     }
 
     if (!color) {
@@ -651,7 +637,6 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
       cens_geom$aes_params$linetype <- single_linetype
     }
     p <- p + cens_geom
-
   }
 
   ## Confidence intervals

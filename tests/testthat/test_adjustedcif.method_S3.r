@@ -1,8 +1,8 @@
 
-library(riskRegression)
-
 set.seed(42)
-sim_dat <- sim_confounded_crisk(n=20)
+sim_dat <- readRDS(system.file("testdata",
+                               "d_sim_crisk_n_20.Rds",
+                               package="adjustedCurves"))
 sim_dat$group <- as.factor(sim_dat$group)
 
 adj <- cif_aalen_johansen(data=sim_dat,

@@ -120,7 +120,7 @@ cif_iptw <- function(data, variable, ev_time, event, cause, conf_int,
   return(output)
 }
 
-# IPTW pseudo
+## IPTW pseudo
 #' @export
 cif_iptw_pseudo <- function(data, variable, ev_time, event, cause,
                             conf_int, conf_level=0.95, times,
@@ -462,16 +462,8 @@ cif_direct_pseudo <- function(data, variable, ev_time, event, cause,
 
   if (type_time=="factor") {
     Sdata$vtime <- as.factor(Sdata$vtime)
-
-    if (length(times)==1) {
-      geese_formula <- paste("yi ~ ", paste(outcome_vars, collapse=" + "),
-                             " + group")
-    } else {
-      geese_formula <- paste("yi ~ vtime + ", paste(outcome_vars,
-                                                    collapse=" + "),
-                             " + group")
-  }
-
+    geese_formula <- paste("yi ~ vtime + ",
+                           paste(outcome_vars, collapse=" + "), " + group")
   } else if (type_time=="bs") {
     geese_formula <- paste("yi ~ splines::bs(vtime, df=", spline_df, ") + ",
                            paste(outcome_vars, collapse=" + "), " + group")

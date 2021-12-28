@@ -1,16 +1,18 @@
 library(survival)
-library(riskRegression)
-library(mice)
 
 set.seed(42)
 
-sim_dat <- adjustedCurves::sim_confounded_crisk(n=150)
+sim_dat <- readRDS(system.file("testdata",
+                               "d_sim_crisk_n_200.Rds",
+                               package="adjustedCurves"))
+
+sim_dat_tibble <- dplyr::tibble(sim_dat)
 sim_dat$group_num <- sim_dat$group
 sim_dat$group <- as.factor(sim_dat$group)
-sim_dat$x1 <- ifelse(runif(n=150) <= 0.4, sim_dat$x1, NA)
+sim_dat$x1 <- ifelse(runif(n=nrow(sim_dat)) <= 0.7, sim_dat$x1, NA)
 
 # impute dataset
-imp <- mice::mice(sim_dat, m=3, method="pmm", printFlag=FALSE)
+imp <- suppressWarnings(mice::mice(sim_dat, m=3, method="pmm", printFlag=FALSE))
 
 # outcome model
 outc_mod <- CSC_MI(mids=imp,
@@ -28,237 +30,308 @@ treat_vars <- c("x1", "x2", "x3", "x4", "x5", "x6")
 
 ### direct
 test_that("MI, direct, no boot", {
-  expect_error(adjustedCurves::adjustedcif(data=imp,
-                                           variable="group",
-                                           ev_time="time",
-                                           event="event",
-                                           method="direct",
-                                           conf_int=FALSE,
-                                           outcome_model=outc_mod,
-                                           cause=1), NA)
+  adj <- adjustedcif(data=imp,
+                     variable="group",
+                     ev_time="time",
+                     event="event",
+                     method="direct",
+                     conf_int=FALSE,
+                     outcome_model=outc_mod,
+                     cause=1)
+  expect_s3_class(adj, "adjustedcif")
+  expect_true(is.numeric(adj$adjcif$cif))
+  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
 })
 
 test_that("MI, direct, boot", {
-  expect_error(adjustedCurves::adjustedcif(data=imp,
-                                           variable="group",
-                                           ev_time="time",
-                                           event="event",
-                                           method="direct",
-                                           conf_int=FALSE,
-                                           bootstrap=TRUE,
-                                           n_boot=3,
-                                           outcome_model=outc_mod,
-                                           cause=1), NA)
+  adj <- adjustedcif(data=imp,
+                     variable="group",
+                     ev_time="time",
+                     event="event",
+                     method="direct",
+                     conf_int=FALSE,
+                     bootstrap=TRUE,
+                     n_boot=2,
+                     outcome_model=outc_mod,
+                     cause=1)
+  expect_s3_class(adj, "adjustedcif")
+  expect_true(is.numeric(adj$adjcif$cif))
+  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+})
+
+test_that("MI, direct, conf_int", {
+  adj <- adjustedcif(data=imp,
+                     variable="group",
+                     ev_time="time",
+                     event="event",
+                     method="direct",
+                     conf_int=TRUE,
+                     bootstrap=FALSE,
+                     n_boot=2,
+                     outcome_model=outc_mod,
+                     cause=1)
+  expect_s3_class(adj, "adjustedcif")
+  expect_true(is.numeric(adj$adjcif$cif))
+  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
 })
 
 ### direct_pseudo
 test_that("MI, direct_pseudo, no boot", {
-  expect_error(adjustedCurves::adjustedcif(data=imp,
-                                           variable="group",
-                                           ev_time="time",
-                                           event="event",
-                                           method="direct_pseudo",
-                                           conf_int=FALSE,
-                                           outcome_vars=outc_vars,
-                                           type_time="bs",
-                                           cause=1), NA)
+  adj <- adjustedcif(data=imp,
+                     variable="group",
+                     ev_time="time",
+                     event="event",
+                     method="direct_pseudo",
+                     conf_int=FALSE,
+                     outcome_vars=outc_vars,
+                     type_time="bs",
+                     cause=1)
+  expect_s3_class(adj, "adjustedcif")
+  expect_true(is.numeric(adj$adjcif$cif))
+  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
 })
 
 test_that("MI, direct_pseudo, boot", {
-  expect_error(adjustedCurves::adjustedcif(data=imp,
-                                           variable="group",
-                                           ev_time="time",
-                                           event="event",
-                                           method="direct_pseudo",
-                                           conf_int=FALSE,
-                                           bootstrap=TRUE,
-                                           n_boot=3,
-                                           outcome_vars=outc_vars,
-                                           type_time="bs",
-                                           cause=1), NA)
+  adj <- adjustedcif(data=imp,
+                     variable="group",
+                     ev_time="time",
+                     event="event",
+                     method="direct_pseudo",
+                     conf_int=FALSE,
+                     bootstrap=TRUE,
+                     n_boot=2,
+                     outcome_vars=outc_vars,
+                     type_time="bs",
+                     cause=1)
+  expect_s3_class(adj, "adjustedcif")
+  expect_true(is.numeric(adj$adjcif$cif))
+  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
 })
 
 ### iptw
 # use glm treatment model
 test_that("MI, iptw, no boot, glm", {
-  expect_error(adjustedCurves::adjustedcif(data=imp,
-                                           variable="group",
-                                           ev_time="time",
-                                           event="event",
-                                           method="iptw",
-                                           conf_int=FALSE,
-                                           treatment_model=treat_mod,
-                                           cause=1), NA)
+  adj <- adjustedcif(data=imp,
+                     variable="group",
+                     ev_time="time",
+                     event="event",
+                     method="iptw",
+                     conf_int=FALSE,
+                     treatment_model=treat_mod,
+                     cause=1)
+  expect_s3_class(adj, "adjustedcif")
+  expect_true(is.numeric(adj$adjcif$cif))
+  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
 })
 
 test_that("MI, iptw, boot, glm", {
-  expect_error(adjustedCurves::adjustedcif(data=imp,
-                                           variable="group",
-                                           ev_time="time",
-                                           event="event",
-                                           method="iptw",
-                                           conf_int=FALSE,
-                                           bootstrap=TRUE,
-                                           n_boot=3,
-                                           treatment_model=treat_mod,
-                                           cause=1), NA)
+  adj <- adjustedcif(data=imp,
+                     variable="group",
+                     ev_time="time",
+                     event="event",
+                     method="iptw",
+                     conf_int=FALSE,
+                     bootstrap=TRUE,
+                     n_boot=2,
+                     treatment_model=treat_mod,
+                     cause=1)
+  expect_s3_class(adj, "adjustedcif")
+  expect_true(is.numeric(adj$adjcif$cif))
+  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
 })
 
 ### iptw_pseudo
 # use glm model
 test_that("MI, iptw_pseudo, no boot", {
-  expect_error(adjustedCurves::adjustedcif(data=imp,
-                                           variable="group",
-                                           ev_time="time",
-                                           event="event",
-                                           method="iptw_pseudo",
-                                           conf_int=FALSE,
-                                           treatment_model=treat_mod,
-                                           cause=1), NA)
+  adj <- adjustedcif(data=imp,
+                     variable="group",
+                     ev_time="time",
+                     event="event",
+                     method="iptw_pseudo",
+                     conf_int=FALSE,
+                     treatment_model=treat_mod,
+                     cause=1)
+  expect_s3_class(adj, "adjustedcif")
+  expect_true(is.numeric(adj$adjcif$cif))
+  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
 })
 
 test_that("MI, iptw_pseudo, boot", {
-  expect_error(adjustedCurves::adjustedcif(data=imp,
-                                           variable="group",
-                                           ev_time="time",
-                                           event="event",
-                                           method="iptw_pseudo",
-                                           conf_int=FALSE,
-                                           bootstrap=TRUE,
-                                           n_boot=3,
-                                           treatment_model=treat_mod,
-                                           cause=1), NA)
+  adj <- adjustedcif(data=imp,
+                     variable="group",
+                     ev_time="time",
+                     event="event",
+                     method="iptw_pseudo",
+                     conf_int=FALSE,
+                     bootstrap=TRUE,
+                     n_boot=2,
+                     treatment_model=treat_mod,
+                     cause=1)
+  expect_s3_class(adj, "adjustedcif")
+  expect_true(is.numeric(adj$adjcif$cif))
+  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
 })
 
 # use formula object treatment model
 test_that("MI, iptw_pseudo, no boot, weightit", {
-  expect_error(adjustedCurves::adjustedcif(data=imp,
-                                           variable="group",
-                                           ev_time="time",
-                                           event="event",
-                                           method="iptw_pseudo",
-                                           conf_int=FALSE,
-                                           treatment_model=group ~ x1 + x2 + x3,
-                                           cause=1), NA)
+  adj <- adjustedcif(data=imp,
+                     variable="group",
+                     ev_time="time",
+                     event="event",
+                     method="iptw_pseudo",
+                     conf_int=FALSE,
+                     treatment_model=group ~ x1 + x2 + x3,
+                     cause=1)
+  expect_s3_class(adj, "adjustedcif")
+  expect_true(is.numeric(adj$adjcif$cif))
+  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
 })
 
 test_that("MI, iptw_pseudo, boot, weightit", {
-  expect_error(adjustedCurves::adjustedcif(data=imp,
-                                           variable="group",
-                                           ev_time="time",
-                                           event="event",
-                                           method="iptw_pseudo",
-                                           conf_int=FALSE,
-                                           bootstrap=TRUE,
-                                           n_boot=3,
-                                           treatment_model=group ~ x1 + x2 + x3,
-                                           cause=1), NA)
+  adj <- adjustedcif(data=imp,
+                     variable="group",
+                     ev_time="time",
+                     event="event",
+                     method="iptw_pseudo",
+                     conf_int=FALSE,
+                     bootstrap=TRUE,
+                     n_boot=2,
+                     treatment_model=group ~ x1 + x2 + x3,
+                     cause=1)
+  expect_s3_class(adj, "adjustedcif")
+  expect_true(is.numeric(adj$adjcif$cif))
+  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
 })
 
 ### matching
 test_that("MI, matching, no boot", {
-  expect_error(adjustedCurves::adjustedcif(data=imp,
-                                           variable="group_num",
-                                           ev_time="time",
-                                           event="event",
-                                           method="matching",
-                                           conf_int=FALSE,
-                                           treatment_model=treat_mod,
-                                           cause=1), NA)
+  adj <- adjustedcif(data=imp,
+                     variable="group_num",
+                     ev_time="time",
+                     event="event",
+                     method="matching",
+                     conf_int=FALSE,
+                     treatment_model=treat_mod,
+                     cause=1)
+  expect_s3_class(adj, "adjustedcif")
+  expect_true(is.numeric(adj$adjcif$cif))
+  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
 })
 
 ### aiptw
 test_that("MI, aiptw, no boot", {
-  expect_error(adjustedCurves::adjustedcif(data=imp,
-                                           variable="group",
-                                           ev_time="time",
-                                           event="event",
-                                           method="aiptw",
-                                           conf_int=FALSE,
-                                           outcome_model=outc_mod,
-                                           treatment_model=treat_mod,
-                                           cause=1), NA)
+  adj <- adjustedcif(data=imp,
+                     variable="group",
+                     ev_time="time",
+                     event="event",
+                     method="aiptw",
+                     conf_int=FALSE,
+                     outcome_model=outc_mod,
+                     treatment_model=treat_mod,
+                     cause=1)
+  expect_s3_class(adj, "adjustedcif")
+  expect_true(is.numeric(adj$adjcif$cif))
+  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
 })
 
 test_that("MI, aiptw, boot", {
-  expect_error(adjustedCurves::adjustedcif(data=imp,
-                                           variable="group",
-                                           ev_time="time",
-                                           event="event",
-                                           method="aiptw",
-                                           conf_int=FALSE,
-                                           bootstrap=TRUE,
-                                           n_boot=3,
-                                           outcome_model=outc_mod,
-                                           treatment_model=treat_mod,
-                                           cause=1), NA)
+  adj <- adjustedcif(data=imp,
+                     variable="group",
+                     ev_time="time",
+                     event="event",
+                     method="aiptw",
+                     conf_int=FALSE,
+                     bootstrap=TRUE,
+                     n_boot=2,
+                     outcome_model=outc_mod,
+                     treatment_model=treat_mod,
+                     cause=1)
+  expect_s3_class(adj, "adjustedcif")
+  expect_true(is.numeric(adj$adjcif$cif))
+  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
 })
 
 ### aiptw_pseudo
 test_that("MI, aiptw_pseudo, no boot", {
-  expect_error(adjustedCurves::adjustedcif(data=imp,
-                                           variable="group",
-                                           ev_time="time",
-                                           event="event",
-                                           method="aiptw_pseudo",
-                                           conf_int=FALSE,
-                                           outcome_vars=outc_vars,
-                                           treatment_model=treat_mod,
-                                           type_time="bs",
-                                           cause=1), NA)
+  adj <- adjustedcif(data=imp,
+                     variable="group",
+                     ev_time="time",
+                     event="event",
+                     method="aiptw_pseudo",
+                     conf_int=FALSE,
+                     outcome_vars=outc_vars,
+                     treatment_model=treat_mod,
+                     type_time="bs",
+                     cause=1)
+  expect_s3_class(adj, "adjustedcif")
+  expect_true(is.numeric(adj$adjcif$cif))
+  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
 })
 
 test_that("MI, aiptw_pseudo, boot", {
-  expect_error(adjustedCurves::adjustedcif(data=imp,
-                                           variable="group",
-                                           ev_time="time",
-                                           event="event",
-                                           method="aiptw_pseudo",
-                                           conf_int=FALSE,
-                                           bootstrap=TRUE,
-                                           n_boot=3,
-                                           outcome_vars=outc_vars,
-                                           treatment_model=treat_mod,
-                                           type_time="bs",
-                                           cause=1), NA)
+  adj <- adjustedcif(data=imp,
+                     variable="group",
+                     ev_time="time",
+                     event="event",
+                     method="aiptw_pseudo",
+                     conf_int=FALSE,
+                     bootstrap=TRUE,
+                     n_boot=2,
+                     outcome_vars=outc_vars,
+                     treatment_model=treat_mod,
+                     type_time="bs",
+                     cause=1)
+  expect_s3_class(adj, "adjustedcif")
+  expect_true(is.numeric(adj$adjcif$cif))
+  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
 })
 
 ### aalen_johansen
 test_that("MI, aalen_johansen, no boot", {
-  expect_error(adjustedCurves::adjustedcif(data=imp,
-                                           variable="group",
-                                           ev_time="time",
-                                           event="event",
-                                           method="aalen_johansen",
-                                           conf_int=F,
-                                           cause=1), NA)
+  adj <- adjustedcif(data=imp,
+                     variable="group",
+                     ev_time="time",
+                     event="event",
+                     method="aalen_johansen",
+                     conf_int=F,
+                     cause=1)
+  expect_s3_class(adj, "adjustedcif")
+  expect_true(is.numeric(adj$adjcif$cif))
+  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
 })
 
 test_that("MI, aalen_johansen, boot", {
-  expect_error(adjustedCurves::adjustedcif(data=imp,
-                                           variable="group",
-                                           ev_time="time",
-                                           event="event",
-                                           method="aalen_johansen",
-                                           conf_int=F,
-                                           bootstrap=T,
-                                           n_boot=3,
-                                           cause=1), NA)
+  adj <- adjustedcif(data=imp,
+                     variable="group",
+                     ev_time="time",
+                     event="event",
+                     method="aalen_johansen",
+                     conf_int=F,
+                     bootstrap=T,
+                     n_boot=2,
+                     cause=1)
+  expect_s3_class(adj, "adjustedcif")
+  expect_true(is.numeric(adj$adjcif$cif))
+  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
 })
 
 ### adjusted_curve_diff
-adjcif <- adjustedCurves::adjustedcif(data=imp,
-                                      variable="group",
-                                      ev_time="time",
-                                      event="event",
-                                      method="aalen_johansen",
-                                      bootstrap=T,
-                                      n_boot=3,
-                                      na.action="na.omit",
-                                      cause=1)
+adjcif <- adjustedcif(data=imp,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="aalen_johansen",
+                      bootstrap=T,
+                      n_boot=2,
+                      na.action="na.omit",
+                      cause=1)
 
 test_that("adjusted_curve_diff, two treatments", {
-  expect_error(adjustedCurves::adjusted_curve_diff(adjcif, from=0, to=1), NA)
+  adj_test <- adjusted_curve_diff(adjcif, from=0, to=1)
+  expect_equal(round(adj_test$observed_diff_integral, 4), 0.0543)
+  expect_equal(round(adj_test$integral_se, 4), 0.1337)
+  expect_equal(round(adj_test$p_value, 4), 1)
+  expect_equal(adj_test$n_boot, 2)
 })
 
 # create 3 treatments
@@ -269,19 +342,25 @@ sim_dat$group2 <- ifelse(sim_dat$group2==1, "Placebo",
                          ifelse(sim_dat$group2==2, "Chemo", "OP"))
 sim_dat$group2 <- factor(sim_dat$group2)
 
-imp <- mice::mice(sim_dat, m=3, method="pmm", printFlag=F)
+imp <- suppressWarnings(mice::mice(sim_dat, m=3, method="pmm", printFlag=F))
 
 # fit adjustedsurv
-adjcif <- adjustedCurves::adjustedcif(data=imp,
-                                      variable="group2",
-                                      ev_time="time",
-                                      event="event",
-                                      method="aalen_johansen",
-                                      bootstrap=T,
-                                      n_boot=3,
-                                      na.action="na.omit",
-                                      cause=1)
+adjcif <- adjustedcif(data=imp,
+                      variable="group2",
+                      ev_time="time",
+                      event="event",
+                      method="aalen_johansen",
+                      bootstrap=T,
+                      n_boot=2,
+                      na.action="na.omit",
+                      cause=1)
 
 test_that("adjusted_curve_diff, three treatments", {
-  expect_error(adjustedCurves::adjusted_curve_diff(adjcif, from=0, to=1), NA)
+  adj_test <- adjusted_curve_diff(adjcif, from=0, to=1)
+  expect_equal(round(adj_test$`Chemo vs. Placebo`$observed_diff_integral, 4),
+               0.0309)
+  expect_equal(round(adj_test$`Chemo vs. Placebo`$integral_se, 4), 0.0315)
+  expect_equal(round(adj_test$`Chemo vs. Placebo`$p_value, 4), NaN)
+  expect_equal(adj_test$`Chemo vs. Placebo`$mids_p_values, c(0, 1, 0))
+  expect_equal(adj_test$`Chemo vs. Placebo`$n_boot, 2)
 })
