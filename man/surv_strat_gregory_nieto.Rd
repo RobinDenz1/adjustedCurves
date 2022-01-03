@@ -14,7 +14,7 @@ When using \code{method="strat_gregory_nieto"} the \code{adjust_vars} argument h
 \usage{
 surv_strat_gregory_nieto(data, variable, ev_time, event,
                          conf_int, conf_level=0.95,
-                         times=NULL, adjust_vars, na.rm=FALSE)
+                         times=NULL, adjust_vars)
 }
 
 \arguments{
@@ -41,9 +41,6 @@ A numeric vector of time points at which the survival probability should be esti
 }
   \item{adjust_vars}{
 A single string or character vector specifying column names in data for which the survival curves should be adjusted for. The variables specified can be integers, factors or characters. Only categorical variables can be used with this method. See details.
-  }
-  \item{na.rm}{
-Whether to remove the rows from the output at which no survival probability could be estimated. The reason for the occurence of \code{NA} values is given in the details.
   }
 }
 \details{

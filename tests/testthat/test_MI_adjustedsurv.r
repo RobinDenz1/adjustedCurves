@@ -432,7 +432,7 @@ adjsurv <- adjustedsurv(data=imp,
 
 test_that("adjusted_median_survival, 2 treatments, no boot", {
   adj_med <- adjusted_median_survival(adjsurv, verbose=FALSE)
-  expect_equal(round(adj_med$median_surv, 4), c(0.4723, 0.5872))
+  expect_equal(round(adj_med$median_surv, 4), c(0.4798, 0.5900))
 })
 
 ### adjusted_rmst
@@ -479,7 +479,7 @@ adjsurv <- adjustedsurv(data=imp,
 
 test_that("adjusted_median_survival, 3 treatments, no boot", {
   adj_med <- adjusted_median_survival(adjsurv, verbose=FALSE)
-  expect_equal(round(adj_med$median_surv, 4), c(0.6998, 0.4723, 0.5365))
+  expect_equal(round(adj_med$median_surv, 4), c(0.7122, 0.4798, 0.5398))
 })
 
 ### adjusted_rmst

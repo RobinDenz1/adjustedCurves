@@ -603,3 +603,30 @@ quiet <- function(x) {
   on.exit(sink())
   invisible(force(x))
 }
+
+## add rows with zero survival time if needed for plot
+add_rows_with_zero <- function(plotdata) {
+
+  . <- group <- time <- no_zero <- NULL
+
+  # which groups have no zero?
+  no_zero_dat <- plotdata %>%
+    dplyr::group_by(., group) %>%
+    dplyr::summarise(no_zero=!any(time==0, na.rm=TRUE)) %>%
+    dplyr::filter(., no_zero)
+  levs_no_zero <- unique(no_zero_dat$group)
+
+  if (length(levs_no_zero)!=0) {
+    row_0 <- data.frame(time=0, group=levs_no_zero, surv=1)
+
+    if ("ci_lower" %in% plotdata) {
+      row_0$se <- 0
+      row_0$ci_lower <- 1
+      row_0$ci_upper <- 1
+    }
+
+    rownames(row_0) <- NULL
+    plotdata <- rbind(row_0, plotdata)
+  }
+  return(plotdata)
+}

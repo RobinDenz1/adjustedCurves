@@ -14,8 +14,7 @@ When using \code{method="strat_cupples"} the \code{adjust_vars} argument has to 
 \usage{
 surv_strat_cupples(data, variable, ev_time, event,
                    conf_int=FALSE, conf_level=0.95,
-                   times, adjust_vars, reference=NULL,
-                   na.rm=FALSE)
+                   times, adjust_vars, reference=NULL)
 }
 
 \arguments{
@@ -45,9 +44,6 @@ A single string or character vector specifying column names in data for which th
   }
   \item{reference}{
 A \code{data.frame} to be used as a reference population when weighting the survival curves or \code{NULL} (default). If \code{NULL} the survival curves are weighted in reference to the full sample supplied using \code{data}, regardless of the \code{variable} level. If a \code{data.frame} is supplied it needs to include all variables specified in \code{adjust_vars}.
-  }
-  \item{na.rm}{
-Whether to remove the rows from the output at which no survival probability could be estimated. The reason for the occurence of \code{NA} values is given in the details.
   }
 }
 \details{

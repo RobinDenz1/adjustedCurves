@@ -412,7 +412,7 @@ plot.adjustedcif <- function(x, conf_int=FALSE, max_t=Inf,
                              ylim=NULL, custom_colors=NULL,
                              custom_linetypes=NULL,
                              single_color=NULL, single_linetype=NULL,
-                             ci_draw_alpha=0.4, steps=TRUE,
+                             conf_int_alpha=0.4, steps=TRUE,
                              censoring_ind="none",
                              censoring_ind_size=0.5, censoring_ind_alpha=1,
                              censoring_ind_shape=17, censoring_ind_width=NULL,
@@ -627,7 +627,7 @@ plot.adjustedcif <- function(x, conf_int=FALSE, max_t=Inf,
         ci_map$fill <- NULL
       }
 
-      ribbon <- pammtools::geom_stepribbon(ci_map, alpha=ci_draw_alpha,
+      ribbon <- pammtools::geom_stepribbon(ci_map, alpha=conf_int_alpha,
                                            inherit.aes=FALSE)
       # plot using linear interpolation
     } else {
@@ -641,7 +641,7 @@ plot.adjustedcif <- function(x, conf_int=FALSE, max_t=Inf,
         ci_map$fill <- NULL
       }
 
-      ribbon <- ggplot2::geom_ribbon(ci_map, alpha=ci_draw_alpha,
+      ribbon <- ggplot2::geom_ribbon(ci_map, alpha=conf_int_alpha,
                                      inherit.aes=FALSE)
     }
     if (!is.null(single_color)) {

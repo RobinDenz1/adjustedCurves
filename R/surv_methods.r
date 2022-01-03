@@ -57,19 +57,6 @@ surv_km <- function(data, variable, ev_time, event, conf_int,
 
   if (!is.null(times)) {
     plotdata <- specific_times(plotdata, times)
-  # ensure that it starts with 0
-  # TODO: rework pls
-  } else if (!0 %in% plotdata$time) {
-    if (conf_int) {
-      levs <- unique(data[, variable])
-
-      row_0 <- data.frame(time=0, group=NA, surv=1, se=0, ci_lower=1,
-                          ci_upper=1)
-      row_0 <- row_0[rep(1, each=length(levs)), ]
-      row_0$group <- levs
-      rownames(row_0) <- NULL
-      plotdata <- rbind(row_0, plotdata)
-    }
   }
 
   output <- list(plotdata=plotdata,
@@ -1026,7 +1013,7 @@ surv_ostmle <- function(data, variable, ev_time, event, conf_int,
 #' @export
 surv_strat_cupples <- function(data, variable, ev_time, event,
                                conf_int=FALSE, conf_level=0.95, times,
-                               adjust_vars, reference=NULL, na.rm=FALSE) {
+                               adjust_vars, reference=NULL) {
 
   # devtools checks
   . <- .COVARS <- time <- treat_group <- surv <- count <- NULL
@@ -1070,10 +1057,10 @@ surv_strat_cupples <- function(data, variable, ev_time, event,
                      .groups="drop_last")
   colnames(plotdata) <- c("time", "group", "surv")
 
-  # remove NAs
-  if (na.rm) {
-    plotdata <- plotdata[!is.na(plotdata$surv), ]
-  }
+  # keep same order in data.frame
+  plotdata <- data.frame(time=plotdata$time,
+                         surv=plotdata$surv,
+                         group=plotdata$group)
 
   output <- list(plotdata=as.data.frame(plotdata))
   class(output) <- "adjustedsurv.method"
@@ -1172,6 +1159,11 @@ surv_strat_amato <- function(data, variable, ev_time, event,
     plotdata <- specific_times(plotdata, times_input)
   }
 
+  # keep same order in data.frame
+  plotdata <- data.frame(time=plotdata$time,
+                         surv=plotdata$surv,
+                         group=plotdata$group)
+
   output <- list(plotdata=plotdata,
                  Pjs=Pjs)
   class(output) <- "adjustedsurv.method"
@@ -1186,7 +1178,7 @@ surv_strat_amato <- function(data, variable, ev_time, event,
 #' @export
 surv_strat_gregory_nieto <- function(data, variable, ev_time, event,
                                      conf_int, conf_level=0.95,
-                                     times=NULL, adjust_vars, na.rm=FALSE) {
+                                     times=NULL, adjust_vars) {
 
   # silence checks
   . <- time <- group <- frac <- est_var <- wji <- var_j <- NULL
@@ -1289,10 +1281,12 @@ surv_strat_gregory_nieto <- function(data, variable, ev_time, event,
     plotdata <- specific_times(plotdata, times_input)
   }
 
-  # remove NAs
-  if (na.rm) {
-    plotdata <- plotdata[!is.na(plotdata$surv), ]
-  }
+  plotdata_out <- data.frame(time=plotdata$time,
+                             surv=plotdata$surv,
+                             group=plotdata$group)
+  plotdata_out$se <- plotdata$se
+  plotdata_out$ci_lower <- plotdata$ci_lower
+  plotdata_out$ci_upper <- plotdata$ci_upper
 
   output <- list(plotdata=plotdata)
   class(output) <- "adjustedsurv.method"

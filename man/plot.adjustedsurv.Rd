@@ -20,7 +20,7 @@ A function to graphically display confounder-adjusted survival curves which wher
      ylim=NULL, custom_colors=NULL,
      custom_linetypes=NULL,
      single_color=NULL, single_linetype=NULL,
-     ci_draw_alpha=0.4, steps=TRUE,
+     conf_int_alpha=0.4, steps=TRUE,
      median_surv_lines=FALSE,
      median_surv_size=0.5,
      median_surv_linetype="dashed",
@@ -107,7 +107,7 @@ A single color to use for every survival curve, irrespective of group status. If
   \item{single_linetype}{
 A single linetype to use for every survival curve, irrespective of group status. If \code{linetype} is specified as well this argument will override it, but also generate a warning. Set to \code{NULL} (default) to ignore this argument.
   }
-  \item{ci_draw_alpha}{
+  \item{conf_int_alpha}{
 A number indicating the level of transparency that should be used when drawing the confidence regions.
   }
   \item{steps}{

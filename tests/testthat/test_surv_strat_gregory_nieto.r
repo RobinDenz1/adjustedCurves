@@ -146,20 +146,6 @@ test_that("> 2 treatments, two confounders", {
   expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
-test_that("> 2 treatments, two confounders, na.rm", {
-  adj <- adjustedsurv(data=sim_dat,
-                      variable="group",
-                      ev_time="time",
-                      event="event",
-                      method="strat_gregory_nieto",
-                      adjust_vars=c("x1", "x3"),
-                      na.rm=TRUE)
-  expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
-  expect_true(!anyNA(adj$adjsurv))
-})
-
 test_that("> 2 treatments, two confounders, with conf_int", {
   adj <- adjustedsurv(data=sim_dat,
                       variable="group",

@@ -62,7 +62,8 @@ To calculate confounder-adjusted survival curves fo each group of this dataset u
 
 ```{r echo=TRUE}
 # it is important to use X=TRUE in the coxph function call
-outcome_model <- survival::coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
+outcome_model <- survival::coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + 
+                                   x6 + group,
                                  data=data, x=TRUE)
 ```
 
@@ -150,8 +151,8 @@ Doubly-Robust methods can be helpful in such cases (see Robins and Rotnitzky (19
 treatment_model <- glm(group ~ x1 + x2 + x3 + x4 + x5 + x6,
                        data=data, family="binomial"(link="logit"))
 
-outcome_model <- survival::coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
-                                 data=data, x=TRUE)
+outcome_model <- survival::coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + 
+                                   x6 + group, data=data, x=TRUE)
 
 adjsurv <- adjustedsurv(data=data,
                         variable="group",
@@ -184,8 +185,8 @@ Let's again start with the *Direct Standardization* method. Instead of using a s
 
 ```{r echo=TRUE}
 # it is important to use X=TRUE in the coxph function call
-outcome_model <- riskRegression::CSC(Hist(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
-                                     data=data)
+outcome_model <- riskRegression::CSC(Hist(time, event) ~ x1 + x2 + x3 + x4 + 
+                                       x5 + x6 + group, data=data)
 ```
 
 This model can then be used in a call to the `adjustedcif` function, as shown below:
@@ -262,8 +263,8 @@ data$group <- as.factor(data$group)
 The Direct Adjusted survival curves can be calculated exactly as before:
 
 ```{r echo=TRUE, fig.show=TRUE, fig.width=7, fig.height=5}
-outcome_model <- survival::coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
-                                 data=data, x=TRUE)
+outcome_model <- survival::coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + 
+                                   x5 + x6 + group, data=data, x=TRUE)
 
 adjsurv <- adjustedsurv(data=data,
                         variable="group",
@@ -278,7 +279,8 @@ plot(adjsurv)
 For the IPTW based estimates we first fit a multinomial logistic regression model using the `multinom` function from the `nnet` R-Package and use it with the same code as before:
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, fig.show=TRUE, fig.width=7, fig.height=5}
-treatment_model <- nnet::multinom(group ~ x1 + x2 + x3 + x4 + x5 + x6, data=data)
+treatment_model <- nnet::multinom(group ~ x1 + x2 + x3 + x4 + x5 + x6,
+                                  data=data)
 
 adjsurv <- adjustedsurv(data=data,
                         variable="group",
@@ -334,8 +336,8 @@ data <- sim_confounded_surv(n=300)
 data$group <- as.factor(data$group)
 
 # fit cox-regression model
-outcome_model <- survival::coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
-                                 data=data, x=TRUE)
+outcome_model <- survival::coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + 
+                                   x6 + group, data=data, x=TRUE)
 
 # run adjustedsurv with bootstrap=TRUE
 adjsurv <- adjustedsurv(data=data,

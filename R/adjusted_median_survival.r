@@ -14,23 +14,27 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## calculate confounder adjusted median survival times
-#' @importFrom dplyr %>%
 #' @export
 adjusted_median_survival <- function(adjsurv, verbose=TRUE) {
 
-  # define those to remove Notes in devtools::check()
-  . <- time <- group <- surv <- NULL
-
   plotdata <- adjsurv$adjsurv
+  plotdata <- plotdata[!is.na(plotdata$surv),]
+  plotdata <- data.frame(surv_time=plotdata$time,
+                         time=plotdata$surv,
+                         group=plotdata$group)
 
-  out <- plotdata %>%
-    dplyr::group_by(., group) %>%
-    dplyr::summarise(median_surv=max(time[surv >= 0.5], na.rm=TRUE),
-                     valid=ifelse(min(surv) <= 0.5, TRUE, FALSE),
-                     .groups="drop_last")
-  out$median_surv[!out$valid] <- NA
-  out$valid <- NULL
-  out <- as.data.frame(out)
+  levs <- levels(plotdata$group)
+
+  out <- vector(mode="numeric", length=length(levs))
+  for (i in seq_len(length(levs))) {
+    temp_dat <- plotdata[plotdata$group==levs[i],]
+    temp_dat$group <- NULL
+
+    out[[i]] <- read_from_step_function(0.5, step_data=temp_dat,
+                                        est="surv_time")
+  }
+
+  out <- data.frame(group=levs, median_surv=out)
 
   out_print <- out
   colnames(out_print) <- NULL
@@ -42,8 +46,6 @@ adjusted_median_survival <- function(adjsurv, verbose=TRUE) {
     print(out_print, row.names=FALSE)
     cat("----------------------------------\n")
   }
-
   # also silently return that data.frame
   return(invisible(out))
-
 }

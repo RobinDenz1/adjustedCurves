@@ -134,6 +134,9 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
       boot_dat$.imp <- i
       boot_dats[[i]] <- boot_dat
 
+      # remove some objects to safe space
+      out[[i]]$data <-NULL
+
     }
     dats <- dplyr::bind_rows(dats)
     boot_dats <- dplyr::bind_rows(boot_dats)
@@ -424,7 +427,7 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
                               ylim=NULL, custom_colors=NULL,
                               custom_linetypes=NULL,
                               single_color=NULL, single_linetype=NULL,
-                              ci_draw_alpha=0.4, steps=TRUE,
+                              conf_int_alpha=0.4, steps=TRUE,
                               median_surv_lines=FALSE, median_surv_size=0.5,
                               median_surv_linetype="dashed",
                               median_surv_color="black", median_surv_alpha=1,
@@ -443,6 +446,9 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
     plotdata <- x$adjsurv
   }
   plotdata$group <- factor(plotdata$group)
+
+  # ensure that curves always start at 0
+  plotdata <- add_rows_with_zero(plotdata)
 
   # shortcut to only show curves up to a certain time
   plotdata <- plotdata[which(plotdata$time <= max_t), ]
@@ -586,9 +592,10 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
       adjsurv_temp <- plotdata[plotdata$group==levs[i], ]
       cens_surv <- vapply(cens_times, read_from_step_function,
                           step_data=adjsurv_temp, FUN.VALUE=numeric(1))
-      cens_dat[[i]] <- data.frame(time=cens_times, surv=cens_surv,
-                                  group=levs[i])
-
+      if (length(cens_times)!=0) {
+        cens_dat[[i]] <- data.frame(time=cens_times, surv=cens_surv,
+                                    group=levs[i])
+      }
     }
     cens_dat <- dplyr::bind_rows(cens_dat)
     cens_dat <- cens_dat[!is.na(cens_dat$surv), ]
@@ -662,7 +669,7 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
         ci_map$fill <- NULL
       }
 
-      ribbon <- pammtools::geom_stepribbon(ci_map, alpha=ci_draw_alpha,
+      ribbon <- pammtools::geom_stepribbon(ci_map, alpha=conf_int_alpha,
                                            inherit.aes=FALSE)
     # plot using linear interpolation
     } else {
@@ -676,7 +683,7 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
         ci_map$fill <- NULL
       }
 
-      ribbon <- ggplot2::geom_ribbon(ci_map, alpha=ci_draw_alpha,
+      ribbon <- ggplot2::geom_ribbon(ci_map, alpha=conf_int_alpha,
                                      inherit.aes=FALSE)
     }
 

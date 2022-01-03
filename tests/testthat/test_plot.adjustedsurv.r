@@ -169,10 +169,10 @@ test_that("plot, using single_linetype", {
   expect_s3_class(plt, "ggplot")
 })
 
-test_that("plot, using ci_draw_alpha", {
-  plt <- plot(adj, conf_int=TRUE, ci_draw_alpha=0.1)
+test_that("plot, using conf_int_alpha", {
+  plt <- plot(adj, conf_int=TRUE, conf_int_alpha=0.1)
   expect_s3_class(plt, "ggplot")
-  vdiffr::expect_doppelganger("plot, using ci_draw_alpha", fig=plt)
+  vdiffr::expect_doppelganger("plot, using conf_int_alpha", fig=plt)
 })
 
 test_that("plot, using steps", {
@@ -226,7 +226,7 @@ test_that("plot, using many many things", {
               ylim=c(-0.1, 1.1),
               custom_colors=c("red", "blue"),
               custom_linetypes=c("solid", "dashed"),
-              ci_draw_alpha=0.4,
+              conf_int_alpha=0.4,
               steps=TRUE,
               median_surv_lines=TRUE,
               median_surv_size=1.2,
