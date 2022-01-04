@@ -49,6 +49,11 @@ test_that("adjustedsurv, no bootstrapping performed", {
                fixed=TRUE)
 })
 
+test_that("adjustedsurv, to larger than last time", {
+  expect_error(check_inputs_adj_test(adj=adjsurv, from=0, to=2),
+               "'to' cannot be greater than the latest observed time.")
+})
+
 class(adjsurv) <- "adjustedcif"
 
 test_that("adjustedcif, to larger than last time", {
@@ -56,15 +61,15 @@ test_that("adjustedcif, to larger than last time", {
                "'to' cannot be greater than the latest observed time.")
 })
 
-class(adjsurv_no_boot) <- "adjustedcif"
-
-test_that("adjustedcif, no bootstrapping performed", {
+test_that("adjustedsurv, no bootstrapping performed", {
   expect_error(check_inputs_adj_test(adj=adjsurv_no_boot, from=0, to=1),
                paste0("Can only perform a significance test if bootstrapping ",
                       "was performed (bootstrap=TRUE in ",
                       "adjustedsurv/adjustedcif call)."),
                fixed=TRUE)
 })
+
+class(adjsurv_no_boot) <- "adjustedcif"
 
 test_that("adjustedcif, no bootstrapping performed", {
   expect_error(check_inputs_adj_test(adj=adjsurv_no_boot, from=0, to=1),

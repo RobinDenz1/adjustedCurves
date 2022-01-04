@@ -44,6 +44,25 @@ test_that("variable has wrong type", {
                       "method='aalen_johansen'."), fixed=TRUE)
 })
 
+test_that("variable has really wrong type", {
+  expect_error(check_inputs_adjustedcif(data=sim_dat,
+                                        variable=1,
+                                        ev_time="time",
+                                        event="event",
+                                        method="aalen_johansen",
+                                        conf_int=FALSE,
+                                        conf_level=0.95,
+                                        times=NULL,
+                                        bootstrap=FALSE,
+                                        n_boot=2,
+                                        na.action="na.omit",
+                                        clean_data=TRUE,
+                                        cause=1),
+               paste0("Arguments 'variable', 'ev_time', 'event' and ",
+                      "'method' must be character strings, specifying ",
+                      "variables in 'data'."), fixed=TRUE)
+})
+
 test_that("variable has wrong type with matching", {
   sim_dat_err <- sim_dat
   sim_dat_err$group <- as.character(sim_dat_err$group)

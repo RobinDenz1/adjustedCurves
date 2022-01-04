@@ -619,12 +619,19 @@ add_rows_with_zero <- function(plotdata) {
   if (length(levs_no_zero)!=0) {
     row_0 <- data.frame(time=0, group=levs_no_zero, surv=1)
 
-    if ("ci_lower" %in% plotdata) {
+    if ("ci_lower" %in% colnames(plotdata)) {
       row_0$se <- 0
       row_0$ci_lower <- 1
       row_0$ci_upper <- 1
-    }
 
+      if ("boot_surv" %in% colnames(plotdata)) {
+        row_0$boot_surv <- 1
+        row_0$n_boot <- plotdata$n_boot[1]
+        row_0 <- dplyr::select(row_0, c("time", "group", "boot_surv",
+                                        "se", "ci_lower", "ci_upper",
+                                        "n_boot", "surv"))
+      }
+    }
     rownames(row_0) <- NULL
     plotdata <- rbind(row_0, plotdata)
   }

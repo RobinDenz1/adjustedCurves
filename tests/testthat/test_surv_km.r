@@ -6,7 +6,6 @@ sim_dat <- readRDS(system.file("testdata",
                                package="adjustedCurves"))
 sim_dat$group <- as.factor(sim_dat$group)
 
-## Just check if function throws any errors
 test_that("2 treatments, no conf_int, no boot", {
   adj <- adjustedsurv(data=sim_dat,
                       variable="group",
@@ -118,4 +117,28 @@ test_that("> 2 treatments, with conf_int, with boot", {
   expect_s3_class(adj, "adjustedsurv")
   expect_true(is.numeric(adj$adjsurv$surv))
   expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+})
+
+# very little data
+sim_dat <- sim_confounded_surv(n=25)
+sim_dat$group <- as.factor(sim_dat$group)
+
+test_that("little data, checking if add_zeros works", {
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="km",
+                      conf_int=TRUE,
+                      bootstrap=TRUE,
+                      n_boot=2)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adjsurv$surv))
+  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  p <- suppressWarnings(plot(adj, median_surv_lines=TRUE))
+  expect_s3_class(p, "ggplot")
+  p <- suppressWarnings(plot(adj, use_boot=TRUE, conf_int=TRUE))
+  expect_s3_class(p, "ggplot")
+  p <- suppressWarnings(plot(adj, conf_int=TRUE))
+  expect_s3_class(p, "ggplot")
 })

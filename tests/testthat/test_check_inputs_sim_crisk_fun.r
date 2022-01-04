@@ -329,22 +329,22 @@ test_that("different lengths in outcome_betas", {
   "The vectors supplied in 'outcome_betas' all need to have, the same length.")
 })
 
-test_that("different lengths in outcome_betas / treatment_betas", {
+test_that("different lengths in group_beta / gamma / lambda", {
   expect_error(check_inputs_sim_crisk_fun(n=10,
                                           lcovars=lcovars,
                                           outcome_betas=list(c(0.03, 0.4),
                                                              c(1.1, 0.8),
                                                              c(0, 0)),
                                           group_beta=c(1, 0),
-                                          gamma=c(1.8, 1.8),
+                                          gamma=c(1.8, 2, 2),
                                           lambda=c(2, 2),
                                           treatment_betas=c(x1=0,
-                                                            x2=log(3)),
+                                                            x2=log(3),
+                                                            x3=0),
                                           intercept=-0.5,
                                           gtol=0.001,
                                           cens_fun=custom_cens,
                                           cens_args=list(),
                                           max_t=1.7),
-  "'outcome_betas', 'treatment_betas' and 'lcovars' must have the same length.")
+  "Arguments 'group_beta', 'gamma' and 'lambda' need to have the same length.")
 })
-

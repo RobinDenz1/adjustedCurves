@@ -73,6 +73,24 @@ test_that("non-standard evaluation in variable", {
                       "a variable in 'data'."))
 })
 
+test_that("variable is really wrong", {
+  expect_error(check_inputs_adjustedsurv(data=sim_dat,
+                                         variable=1,
+                                         ev_time="time",
+                                         event="event",
+                                         method="km",
+                                         conf_int=FALSE,
+                                         conf_level=0.95,
+                                         times=NULL,
+                                         bootstrap=FALSE,
+                                         n_boot=2,
+                                         na.action="na.omit",
+                                         clean_data=TRUE),
+               paste0("Arguments 'variable', 'ev_time', 'event' and 'method' ",
+                      "must be character strings, specifying variables ",
+                      "in 'data'."))
+})
+
 test_that("ev_time not in data", {
   expect_error(check_inputs_adjustedsurv(data=sim_dat,
                                          variable="group",

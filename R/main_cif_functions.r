@@ -265,7 +265,7 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
 
           adjustedcif_boot(data=data, variable=variable, ev_time=ev_time,
                            event=event, method=method, times=times, i=i,
-                           cif_fun=cif_fun, levs=levs, cause=cause,
+                           cif_fun=cif_fun, cause=cause,
                            na.action=na.action, ...)
         }
         parallel::stopCluster(cl)
@@ -278,7 +278,7 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
                                             ev_time=ev_time, event=event,
                                             method=method,
                                             times=times, i=i, cause=cause,
-                                            cif_fun=cif_fun, levs=levs,
+                                            cif_fun=cif_fun,
                                             na.action=na.action, ...)
         }
       }
@@ -351,7 +351,7 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
 
 ## perform one bootstrap iteration
 adjustedcif_boot <- function(data, variable, ev_time, event, cause, method,
-                             times, i, cif_fun, levs, na.action, ...) {
+                             times, i, cif_fun, na.action, ...) {
 
   # draw sample
   indices <- sample(x=rownames(data), size=nrow(data), replace=TRUE)

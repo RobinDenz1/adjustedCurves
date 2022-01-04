@@ -274,7 +274,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
           adjustedsurv_boot(data=data, variable=variable, ev_time=ev_time,
                             event=event, method=method,
                             times=times, i=i, surv_fun=surv_fun,
-                            levs=levs, na.action=na.action, ...)
+                            na.action=na.action, ...)
                                      }
         parallel::stopCluster(cl)
 
@@ -286,7 +286,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
                                              ev_time=ev_time, event=event,
                                              method=method,
                                              times=times, i=i,
-                                             surv_fun=surv_fun, levs=levs,
+                                             surv_fun=surv_fun,
                                              na.action=na.action, ...)
         }
       }
@@ -360,7 +360,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
 
 ## perform one bootstrap iteration
 adjustedsurv_boot <- function(data, variable, ev_time, event, method,
-                              times, i, surv_fun, levs, na.action, ...) {
+                              times, i, surv_fun, na.action, ...) {
 
   # draw sample
   indices <- sample(x=rownames(data), size=nrow(data), replace=TRUE)

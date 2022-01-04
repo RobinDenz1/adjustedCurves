@@ -371,11 +371,6 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
       stop("The column name '.COVARS' cannot be used with method='",
            method, "'. Please rename that variable and rerun the function.")
     }
-    # can't use na.rm = TRUE when bootstrap = TRUE
-    if ("na.rm" %in% names(obj) && obj$na.rm && bootstrap) {
-      warning("The argument 'na.rm=TRUE' cannot be used when using ",
-              "bootstrap=TRUE.")
-    }
   ## IPTW KM, IPW COX
   } else if (method=="iptw_km" | method=="iptw_cox") {
     # need treatment_model
@@ -932,7 +927,7 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
 check_inputs_sim_crisk_fun <- function(n, lcovars, outcome_betas, gamma,
                                        lambda, treatment_betas, group_beta,
                                        intercept, gtol, cens_fun, cens_args,
-                                       max_t, max_iter) {
+                                       max_t) {
 
   if (!(is.numeric(n) & length(n)==1)) {
     stop("'n' must be a single positive integer.")
