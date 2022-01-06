@@ -84,7 +84,7 @@ This method works by modelling the treatment assignment mechanism. Adjusted surv
 
 The standard error of this estimator can be approximated by calculation a weighted version of the standard error estimator. Interestingly, no exact method exists in the weighted case. Four approximations are implemented which can be chosen using the \code{se_method} argument. The equations for \code{"miller"}, \code{"galloway"} and \code{"cochrane"} are described and compared in Gatz and Smith (1995). \code{"simple"} is just the standard equation with a weight term added and should only be used with stabilized weights (\code{stabilize=TRUE}). The resulting estimates are conservative in nature, because they ignore the variation introduced by the pseudo-value calculation (Zeng et al. 2021). It is generally recommended to use bootstrap estimates instead.
 
-Additionally, covariate-dependent censoring can be corrected for using inverse probability of censoring weighted pseudo-values (Binder et al. 2014) instead of regular pseudo-values (specified using the \code{censoring_vars} and \code{ipcw_method} arguments).
+Additionally, covariate-dependent censoring can be accounted for by using inverse probability of censoring weighted pseudo-values (Binder et al. 2014) instead of regular pseudo-values (specified using the \code{censoring_vars} and \code{ipcw_method} arguments).
 }
 \value{
 Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable}, the estimated pseudo-values and the weights used in the analysis.

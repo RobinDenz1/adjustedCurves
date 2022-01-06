@@ -58,6 +58,7 @@ test_that("2 treatments, with conf_int, no boot, using SL", {
                                       SL.ftime=c("SL.glm"),
                                       SL.ctime=NULL,
                                       adjust_vars=adjust_vars,
+                                      times=c(1, 2, 3, 4, 5),
                                       cause=1))
   expect_s3_class(adj, "adjustedcif")
   expect_true(is.numeric(adj$adjcif$cif))
@@ -132,6 +133,7 @@ test_that("2 treatments, with conf_int, no boot, using glm", {
                                       glm.ftime="x2 + x4 + x6",
                                       glm.ctime="x1 + x6",
                                       adjust_vars=adjust_vars,
+                                      times=c(1, 2, 3, 4, 5, 6),
                                       cause=1))
   expect_s3_class(adj, "adjustedcif")
   expect_true(is.numeric(adj$adjcif$cif))

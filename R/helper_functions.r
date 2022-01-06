@@ -149,6 +149,9 @@ confint_surv <- function(surv, se, conf_level, conf_type="plain") {
 ## and step function data from which to read it
 read_from_step_function <- function(x, step_data, est="surv") {
 
+  # keep only data with non-missing est
+  step_data <- step_data[which(!is.na(step_data[, est])), ]
+
   # no extrapolation
   if (x > max(step_data$time)) {
     return(NA)
@@ -341,11 +344,13 @@ survtmle.timepoints <- function(object, times, returnModels=FALSE,
   } else if (!ftglm & callList$method == "hazard") {
     funOpts$SL.ftime <- object$ftimeMod
   }
+  # NOTE: this is the bug-fix
   # add in failure times, types, trt, and adjust
   funOpts$ftime <- object$ftime
   funOpts$ftype <- object$ftype
   funOpts$trt <- object$trt
   funOpts$adjustVars <- object$adjustVars
+  funOpts$ftypeOfInterest <- object$ftypeOfInterest
 
   outList <- vector(mode = "list", length = length(times))
   ct <- 0

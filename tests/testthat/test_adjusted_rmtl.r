@@ -34,8 +34,8 @@ test_that("rmtl surv, no boot but use_boot=TRUE", {
 test_that("rmtl surv, with boot", {
   adj_rmtl <- adjusted_rmtl(adj, to=1.1, use_boot=TRUE)
   expect_equal(as.vector(round(adj_rmtl$auc, 4)), c(0.5789, 0.4279))
-  expect_equal(as.vector(round(adj_rmtl$auc_se, 4)), c(0.0551, 0.0474))
-  expect_equal(as.vector(adj_rmtl$n_boot), c(9, 8))
+  expect_equal(as.vector(round(adj_rmtl$auc_se, 4)), c(0.0511, 0.0587))
+  expect_equal(as.vector(adj_rmtl$n_boot), c(7, 5))
 })
 
 test_that("rmtl surv, no boot, using from", {
@@ -46,8 +46,8 @@ test_that("rmtl surv, no boot, using from", {
 test_that("rmtl surv, with boot, using from", {
   adj_rmtl <- adjusted_rmtl(adj, to=1.1, from=0.3, use_boot=TRUE)
   expect_equal(as.vector(round(adj_rmtl$auc, 4)), c(0.5435, 0.4191))
-  expect_equal(as.vector(round(adj_rmtl$auc_se, 4)), c(0.0449, 0.0436))
-  expect_equal(as.vector(adj_rmtl$n_boot), c(9, 8))
+  expect_equal(as.vector(round(adj_rmtl$auc_se, 4)), c(0.0420, 0.0525))
+  expect_equal(as.vector(adj_rmtl$n_boot), c(7, 5))
 })
 
 ### using competing risks data

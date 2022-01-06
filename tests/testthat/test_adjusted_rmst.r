@@ -32,8 +32,8 @@ test_that("rmst 2 treatments, no boot but use_boot=TRUE", {
 test_that("rmst 2 treatments, with boot", {
   adj_rmst <- adjusted_rmst(adj, to=1.1, use_boot=TRUE)
   expect_equal(as.vector(round(adj_rmst$auc, 4)), c(0.5211, 0.6721))
-  expect_equal(as.vector(round(adj_rmst$auc_se, 4)), c(0.0551, 0.0474))
-  expect_equal(as.vector(adj_rmst$n_boot), c(9, 8))
+  expect_equal(as.vector(round(adj_rmst$auc_se, 4)), c(0.0511, 0.0587))
+  expect_equal(as.vector(adj_rmst$n_boot), c(7, 5))
 })
 
 test_that("rmst 2 treatments, no boot, using from", {
@@ -44,8 +44,8 @@ test_that("rmst 2 treatments, no boot, using from", {
 test_that("rmst 2 treatments, with boot, using from", {
   adj_rmst <- adjusted_rmst(adj, to=1.1, from=0.3, use_boot=TRUE)
   expect_equal(as.vector(round(adj_rmst$auc, 4)), c(0.2565, 0.3809))
-  expect_equal(as.vector(round(adj_rmst$auc_se, 4)), c(0.0449, 0.0436))
-  expect_equal(as.vector(adj_rmst$n_boot), c(9, 8))
+  expect_equal(as.vector(round(adj_rmst$auc_se, 4)), c(0.0420, 0.0525))
+  expect_equal(as.vector(adj_rmst$n_boot), c(7, 5))
 })
 
 sim_dat$group <- as.character(sim_dat$group)
@@ -65,25 +65,25 @@ adj <- adjustedsurv(data=sim_dat,
 
 
 test_that("rmst 3 treatments, no boot", {
-  adj_rmst <- adjusted_rmst(adj, to=1.1)
-  expect_equal(as.vector(round(adj_rmst$auc, 4)), c(0.5211, 0.7203, 0.6432))
+  adj_rmst <- adjusted_rmst(adj, to=1)
+  expect_equal(as.vector(round(adj_rmst$auc, 4)), c(0.5115, 0.7021, 0.6293))
 })
 
 test_that("rmst 3 treatments, with boot", {
-  adj_rmst <- adjusted_rmst(adj, to=1.1, use_boot=TRUE)
-  expect_equal(as.vector(round(adj_rmst$auc, 4)), c(0.5211, 0.7203, 0.6432))
-  expect_equal(as.vector(round(adj_rmst$auc_se, 4)), c(0.0731, 0.0661, 0.0711))
-  expect_equal(as.vector(adj_rmst$n_boot), c(10, 6, 6))
+  adj_rmst <- adjusted_rmst(adj, to=1, use_boot=TRUE)
+  expect_equal(as.vector(round(adj_rmst$auc, 4)), c(0.5115, 0.7021, 0.6293))
+  expect_equal(as.vector(round(adj_rmst$auc_se, 4)), c(0.0692, 0.0639, 0.0706))
+  expect_equal(as.vector(adj_rmst$n_boot), c(10, 6, 8))
 })
 
 test_that("rmst 3 treatments, no boot, using from", {
-  adj_rmst <- adjusted_rmst(adj, to=1.1, from=0.3)
-  expect_equal(as.vector(round(adj_rmst$auc, 4)), c(0.2565, 0.4203, 0.3579))
+  adj_rmst <- adjusted_rmst(adj, to=1, from=0.3)
+  expect_equal(as.vector(round(adj_rmst$auc, 4)), c(0.2470, 0.4021, 0.3441))
 })
 
 test_that("rmst 3 treatments, with boot, using from", {
-  adj_rmst <- adjusted_rmst(adj, to=1.1, from=0.3, use_boot=TRUE)
-  expect_equal(as.vector(round(adj_rmst$auc, 4)), c(0.2565, 0.4203, 0.3579))
-  expect_equal(as.vector(round(adj_rmst$auc_se, 4)), c(0.0620, 0.0661, 0.0579))
-  expect_equal(as.vector(adj_rmst$n_boot), c(10, 6, 6))
+  adj_rmst <- adjusted_rmst(adj, to=1, from=0.3, use_boot=TRUE)
+  expect_equal(as.vector(round(adj_rmst$auc, 4)), c(0.2470, 0.4021, 0.3441))
+  expect_equal(as.vector(round(adj_rmst$auc_se, 4)), c(0.0582, 0.0639, 0.0599))
+  expect_equal(as.vector(adj_rmst$n_boot), c(10, 6, 8))
 })

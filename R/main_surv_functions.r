@@ -339,13 +339,18 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
 
       # order both data.frames
       plotdata_temp <- plotdata_temp[order(plotdata_temp$group,
-                                           plotdata_temp$time),]
+                                           plotdata_temp$time), ]
       boot_stats <- boot_stats[order(boot_stats$group,
-                                     boot_stats$time),]
+                                     boot_stats$time), ]
 
       # put together
       boot_stats$surv <- plotdata_temp$surv
-      out$boot_adjsurv <- boot_stats
+      out$boot_adjsurv <- boot_stats[!is.na(boot_stats$surv), ]
+
+      if (method %in% c("km", "iptw_km", "iptw_cox", "strat_amato",
+                        "strat_gregory_nieto")) {
+        out$adjsurv <- out$adjsurv[!is.na(out$adjsurv$surv), ]
+      }
     }
 
     # add method-specific objects to output
@@ -354,7 +359,6 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
 
     class(out) <- "adjustedsurv"
     return(out)
-
   }
 }
 
@@ -582,14 +586,19 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
 
     levs <- levels(plotdata$group)
 
-    # calculate needed data
+    # keep only relevant data
+    x$data <- x$data[which(x$data[, x$call$ev_time] <= max_t), ]
+
+    # create needed data.frame
     cens_dat <- vector(mode="list", length=length(levs))
     for (i in seq_len(length(levs))) {
 
-      x$data <- x$data[which(x$data[, x$call$ev_time] <= max_t), ]
+      # times with censoring
       cens_times <- sort(unique(x$data[, x$call$ev_time][
         x$data[, x$call$event]==0 & x$data[, x$call$variable]==levs[i]]))
-      adjsurv_temp <- plotdata[plotdata$group==levs[i], ]
+      # y axis place to put them
+      adjsurv_temp <- plotdata[plotdata$group==levs[i] &
+                                 !is.na(plotdata$surv), ]
       cens_surv <- vapply(cens_times, read_from_step_function,
                           step_data=adjsurv_temp, FUN.VALUE=numeric(1))
       if (length(cens_times)!=0) {

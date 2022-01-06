@@ -1274,8 +1274,8 @@ surv_strat_gregory_nieto <- function(data, variable, ev_time, event,
     plotdata$ci_upper <- exp(surv_ci$right)
   } else {
     plotdata$se <- NULL
-    plotdata$est_var <- NULL
   }
+  plotdata$est_var <- NULL
 
   if (!is.null(times_input)) {
     plotdata <- specific_times(plotdata, times_input)
