@@ -125,16 +125,17 @@ cif_iptw <- function(data, variable, ev_time, event, cause, conf_int,
 cif_iptw_pseudo <- function(data, variable, ev_time, event, cause,
                             conf_int, conf_level=0.95, times,
                             treatment_model, weight_method="ps",
-                            stabilize=TRUE, trim=FALSE,
+                            stabilize=FALSE, trim=FALSE,
                             se_method="cochrane", ...) {
   levs <- levels(data[, variable])
 
   # get weights
   if (is.numeric(treatment_model)) {
-
     weights <- treatment_model
     weights <- trim_weights(weights=weights, trim=trim)
-
+    if (stabilize) {
+      weights <- stabilize_weights(weights, data, variable, levs)
+    }
   } else {
     weights <- get_iptw_weights(data=data, treatment_model=treatment_model,
                                 weight_method=weight_method,

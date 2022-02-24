@@ -68,7 +68,7 @@ The wrapper function was written by Robin Denz, the \code{survfit} function (whi
 }
 
 \seealso{
-\code{\link{survival}}, \code{\link{survfit}}
+\code{\link{survfit}}
 }
 \examples{
 \dontrun{

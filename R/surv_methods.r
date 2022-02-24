@@ -70,7 +70,7 @@ surv_km <- function(data, variable, ev_time, event, conf_int,
 #' @export
 surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
                          conf_level=0.95, times=NULL, treatment_model,
-                         weight_method="ps", stabilize=TRUE,
+                         weight_method="ps", stabilize=FALSE,
                          trim=FALSE, ...) {
 
   levs <- levels(data[, variable])
@@ -79,6 +79,9 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
   if (is.numeric(treatment_model)) {
     weights <- treatment_model
     weights <- trim_weights(weights=weights, trim=trim)
+    if (stabilize) {
+      weights <- stabilize_weights(weights, data, variable, levs)
+    }
   } else {
     weights <- get_iptw_weights(data=data, treatment_model=treatment_model,
                                 weight_method=weight_method,
@@ -152,11 +155,18 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
 #' @export
 surv_iptw_cox <- function(data, variable, ev_time, event, conf_int,
                           conf_level=0.95, times=NULL, treatment_model,
-                          weight_method="ps", stabilize=TRUE,
+                          weight_method="ps", stabilize=FALSE,
                           trim=FALSE, ...) {
+
+  levs <- levels(data[, variable])
+
   # get weights
   if (is.numeric(treatment_model)) {
     weights <- treatment_model
+    weights <- trim_weights(weights=weights, trim=trim)
+    if (stabilize) {
+      weights <- stabilize_weights(weights, data, variable, levs)
+    }
   } else {
     weights <- get_iptw_weights(data=data, treatment_model=treatment_model,
                                 weight_method=weight_method,
@@ -205,7 +215,7 @@ surv_iptw_cox <- function(data, variable, ev_time, event, conf_int,
 #' @export
 surv_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
                              conf_level=0.95, times, treatment_model,
-                             weight_method="ps", stabilize=TRUE,
+                             weight_method="ps", stabilize=FALSE,
                              trim=FALSE, se_method="cochrane",
                              censoring_vars=NULL, ipcw_method="binder", ...) {
   levs <- levels(data[, variable])
@@ -214,6 +224,9 @@ surv_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
   if (is.numeric(treatment_model)) {
     weights <- treatment_model
     weights <- trim_weights(weights, trim)
+    if (stabilize) {
+      weights <- stabilize_weights(weights, data, variable, levs)
+    }
   } else {
     weights <- get_iptw_weights(data=data, treatment_model=treatment_model,
                                 weight_method=weight_method,
@@ -734,7 +747,7 @@ surv_emp_lik <- function(data, variable, ev_time, event, conf_int=FALSE,
                          standardize=FALSE, gtol=0.00001,
                          max_iter=100, newton_tol=1.0e-06) {
 
-  # if it's a factor, turn it into numeric
+  # if 'variable' is a factor, turn it into numeric
   if (is.factor(data[, variable])) {
     levs <- levels(data[, variable])
     data[, variable] <- ifelse(data[, variable]==levs[1], 0, 1)
@@ -742,10 +755,18 @@ surv_emp_lik <- function(data, variable, ev_time, event, conf_int=FALSE,
     levs <- sort(unique(data[, variable]))
   }
 
+  # create design matrix for function call
+  x_dat <- data[,treatment_vars]
+  form <- stats::as.formula(paste0("~ ",
+                                   paste0(treatment_vars, collapse=" + ")))
+  mod_mat <- stats::model.matrix(form, data=x_dat)
+  mod_mat <- mod_mat[,seq(2, ncol(mod_mat))]
+
+  # call function twice
   el_0 <- el.est(y=data[, ev_time],
                  delta=data[, event],
                  treat=data[, variable],
-                 x=as.matrix(data[, treatment_vars]),
+                 x=mod_mat,
                  treat.select=0,
                  t=times,
                  psix_moment=moment,
@@ -757,7 +778,7 @@ surv_emp_lik <- function(data, variable, ev_time, event, conf_int=FALSE,
   el_1 <- el.est(y=data[, ev_time],
                  delta=data[, event],
                  treat=data[, variable],
-                 x=as.matrix(data[, treatment_vars]),
+                 x=mod_mat,
                  treat.select=1,
                  t=times,
                  psix_moment=moment,

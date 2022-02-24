@@ -14,7 +14,7 @@ When using \code{method="iptw_km"} the \code{treatment_model} argument has to be
 \usage{
 surv_iptw_km(data, variable, ev_time, event, conf_int,
              conf_level=0.95, times=NULL, treatment_model,
-             weight_method="ps", stabilize=TRUE,
+             weight_method="ps", stabilize=FALSE,
              trim=FALSE, ...)
 }
 
@@ -47,7 +47,7 @@ Must be either a model object with \code{variable} as response variable, a vecto
 Method used in \code{WeightIt} function call. Ignored if \code{treatment_model} is not a formula object.
 }
   \item{stabilize}{
-Whether to stabilize the weights or not. Is set to \code{TRUE} by default. Stabilizing weights ensures that the sum of all weights is equal to the original sample size. It has no effect on point estimates, only on the asymptotic variance calculations and confidence intervals. Stabilized weights are calculated using \code{w * length(w) / sum(w)} where \code{w} is a vector of weights.
+Whether to stabilize the weights or not. Is set to \code{TRUE} by default. Stabilizing weights ensures that the sum of all weights is equal to the original sample size. It has no effect on point estimates, only on the asymptotic variance calculations and confidence intervals.
   }
   \item{trim}{
 Can be either \code{FALSE} (default) or a numeric value at which to trim the weights. If \code{FALSE}, weights are used as calculated or supplied. If a numeric value is supplied, all weights that are bigger than \code{trim} are set to \code{trim} before the analysis is carried out. Useful when some weights are extremely large.

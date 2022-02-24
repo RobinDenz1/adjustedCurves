@@ -51,7 +51,7 @@ get_iptw_weights <- function(data, treatment_model, weight_method,
   weights <- trim_weights(weights=weights, trim=trim)
 
   if (stabilize) {
-    weights <- weights * length(weights) / sum(weights)
+    weights <- stabilize_weights(weights, data, variable, levs)
   }
 
   return(weights)
@@ -66,6 +66,19 @@ trim_weights <- function(weights, trim) {
     weights[weights > trim] <- trim
     return(weights)
   }
+}
+
+## stabilize weights
+stabilize_weights <- function(weights, data, variable, levs) {
+
+  w_names <- names(weights)
+  tab <- stats::setNames(vapply(X=levs, FUN=function(x, treat) {mean(treat==x)},
+                                FUN.VALUE=numeric(1L), treat=data[,variable]),
+                         levs)
+  weights <- stats::setNames(weights * tab[as.character(data[,variable])],
+                             w_names)
+
+  return(weights)
 }
 
 ## Computes the standard error of a weighted mean using one of

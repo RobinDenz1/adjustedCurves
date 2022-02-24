@@ -107,7 +107,7 @@ Jixian Wang supplied the R source code used in the original article, which was u
 \examples{
 \dontrun{
 # simulate some data as example
-sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat <- sim_confounded_surv(n=100, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # estimate a treatment assignment model

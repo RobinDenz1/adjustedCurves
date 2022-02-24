@@ -107,6 +107,8 @@ The wrapper function was written by Robin Denz, the \pkg{survtmle} package (whic
 }
 \examples{
 \dontrun{
+library(survtmle)
+
 # simulate some data as example (needs a binary integer "variable")
 sim_dat <- sim_confounded_crisk(n=200, max_t=5)
 

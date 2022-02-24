@@ -14,7 +14,7 @@ When using \code{method="iptw_pseudo"} the \code{treatment_model} argument has t
 cif_iptw_pseudo(data, variable, ev_time, event, cause,
                 conf_int, conf_level=0.95, times,
                 treatment_model, weight_method="ps",
-                stabilize=TRUE, trim=FALSE,
+                stabilize=FALSE, trim=FALSE,
                 se_method="cochrane", ...)
 }
 
@@ -50,7 +50,7 @@ Must be either a model object with \code{variable} as response variable, a vecto
 Method used in \code{WeightIt} function call. Ignored if \code{treatment_model} is not a formula object.
 }
   \item{stabilize}{
-Whether to stabilize the weights or not. Is set to \code{TRUE} by default. Stabilizing weights ensures that the sum of all weights is equal to the original sample size. It has no effect on point estimates, only on the asymptotic variance calculations and confidence intervals. Stabilized weights are calculated using \code{w * length(w) / sum(w)} where \code{w} is a vector of weights.
+Whether to stabilize the weights or not. Is set to \code{TRUE} by default. Stabilizing weights ensures that the sum of all weights is equal to the original sample size. It has no effect on point estimates, only on the asymptotic variance calculations and confidence intervals.
   }
   \item{trim}{
 Can be either \code{FALSE} (default) or a numeric value at which to trim the weights. If \code{FALSE}, weights are used as calculated or supplied. If a numeric value is supplied, all weights that are bigger than \code{trim} are set to \code{trim} before the analysis is carried out. Useful when some weights are extremely large.
@@ -77,7 +77,7 @@ Further arguments passed to \code{\link[WeightIt]{weightit}}.
 
 This method works by modelling the treatment assignment mechanism. Adjusted CIFs are calculated by first estimating appropriate case-weights for each observation in \code{data}. This can be done using inverse probability of treatment weights using the propensity score (usually estimated using a logistic regression model) or by some other method (see \code{\link[WeightIt]{weightit}}). Pseudo-Values of the cause-specific CIF are then calculated for every observation in \code{data} at some points in time \eqn{T}. Since Pseudo-Values bypass the problem of censoring, a simple weighted average of the Pseudo-Values can be taken for every \eqn{T}. See Andersen et al. (2017) for more details on this method and Andersen and Perme (2010) for more information on Pseudo-Values in general.
 
-The standard error of this estimator can be approximated by calculation a weighted version of the standard error estimator. Interestingly, no exact method exists in the weighted case. Four approximations are implemented which can be chosen using the \code{se_method} argument. The equations for \code{"miller"}, \code{"galloway"} and \code{"cochrane"} are described and compared in Gatz and Smith (1995). \code{"simple"} is just the standard equation with a weight term added and should only be used with stabilized weights (\code{stabilize=TRUE}). The resulting estimates are conservative in nature, because they ignore the variation introduced by the pseudo-value calculation (Zeng et al. 2021). It is generally recommended to use bootstrap estimates instead.
+The standard error of this estimator can be approximated by calculation a weighted version of the standard error estimator. Interestingly, no exact method exists in the weighted case. Four approximations are implemented which can be chosen using the \code{se_method} argument. The equations for \code{"miller"}, \code{"galloway"} and \code{"cochrane"} are described and compared in Gatz and Smith (1995). \code{"simple"} is just the standard equation with a weight term added and should only be used with stabilized weights (\code{stabilize=TRUE}). It is generally recommended to use bootstrap estimates instead.
 }
 \value{
 Returns a \code{list} object containing a \code{data.frame} with estimated CIFs for some points in time for each level of \code{variable}, the estimated pseudo-values and the weights used in the analysis.
@@ -94,8 +94,6 @@ William G. Cochran (1977). Sampling Techniques. Vol. 3. New York: Wiley
 J. N. Galloway, G. E. Likens, and M. E. Hawley (1984). "Acid Precipitation: Natural Versus Anthropogenic Components". In: Science 226, pp. 829-831
 
 J. M. Miller (1977). A Statistical Evaluation of the U.S. Precipitation Chemistry Network. Precipitation Scavenging (edited by Semonin R. G. and Beadle R. W.) pp. 639-659. Available as CONF 74100 from National Technical Information Service, U.S. Dept. of Commerce, Springfiel, VA.
-
-Shuxi Zeng, Fan Li, Liangyuan Hu, and Fan Li (2021). Propensity Score Weighting Analysis of Survival Outcomes Using Pseudo-Observations. arXiv: 2103.00605v1
 }
 \author{
 Robin Denz

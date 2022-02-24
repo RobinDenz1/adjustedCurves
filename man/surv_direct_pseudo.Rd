@@ -100,7 +100,7 @@ Robin Denz
 \examples{
 \dontrun{
 # simulate some data as example
-sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat <- sim_confounded_surv(n=100, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # calculate adjusted survival curves, with time as factor

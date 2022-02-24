@@ -105,6 +105,8 @@ The wrapper function was written by Robin Denz, the \code{survtmle} package (whi
 }
 \examples{
 \dontrun{
+library(survtmle)
+
 # simulate some data as example (needs a binary integer "variable")
 sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
 

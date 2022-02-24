@@ -6,7 +6,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
 
   ## check if non-standard evaluation is used
   if (inherits(substitute(variable), "name") &&
-             !exists(toString(substitute(variable)))) {
+              !exists(toString(substitute(variable)))) {
     stop("'variable' must be a character string specifying a variable",
          " in 'data'.")
   } else if (inherits(substitute(ev_time), "name") &&

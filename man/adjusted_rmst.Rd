@@ -45,7 +45,7 @@ If the \code{adjsurv} object was created with \code{bootstrap = TRUE} in the \co
 
 \strong{\emph{Multiple Imputation}}
 
-If multiple imputation was used when creating the \code{adjsurv} object, the analysis is carries out on all multiply imputed dataset and pooled using Rubins Rule. When bootstrapping was carried out as well, the pooled standard error over all imputed datasets is used in combination with the normal approximation to re-calculate the bootstrap confidence intervals.
+If multiple imputation was used when creating the \code{adjsurv} object, the analysis is carries out on all multiply imputed datasets and pooled using Rubins Rule. When bootstrapping was carried out as well, the pooled standard error over all imputed datasets is used in combination with the normal approximation to re-calculate the bootstrap confidence intervals.
 
 \strong{\emph{Competing Risks}}
 
