@@ -6,45 +6,13 @@ Inverse Probability of Treatment Weighted CIFs using Pseudo-Values
 }
 \description{
 
-This page explains the details of estimating inverse probability of treatment weighted cumulative incidence functions using Pseudo-Values in a competing risks setting. The function is called internally when using \code{method="iptw_pseudo"} in the \code{\link[=adjustedcif]{adjustedcif}} function. It is highly recommended to use \code{\link[=adjustedcif]{adjustedcif}} instead of calling this function directly.
+This page explains the details of estimating inverse probability of treatment weighted cumulative incidence functions using Pseudo-Values in a competing risks setting (\code{method="iptw_pseudo"} in the \code{\link[=adjustedcif]{adjustedcif}} function). All regular arguments of the \code{adjustedcif} function can be used. Additionally, the \code{treatment_model} argument has to be specified in the \code{adjustedcif} call. Further arguments specific to this method are listed below.
 
-When using \code{method="iptw_pseudo"} the \code{treatment_model} argument has to be specified in the \code{adjustedcif} call.
-}
-\usage{
-cif_iptw_pseudo(data, variable, ev_time, event, cause,
-                conf_int, conf_level=0.95, times,
-                treatment_model, weight_method="ps",
-                stabilize=FALSE, trim=FALSE,
-                se_method="cochrane", ...)
 }
 
 \arguments{
-  \item{data}{
-A \code{data.frame} object containing the needed time-to-event data in standard format.
-}
-  \item{variable}{
-A character string specifying the variable by which the CIFs should be grouped. Must be a valid column name of \code{data}. The variable specified should be a factor variable.
-}
-  \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
-}
-  \item{event}{
-A character string specifying the numeric event indicator. The censoring indicator should be coded as 0 and all other events of interest as 1, 2, etc. Must be a valid column name of \code{data}.
-  }
-  \item{cause}{
-The cause of interest for which the cumulative incidence functions should be calculated. Should be a number that appears in the \code{event} column of \code{data}.
-  }
-  \item{conf_int}{
-A logical variable, indicating whether the asymptotic variances and confidence intervals of the CIFs should be calculated.
-  }
-  \item{conf_level}{
-A number specifying the confidence level of asymptotic confidence intervals.
-  }
-  \item{times}{
-A numeric vector of time points at which the CIFs should be estimated.
-}
   \item{treatment_model}{
-Must be either a model object with \code{variable} as response variable, a vector of weights or a formula which can be passed to \code{WeightIt}.
+[\strong{required}] Must be either a model object with \code{variable} as response variable, a vector of weights or a formula which can be passed to \code{WeightIt}.
 }
   \item{weight_method}{
 Method used in \code{WeightIt} function call. Ignored if \code{treatment_model} is not a formula object.
@@ -80,7 +48,13 @@ This method works by modelling the treatment assignment mechanism. Adjusted CIFs
 The standard error of this estimator can be approximated by calculation a weighted version of the standard error estimator. Interestingly, no exact method exists in the weighted case. Four approximations are implemented which can be chosen using the \code{se_method} argument. The equations for \code{"miller"}, \code{"galloway"} and \code{"cochrane"} are described and compared in Gatz and Smith (1995). \code{"simple"} is just the standard equation with a weight term added and should only be used with stabilized weights (\code{stabilize=TRUE}). It is generally recommended to use bootstrap estimates instead.
 }
 \value{
-Returns a \code{list} object containing a \code{data.frame} with estimated CIFs for some points in time for each level of \code{variable}, the estimated pseudo-values and the weights used in the analysis.
+Adds the following additional objects to the output of the \code{adjustedcif} function:
+
+\itemize{
+\item{\code{pseudo_values}: }{The matrix of estimated pseudo-values.}
+\item{\code{weights}: }{The final weights used in the analysis.}
+}
+
 }
 \references{
 Per Kragh Andersen, Elisavet Syriopoulou, and Erik T. Parner (2017). "Causal Inference in Survival Analysis using Pseudo-Observations". In: Statistics in Medicine 36, pp. 2669-2681

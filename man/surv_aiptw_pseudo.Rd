@@ -6,45 +6,16 @@ Augmented Inverse Probability of Treatment Weighted Survival Curves using Pseudo
 }
 \description{
 
-This page explains the details of estimating augmented inverse probability of treatment weighted survival curves using Pseudo-Values for single event time-to-event data. The function is called internally when using \code{method="aiptw_pseudo"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function. It is highly recommended to use \code{\link[=adjustedsurv]{adjustedsurv}} instead of calling this function directly.
+This page explains the details of estimating augmented inverse probability of treatment weighted survival curves using Pseudo-Values for single event time-to-event data (\code{method="aiptw_pseudo"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function). All regular arguments of the \code{adjustedsurv} function can be used. Additionally, the \code{outcome_vars} argument and the \code{treatment_model} argument have to be specified in the \code{adjustedsurv} call. Further arguments specific to this method are listed below.
 
-When using \code{method="aiptw_pseudo"} the \code{treatment_model} argument and the \code{outcome_vars} argument have to be specified in the \code{adjustedsurv} call.
-}
-\usage{
-surv_aiptw_pseudo(data, variable, ev_time, event, conf_int,
-                  conf_level=0.95, times, outcome_vars,
-                  treatment_model, type_time="factor",
-                  spline_df=5, censoring_vars=NULL,
-                  ipcw_method="binder")
 }
 
 \arguments{
-  \item{data}{
-A \code{data.frame} object containing the needed time-to-event data in standard format.
-}
-  \item{variable}{
-A character string specifying the variable by which the survival curves should be grouped. Must be a valid column name of \code{data}.
-}
-  \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
-}
-  \item{event}{
-A character string specifying the binary event indicator. Must be a valid column name of \code{data}.
-}
-  \item{conf_int}{
-A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated.
-  }
-  \item{conf_level}{
-A number specifying the confidence level of asymptotic confidence intervals.
-  }
-  \item{times}{
-A numeric vector of time points at which the survival probability should be estimated.
-}
   \item{outcome_vars}{
-A character vector of column names specifying variables to be used when modeling the outcome mechanism using \code{\link[geepack]{geese}}. See details and examples.
+[\strong{required}] A character vector of column names specifying variables to be used when modeling the outcome mechanism using \code{\link[geepack]{geese}}. See details and examples.
 }
   \item{treatment_model}{
-Must be a \code{glm} or \code{multinom} model object with \code{variable} as response variable. Alternatively you can supply a numeric vector of propensity scores directly. See details and examples.
+[\strong{required}] Must be a \code{glm} or \code{multinom} model object with \code{variable} as response variable. Alternatively you can supply a numeric vector of propensity scores directly. See details and examples.
 }
   \item{type_time}{
 A character string specifying how the time should be modeled. See details.
@@ -79,7 +50,13 @@ When estimating the \code{geese} model the \code{ev_time} variable is used as a 
 Additionally, covariate-dependent censoring can be accounted for by using inverse probability of censoring weighted pseudo-values (Binder et al. 2014) instead of regular pseudo-values (specified using the \code{censoring_vars} and \code{ipcw_method} arguments).
 }
 \value{
-Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable}, the estimated pseudo-values and the geese model.
+Adds the following additional objects to the output of the \code{adjustedsurv} function:
+
+\itemize{
+\item{\code{pseudo_values}: }{The matrix of estimated pseudo-values.}
+\item{\code{geese_model}: }{The geese model used to make the predictions.}
+}
+
 }
 \references{
 

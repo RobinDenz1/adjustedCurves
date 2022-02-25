@@ -6,44 +6,13 @@ Inverse Probability of Treatment Weighted Survival Estimates using Pseudo-Values
 }
 \description{
 
-This page explains the details of estimating inverse probability of treatment weighted survival curves using Pseudo-Values for single event time-to-event data. The function is called internally when using \code{method="iptw_pseudo"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function. It is highly recommended to use \code{\link[=adjustedsurv]{adjustedsurv}} instead of calling this function directly.
+This page explains the details of estimating inverse probability of treatment weighted survival curves using Pseudo-Values for single event time-to-event data (\code{method="iptw_pseudo"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function). All regular arguments of the \code{adjustedsurv} function can be used. Additionally, the \code{treatment_model} argument has to be specified in the \code{adjustedsurv} call. Further arguments specific to this method are listed below.
 
-When using \code{method="iptw_pseudo"} the \code{treatment_model} argument has to be specified in the \code{adjustedsurv} call.
-
-}
-\usage{
-surv_iptw_pseudo(data, variable, ev_time, event, conf_int,
-                 conf_level=0.95, times, treatment_model,
-                 weight_method="ps", stabilize=FALSE,
-                 trim=FALSE, se_method="cochrane",
-                 censoring_vars=NULL, ipcw_method="binder",
-                 ...)
 }
 
 \arguments{
-  \item{data}{
-A \code{data.frame} object containing the needed time-to-event data in standard format.
-}
-  \item{variable}{
-A character string specifying the variable by which the survival curves should be grouped. Must be a valid column name of \code{data}. The variable specified should be a factor variable.
-}
-  \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
-}
-  \item{event}{
-A character string specifying the binary event indicator. Must be a valid column name of \code{data}.
-}
-  \item{conf_int}{
-A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated.
-  }
-  \item{conf_level}{
-A number specifying the confidence level of asymptotic confidence intervals.
-  }
-  \item{times}{
-A numeric vector of time points at which the survival probability should be estimated.
-}
   \item{treatment_model}{
-Must be either a model object with \code{variable} as response variable, a vector of weights or a formula which can be passed to \code{WeightIt}.
+[\strong{required}] Must be either a model object with \code{variable} as response variable, a vector of weights or a formula which can be passed to \code{WeightIt}.
 }
   \item{weight_method}{
 Method used in \code{WeightIt} function call. Ignored if \code{treatment_model} is not a formula object.
@@ -87,7 +56,13 @@ The standard error of this estimator can be approximated by calculation a weight
 Additionally, covariate-dependent censoring can be accounted for by using inverse probability of censoring weighted pseudo-values (Binder et al. 2014) instead of regular pseudo-values (specified using the \code{censoring_vars} and \code{ipcw_method} arguments).
 }
 \value{
-Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable}, the estimated pseudo-values and the weights used in the analysis.
+
+Adds the following additional objects to the output of the \code{adjustedsurv} function:
+
+\itemize{
+\item{\code{pseudo_values}: }{The matrix of estimated pseudo-values.}
+\item{\code{weights}: }{The final weights used in the analysis.}
+}
 }
 \references{
 Per Kragh Andersen, Elisavet Syriopoulou, and Erik T. Parner (2017). "Causal Inference in Survival Analysis using Pseudo-Observations". In: Statistics in Medicine 36, pp. 2669-2681

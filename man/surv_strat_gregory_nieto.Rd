@@ -6,41 +6,13 @@ Adjusted Survival Curves for Categorical Confounders using the Method by Gregory
 }
 \description{
 
-This page explains the details of estimating confounder-adjusted survival curves using a weighted average of stratified Kaplan-Meier estimates using the method described in Gregory (1988) and Nieto & Coresh (1996). The function is called internally when using \code{method="strat_gregory_nieto"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function. It is highly recommended to use \code{\link[=adjustedsurv]{adjustedsurv}} instead of calling this function directly.
+This page explains the details of estimating confounder-adjusted survival curves using a weighted average of stratified Kaplan-Meier estimates using the method described in Gregory (1988) and Nieto & Coresh (1996) (\code{method="strat_gregory_nieto"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function). All regular arguments of the \code{adjustedsurv} function can be used. Additionally, the \code{adjust_vars} argument has to be specified in the \code{adjustedsurv} call. Further arguments specific to this method are listed below.
 
-When using \code{method="strat_gregory_nieto"} the \code{adjust_vars} argument has to be specified in the \code{adjustedsurv} call.
-
-}
-\usage{
-surv_strat_gregory_nieto(data, variable, ev_time, event,
-                         conf_int, conf_level=0.95,
-                         times=NULL, adjust_vars)
 }
 
 \arguments{
-  \item{data}{
-A \code{data.frame} object containing the needed time-to-event data in standard format.
-}
-  \item{variable}{
-A character string specifying the variable by which the survival curves should be grouped. Must be a valid column name of \code{data}. The variable specified should be a factor variable.
-}
-  \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
-}
-  \item{event}{
-A character string specifying the binary event indicator. Must be a valid column name of \code{data}.
-}
-  \item{conf_int}{
-A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated. The estimator for the variance can be found in the appendix of Nieto & Coresh (1996).
-  }
-  \item{conf_level}{
-A number specifying the confidence level of asymptotic confidence intervals.
-  }
-  \item{times}{
-A numeric vector of time points at which the survival probability should be estimated or \code{NULL} (default). If \code{NULL}, the full survival curves are estimated using the standard method. If \code{times} is numeric, the full curves are still estimated and the respective values are simply read off the curves.
-}
   \item{adjust_vars}{
-A single string or character vector specifying column names in data for which the survival curves should be adjusted for. The variables specified can be integers, factors or characters. Only categorical variables can be used with this method. See details.
+[\strong{required}] A single string or character vector specifying column names in data for which the survival curves should be adjusted for. The variables specified can be integers, factors or characters. Only categorical variables can be used with this method. See details.
   }
 }
 \details{
@@ -49,7 +21,7 @@ A single string or character vector specifying column names in data for which th
 \item{\strong{Type of Adjustment:} The survival curves are adjusted by taking a weighted average of stratified Kaplan-Meier estimates. This only works for categorical confounders. See below for more information.}
 \item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
 \item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
-\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are not available.}
+\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available. The estimator for the variance can be found in the appendix of Nieto & Coresh (1996).}
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
@@ -64,7 +36,7 @@ Nieto & Coresh (1996) proposed a very similar method. The only major difference 
 
 }
 \value{
-Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
+Adds no additional objects to the output of the \code{adjustedsurv} function.
 }
 \references{
 W. M. Gregory (1988). "Adjusting Survival Curves for Imbalances in Prognostic Factors". In: British Journal of Cancer 58, pp. 202-204

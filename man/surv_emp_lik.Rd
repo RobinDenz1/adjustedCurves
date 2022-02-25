@@ -6,39 +6,13 @@ Empirical Likelihood Estimation Survival Curves
 }
 \description{
 
-This page explains the details of estimating adjusted survival curves using the empirical likelihood estimation methodology introduced by Wang et al. (2019) for single event time-to-event data. The function is called internally when using \code{method="emp_lik"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function. It is highly recommended to use \code{\link[=adjustedsurv]{adjustedsurv}} instead of calling this function directly.
+This page explains the details of estimating adjusted survival curves using the empirical likelihood estimation methodology introduced by Wang et al. (2019) for single event time-to-event data (\code{method="emp_lik"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function). All regular arguments of the \code{adjustedsurv} function can be used. Additionally, the \code{treatment_vars} argument has to be specified in the \code{adjustedsurv} call. Further arguments specific to this method are listed below.
 
-When using \code{method="emp_lik"} the \code{treatment_vars} argument has to be specified in the \code{adjustedsurv} call.
-
-}
-\usage{
-surv_emp_lik(data, variable, ev_time, event, conf_int=FALSE,
-             times, treatment_vars, moment="first",
-             standardize=FALSE, gtol=0.00001, max_iter=100,
-             newton_tol=1.0e-06)
 }
 
 \arguments{
-  \item{data}{
-A \code{data.frame} object containing the needed time-to-event data in standard format.
-}
-  \item{variable}{
-A character string specifying the variable by which the survival curves should be grouped. Must be a valid column name of \code{data}. The variable in question can be either a dichotomous integer variable or a factor variable with exactly two levels.
-}
-  \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
-}
-  \item{event}{
-A character string specifying the binary event indicator. Must be a valid column name of \code{data}. Can be either a factor variable or a binary integer variable. If a factor variable is supplied, the first level is assumed to correspond to the control group.
-}
-  \item{conf_int}{
-Currently not used because asymptotic variance calculations for this estimator have not been proposed yet. Bootstrapping can still be used to estimate the confidence intervals (see \code{?adjustedsurv}).
-}
-  \item{times}{
-A numeric vector of time points at which the survival probability should be estimated.
-}
   \item{treatment_vars}{
-A character vector of column names specifying variables to be used as covariates in the empirical likelihood estimation. See details and examples.
+[\strong{required}] A character vector of column names specifying variables to be used as covariates in the empirical likelihood estimation. See details and examples.
 }
   \item{moment}{
 A character string specifying which moment to adjust for. Can be either \code{"first"} (default) or \code{"second"}.
@@ -62,7 +36,7 @@ Tolerance used in the newton-raphson algorithm. Set to 1.0e-06 by default which 
 \item{\strong{Type of Adjustment:} Requires a character vector of variable names used to balance the distribution of covariates (treatment assignment mechanism)}
 \item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
 \item{\strong{Categorical groups:} Only binary treatments are allowed. Column specified by \code{variable} must be an integer with only 0 and 1 as values or a factor variable with exactly two levels.}
-\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are not available. The user has to use bootstrapping if those are desired.}
+\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are not available. Bootstrapping can still be used to estimate the confidence intervals (see \code{?adjustedsurv}).}
 \item{\strong{Allowed Time Values:} Allows both continuous and integer survival times.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
@@ -73,7 +47,7 @@ A non-parametric likelihood based method which does not require the researcher t
 
 }
 \value{
-Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
+Adds no additional objects to the output of the \code{adjustedsurv} function.
 }
 \references{
 Xiaofei Wang, Fangfang Bai, Herbert Pang, and Stephen L. George (2019). "Bias-Adjusted Kaplan-Meier Survival Curves for Marginal Treatment Effect in Observational Studies". In: Journal of Biopharmaceutical Statistics 29.4, pp. 592-605

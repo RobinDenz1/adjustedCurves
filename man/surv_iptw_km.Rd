@@ -6,42 +6,13 @@ Inverse Probability of Treatment Weighted Kaplan-Meier estimates
 }
 \description{
 
-This page explains the details of estimating inverse probability of treatment weighted survival curves using a weighted version of the Kaplan-Meier estimator for single event time-to-event data. The function is called internally when using \code{method="iptw_km"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function. It is highly recommended to use \code{\link[=adjustedsurv]{adjustedsurv}} instead of calling this function directly.
+This page explains the details of estimating inverse probability of treatment weighted survival curves using a weighted version of the Kaplan-Meier estimator for single event time-to-event data (\code{method="iptw_km"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function). All regular arguments of the \code{adjustedsurv} function can be used. Additionally, the \code{treatment_model} argument has to be specified in the \code{adjustedsurv} call. Further arguments specific to this method are listed below.
 
-When using \code{method="iptw_km"} the \code{treatment_model} argument has to be specified in the \code{adjustedsurv} call.
-
-}
-\usage{
-surv_iptw_km(data, variable, ev_time, event, conf_int,
-             conf_level=0.95, times=NULL, treatment_model,
-             weight_method="ps", stabilize=FALSE,
-             trim=FALSE, ...)
 }
 
 \arguments{
-  \item{data}{
-A \code{data.frame} object containing the needed time-to-event data in standard format.
-}
-  \item{variable}{
-A character string specifying the variable by which the survival curves should be grouped. Must be a valid column name of \code{data}. The variable specified should be a factor variable.
-}
-  \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
-}
-  \item{event}{
-A character string specifying the binary event indicator. Must be a valid column name of \code{data}.
-}
-  \item{conf_int}{
-A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated.
-  }
-  \item{conf_level}{
-A number specifying the confidence level of asymptotic confidence intervals.
-  }
-  \item{times}{
-A numeric vector of time points for which to return the survival probability estimates or \code{NULL} (default). If \code{NULL} the whole curve will be estimated according to the normal procedure. When custom time points are specified the whole curve is estimated anyways and the time specific estimates are simply read off that curve.
-}
   \item{treatment_model}{
-Must be either a model object with \code{variable} as response variable, a vector of weights or a formula which can be passed to \code{WeightIt}.
+[\strong{required}] Must be either a model object with \code{variable} as response variable, a vector of weights or a formula which can be passed to \code{WeightIt}.
 }
   \item{weight_method}{
 Method used in \code{WeightIt} function call. Ignored if \code{treatment_model} is not a formula object.
@@ -74,7 +45,11 @@ This method works by modelling the treatment assignment mechanism. Adjusted surv
 Asymptotic variances are calculated using the equations given in Xie and Liu (2005). It is also recommended to use stabilized weights by using \code{stabilize=TRUE} (the default value). More information can be found in the cited literature.
 }
 \value{
-Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable} and the weights used in the analysis.
+Adds the following additional objects to the output of the \code{adjustedsurv} function:
+
+\itemize{
+\item{\code{weights}: }{The final weights used in the analysis.}
+}
 }
 \references{
 Jun Xie and Chaofeng Liu (2005). "Adjusted Kaplan-Meier Estimator and Log- Rank Test with Inverse Probability of Treatment Weighting for Survival Data". In: Statistics in Medicine 24, pp. 3089-3110

@@ -6,42 +6,13 @@ Direct Adjusted Survival Curves using Pseudo-Values
 }
 \description{
 
-This page explains the details of estimating direct adjusted survival curves using pseudo-values for single event time-to-event data. The function is called internally when using \code{method="direct_pseudo"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function. It is highly recommended to use \code{\link[=adjustedsurv]{adjustedsurv}} instead of calling this function directly.
+This page explains the details of estimating direct adjusted survival curves using pseudo-values for single event time-to-event data (\code{method="direct_pseudo"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function). All regular arguments of the \code{adjustedsurv} function can be used. Additionally, the \code{outcome_vars} argument has to be specified in the \code{adjustedsurv} call. Further arguments specific to this method are listed below.
 
-When using \code{method="direct_pseudo"} the \code{outcome_vars} argument has to be specified in the \code{adjustedsurv} call.
-
-}
-\usage{
-surv_direct_pseudo(data, variable, ev_time, event, conf_int=FALSE,
-                   conf_level=0.95, times, outcome_vars,
-                   type_time="factor", spline_df=5,
-                   censoring_vars=NULL, ipcw_method="binder")
 }
 
 \arguments{
-  \item{data}{
-A \code{data.frame} object containing the needed time-to-event data in standard format.
-}
-  \item{variable}{
-A character string specifying the variable by which the survival curves should be grouped. Must be a valid column name of \code{data}. The variable specified should be a factor variable.
-}
-  \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
-}
-  \item{event}{
-A character string specifying the binary event indicator. Must be a valid column name of \code{data}.
-}
-   \item{conf_int}{
-Currently not used because asymptotic variance calculations for this estimator have not been proposed yet. Bootstrapping can still be used to estimate the confidence intervals (see \code{?adjustedsurv}).
-  }
-  \item{conf_level}{
-A number specifying the confidence level of asymptotic confidence intervals.
-  }
-  \item{times}{
-A numeric vector of time points at which the survival probability should be estimated.
-}
   \item{outcome_vars}{
-A character vector of column names specifying variables to be used when modeling the outcome mechanism. See details and examples.
+[\strong{required}] A character vector of column names specifying variables to be used when modeling the outcome mechanism. See details and examples.
 }
   \item{type_time}{
 A character string specifying how the time should be modeled.
@@ -63,7 +34,7 @@ The specific method used in the calculation of inverse probability of censoring 
 \item{\strong{Type of Adjustment:} Requires a character vector of variable names used to model the outcome mechanism (internally uses \code{\link[geepack]{geese}}).}
 \item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
 \item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
-\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are not available. Users need to use bootstrapping if those are desired.}
+\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are not available. Bootstrapping can still be used to estimate the confidence intervals (see \code{?adjustedsurv}).}
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are not guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are not guaranteed to be monotone.}
@@ -79,7 +50,13 @@ When estimating the \code{geese} model the \code{ev_time} variable is used as a 
 Additionally, covariate-dependent censoring can be accounted for by using inverse probability of censoring weighted pseudo-values (Binder et al. 2014) instead of regular pseudo-values (specified using the \code{censoring_vars} and \code{ipcw_method} arguments).
 }
 \value{
-Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable}, the estimated pseudo-values and the geese model.
+Adds the following additional objects to the output of the \code{adjustedsurv} function:
+
+\itemize{
+\item{\code{pseudo_values}: }{The matrix of estimated pseudo-values.}
+\item{\code{geese_model}: }{The geese model used to make the predictions.}
+}
+
 }
 \references{
 Per Kragh Andersen, Elisavet Syriopoulou, and Erik T. Parner (2017). "Causal Inference in Survival Analysis using Pseudo-Observations". In: Statistics in Medicine 36, pp. 2669-2681

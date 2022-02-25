@@ -6,40 +6,12 @@ Group-Specific Aalen-Johansen CIFs
 }
 \description{
 
-This page explains the details of estimating standard Aalen-Johansen cumulative incidence functions, stratified by the group variable. The function is called internally when using \code{method="aalen_johansen"} in the \code{\link[=adjustedcif]{adjustedcif}} function. It is highly recommended to use \code{\link[=adjustedcif]{adjustedcif}} instead of calling this function directly.
+This page explains the details of estimating standard Aalen-Johansen cumulative incidence functions, stratified by the group variable (\code{method="aalen_johansen"} in the \code{\link[=adjustedcif]{adjustedcif}} function). All regular arguments of the \code{adjustedcif} function can be used. Further arguments specific to this method are listed below.
 
 NO adjustment for any confounders are made. This function is included only for reference and should not be used when confounder adjusted CIFs are desired.
 }
-\usage{
-cif_aalen_johansen(data, variable, ev_time, event, cause,
-                   conf_int, conf_level=0.95, times=NULL, ...)
-}
 
 \arguments{
-  \item{data}{
-A \code{data.frame} object containing the needed time-to-event data in standard format.
-}
-  \item{variable}{
-A character string specifying the variable by which the CIFs should be grouped. Must be a valid column name of \code{data}. The variable specified should be a factor variable.
-}
-  \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
-}
-  \item{event}{
-A character string specifying the numeric event indicator. The censoring indicator should be coded as 0 and all other events of interest as 1, 2, etc. Must be a valid column name of \code{data}.
-  }
-  \item{cause}{
-The cause of interest for which the cumulative incidence functions should be calculated. Should be a number that appears in the \code{event} column of \code{data}.
-  }
-  \item{conf_int}{
-A logical variable, indicating whether the asymptotic variances and confidence intervals of the CIFs should be calculated. For the available types of confidence intervals see \code{?cuminc}.
-  }
-  \item{conf_level}{
-A number specifying the confidence level of asymptotic confidence intervals.
-  }
-  \item{times}{
-A numeric vector of time points for which to return the cumulative incidence estimates or \code{NULL} (default). If \code{NULL} the whole curve will be estimated according to the usual Aalen-Johansen procedure. When custom time points are specified the whole curve is estimated anyways and the time specific estimates are simply read off that curve.
-}
   \item{...}{
 Further arguments passed to \code{\link[cmprsk]{cuminc}}.
   }
@@ -61,7 +33,11 @@ This function is just a convenient wrapper around the \code{\link[cmprsk]{cuminc
 
 }
 \value{
-Returns a \code{list} object containing a \code{data.frame} with estimated CIFs for some points in time for each level of \code{variable} and the original \code{cuminc} object.
+Adds the following additional objects to the output of the \code{adjustedsurv} function:
+
+\itemize{
+\item{\code{cuminc_object}: }{The object returned by the \code{cuminc} function.}
+}
 }
 \references{
 Odd O. Aalen and Søren Johansen (1978). "An Empirical Transition Matrix for Non-Homogeneous Markov Chains Based on Censored Observations". In: Scandinavian Journal of Statistics 5.3, pp. 141-150

@@ -6,42 +6,13 @@ Inverse Probability of Treatment Weighted Survival using Cox-Regression
 }
 \description{
 
-This page explains the details of estimating inverse probability of treatment weighted survival curves using a weighted univariate cox-regression for single event time-to-event data. The function is called internally when using \code{method="iptw_cox"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function. It is highly recommended to use \code{\link[=adjustedsurv]{adjustedsurv}} instead of calling this function directly.
+This page explains the details of estimating inverse probability of treatment weighted survival curves using a weighted univariate cox-regression for single event time-to-event data (\code{method="iptw_cox"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function). All regular arguments of the \code{adjustedsurv} function can be used. Additionally, the \code{treatment_model} argument has to be specified in the \code{adjustedsurv} call. Further arguments specific to this method are listed below.
 
-When using \code{method="iptw_cox"} the \code{treatment_model} argument has to be specified in the \code{adjustedsurv} call.
-
-}
-\usage{
-surv_iptw_cox(data, variable, ev_time, event, conf_int,
-              conf_level=0.95, times=NULL, treatment_model,
-              weight_method="ps", stabilize=FALSE,
-              trim=FALSE, ...)
 }
 
 \arguments{
-  \item{data}{
-A \code{data.frame} object containing the needed time-to-event data in standard format.
-}
-  \item{variable}{
-A character string specifying the variable by which the survival curves should be grouped. Must be a valid column name of \code{data}. The variable specified should be a factor variable.
-}
-  \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
-}
-  \item{event}{
-A character string specifying the binary event indicator. Must be a valid column name of \code{data}.
-}
-  \item{conf_int}{
-A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated.
-  }
-  \item{conf_level}{
-A number specifying the confidence level of asymptotic confidence intervals.
-  }
-  \item{times}{
-A numeric vector of time points for which to return the survival probability estimates \code{NULL} (default). If \code{NULL} the whole curve will be estimated according to the usual Kaplan-Meier procedure. When custom time points are specified the whole curve is estimated anyways and the time specific estimates are simply read off that curve.
-}
   \item{treatment_model}{
-Must be either a model object with \code{variable} as response variable, a vector of weights or a formula which can be passed to \code{WeightIt}.
+[\strong{required}] Must be either a model object with \code{variable} as response variable, a vector of weights or a formula which can be passed to \code{WeightIt}.
 }
   \item{weight_method}{
 Method used in \code{WeightIt} function call. Ignored if \code{treatment_model} is not a formula object.
@@ -74,6 +45,14 @@ This method works by modelling the treatment assignment mechanism. Adjusted surv
 By default this method uses a a robust sandwich-type variance estimator (\code{robust=TRUE} in the \code{coxph} function call) to calculate the standard error used in the construction of confidence intervals. This estimator has been shown to be biased by Austin (2016). Coupled with stabilized weights however (\code{stabilize=TRUE}) this gives conservative estimates of the variance and confidence intervals (Xu et al. 2010). It is still recommended to use bootstrap confidence intervals instead. This can be done by setting \code{bootstrap=TRUE} in the \code{adjustedsurv} function call.
 }
 \value{
+Adds the following additional objects to the output of the \code{adjustedsurv} function:
+
+\itemize{
+\item{\code{cox_model}: }{The stratified and weighted \code{coxph} model.}
+\item{\code{survfit}: }{The \code{survfit} object created using the \code{cox_model} object.}
+\item{\code{weights}: }{The final weights used in the analysis.}
+}
+
 Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable}, the weighted \code{coxph} model, the weighted \code{survfit} object and the weights used in the analysis.
 }
 \references{

@@ -6,44 +6,13 @@ Inverse Probability of Treatment Weighted CIFs
 }
 \description{
 
-This page explains the details of estimating inverse probability of treatment weighted cumulative incidence functions in a competing risks setting. The function is called internally when using \code{method="iptw"} in the \code{\link[=adjustedcif]{adjustedcif}} function. It is highly recommended to use \code{\link[=adjustedcif]{adjustedcif}} instead of calling this function directly.
+This page explains the details of estimating inverse probability of treatment weighted cumulative incidence functions in a competing risks setting (\code{method="iptw"} in the \code{\link[=adjustedcif]{adjustedcif}} function). All regular arguments of the \code{adjustedcif} function can be used. Additionally, the \code{treatment_model} argument has to be specified in the \code{adjustedcif} call. Further arguments specific to this method are listed below.
 
-When using \code{method="iptw"} the \code{treatment_model} argument has to be specified in the \code{adjustedcif} call.
-}
-\usage{
-cif_iptw(data, variable, ev_time, event, cause,
-         conf_int, conf_level=0.95, times,
-         treatment_model, censoring_model=NULL,
-         verbose=FALSE, ...)
 }
 
 \arguments{
-  \item{data}{
-A \code{data.frame} object containing the needed time-to-event data in standard format.
-}
-  \item{variable}{
-A character string specifying the variable by which the CIFs should be grouped. Must be a valid column name of \code{data}. The variable specified should be a factor variable.
-}
-  \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
-}
-  \item{event}{
-A character string specifying the numeric event indicator. The censoring indicator should be coded as 0 and all other events of interest as 1, 2, etc. Must be a valid column name of \code{data}.
-  }
-  \item{cause}{
-The cause of interest for which the cumulative incidence functions should be calculated. Should be a number that appears in the \code{event} column of \code{data}.
-  }
-  \item{conf_int}{
-A logical variable, indicating whether the asymptotic variances and confidence intervals of the CIFs should be calculated. Not available for all methods.
-  }
-  \item{conf_level}{
-A number specifying the confidence level of asymptotic confidence intervals.
-  }
-  \item{times}{
-A numeric vector of time points at which the cumulative incidences should be estimated.
-  }
   \item{treatment_model}{
-Must be a \code{glm} or \code{multinom} model object with \code{variable} as response variable.
+[\strong{required}] Must be a \code{glm} or \code{multinom} model object with \code{variable} as response variable.
 }
   \item{censoring_model}{
 Either \code{NULL} to make no adjustments for dependent censoring, or a \code{coxph} object. See \code{?ate} for more details.
@@ -74,7 +43,11 @@ Internally, this function simply calls the \code{\link[riskRegression]{ate}} fun
 
 }
 \value{
-Returns a \code{list} object containing a \code{data.frame} with estimated CIFs for some points in time for each level of \code{variable} and the original object created using the \code{ate} function.
+Adds the following additional objects to the output of the \code{adjustedcif} function:
+
+\itemize{
+\item{\code{ate_object}: }{The object returned by the \code{ate} function.}
+}
 }
 \references{
 Anke Neumann and Cécile Billionnet (2016). "Covariate Adjustment of Cumulative Incidence Functions for Competing Risks Data Using Inverse Probability of Treatment Weighting". In: Computer Methods and Programs in Biomedicine 129, pp. 63-70

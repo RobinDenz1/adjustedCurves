@@ -6,48 +6,16 @@ Augmented Inverse Probability of Treatment Weighted CIFs
 }
 \description{
 
-This page explains the details of estimating augmented inverse probability of treatment weighted cumulative incidence functions for competing risks data. The function is called internally when using \code{method="aiptw"} in the \code{\link[=adjustedcif]{adjustedcif}} function. It is highly recommended to use \code{\link[=adjustedcif]{adjustedcif}} instead of calling this function directly.
+This page explains the details of estimating augmented inverse probability of treatment weighted cumulative incidence functions for competing risks data (\code{method="aiptw"} in the \code{\link[=adjustedcif]{adjustedcif}} function). All regular arguments of the \code{adjustedcif} function can be used. Additionally, the \code{outcome_model} argument and the \code{treatment_model} argument have to be specified in the \code{adjustedcif} call. Further arguments specific to this method are listed below.
 
-When using \code{method="aiptw"} the \code{treatment_model} argument and the \code{outcome_model} argument have to be specified in the \code{adjustedcif} call.
-
-}
-\usage{
-cif_aiptw(data, variable, ev_time, event, cause,
-          conf_int, conf_level=0.95, times,
-          outcome_model, treatment_model,
-          censoring_model=NULL, verbose=FALSE, ...)
 }
 
 \arguments{
-  \item{data}{
-A \code{data.frame} object containing the needed time-to-event data in standard format.
-}
-  \item{variable}{
-A character string specifying the variable by which the CIFs should be grouped. Must be a valid column name of \code{data}. The variable specified should be a factor variable.
-}
-  \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
-}
-  \item{event}{
-A character string specifying the numeric event indicator. The censoring indicator should be coded as 0 and all other events of interest as 1, 2, etc. Must be a valid column name of \code{data}.
-  }
-  \item{cause}{
-The cause of interest for which the cumulative incidence functions should be calculated. Should be a number that appears in the \code{event} column of \code{data}.
-  }
-  \item{conf_int}{
-A logical variable, indicating whether the asymptotic variances and confidence intervals of the CIFs should be calculated.
-  }
-  \item{conf_level}{
-A number specifying the confidence level of asymptotic confidence intervals.
-  }
-  \item{times}{
-A numeric vector of time points at which the CIFs should be estimated.
-}
   \item{outcome_model}{
-Must be a \code{CauseSpecificCox} model object created using the \code{\link[riskRegression]{CSC}} function, modeling the time-to-event mechanism. See details and examples.
+[\strong{required}] Must be a \code{CauseSpecificCox} model object created using the \code{\link[riskRegression]{CSC}} function, modeling the time-to-event mechanism. See details and examples.
 }
   \item{treatment_model}{
-Must be a \code{glm} model object with \code{variable} as response variable. See details and examples.
+[\strong{required}] Must be a \code{glm} model object with \code{variable} as response variable. See details and examples.
 }
   \item{censoring_model}{
 Must be a \code{coxph} model object, modeling the censoring mechanism or \code{NULL}. If \code{NULL} (default) independent censoring is assumed. See details and examples.
@@ -78,7 +46,11 @@ This function is basically just a wrapper around the \code{\link[riskRegression]
 
 }
 \value{
-Returns a \code{list} object containing a \code{data.frame} with estimated CIFs for some points in time for each level of \code{variable} and the original object created using the \code{ate} function.
+Adds the following additional objects to the output of the \code{adjustedcif} function:
+
+\itemize{
+\item{\code{ate_object}: }{The object returned by the \code{ate} function.}
+}
 }
 \references{
 James M. Robins and Andrea Rotnitzky (1992). "Recovery of Information and Adjustment for Dependent Censoring Using Surrogate Markers". In: AIDS Epidemiology: Methodological Issues. Ed. by Nicholas P. Jewell, Klaus Dietz, and Vernon T. Farewell. New York: Springer Science + Business Media, pp. 297-331

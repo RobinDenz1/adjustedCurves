@@ -6,43 +6,13 @@ Direct Adjusted Cumulative Incidence Functions
 }
 \description{
 
-This page explains the details of estimating confounder-adjusted CIFs using a previously fit model to describe the outcome mechanism in a competing risks setting. The function is called internally when using \code{method="direct"} in the \code{\link[=adjustedcif]{adjustedcif}} function. It is highly recommended to use \code{\link[=adjustedcif]{adjustedcif}} instead of calling this function directly.
+This page explains the details of estimating confounder-adjusted CIFs using a previously fit model to describe the outcome mechanism in a competing risks setting (\code{method="direct"} in the \code{\link[=adjustedcif]{adjustedcif}} function). All regular arguments of the \code{adjustedcif} function can be used. Additionally, the \code{outcome_model} argument has to be specified in the \code{adjustedcif} call. Further arguments specific to this method are listed below.
 
-When using \code{method="direct"} the \code{outcome_model} argument has to be specified in the \code{adjustedcif} call.
-}
-\usage{
-cif_direct(data, variable, ev_time, event, cause,
-           conf_int, conf_level=0.95, times, outcome_model,
-           verbose=FALSE, predict_fun=NULL, ...)
 }
 
 \arguments{
-  \item{data}{
-A \code{data.frame} object containing the needed time-to-event data in standard format.
-}
-  \item{variable}{
-A character string specifying the variable by which the CIFs should be grouped. Must be a valid column name of \code{data}. The variable specified should be a factor variable.
-}
-  \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
-}
-  \item{event}{
-A character string specifying the numeric event indicator. The censoring indicator should be coded as 0 and all other events of interest as 1, 2, etc. Must be a valid column name of \code{data}.
-  }
-  \item{cause}{
-The cause of interest for which the cumulative incidence functions should be calculated. Should be a number that appears in the \code{event} column of \code{data}.
-  }
-  \item{conf_int}{
-A logical variable, indicating whether the asymptotic variances and confidence intervals of the CIFs should be calculated. Asymptotic variance calculations are only availabe if the \code{outcome_model} is a \code{CauseSpecificCox} model. The \code{\link[riskRegression]{ate}} function is used for the calculation in that case. Bootstrap confidence intervals can however be calculated with all supported models. See \code{?adjustedcif} for more information on bootstrapping.
-  }
-  \item{conf_level}{
-A number specifying the confidence level of asymptotic confidence intervals.
-  }
   \item{outcome_model}{
-Must be a previously fit model object including \code{variable} as independent variable. Apart from the classic \code{CauseSpecificCox} model this function also supports a variety of other models, such as the Fine & Gray model (\code{\link[riskRegression]{FGR}}). See \code{\link[adjustedCurves]{models_cif_direct}} for a list of supported model objects and some more details.
-}
-  \item{times}{
-A numeric vector of time points at which the CIFs should be estimated.
+[\strong{required}] Must be a previously fit model object including \code{variable} as independent variable. Apart from the classic \code{CauseSpecificCox} model this function also supports a variety of other models, such as the Fine & Gray model (\code{\link[riskRegression]{FGR}}). See \code{\link[adjustedCurves]{models_cif_direct}} for a list of supported model objects and some more details.
 }
   \item{verbose}{
 Whether to print estimation information of the \code{ate} function in the \pkg{riskRegression} package. Ignored if a \code{outcome_model} is not a \code{CauseSpecificCox} model.
@@ -60,7 +30,7 @@ Further arguments passed to \code{\link[riskRegression]{ate}} when a \code{Cause
 \item{\strong{Type of Adjustment:} Requires a model describing the outcome mechanism. Both Cause-Specific-Cox models (\code{\link[riskRegression]{CSC}}) and Fine & Gray models (\code{\link[riskRegression]{FGR}}) are supported, as well as other models. See \code{\link[adjustedCurves]{models_cif_direct}} for a full list.}
 \item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
 \item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
-\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are only available when using a Cause-Specific-Cox model.}
+\item{\strong{Approximate Variance:} Asymptotic variance calculations are only availabe if the \code{outcome_model} is a \code{CauseSpecificCox} model. The \code{\link[riskRegression]{ate}} function is used for the calculation in that case. Bootstrap confidence intervals can however be calculated with all supported models. See \code{?adjustedcif} for more information on bootstrapping.}
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
@@ -73,7 +43,12 @@ In the literature this method is sometimes called "Direct Standardization", "Cor
 
 }
 \value{
-Returns a \code{list} object containing a \code{data.frame} with estimated CIFs for some points in time for each level of \code{variable} and the original object created using the \code{ate} function.
+Adds the following additional objects to the output of the \code{adjustedcif} function:
+
+\itemize{
+\item{\code{ate_object}: }{The object returned by the \code{ate} function.}
+}
+
 }
 \references{
 Xu Zhang and Mei-Jie Zhang (2011). "SAS Macros for Estimation of Direct Adjusted Cumulative Incidence Curves Under Proportional Subdistribution Hazards Models". In: Computer Methods and Programs in Biomedicine 101.1, pp. 87-93

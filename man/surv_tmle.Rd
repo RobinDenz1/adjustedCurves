@@ -6,43 +6,13 @@ Targeted Maximum Likelihood Estimation for Adjusted Survival Curves
 }
 \description{
 
-This page explains the details of estimating adjusted survival curves using the targeted maximum likelihood methodology for single event time-to-event data. The function is called internally when using \code{method="tmle"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function. It is highly recommended to use \code{\link[=adjustedsurv]{adjustedsurv}} instead of calling this function directly.
+This page explains the details of estimating adjusted survival curves using the targeted maximum likelihood methodology for single event time-to-event data (\code{method="tmle"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function). All regular arguments of the \code{adjustedsurv} function can be used. Additionally, you have to specify either \code{SL.ftime} or \code{glm.ftime}, \code{SL.ctime} or \code{glm.ctime} and \code{SL.trt} or \code{glm.trt} in the \code{adjustedsurv} call. Further arguments specific to this method are listed below.
 
-When using \code{method="tmle"} you have to specify either \code{SL.ftime} or \code{glm.ftime}, \code{SL.ctime} or \code{glm.ctime} and \code{SL.trt} or \code{glm.trt} in the \code{adjustedsurv} call.
-
-}
-\usage{
-surv_tmle(data, variable, ev_time, event, conf_int,
-          conf_level=0.95, times, adjust_vars=NULL,
-          SL.ftime=NULL, SL.ctime=NULL,
-          SL.trt=NULL, glm.ftime=NULL,
-          glm.ctime=NULL, glm.trt=NULL, ...)
 }
 
 \arguments{
-  \item{data}{
-A \code{data.frame} object containing the needed time-to-event data in standard format.
-  }
-  \item{variable}{
-A character string specifying the variable by which the survival curves should be grouped. Must be a valid column name of \code{data}. Can be either a factor variable or a binary integer variable. If a factor variable is supplied, the first level is assumed to correspond to the control group. Either way only two treatments are allowed.
-  }
-  \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
-  }
-  \item{event}{
-A character string specifying the binary event indicator. Must be a valid column name of \code{data}.
-  }
-  \item{conf_int}{
-A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated.
-  }
-  \item{conf_level}{
-A number specifying the confidence level of asymptotic confidence intervals.
-  }
-  \item{times}{
-A numeric vector of time points at which the survival probability should be estimated.
-  }
   \item{adjust_vars}{
-A character vector of column names specifying variables to be used when modeling the outcome, treatment and censoring mechanism. See details and examples.
+A character vector of column names specifying variables to be used when modeling the outcome, treatment and censoring mechanism. Can be set to \code{NULL} (default), in which case all covariates are used. See details and examples.
   }
   \item{SL.ftime}{
 A character vector or list specification to be passed to the \code{SL.library} option in the call to \code{SuperLearner} for the outcome regression. See\code{?SuperLearner} for more information on how to specify valid \code{SuperLearner} libraries. It is expected that the wrappers used in the library will play nicely with the input variables, which will be called "trt", \code{names(adjust_vars)}, and "t".
@@ -71,7 +41,7 @@ Additional arguments passed to \code{\link[survtmle]{survtmle}}.
 \itemize{
 \item{\strong{Type of Adjustment:} Adjustments are made based on the treatment assignment mechanism, the outcome mechanism and the censoring mechanism. No models can be supplied. The adjustments are made based on \code{\link[SuperLearner]{SuperLearner}}} libraries or using the \code{glm} arguments.
 \item{\strong{Doubly-Robust:} Estimates are Doubly-Robust.}
-\item{\strong{Categorical groups:} Currently only two groups in \code{variable} are allowed. Must be an integer variable only containing 0 and 1 or a factor variable with exactly two levels.}
+\item{\strong{Categorical groups:} Currently only two groups in \code{variable} are allowed. Must be an integer variable only containing 0 and 1 or a factor variable with exactly two levels. If a factor variable is supplied, the first level is assumed to correspond to the control group. Either way only two treatments are allowed.}
 \item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
 \item{\strong{Allowed Time Values:} Allows only integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
@@ -87,7 +57,13 @@ When the sample size is large or many time points are of interest, this method w
 
 }
 \value{
-Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable}, the object created using the \code{\link[survtmle]{survtmle}} function and the object created using the \code{survtmle.timepoints} function.
+
+Adds the following additional objects to the output of the \code{adjustedsurv} function:
+
+\itemize{
+\item{\code{survtmle_object}: }{The object created using the \code{\link[survtmle]{survtmle}} function.}
+\item{\code{survtmle.timepoints_object}: }{The object created using the \code{survtmle.timepoints} function.}
+}
 }
 \references{
 Ori M. Stitelman and Mark J. van der Laan (2010). "Collaborative Targeted Maximum Likelihood for Time to Event Data". In: The International Journal of Biostatistics 6.1

@@ -6,45 +6,13 @@ Direct Adjusted CIFs using Pseudo-Values
 }
 \description{
 
-This page explains the details of estimating direct adjusted cumulative incidence functions using pseudo-values in a competing risks setting. The function is called internally when using \code{method="direct_pseudo"} in the \code{\link[=adjustedcif]{adjustedcif}} function. It is highly recommended to use \code{\link[=adjustedcif]{adjustedcif}} instead of calling this function directly.
+This page explains the details of estimating direct adjusted cumulative incidence functions using pseudo-values in a competing risks setting (\code{method="direct_pseudo"} in the \code{\link[=adjustedcif]{adjustedcif}} function). All regular arguments of the \code{adjustedcif} function can be used. Additionally, the \code{outcome_vars} argument has to be specified in the \code{adjustedcif} call. Further arguments specific to this method are listed below.
 
-When using \code{method="direct_pseudo"} the \code{outcome_varsl} argument has to be specified in the \code{adjustedcif} call.
-
-}
-\usage{
-cif_direct_pseudo(data, variable, ev_time, event, cause,
-                  conf_int=FALSE, conf_level=0.95, times,
-                  outcome_vars, type_time="factor",
-                  spline_df=5)
 }
 
 \arguments{
-  \item{data}{
-A \code{data.frame} object containing the needed time-to-event data in standard format.
-}
-  \item{variable}{
-A character string specifying the variable by which the CIFs should be grouped. Must be a valid column name of \code{data}. The variable specified should be a factor variable.
-}
-  \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
-}
-  \item{event}{
-A character string specifying the numeric event indicator. The censoring indicator should be coded as 0 and all other events of interest as 1, 2, etc. Must be a valid column name of \code{data}.
-  }
-  \item{cause}{
-The cause of interest for which the cumulative incidence functions should be calculated. Should be a number that appears in the \code{event} column of \code{data}.
-  }
-  \item{conf_int}{
-Currently not used because asymptotic variance calculations for this estimator have not been proposed yet. Bootstrapping can still be used to estimate the confidence intervals (see \code{?adjustedcif}).
-  }
-  \item{conf_level}{
-A number specifying the confidence level of asymptotic confidence intervals.
-  }
-  \item{times}{
-A numeric vector of time points at which the CIFs should be estimated.
-}
   \item{outcome_vars}{
-A character vector of column names specifying variables to be used when modeling the outcome mechanism. See details and examples.
+[\strong{required}] A character vector of column names specifying variables to be used when modeling the outcome mechanism. See details and examples.
 }
   \item{type_time}{
 A character string specifying how the time should be modeled. See details.
@@ -59,7 +27,7 @@ The number of degrees of freedom used for the natural-spline or B-spline functio
 \item{\strong{Type of Adjustment:} Requires a character vector of variable names used to model the outcome mechanism (internally uses \code{\link[geepack]{geese}}).}
 \item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
 \item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
-\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are not available. Users need to use bootstrapping if those are desired.}
+\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are not available. Bootstrapping can still be used to estimate the confidence intervals (see \code{?adjustedcif}).}
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are not guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are not guaranteed to be monotone.}
@@ -73,7 +41,12 @@ It is essentially the same procedure as described in \code{\link[=cif_direct]{"d
 When estimating the \code{geese} model the \code{ev_time} variable is used as a factor by default. This results in one coefficient being estimated for each unique point in time, which can be very slow computationally if there are a lot of unique points in time and/or the dataset has many rows. In these cases it is recommended to use \code{type_time="bs"} or \code{type_time="ns"}, which results in the \code{ev_time} being modeled using B-Splines or Natural Splines. Simulation studies indicate that there is little difference in the estimates when an appropriately large number of \code{spline_df} is used.
 }
 \value{
-Returns a \code{list} object containing a \code{data.frame} with estimated CIFs for some points in time for each level of \code{variable}, the estimated pseudo-values and the geese model.
+Adds the following additional objects to the output of the \code{adjustedcif} function:
+
+\itemize{
+\item{\code{pseudo_values}: }{The matrix of estimated pseudo-values.}
+\item{\code{geese_model}: }{The geese model used to make the predictions.}
+}
 }
 \references{
 Per Kragh Andersen, Elisavet Syriopoulou, and Erik T. Parner (2017). "Causal Inference in Survival Analysis using Pseudo-Observations". In: Statistics in Medicine 36, pp. 2669-2681

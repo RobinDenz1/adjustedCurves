@@ -6,44 +6,13 @@ Using Matching to Calculate Adjusted CIFs
 }
 \description{
 
-This page explains the details of estimating adjusted cumulative incidence functions using propensity-score matching in a competing risks setting. The function is called internally when using \code{method="matching"} in the \code{\link[=adjustedcif]{adjustedcif}} function. It is highly recommended to use \code{\link[=adjustedcif]{adjustedcif}} instead of calling this function directly.
+This page explains the details of estimating adjusted cumulative incidence functions using propensity-score matching in a competing risks setting (\code{method="matching"} in the \code{\link[=adjustedcif]{adjustedcif}} function). All regular arguments of the \code{adjustedcif} function can be used. Additionally, the \code{treatment_model} argument has to be specified in the \code{adjustedcif} call. Further arguments specific to this method are listed below.
 
-When using \code{method="matching"} the \code{treatment_model} argument has to be specified in the \code{adjustedcif} call.
-
-}
-\usage{
-cif_matching(data, variable, ev_time, event, cause,
-             conf_int, conf_level=0.95, times,
-             treatment_model, gtol=0.001, ...)
 }
 
 \arguments{
-  \item{data}{
-A \code{data.frame} object containing the needed time-to-event data in standard format.
-}
-  \item{variable}{
-A character string specifying the variable by which the CIFs should be grouped. Must be a valid column name of \code{data}. The variable in question can be either a dichotomous integer variable or a factor variable with exactly two levels.
-}
-  \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
-}
-  \item{event}{
-A character string specifying the numeric event indicator. The censoring indicator should be coded as 0 and all other events of interest as 1, 2, etc. Must be a valid column name of \code{data}.
-  }
-  \item{cause}{
-The cause of interest for which the cumulative incidence functions should be calculated. Should be a number that appears in the \code{event} column of \code{data}.
-  }
-  \item{conf_int}{
-Currently not used because asymptotic variance calculations for this estimator have not been implemented.
-  }
-  \item{conf_level}{
-A number specifying the confidence level of asymptotic confidence intervals.
-  }
-  \item{times}{
-A numeric vector of time points for which to return the cumulative incidence estimates or \code{NULL} (default). If \code{NULL} the whole curve will be estimated according to the usual procedure. When custom time points are specified the whole curve is estimated anyways and the time specific estimates are simply read off that curve.
-}
   \item{treatment_model}{
-Must be either a model object with \code{variable} as response variable or a vector of previously estimated propensity scores.
+[\strong{required}] Must be either a model object with \code{variable} as response variable or a vector of previously estimated propensity scores.
 }
   \item{gtol}{
 Tolerance at which estimated treatment assignment probabilities are truncated. Every propensity score bigger than 1 - \code{gtol} is set to 1 - \code{gtol} and every propensity score smaller than \code{gtol} is set to \code{gtol}. Useful when there are extreme propensity scores close to 0 or 1.
@@ -58,7 +27,7 @@ Further arguments passed to the \code{Match} function of the \pkg{Matching} Pack
 \item{\strong{Type of Adjustment:} Requires a model describing the treatment assignment mechanism. This must be either a \code{\link{glm}} object or a vector of propensity scores.}
 \item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
 \item{\strong{Categorical groups:} Only two groups in \code{variable} are allowed. Must be an integer variable containing only 0 and 1.}
-\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are currently not available.}
+\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are currently not available. Bootstrapping can still be used to estimate the confidence intervals (see \code{?adjustedcif}).}
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
@@ -71,7 +40,12 @@ Simulation results showed that this specific implementation of this method is th
 
 }
 \value{
-Returns a \code{list} object containing a \code{data.frame} with estimated CIFs for some points in time for each level of \code{variable} and the object created using the \code{\link[Matching]{Match}} function.
+Adds the following additional objects to the output of the \code{adjustedcif} function:
+
+\itemize{
+\item{\code{match_object}: }{The object creates using the \code{Match} function.}
+\item{\code{cuminc_object}: }{The \code{cuminc} object fit on the matched data.}
+}
 }
 \references{
 Peter C. Austin and Jason P. Fine (2019). "Propensity-Score Matching with Competing Risks in Survival Analysis". In: Statistics in Medicine 38, pp. 751-777

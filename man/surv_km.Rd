@@ -6,39 +6,14 @@ Group-Specific Kaplan-Meier Survival Curves
 }
 \description{
 
-This page explains the details of estimating group-specific Kaplan-Meier curves for single event time-to-event data. The function is called internally when using \code{method="km"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function. It is highly recommended to use \code{\link[=adjustedsurv]{adjustedsurv}} instead of calling this function directly.
+This page explains the details of estimating group-specific Kaplan-Meier curves for single event time-to-event data (\code{method="km"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function). All regular arguments of the \code{adjustedsurv} function can be used. Further arguments specific to this method are listed below.
 
 Calculates standard Kaplan-Meier survival curves, stratified by the group variable.
 NO adjustment for any confounders is made. This function is included only for reference and should not be used when confounder adjusted survival curves are desired.
 
 }
-\usage{
-surv_km(data, variable, ev_time, event, conf_int,
-        conf_level=0.95, times=NULL, conf_type="log")
-}
 
 \arguments{
-  \item{data}{
-A \code{data.frame} object containing the needed time-to-event data in standard format.
-}
-  \item{variable}{
-A character string specifying the variable by which the survival curves should be grouped. Must be a valid column name of \code{data}. The variable specified should be a factor variable.
-}
-  \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
-}
-  \item{event}{
-A character string specifying the binary event indicator. Must be a valid column name of \code{data}.
-}
-  \item{conf_int}{
-A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated. For the available types of confidence intervals see \code{?survfit}.
-  }
-  \item{conf_level}{
-A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
-  }
-  \item{times}{
-A numeric vector of time points for which to return the survival probability estimates or \code{NULL} (default). If \code{NULL} the whole curve will be estimated according to the usual Kaplan-Meier procedure. When custom time points are specified the whole curve is estimated anyways and the time specific estimates are simply read off that curve.
-}
   \item{conf_type}{
 The type of confidence interval that should be calculated. Has to be a character string, passed to the \code{conf.type} argument in the \code{survfit} function. Defaults to \code{"log"}, which is also the default in \code{survfit}.
   }
@@ -58,7 +33,11 @@ The type of confidence interval that should be calculated. Has to be a character
 
 }
 \value{
-Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable} and the original \code{survfit} object.
+Adds the following additional objects to the output of the \code{adjustedsurv} function:
+
+\itemize{
+\item{\code{survfit_object}: }{The \code{survfit} object used to calculate the Kaplan-Meier curves.}
+}
 }
 \references{
 E. L. Kaplan and Paul Meier (1958). "Nonparametric Estimation from Incomplete Observations". In: Journal of the American Statistical Association 53.282, pp. 457-481

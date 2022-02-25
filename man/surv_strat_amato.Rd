@@ -6,42 +6,13 @@ Adjusted Survival Curves for Categorical Confounders using the Method by Amato (
 }
 \description{
 
-This page explains the details of estimating confounder-adjusted survival curves using a weighted average of stratified Kaplan-Meier estimates using the method described in Amato (1999). The function is called internally when using \code{method="strat_amato"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function. It is highly recommended to use \code{\link[=adjustedsurv]{adjustedsurv}} instead of calling this function directly.
+This page explains the details of estimating confounder-adjusted survival curves using a weighted average of stratified Kaplan-Meier estimates using the method described in Amato (1999) (\code{method="strat_amato"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function). All regular arguments of the \code{adjustedsurv} function can be used. Additionally, the \code{adjust_vars} argument has to be specified in the \code{adjustedsurv} call. Further arguments specific to this method are listed below.
 
-When using \code{method="strat_amato"} the \code{adjust_vars} argument has to be specified in the \code{adjustedsurv} call.
-
-}
-\usage{
-surv_strat_amato(data, variable, ev_time, event,
-                 conf_int=FALSE, conf_level=0.95,
-                 times=NULL, adjust_vars,
-                 reference=NULL)
 }
 
 \arguments{
-  \item{data}{
-A \code{data.frame} object containing the needed time-to-event data in standard format.
-}
-  \item{variable}{
-A character string specifying the variable by which the survival curves should be grouped. Must be a valid column name of \code{data}. The variable specified should be a factor variable.
-}
-  \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
-}
-  \item{event}{
-A character string specifying the binary event indicator. Must be a valid column name of \code{data}.
-}
-  \item{conf_int}{
-Currently not used because asymptotic variance calculations for this estimator have not been implemented.
-  }
-  \item{conf_level}{
-A number specifying the confidence level of asymptotic confidence intervals.
-  }
-  \item{times}{
-A numeric vector of time points at which the survival probability should be estimated or \code{NULL} (default). If \code{NULL}, the full survival curves are estimated using the standard method. If \code{times} is numeric, the full curves are still estimated and the respective values are simply read off the curves.
-}
   \item{adjust_vars}{
-A single string or character vector specifying column names in data for which the survival curves should be adjusted for. The variables specified can be integers, factors or characters. Only categorical variables can be used with this method. See details.
+[\strong{required}] A single string or character vector specifying column names in data for which the survival curves should be adjusted for. The variables specified can be integers, factors or characters. Only categorical variables can be used with this method. See details.
   }
   \item{reference}{
 A \code{data.frame} to be used as a reference population when weighting the survival curves or \code{NULL} (default). If \code{NULL} the survival curves are weighted in reference to the full sample supplied using \code{data}, regardless of the \code{variable} level. If a \code{data.frame} is supplied it needs to include all variables specified in \code{adjust_vars}.
@@ -53,7 +24,7 @@ A \code{data.frame} to be used as a reference population when weighting the surv
 \item{\strong{Type of Adjustment:} The survival curves are adjusted by calculating a weighted version of the Kaplan-Meier estimator, based on stratification on covariates. This only works for categorical confounders. See below for more information.}
 \item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
 \item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
-\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are not available.}
+\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are not available. Bootstrap confidence intervals can however be calculated with all supported models. See \code{?adjustedsurv} for more information on bootstrapping.}
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
@@ -66,7 +37,11 @@ If a character vector is supplied in the \code{adjust_vars} argument, every poss
 
 }
 \value{
-Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable}.
+Adds the following additional objects to the output of the \code{adjustedsurv} function:
+
+\itemize{
+\item{\code{Pjs}: }{The weights used for each stratum.}
+}
 }
 \references{
 David A. Amato (1988). "A Generalized Kaplan-Meier Estimator for Heterogenous Populations". In: Communications in Statistics: Theory and Methods 17.1, pp. 263-286

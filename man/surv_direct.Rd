@@ -6,41 +6,12 @@ Direct Adjusted Survival Curves
 }
 \description{
 
-This page explains the details of estimating confounder-adjusted survival curves using a previously fit Cox-Regression model for single event time-to-event data using Direct Standardization. The function is called internally when using \code{method="direct"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function. It is highly recommended to use \code{\link[=adjustedsurv]{adjustedsurv}} instead of calling this function directly.
-
-When using \code{method="direct"} the \code{outcome_model} argument has to be specified in the \code{adjustedsurv} call.
+This page explains the details of estimating confounder-adjusted survival curves using a previously fit Cox-Regression model for single event time-to-event data using Direct Standardization (\code{method="direct"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function). All regular arguments of the \code{adjustedsurv} function can be used. Additionally, the \code{outcome_model} argument has to be specified in the \code{adjustedsurv} call. Further arguments specific to this method are listed below.
 
 }
-\usage{
-surv_direct(data, variable, ev_time, event, conf_int,
-            conf_level=0.95, times, outcome_model,
-            verbose=FALSE, predict_fun=NULL,  ...)
-}
-
 \arguments{
-  \item{data}{
-A \code{data.frame} object containing the needed time-to-event data in standard format.
-}
-  \item{variable}{
-A character string specifying the variable by which the survival curves should be grouped. Must be a valid column name of \code{data}. The variable specified should be a factor variable.
-}
-  \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
-}
-  \item{event}{
-A character string specifying the binary event indicator. Must be a valid column name of \code{data}.
-}
-  \item{conf_int}{
-A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated. Asymptotic variance calculations are only availabe if the \code{outcome_model} is a \code{coxph} model. The \code{\link[riskRegression]{ate}} function is used for the calculation in that case. Bootstrap confidence intervals can however be calculated with all supported models. See \code{?adjustedsurv} for more information on bootstrapping.
-  }
-  \item{conf_level}{
-A number specifying the confidence level of asymptotic confidence intervals.
-  }
   \item{outcome_model}{
-Must be a previously fit model object including \code{variable} as independent variable. Apart from the classic \code{coxph} model this function also supports a variety of other models. See \code{\link[adjustedCurves]{models_surv_direct}} for a list of supported model objects and some more details.
-}
-  \item{times}{
-A numeric vector of time points at which the survival probability should be estimated.
+[\strong{required}] Must be a previously fit model object including \code{variable} as independent variable. Apart from the classic \code{coxph} model this function also supports a variety of other models. See \code{\link[adjustedCurves]{models_surv_direct}} for a list of supported model objects and some more details.
 }
   \item{verbose}{
 Whether to print estimation information of the \code{ate} function in the \pkg{riskRegression} package. Ignored if \code{outcome_model} is not a \code{coxph} object.
@@ -58,7 +29,7 @@ Further arguments passed to \code{ate} if \code{outcome_model} is a \code{coxph}
 \item{\strong{Type of Adjustment:} Requires a model describing the outcome mechanism. See \code{\link[adjustedCurves]{models_surv_direct}} for a list of supported model objects and some more details.}
 \item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
 \item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
-\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available only if \code{outcome_model} is a \code{coxph} object.}
+\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available only if \code{outcome_model} is a \code{coxph} object. The \code{\link[riskRegression]{ate}} function is used for the calculation in that case. Bootstrap confidence intervals can however be calculated with all supported models. See \code{?adjustedsurv} for more information on bootstrapping.}
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
@@ -71,7 +42,12 @@ In the literature this method is sometimes called "Direct Standardization", "Cor
 
 }
 \value{
-Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable} and the original object created using the \code{ate} function.
+Adds the following additional objects to the output of the \code{adjustedsurv} function:
+
+\itemize{
+\item{\code{ate_object}: }{The object returned by the \code{ate} function.}
+}
+
 }
 \references{
 I-Ming Chang, Rebecca Gelman, and Marcello Pagano (1982). "Corrected Group Prognostic Curves and Summary Statistics". In: Journal of Chronic Diseases 35, pp. 669-674

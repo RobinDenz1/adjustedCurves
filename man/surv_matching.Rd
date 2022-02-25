@@ -6,41 +6,13 @@ Using Matching to Calculate Adjusted Survival Curves
 }
 \description{
 
-This page explains the details of estimating adjusted survival curves using propensity-score matching for single event time-to-event data. The function is called internally when using \code{method="matching"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function. It is highly recommended to use \code{\link[=adjustedsurv]{adjustedsurv}} instead of calling this function directly.
+This page explains the details of estimating adjusted survival curves using propensity-score matching for single event time-to-event data (\code{method="matching"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function). All regular arguments of the \code{adjustedsurv} function can be used. Additionally, the \code{treatment_model} argument has to be specified in the \code{adjustedsurv} call. Further arguments specific to this method are listed below.
 
-When using \code{method="matching"} the \code{treatment_model} argument has to be specified in the \code{adjustedsurv} call.
-
-}
-\usage{
-surv_matching(data, variable, ev_time, event, conf_int=FALSE,
-              conf_level=0.95, times, treatment_model,
-              gtol=0.001, ...)
 }
 
 \arguments{
-  \item{data}{
-A \code{data.frame} object containing the needed time-to-event data in standard format.
-}
-  \item{variable}{
-A character string specifying the variable by which the survival curves should be grouped. Must be a valid column name of \code{data}. The variable in question can be either a dichotomous integer variable or a factor variable with exactly two levels.
-}
-  \item{ev_time}{
-A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.
-}
-  \item{event}{
-A character string specifying the binary event indicator. Must be a valid column name of \code{data}. Can be either a factor variable or a binary integer variable. If a factor variable is supplied, the first level is assumed to correspond to the control group.
-}
-  \item{conf_int}{
-Currently not used because asymptotic variance calculations for this estimator have not been implemented.
-  }
-  \item{conf_level}{
-A number specifying the confidence level of asymptotic confidence intervals.
-  }
-  \item{times}{
-A numeric vector of time points for which to return the survival probability estimates or \code{NULL} (default). If \code{NULL} the whole curve will be estimated according to the usual Kaplan-Meier procedure. When custom time points are specified the whole curve is estimated anyways and the time specific estimates are simply read off that curve.
-}
   \item{treatment_model}{
-Must be either a model object with \code{variable} as response variable or a vector of previously estimated propensity scores.
+[\strong{required}] Must be either a model object with \code{variable} as response variable or a vector of previously estimated propensity scores.
 }
   \item{gtol}{
 Tolerance at which estimated treatment assignment probabilities are truncated. Every propensity score bigger than 1 - \code{gtol} is set to 1 - \code{gtol} and every propensity score smaller than \code{gtol} is set to \code{gtol}. Useful when there are extreme propensity scores close to 0 or 1.
@@ -54,8 +26,8 @@ Further arguments passed to the \code{\link[Matching]{Match}} function of the \p
 \itemize{
 \item{\strong{Type of Adjustment:} Requires a model describing the treatment assignment mechanism. This must be either a \code{\link{glm}} object.}
 \item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
-\item{\strong{Categorical groups:} Only two groups in \code{variable} are allowed. Must be an integer variable containing only 0 and 1 or a factor variable with exactly two levels.}
-\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are currently not available.}
+\item{\strong{Categorical groups:} Only two groups in \code{variable} are allowed. Must be an integer variable containing only 0 and 1 or a factor variable with exactly two levels. If a factor variable is supplied, the first level is assumed to correspond to the control group.}
+\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are currently not available. Bootstrap confidence intervals can however be calculated with all supported models. See \code{?adjustedsurv} for more information on bootstrapping.}
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
@@ -70,7 +42,12 @@ Simulation studies have shown that this particular method as implemented here is
 
 }
 \value{
-Returns a \code{list} object containing a \code{data.frame} with the estimated adjusted survival probabilities for some points in time for each level of \code{variable} and the object created using the \code{Match} function.
+Adds the following additional objects to the output of the \code{adjustedsurv} function:
+
+\itemize{
+\item{\code{match_object}: }{The object creates using the \code{Match} function.}
+\item{\code{survfit_object}: }{The \code{survfit} object fit on the matched data.}
+}
 }
 \references{
 Peter C. Austin (2014). "The Use of Propensity Score Methods with Survival or Time-To-Event Outcomes: Reporting Measures of Effect Similar to those Used in Randomized Experiments". In: Statistics in Medicine 33, pp. 1242-1258
