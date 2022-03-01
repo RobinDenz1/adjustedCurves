@@ -713,3 +713,148 @@ logit <- function(x) log(x) - log(1 - x)
 norm_l2 <- function(beta) sqrt(sum(beta ^ 2))
 
 norm_l1 <- function(beta) sum(abs(beta))
+
+## This is the only function in this file Robin Denz wrote:
+## One-Step Targeted Maximum Likelihood Estimation
+#' @export
+surv_ostmle <- function(data, variable, ev_time, event, conf_int,
+                        conf_level=0.95, times, adjust_vars=NULL,
+                        SL.ftime=NULL, SL.ctime=NULL, SL.trt=NULL,
+                        epsilon=1, max_num_iteration=100,
+                        psi_moss_method="l2", tmle_tolerance=NULL,
+                        gtol=1e-3) {
+
+  # if it's a factor, turn it into numeric
+  if (is.factor(data[, variable])) {
+    levs <- levels(data[, variable])
+    data[, variable] <- ifelse(data[, variable]==levs[1], 0, 1)
+  } else {
+    levs <- unique(data[, variable])
+  }
+
+  # gather needed data
+  if (is.null(adjust_vars)) {
+    all_covars <- colnames(data)
+    all_covars <- all_covars[!all_covars %in% c(variable, ev_time, event)]
+    adjust_vars <- data[, all_covars]
+  } else {
+    adjust_vars <- data[, adjust_vars]
+  }
+
+  # time point grid
+  k_grid <- 1:max(data[, ev_time])
+
+  # create initial fit object
+  sl_fit <- initial_sl_fit(
+    T_tilde=data[, ev_time],
+    Delta=data[, event],
+    A=data[, variable],
+    W=adjust_vars,
+    t_max=max(data[, ev_time]),
+    sl_treatment=SL.trt,
+    sl_censoring=SL.ctime,
+    sl_failure=SL.ftime,
+    gtol=gtol
+  )
+
+  # set to same time point grid
+  sl_fit$density_failure_1$t <- k_grid
+  sl_fit$density_failure_0$t <- k_grid
+  sl_fit$density_censor_1$t <- k_grid
+  sl_fit$density_censor_0$t <- k_grid
+
+  invisible(sl_fit$density_failure_1$hazard_to_survival())
+  invisible(sl_fit$density_failure_0$hazard_to_survival())
+
+  # for treatment == 1
+  moss_hazard_fit_1 <- MOSS_hazard$new(
+    A=data[, variable],
+    T_tilde=data[, ev_time],
+    Delta=data[, event],
+    density_failure=sl_fit$density_failure_1,
+    density_censor=sl_fit$density_censor_1,
+    g1W=sl_fit$g1W,
+    A_intervene=1,
+    k_grid=k_grid
+  )
+  psi_moss_hazard_1 <- moss_hazard_fit_1$iterate_onestep(
+    epsilon=epsilon,
+    max_num_interation=max_num_iteration,
+    tmle_tolerance=tmle_tolerance,
+    method=psi_moss_method
+  )
+
+  # for treatment == 0
+  moss_hazard_fit_0 <- MOSS_hazard$new(
+    A=data[, variable],
+    T_tilde=data[, ev_time],
+    Delta=data[, event],
+    density_failure=sl_fit$density_failure_0,
+    density_censor=sl_fit$density_censor_0,
+    g1W=sl_fit$g1W,
+    A_intervene=0,
+    k_grid=k_grid
+  )
+  psi_moss_hazard_0 <- moss_hazard_fit_0$iterate_onestep(
+    epsilon=epsilon,
+    max_num_interation=max_num_iteration,
+    tmle_tolerance=tmle_tolerance,
+    method=psi_moss_method
+  )
+
+  # put together
+  plotdata <- data.frame(time=c(k_grid, k_grid),
+                         surv=c(psi_moss_hazard_0, psi_moss_hazard_1),
+                         group=c(rep(levs[1], length(k_grid)),
+                                 rep(levs[2], length(k_grid))))
+  # keep only time points in times
+  plotdata <- plotdata[which(plotdata$time %in% times), ]
+
+  if (conf_int) {
+
+    # for treatment == 1
+    s_1 <- as.vector(psi_moss_hazard_1)
+    eic_fit <- eic$new(
+      A = data[, variable],
+      T_tilde = data[, ev_time],
+      Delta = data[, event],
+      density_failure = moss_hazard_fit_1$density_failure,
+      density_censor = moss_hazard_fit_1$density_censor,
+      g1W = moss_hazard_fit_1$g1W,
+      psi = s_1,
+      A_intervene = 1
+    )
+    eic_matrix <- eic_fit$all_t(k_grid=k_grid)
+    se_1 <- compute_se_moss(eic_matrix, alpha=1-conf_level)
+
+
+    # for treatment == 0
+    s_0 <- as.vector(psi_moss_hazard_0)
+    eic_fit <- eic$new(
+      A = data[, variable],
+      T_tilde = data[, ev_time],
+      Delta = data[, event],
+      density_failure = moss_hazard_fit_0$density_failure,
+      density_censor = moss_hazard_fit_0$density_censor,
+      g1W = moss_hazard_fit_0$g1W,
+      psi = s_0,
+      A_intervene = 1
+    )
+    eic_matrix <- eic_fit$all_t(k_grid=k_grid)
+    se_0 <- compute_se_moss(eic_matrix, alpha=1-conf_level)
+
+    plotdata$se <- c(se_0, se_1)
+
+    crit <- stats::qnorm(1-((1-conf_level)/2))
+    plotdata$ci_lower <- plotdata$surv - crit * plotdata$se
+    plotdata$ci_upper <- plotdata$surv + crit * plotdata$se
+
+  }
+
+  output <- list(plotdata=plotdata,
+                 psi_moss_hazard_0=psi_moss_hazard_0,
+                 psi_moss_hazard_1=psi_moss_hazard_1)
+  class(output) <- "adjustedsurv.method"
+
+  return(output)
+}

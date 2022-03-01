@@ -395,7 +395,7 @@ survtmle.timepoints <- function(object, times, returnModels=FALSE,
 ## calculate pseudo values for the survival function
 ## using either the standard way or with dependent censoring
 calc_pseudo_surv <- function(data, ev_time, event, times, censoring_vars,
-                             ipcw.method) {
+                             ipcw.method, cause=1) {
 
   # standard pseudo-values, no dependent censoring
   if (is.null(censoring_vars)) {
@@ -404,7 +404,7 @@ calc_pseudo_surv <- function(data, ev_time, event, times, censoring_vars,
     hist_formula <- stats::as.formula(paste("prodlim::Hist(", ev_time, ", ",
                                             event, ") ~ 1"))
     pseudo <- prodlim::jackknife(prodlim::prodlim(hist_formula, data=data),
-                                 times=times)
+                                 times=times, cause=cause)
 
   } else {
 

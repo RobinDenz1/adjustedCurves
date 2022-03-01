@@ -16,6 +16,7 @@
 ## All functions in this file were written by Fangfang Bai and Xiaofei Wang
 ## and were taken directly from the official github repository
 ## See: https://github.com/kimihua1995
+## The only exception is the "surv_emp_lik" function.
 ## Since that package is published under a General Public License, this is
 ## perfectly legal. Permission from the authors was also granted.
 
@@ -223,4 +224,62 @@ el.est <- function(y, delta, treat, x, psix_moment=c("first", "second"),
   suvdf <- apply(temp, 2, prod)
 
   return(suvdf)
+}
+
+## Using Empirical Likelihood Estimation
+#' @export
+surv_emp_lik <- function(data, variable, ev_time, event, conf_int=FALSE,
+                         times, treatment_vars, moment="first",
+                         standardize=FALSE, gtol=0.00001,
+                         max_iter=100, newton_tol=1.0e-06) {
+
+  # if 'variable' is a factor, turn it into numeric
+  if (is.factor(data[, variable])) {
+    levs <- levels(data[, variable])
+    data[, variable] <- ifelse(data[, variable]==levs[1], 0, 1)
+  } else {
+    levs <- sort(unique(data[, variable]))
+  }
+
+  # create design matrix for function call
+  x_dat <- data[,treatment_vars]
+  form <- stats::as.formula(paste0("~ ",
+                                   paste0(treatment_vars, collapse=" + ")))
+  mod_mat <- stats::model.matrix(form, data=x_dat)
+  mod_mat <- mod_mat[,seq(2, ncol(mod_mat))]
+
+  # call function twice
+  el_0 <- el.est(y=data[, ev_time],
+                 delta=data[, event],
+                 treat=data[, variable],
+                 x=mod_mat,
+                 treat.select=0,
+                 t=times,
+                 psix_moment=moment,
+                 standardize=standardize,
+                 gtol=gtol,
+                 max_iter=max_iter,
+                 newton_tol=newton_tol)
+
+  el_1 <- el.est(y=data[, ev_time],
+                 delta=data[, event],
+                 treat=data[, variable],
+                 x=mod_mat,
+                 treat.select=1,
+                 t=times,
+                 psix_moment=moment,
+                 standardize=standardize,
+                 gtol=gtol,
+                 max_iter=max_iter,
+                 newton_tol=newton_tol)
+
+  plotdata <- data.frame(time=c(times, times),
+                         surv=c(el_0, el_1),
+                         group=c(rep(levs[1], length(el_0)),
+                                 rep(levs[2], length(el_0))))
+
+  output <- list(plotdata=plotdata)
+  class(output) <- "adjustedsurv.method"
+
+  return(output)
 }

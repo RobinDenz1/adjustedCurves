@@ -15,7 +15,7 @@
 
 ## calculate confounder adjusted median survival times
 #' @export
-adjusted_median_survival <- function(adjsurv, verbose=TRUE) {
+adjusted_median_survival <- function(adjsurv, p=0.5, verbose=TRUE) {
 
   plotdata <- adjsurv$adjsurv
   plotdata <- plotdata[!is.na(plotdata$surv),]
@@ -30,7 +30,7 @@ adjusted_median_survival <- function(adjsurv, verbose=TRUE) {
     temp_dat <- plotdata[plotdata$group==levs[i],]
     temp_dat$group <- NULL
 
-    out[[i]] <- read_from_step_function(0.5, step_data=temp_dat,
+    out[[i]] <- read_from_step_function(p, step_data=temp_dat,
                                         est="surv_time")
   }
 

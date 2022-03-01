@@ -8,12 +8,15 @@ Calculate Confounder-Adjusted Median Survival Times
 This function can be utilized to calculate the confounder-adjusted median survival time, given previously estimated adjusted survival curves.
 }
 \usage{
-adjusted_median_survival(adjsurv, verbose=TRUE)
+adjusted_median_survival(adjsurv, p=0.5, verbose=TRUE)
 }
 
 \arguments{
   \item{adjsurv}{
 An \code{adjustedsurv} object created using the \code{adjustedsurv} function.
+  }
+  \item{p}{
+The quantile of interest. To calculate the median survival time, set this parameter to 0.5 (default).
   }
   \item{verbose}{
 Whether to print the output or not.
@@ -21,7 +24,7 @@ Whether to print the output or not.
 }
 \details{
 
-The median survival time is simply the time when half the patients are expected to be alive. The chance of surviving beyond that time is 50 percent. It can be read directly from the respective survival curve by drawing a straight line from the 0.5 point on the Y-Axis and reading the X-Axis value where this line intersects with the survival curve. If the survival probability never drops below 50 percent, the median survival time cannot be calculated.
+The median survival time is simply the time when half the patients are expected to be alive. The chance of surviving beyond that time is 50 percent. It can be read directly from the respective survival curve by drawing a straight line from the 0.5 point on the Y-Axis and reading the X-Axis value where this line intersects with the survival curve. If the survival probability never drops below 50 percent, the median survival time cannot be calculated. By changing the \code{p} argument to some other value between 0 and 1 the user can calculate the same quantity for different quantiles.
 
 This function calculates this quantity automatically. When multiple imputation was used in the original function call, the median survival times are read off the final pooled survival curves directly.
 

@@ -128,6 +128,9 @@ The color of the median survival indicator lines. Ignored if \code{median_surv_l
   \item{median_surv_alpha}{
 The transparency level of the median survival indicator lines. Ignored if \code{median_surv_lines=FALSE}.
   }
+  \item{median_surv_quantile}{
+The survival quantile which should be drawn. To draw the median survival time, set this parameter to 0.5 (default).
+  }
   \item{censoring_ind}{
 What kind of indicator to plot for censored observations on the survival curves. Must be one of \code{"none"} (plotting no indicators at all, the default), \code{"lines"} (plotting small vertical lines) and \code{"points"} (plotting points). Those will be affected by \code{linetype} and \code{color} as well.
   }
