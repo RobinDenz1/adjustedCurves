@@ -284,10 +284,12 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     }
   ## Matching
   } else if (method=="matching") {
-    # treatment model
+    # treatment model needed
     if (!"treatment_model" %in% names(obj)) {
       stop("Argument 'treatment_model' must be specified when using",
            " method='matching'.")
+    } else if (is.numeric(obj$treatment_model) && anyNA(obj$treatment_model)) {
+      stop("Missing values in vector of propensity scores are not allowed.")
     } else if (is.numeric(obj$treatment_model) &&
                (any(obj$treatment_model > 1) | any(obj$treatment_model < 0))) {
       stop("Propensity Scores > 1 or < 0 not allowed. Perhaps you supplied ",
@@ -388,6 +390,10 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
                length(obj$treatment_model) != nrow(data)) {
       stop("If weights are supplied directly in the 'treatment_model'",
            " argument, they must be of length nrow(data).")
+    # check for NA in weights
+    } else if (is.numeric(obj$treatment_model) && anyNA(obj$treatment_model)) {
+      stop("If weights are supplied directly in the 'treatment_model'",
+           " argument, they may not include missing values.")
     # check if weights are positive
     } else if (is.numeric(obj$treatment_model) &&
                any(obj$treatment_model < 0)) {
@@ -869,6 +875,8 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
     if (!"treatment_model" %in% names(obj)) {
       stop("Argument 'treatment_model' must be specified when using",
            " method='matching'.")
+    } else if (is.numeric(obj$treatment_model) && anyNA(obj$treatment_model)) {
+      stop("Missing values in vector of propensity scores are not allowed.")
     } else if (is.numeric(obj$treatment_model) &&
                (any(obj$treatment_model > 1) | any(obj$treatment_model < 0))) {
       stop("Propensity Scores > 1 or < 0 not allowed. Perhaps you supplied ",

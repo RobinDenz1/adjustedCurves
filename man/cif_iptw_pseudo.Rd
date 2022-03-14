@@ -24,7 +24,7 @@ Whether to stabilize the weights or not. Is set to \code{TRUE} by default. Stabi
 Can be either \code{FALSE} (default) or a numeric value at which to trim the weights. If \code{FALSE}, weights are used as calculated or supplied. If a numeric value is supplied, all weights that are bigger than \code{trim} are set to \code{trim} before the analysis is carried out. Useful when some weights are extremely large.
   }
   \item{se_method}{
-One of \code{"miller"}, \code{"galloway"}, \code{"cochrane"} and \code{"simple"}. Specifies which kind of standard error to calculate. Defaults to \code{"cochrane"}. See details.
+One of \code{"miller"}, \code{"galloway"}, \code{"cochrane"} and \code{"Hmisc"}. Specifies which kind of standard error to calculate. Defaults to \code{"cochrane"}. See details.
 }
   \item{...}{
 Further arguments passed to \code{\link[WeightIt]{weightit}}.
@@ -45,7 +45,7 @@ Further arguments passed to \code{\link[WeightIt]{weightit}}.
 
 This method works by modelling the treatment assignment mechanism. Adjusted CIFs are calculated by first estimating appropriate case-weights for each observation in \code{data}. This can be done using inverse probability of treatment weights using the propensity score (usually estimated using a logistic regression model) or by some other method (see \code{\link[WeightIt]{weightit}}). Pseudo-Values of the cause-specific CIF are then calculated for every observation in \code{data} at some points in time \eqn{T}. Since Pseudo-Values bypass the problem of censoring, a simple weighted average of the Pseudo-Values can be taken for every \eqn{T}. See Andersen et al. (2017) for more details on this method and Andersen and Perme (2010) for more information on Pseudo-Values in general.
 
-The standard error of this estimator can be approximated by calculation a weighted version of the standard error estimator. Interestingly, no exact method exists in the weighted case. Four approximations are implemented which can be chosen using the \code{se_method} argument. The equations for \code{"miller"}, \code{"galloway"} and \code{"cochrane"} are described and compared in Gatz and Smith (1995). \code{"simple"} is just the standard equation with a weight term added and should only be used with stabilized weights (\code{stabilize=TRUE}). It is generally recommended to use bootstrap estimates instead.
+The standard error of this estimator can be approximated by calculation a weighted version of the standard error estimator. Interestingly, no exact method exists in the weighted case. Four approximations are implemented which can be chosen using the \code{se_method} argument. The equations for \code{"miller"}, \code{"galloway"} and \code{"cochrane"} are described and compared in Gatz and Smith (1995). \code{"Hmisc"} is the standard equation with a weight term added, as specified in the \pkg{Hmisc} package, and should only be used with stabilized weights (\code{stabilize=TRUE}). It is generally recommended to use bootstrap estimates instead.
 }
 \value{
 Adds the following additional objects to the output of the \code{adjustedcif} function:

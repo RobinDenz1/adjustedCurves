@@ -1,11 +1,9 @@
 
 ## generalized function that does both
 method_iptw_pseudo <- function(data, variable, ev_time, event, cause, conf_int,
-                               conf_level=0.95, times, treatment_model,
-                               weight_method="ps", stabilize=FALSE,
-                               trim=FALSE, se_method="cochrane",
-                               censoring_vars=NULL, ipcw_method="binder",
-                               mode, ...) {
+                               conf_level, times, treatment_model,
+                               weight_method, stabilize, trim, se_method,
+                               censoring_vars, ipcw_method, mode, ...) {
 
   levs <- levels(data[, variable])
 
@@ -118,4 +116,36 @@ cif_iptw_pseudo <- function(data, variable, ev_time, event, cause,
                             censoring_vars=NULL, ipcw_method="binder",
                             mode="cif", ...)
   return(out)
+}
+
+## Computes the standard error of a weighted mean using one of
+## four possible approximations
+weighted.var.se <- function(x, w, se_method, na.rm=FALSE) {
+
+  if (na.rm) {
+    miss_ind <- !is.na(x)
+    w <- w[miss_ind]
+    x <- x[miss_ind]
+  }
+
+  n <- length(x)
+  mean_Xw <- stats::weighted.mean(x=x, w=w, na.rm=na.rm)
+
+  ## Miller (1977)
+  if (se_method=="miller") {
+    se <- 1/n * (1/sum(w)) * sum(w * (x - mean_Xw)^2)
+  ## Galloway et al. (1984)
+  } else if (se_method=="galloway") {
+    se <- (n/(sum(w)^2)) * ((n*sum(w^2 * x^2) - sum(w*x)^2) / (n*(n-1)))
+  ## Cochrane (1977)
+  } else if (se_method=="cochrane") {
+    mean_W <- mean(w)
+    se <- (n/((n-1)*sum(w)^2))*(sum((w*x - mean_W*mean_Xw)^2)
+                                - 2*mean_Xw*sum((w-mean_W)*(w*x-mean_W*mean_Xw))
+                                + mean_Xw^2*sum((w-mean_W)^2))
+  ## As implemented in Hmisc
+  } else if (se_method=="Hmisc") {
+    se <- (sum(w * (x - mean_Xw)^2) / (sum(w) - 1)) / n
+  }
+  return(se)
 }

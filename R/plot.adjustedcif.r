@@ -31,6 +31,9 @@ plot.adjustedcif <- function(x, conf_int=FALSE, max_t=Inf,
   }
   plotdata$group <- factor(plotdata$group)
 
+  # ensure that curves always start at 0
+  plotdata <- add_rows_with_zero(plotdata, mode="cif")
+
   # shortcut to only show curves up to a certain time
   plotdata <- plotdata[which(plotdata$time <= max_t), ]
 
@@ -101,9 +104,15 @@ plot.adjustedcif <- function(x, conf_int=FALSE, max_t=Inf,
   # add steps / lines to plot
   p <- p + line_obj
 
-  # don't use the word "adjusted" with standard Kaplan-Meier
+  # don't use the word "adjusted" with standard Aalen-Johansen
   if (ylab=="Adjusted Cumulative Incidence" & x$method=="aalen_johansen") {
     ylab <- "Cumulative Incidence"
+  }
+
+  # also warn the user when using steps=FALSE with Aalen-Johansen
+  if (x$method=="aalen_johansen" & !steps) {
+    warning("Unadjusted Aalen-Johansen estimates should only be drawn as",
+            " step functions (steps=TRUE).", call.=FALSE)
   }
 
   p <- p + gg_theme +
@@ -130,9 +139,7 @@ plot.adjustedcif <- function(x, conf_int=FALSE, max_t=Inf,
 
   ## Censoring indicators
   if (censoring_ind!="none") {
-
     if (is.null(censoring_ind_width)) {
-
       if (is.null(ylim)) {
         ystart <- 1 - ggplot2::layer_scales(p)$y$range$range[1]
       } else {
@@ -142,6 +149,9 @@ plot.adjustedcif <- function(x, conf_int=FALSE, max_t=Inf,
     }
 
     levs <- levels(plotdata$group)
+
+    # keep only relevant data
+    x$data <- x$data[which(x$data[, x$call$ev_time] <= max_t), ]
 
     # calculate needed data
     cens_dat <- vector(mode="list", length=length(levs))
@@ -219,6 +229,8 @@ plot.adjustedcif <- function(x, conf_int=FALSE, max_t=Inf,
 
     # plot using step-function interpolation
     if (steps) {
+      requireNamespace("pammtools")
+
       ci_map <- ggplot2::aes(ymin=.data$ci_lower,
                              ymax=.data$ci_upper,
                              group=.data$group,

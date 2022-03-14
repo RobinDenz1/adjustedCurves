@@ -81,38 +81,6 @@ stabilize_weights <- function(weights, data, variable, levs) {
   return(weights)
 }
 
-## Computes the standard error of a weighted mean using one of
-## four possible approximations
-weighted.var.se <- function(x, w, se_method, na.rm=FALSE) {
-
-  if (na.rm) {
-    miss_ind <- !is.na(x)
-    w <- w[miss_ind]
-    x <- x[miss_ind]
-  }
-
-  n <- length(x)
-  mean_Xw <- stats::weighted.mean(x=x, w=w, na.rm=na.rm)
-
-  ## Miller (1977)
-  if (se_method=="miller") {
-    se <- 1/n * (1/sum(w)) * sum(w * (x - mean_Xw)^2)
-  ## Galloway et al. (1984)
-  } else if (se_method=="galloway") {
-    se <- (n/(sum(w)^2)) * ((n*sum(w^2 * x^2) - sum(w*x)^2) / (n*(n-1)))
-  ## Cochrane (1977)
-  } else if (se_method=="cochrane") {
-    mean_W <- mean(w)
-    se <- (n/((n-1)*sum(w)^2))*(sum((w*x - mean_W*mean_Xw)^2)
-                                - 2*mean_Xw*sum((w-mean_W)*(w*x-mean_W*mean_Xw))
-                                + mean_Xw^2*sum((w-mean_W)^2))
-  ## just use a classic weighted version (Hmisc)
-  } else if (se_method=="simple") {
-    se <- (sum(w * (x - mean_Xw)^2) / (sum(w) - 1)) / n
-  }
-  return(se)
-}
-
 ## function to get predicted values from any kind of geese object,
 ## for multiple time points
 geese_predictions <- function(geese_mod, Sdata, times, n) {
@@ -308,88 +276,6 @@ specific_times <- function(plotdata, times, cif=FALSE) {
   }
   new_plotdata <- as.data.frame(dplyr::bind_rows(new_plotdata))
   return(new_plotdata)
-}
-
-## redefine 'timepoints' from survtmle to fix a bug in there
-survtmle.timepoints <- function(object, times, returnModels=FALSE,
-                                SL.trt, SL.ctime, SL.ftime,
-                                glm.trt, glm.ctime, glm.ftime) {
-
-  callList <- as.list(object$call)[-1]
-  cglm <- any(class(object$ctimeMod) %in% c("glm", "speedglm")) |
-    any(class(object$ctimeMod) == "noCens")
-
-  tglm <- any(class(object$trtMod) %in% c("glm", "speedglm"))
-  ftglm <- ifelse(callList$method == "hazard",
-                  any(class(object$ftimeMod[[1]]) %in% c(
-                    "glm",
-                    "speedglm"
-                  )), FALSE
-  )
-
-  myOpts <- c(
-    "t0", "returnModels",
-    ifelse(cglm, "glm.ctime", "SL.ctime"),
-    ifelse(tglm, "glm.trt", "SL.trt")
-  )
-  if (callList$method == "hazard") {
-    myOpts <- c(myOpts, ifelse(ftglm, "glm.ftime", "SL.ftime"))
-  }
-  funOpts <- callList[-which(names(callList) %in% myOpts)]
-
-  funOpts$returnModels <- returnModels
-  # used glm for censoring?
-  if (cglm) {
-    funOpts$glm.ctime <- object$ctimeMod
-    funOpts$SL.ctime <- NULL
-  } else {
-    funOpts$SL.ctime <- object$ctimeMod
-  }
-  # used glm for trt?
-  if (tglm) {
-    funOpts$glm.trt <- object$trtMod
-  } else {
-    funOpts$SL.trt <- object$trtMod
-  }
-  # used glm for ftime
-  if (ftglm & callList$method == "hazard") {
-    funOpts$glm.ftime <- object$ftimeMod
-  } else if (!ftglm & callList$method == "hazard") {
-    funOpts$SL.ftime <- object$ftimeMod
-  }
-  # NOTE: this is the bug-fix
-  # add in failure times, types, trt, and adjust
-  funOpts$ftime <- object$ftime
-  funOpts$ftype <- object$ftype
-  funOpts$trt <- object$trt
-  funOpts$adjustVars <- object$adjustVars
-  funOpts$ftypeOfInterest <- object$ftypeOfInterest
-
-  outList <- vector(mode = "list", length = length(times))
-  ct <- 0
-  for (i in times) {
-    ct <- ct + 1
-    funOpts$t0 <- i
-    if (all(object$ftime[object$ftype > 0] > i)) {
-      outList[[ct]] <- list(
-        est = rep(0, length(object$est)),
-        var = matrix(
-          NA,
-          nrow = length(object$est),
-          ncol = length(object$est)
-        )
-      )
-    } else {
-      if (i != object$t0) {
-        outList[[ct]] <- do.call("survtmle", args = funOpts)
-      } else {
-        outList[[ct]] <- object
-      }
-    }
-  }
-  names(outList) <- paste0("t", times)
-  class(outList) <- "tp.survtmle"
-  return(outList)
 }
 
 ## calculate pseudo values for the survival function
@@ -623,7 +509,7 @@ quiet <- function(x) {
 }
 
 ## add rows with zero survival time if needed for plot
-add_rows_with_zero <- function(plotdata) {
+add_rows_with_zero <- function(plotdata, mode="surv") {
 
   . <- group <- time <- no_zero <- NULL
 
@@ -634,7 +520,7 @@ add_rows_with_zero <- function(plotdata) {
     dplyr::filter(., no_zero)
   levs_no_zero <- unique(no_zero_dat$group)
 
-  if (length(levs_no_zero)!=0) {
+  if (length(levs_no_zero)!=0 & mode=="surv") {
     row_0 <- data.frame(time=0, group=levs_no_zero, surv=1)
 
     if ("ci_lower" %in% colnames(plotdata)) {
@@ -652,6 +538,26 @@ add_rows_with_zero <- function(plotdata) {
     }
     rownames(row_0) <- NULL
     plotdata <- rbind(row_0, plotdata)
+
+  } else if (length(levs_no_zero)!=0 & mode=="cif") {
+    row_0 <- data.frame(time=0, group=levs_no_zero, cif=0)
+
+    if ("ci_lower" %in% colnames(plotdata)) {
+      row_0$se <- 0
+      row_0$ci_lower <- 0
+      row_0$ci_upper <- 0
+
+      if ("boot_cif" %in% colnames(plotdata)) {
+        row_0$boot_cif <- 0
+        row_0$n_boot <- plotdata$n_boot[1]
+        row_0 <- dplyr::select(row_0, c("time", "group", "boot_cif",
+                                        "se", "ci_lower", "ci_upper",
+                                        "n_boot", "cif"))
+      }
+    }
+    rownames(row_0) <- NULL
+    plotdata <- rbind(row_0, plotdata)
   }
+
   return(plotdata)
 }

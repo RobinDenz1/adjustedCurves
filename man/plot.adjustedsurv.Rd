@@ -26,6 +26,7 @@ A function to graphically display confounder-adjusted survival curves which wher
      median_surv_linetype="dashed",
      median_surv_color="black",
      median_surv_alpha=1,
+     median_surv_quantile=0.5,
      censoring_ind="none",
      censoring_ind_size=0.5,
      censoring_ind_alpha=1,

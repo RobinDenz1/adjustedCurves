@@ -2,7 +2,7 @@
 \alias{cif_matching}
 
 \title{
-Using Matching to Calculate Adjusted CIFs
+Using Propensity-Score Matching to Calculate Adjusted CIFs
 }
 \description{
 

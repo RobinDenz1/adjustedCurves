@@ -1,4 +1,86 @@
 
+## redefine 'timepoints' from survtmle to fix a bug in there
+survtmle.timepoints <- function(object, times, returnModels=FALSE,
+                                SL.trt, SL.ctime, SL.ftime,
+                                glm.trt, glm.ctime, glm.ftime) {
+
+  callList <- as.list(object$call)[-1]
+  cglm <- any(class(object$ctimeMod) %in% c("glm", "speedglm")) |
+    any(class(object$ctimeMod) == "noCens")
+
+  tglm <- any(class(object$trtMod) %in% c("glm", "speedglm"))
+  ftglm <- ifelse(callList$method == "hazard",
+                  any(class(object$ftimeMod[[1]]) %in% c(
+                    "glm",
+                    "speedglm"
+                  )), FALSE
+  )
+
+  myOpts <- c(
+    "t0", "returnModels",
+    ifelse(cglm, "glm.ctime", "SL.ctime"),
+    ifelse(tglm, "glm.trt", "SL.trt")
+  )
+  if (callList$method == "hazard") {
+    myOpts <- c(myOpts, ifelse(ftglm, "glm.ftime", "SL.ftime"))
+  }
+  funOpts <- callList[-which(names(callList) %in% myOpts)]
+
+  funOpts$returnModels <- returnModels
+  # used glm for censoring?
+  if (cglm) {
+    funOpts$glm.ctime <- object$ctimeMod
+    funOpts$SL.ctime <- NULL
+  } else {
+    funOpts$SL.ctime <- object$ctimeMod
+  }
+  # used glm for trt?
+  if (tglm) {
+    funOpts$glm.trt <- object$trtMod
+  } else {
+    funOpts$SL.trt <- object$trtMod
+  }
+  # used glm for ftime
+  if (ftglm & callList$method == "hazard") {
+    funOpts$glm.ftime <- object$ftimeMod
+  } else if (!ftglm & callList$method == "hazard") {
+    funOpts$SL.ftime <- object$ftimeMod
+  }
+  # NOTE: this is the bug-fix
+  # add in failure times, types, trt, and adjust
+  funOpts$ftime <- object$ftime
+  funOpts$ftype <- object$ftype
+  funOpts$trt <- object$trt
+  funOpts$adjustVars <- object$adjustVars
+  funOpts$ftypeOfInterest <- object$ftypeOfInterest
+
+  outList <- vector(mode = "list", length = length(times))
+  ct <- 0
+  for (i in times) {
+    ct <- ct + 1
+    funOpts$t0 <- i
+    if (all(object$ftime[object$ftype > 0] > i)) {
+      outList[[ct]] <- list(
+        est = rep(0, length(object$est)),
+        var = matrix(
+          NA,
+          nrow = length(object$est),
+          ncol = length(object$est)
+        )
+      )
+    } else {
+      if (i != object$t0) {
+        outList[[ct]] <- do.call("survtmle", args = funOpts)
+      } else {
+        outList[[ct]] <- object
+      }
+    }
+  }
+  names(outList) <- paste0("t", times)
+  class(outList) <- "tp.survtmle"
+  return(outList)
+}
+
 ## Targeted Maximum Likelihood Estimation
 #' @export
 cif_tmle <- function(data, variable, ev_time, event, cause, conf_int,

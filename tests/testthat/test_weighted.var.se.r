@@ -25,8 +25,8 @@ test_that("cochrane", {
   expect_gt(results, 0)
 })
 
-test_that("simple", {
-  results <- weighted.var.se(x=values, w=weights, se_method="simple")
+test_that("Hmisc", {
+  results <- weighted.var.se(x=values, w=weights, se_method="Hmisc")
   expect_true(!is.na(results))
   expect_length(results, 1)
   expect_gt(results, 0)

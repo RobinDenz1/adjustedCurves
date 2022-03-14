@@ -2,7 +2,7 @@
 \alias{surv_matching}
 
 \title{
-Using Matching to Calculate Adjusted Survival Curves
+Using Propensity-Score Matching to Calculate Adjusted Survival Curves
 }
 \description{
 
