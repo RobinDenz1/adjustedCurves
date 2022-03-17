@@ -109,10 +109,10 @@ summary(adj_test)
 More examples can be found in the documentation and the vignettes.
 
 ## Citation
-Please cite this R-Package using:
-MY PAPER
 
-You should also cite the paper describing the method you used. The respective literature can be found in the documentation.
+Information on the correct citation of this package in general can be found by using `citation("adjustedCurves")`.
+
+In addition, the relevant primary literature of the respective method should be cited. This can be found in the documentation of the method.
 
 ## License
 
