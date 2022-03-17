@@ -48,7 +48,7 @@ Suggests:
     survtmle (>= 1.1),
     testthat (>= 3.0.0),
     tidyr,
-    vdiffr (>= 3.0.0)
+    vdiffr (>= 1.0.0)
 VignetteBuilder: 
     knitr
 Config/testthat/edition: 3
