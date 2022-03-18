@@ -17,7 +17,8 @@ Description: Estimate and plot confounder-adjusted survival curves using
     incidence functions in the competing risks setting using the same
     methods (with some exceptions).
 License: GPL (>= 3)
-URL: https://github.com/RobinDenz1/adjustedCurves
+URL: https://github.com/RobinDenz1/adjustedCurves,
+    https://robindenz1.github.io/adjustedCurves/
 BugReports: https://github.com/RobinDenz1/adjustedCurves/issues
 Imports: 
     R.utils,
