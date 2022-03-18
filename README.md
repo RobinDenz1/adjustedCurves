@@ -3,6 +3,7 @@
 [![](https://www.r-pkg.org/badges/version/adjustedCurves?color=green)](https://cran.r-project.org/package=adjustedCurves)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/adjustedCurves?color=blue)](https://cran.r-project.org/package=adjustedCurves)
 [![R-CMD-check](https://github.com/RobinDenz1/adjustedCurves/workflows/R-CMD-check/badge.svg)](https://github.com/RobinDenz1/adjustedCurves/actions)
+[![Codecov test coverage](https://codecov.io/gh/RobinDenz1/adjustedCurves/branch/main/graph/badge.svg)](https://app.codecov.io/gh/RobinDenz1/adjustedCurves?branch=main)
 <!-- badges: end -->
 
 # adjustedCurves <img src="man/figures/logo.png" height="240" align="right" />
