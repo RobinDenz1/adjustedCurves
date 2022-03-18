@@ -17,7 +17,7 @@ adjusted_rmtl(adj, to, from=0, use_boot=FALSE,
 An \code{adjustedsurv} object created using the \code{adjustedsurv} function or a \code{adjustedcif} object created using the \code{adjustedcif} function.
   }
   \item{from}{
-A number specifying the left side of the time interval of interest. See details.
+A number specifying the left side of the time interval of interest. See details. Usually this should be kept at 0 (default) unless there are good reasons to change it.
   }
   \item{to}{
 A number specifying the right side of the time interval of interest. See details.

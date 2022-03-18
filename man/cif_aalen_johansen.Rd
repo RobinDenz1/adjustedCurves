@@ -57,7 +57,7 @@ library(cmprsk)
 sim_dat <- sim_confounded_crisk(n=500, max_t=5)
 sim_dat$group <- as.factor(sim_dat$group)
 
-# calculate un-adjusted kaplan-meier survival curves
+# calculate un-adjusted aalen-johansen estimates
 adjcif <- adjustedcif(data=sim_dat,
                       variable="group",
                       ev_time="time",

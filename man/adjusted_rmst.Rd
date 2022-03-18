@@ -17,7 +17,7 @@ adjusted_rmst(adjsurv, to, from=0, use_boot=FALSE,
 An \code{adjustedsurv} object created using the \code{adjustedsurv} function.
   }
   \item{from}{
-A number specifying the left side of the time interval of interest. See details.
+A number specifying the left side of the time interval of interest. See details. Usually this should be kept at 0 (default) unless there are good reasons to change it.
   }
   \item{to}{
 A number specifying the right side of the time interval of interest. See details.
@@ -31,11 +31,11 @@ A number specifying the confidence level of the bootstrap confidence intervals.
 }
 \details{
 
-The adjusted restricted mean survival times (RMST) are calculated by integrating the estimated adjusted survival curves in a specified interval. Let \eqn{Z} be the grouping variable (corresponding to the \code{variable} argument in the \code{\link{adjustedsurv}} function) with possible levels \eqn{Z = z \in \{0, 1, 2, ..., k\}}. \eqn{T} is defined as the time and \eqn{X} is a vector or matrix of covariates. \eqn{\hat{S}(T = t | Z = z, X)} denotes the estimated counterfactual survival function. The RMST is then defined as:
+The adjusted restricted mean survival times (RMST) are calculated by integrating the estimated adjusted survival curves in a specified interval. Let \eqn{Z} be the grouping variable (corresponding to the \code{variable} argument in the \code{\link{adjustedsurv}} function) with possible levels \eqn{Z \in \{0, 1, 2, ..., k\}}. \eqn{T} is defined as the time and \eqn{\hat{S}_z(t)} denotes the estimated counterfactual survival function. The RMST is then defined as:
 
-\deqn{RMST_{z} = \int_{from}^{to} \hat{S}(T = t | Z = z, X)}
+\deqn{RMST_{z} = \int_{from}^{to} \hat{S}_z(t)}
 
-It can be interpreted as the mean survival time of individuals in group \eqn{Z = z}. Note however that simply subtracting the estimates from each other does not give a correct estimate of the area between the survival curves if the respective curves cross at some point. The \code{\link{adjusted_curve_diff}} function can be used to calculate the actual area between the curves instead. See \code{?adjusted_curve_diff} for more information.
+It can be interpreted as the mean survival time of individuals in group \eqn{Z = z} in the interval [\code{from}, \code{to}]. Note however that simply subtracting the estimates from each other does not give a correct estimate of the area between the survival curves if the respective curves cross at some point. The \code{\link{adjusted_curve_diff}} function can be used to calculate the actual area between the curves instead. See \code{?adjusted_curve_diff} for more information.
 
 The associated \code{print} and \code{summary} methods can be used to obtain a neat data.frame of the most important quantities. There is also a small \code{plot} method to graphically display the results.
 

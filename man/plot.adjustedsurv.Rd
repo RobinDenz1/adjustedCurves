@@ -219,12 +219,22 @@ plot(adjsurv, linetype=FALSE, color=FALSE, facet=TRUE)
 # plot with different linetypes and different colors
 plot(adjsurv, linetype=TRUE, color=TRUE, facet=FALSE)
 
+# plot with median survival indicator lines
+plot(adjsurv, median_surv_lines=TRUE)
+
+# plot with small lines indicating where observations were censored
+plot(adjsurv, censoring_ind="lines")
+
+# plot with points indicating where observations were censored
+plot(adjsurv, censoring_ind="points", censoring_ind_size=4)
+
 # plot with some custom characteristics
 plot(adjsurv, legend.position="bottom", linetype=TRUE,
      custom_colors=c("green", "blue"), legend.title="Custom",
-     title="Custom Plot", conf_int=TRUE, linesize=0.5)
+     title="Custom Plot", conf_int=TRUE, linesize=0.5,
+     median_surv_lines=TRUE, censoring_ind="lines")
 
 # adding further ggplot2 elements
-plot(adjsurv) + theme_classic()
+plot(adjsurv) + theme_bw()
 }
 }
