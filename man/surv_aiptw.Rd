@@ -21,7 +21,7 @@ This page explains the details of estimating augmented inverse probability of tr
 Must be a \code{coxph} model object, modeling the censoring mechanism or \code{NULL}. If \code{NULL} (default) independent censoring is assumed. See details and examples.
 }
   \item{verbose}{
-Whether to print estimation information of the \code{\link[riskRegression]{ate}} function in the \pkg{riskRegression} package.
+Whether to print estimation information of the \code{\link[riskRegression]{ate}} function in the \pkg{riskRegression} package. Defaults to \code{FALSE}.
 }
   \item{...}{
 Further arguments passed to \code{\link[riskRegression]{ate}}.

@@ -15,10 +15,10 @@ This page explains the details of estimating direct adjusted survival curves usi
 [\strong{required}] A character vector of column names specifying variables to be used when modeling the outcome mechanism. See details and examples.
 }
   \item{type_time}{
-A character string specifying how the time should be modeled.
+A character string specifying how the time should be modeled. Possible values are \code{"factor"} (modeling each point in time as a separate variable, the default), \code{"bs"} (modeling time using B-Splines) or \code{"ns"} (modeling time using natural splines).
 }
   \item{spline_df}{
-The number of degrees of freedom used for the natural-spline or B-spline function. Ignored if \code{type_time="factor"}.
+The number of degrees of freedom used for the natural-spline or B-spline function. Ignored if \code{type_time="factor"}. Defaults to 5.
 }
   \item{censoring_vars}{
 An optional character vector specifying variables in \code{data}. Those are used in the calculation of inverse probability of censoring weighted pseudo observations. See \code{?pseudo_aareg} for more information. Set to \code{NULL} (default) to use standard pseudo-values without corrections for dependent censoring instead.

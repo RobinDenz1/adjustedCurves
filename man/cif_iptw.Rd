@@ -15,10 +15,10 @@ This page explains the details of estimating inverse probability of treatment we
 [\strong{required}] Must be a \code{glm} or \code{multinom} model object with \code{variable} as response variable.
 }
   \item{censoring_model}{
-Either \code{NULL} to make no adjustments for dependent censoring, or a \code{coxph} object. See \code{?ate} for more details.
+Either \code{NULL} (default) to make no adjustments for dependent censoring, or a \code{coxph} object. See \code{?ate} for more details.
   }
   \item{verbose}{
-Whether to print estimation information of the \code{ate} function in the \pkg{riskRegression} package.
+Whether to print estimation information of the \code{ate} function in the \pkg{riskRegression} package. Defaults to \code{FALSE}.
   }
   \item{...}{
 Further arguments passed to \code{\link[riskRegression]{ate}}.

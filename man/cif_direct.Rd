@@ -15,7 +15,7 @@ This page explains the details of estimating confounder-adjusted CIFs using a pr
 [\strong{required}] Must be a previously fit model object including \code{variable} as independent variable. Apart from the classic \code{CauseSpecificCox} model this function also supports a variety of other models, such as the Fine & Gray model (\code{\link[riskRegression]{FGR}}). See \code{\link[adjustedCurves]{models_cif_direct}} for a list of supported model objects and some more details.
 }
   \item{verbose}{
-Whether to print estimation information of the \code{ate} function in the \pkg{riskRegression} package. Ignored if a \code{outcome_model} is not a \code{CauseSpecificCox} model.
+Whether to print estimation information of the \code{ate} function in the \pkg{riskRegression} package. Defaults to \code{FALSE}. Ignored if a \code{outcome_model} is not a \code{CauseSpecificCox} model.
 }
   \item{predict_fun}{
 A function which should be used to calculate the predicted cause-specific cumulative incidences given covariates and some points in time. This argument only needs to be specified if the kind of model supplied in the \code{outcome_model} is not directly supported. See \code{\link[adjustedCurves]{models_cif_direct}} for more information. Defaults to \code{NULL}.

@@ -18,10 +18,10 @@ This page explains the details of estimating adjusted survival curves using the 
 A character string specifying which moment to adjust for. Can be either \code{"first"} (default) or \code{"second"}.
 }
   \item{standardize}{
-A logical variable indicating whether the \code{treatment_vars} variables should be standardized. See details.
+A logical variable indicating whether the \code{treatment_vars} variables should be standardized. Defaults to \code{FALSE}. See details.
 }
   \item{gtol}{
-A number specifying the tolerance for the weights. Is basically only used to avoid division by 0 errors in cases where the weights are estimated to be 0.
+A number specifying the tolerance for the weights. Is basically only used to avoid division by 0 errors in cases where the weights are estimated to be 0. Defaults to 0.00001.
 }
   \item{max_iter}{
 Maximum number of iterations allowed in the newton-raphson algorithm. Set to 100 by default which is more than enough in most cases.

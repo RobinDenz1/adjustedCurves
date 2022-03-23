@@ -18,10 +18,10 @@ This page explains the details of estimating augmented inverse probability of tr
 [\strong{required}] Must be a \code{glm} or \code{multinom} model object with \code{variable} as response variable. See details and examples.
 }
   \item{type_time}{
-A character string specifying how the time should be modeled. See details.
+A character string specifying how the time should be modeled. Possible values are \code{"factor"} (modeling each point in time as a separate variable, the default), \code{"bs"} (modeling time using B-Splines) or \code{"ns"} (modeling time using natural splines).
 }
   \item{spline_df}{
-The number of degrees of freedom used for the natural-spline or B-spline function. Ignored if \code{type_time="factor"}.
+The number of degrees of freedom used for the natural-spline or B-spline function. Defaults to 5. Ignored if \code{type_time="factor"}.
 }
 }
 \details{
