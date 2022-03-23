@@ -64,9 +64,9 @@ This page explains the details of estimating inverse probability of treatment we
     <dl><dt>treatment_model</dt>
 <dd><p>[<strong>required</strong>] Must be either a model object with <code>variable</code> as response variable, a vector of weights or a formula which can be passed to <code>WeightIt</code>.</p></dd>
 <dt>weight_method</dt>
-<dd><p>Method used in <code>WeightIt</code> function call. Ignored if <code>treatment_model</code> is not a formula object.</p></dd>
+<dd><p>Method used in <code>WeightIt</code> function call. Ignored if <code>treatment_model</code> is not a formula object. Defaults to <code>"ps"</code>.</p></dd>
 <dt>stabilize</dt>
-<dd><p>Whether to stabilize the weights or not. Is set to <code>TRUE</code> by default. Stabilizing weights ensures that the sum of all weights is equal to the original sample size. It has no effect on point estimates, only on the asymptotic variance calculations and confidence intervals.</p></dd>
+<dd><p>Whether to stabilize the weights or not. Is set to <code>FALSE</code> by default. Stabilizing weights ensures that the sum of all weights is equal to the original sample size. It has no effect on point estimates, only on the asymptotic variance calculations and confidence intervals.</p></dd>
 <dt>trim</dt>
 <dd><p>Can be either <code>FALSE</code> (default) or a numeric value at which to trim the weights. If <code>FALSE</code>, weights are used as calculated or supplied. If a numeric value is supplied, all weights that are bigger than <code>trim</code> are set to <code>trim</code> before the analysis is carried out. Useful when some weights are extremely large.</p></dd>
 <dt>...</dt>

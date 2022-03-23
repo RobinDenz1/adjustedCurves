@@ -64,7 +64,7 @@ This page explains the details of estimating confounder-adjusted CIFs using a pr
     <dl><dt>outcome_model</dt>
 <dd><p>[<strong>required</strong>] Must be a previously fit model object including <code>variable</code> as independent variable. Apart from the classic <code>CauseSpecificCox</code> model this function also supports a variety of other models, such as the Fine &amp; Gray model (<code><a href="https://rdrr.io/pkg/riskRegression/man/FGR.html" class="external-link">FGR</a></code>). See <code><a href="models_cif_direct.html">models_cif_direct</a></code> for a list of supported model objects and some more details.</p></dd>
 <dt>verbose</dt>
-<dd><p>Whether to print estimation information of the <code>ate</code> function in the <span class="pkg">riskRegression</span> package. Ignored if a <code>outcome_model</code> is not a <code>CauseSpecificCox</code> model.</p></dd>
+<dd><p>Whether to print estimation information of the <code>ate</code> function in the <span class="pkg">riskRegression</span> package. Defaults to <code>FALSE</code>. Ignored if a <code>outcome_model</code> is not a <code>CauseSpecificCox</code> model.</p></dd>
 <dt>predict_fun</dt>
 <dd><p>A function which should be used to calculate the predicted cause-specific cumulative incidences given covariates and some points in time. This argument only needs to be specified if the kind of model supplied in the <code>outcome_model</code> is not directly supported. See <code><a href="models_cif_direct.html">models_cif_direct</a></code> for more information. Defaults to <code>NULL</code>.</p></dd>
 <dt>...</dt>

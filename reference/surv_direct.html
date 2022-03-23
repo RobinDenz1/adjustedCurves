@@ -64,7 +64,7 @@ This page explains the details of estimating confounder-adjusted survival curves
     <dl><dt>outcome_model</dt>
 <dd><p>[<strong>required</strong>] Must be a previously fit model object including <code>variable</code> as independent variable. Apart from the classic <code>coxph</code> model this function also supports a variety of other models. See <code><a href="models_surv_direct.html">models_surv_direct</a></code> for a list of supported model objects and some more details.</p></dd>
 <dt>verbose</dt>
-<dd><p>Whether to print estimation information of the <code>ate</code> function in the <span class="pkg">riskRegression</span> package. Ignored if <code>outcome_model</code> is not a <code>coxph</code> object.</p></dd>
+<dd><p>Whether to print estimation information of the <code>ate</code> function in the <span class="pkg">riskRegression</span> package. Ignored if <code>outcome_model</code> is not a <code>coxph</code> object. Defaults to <code>FALSE</code>.</p></dd>
 <dt>predict_fun</dt>
 <dd><p>A function which should be used to calculate the predicted survival probabilties given covariates and some points in time. This argument only needs to be specified if the kind of model supplied in the <code>outcome_model</code> is not directly supported. See <code><a href="models_surv_direct.html">models_surv_direct</a></code> for more information. Defaults to <code>NULL</code>.</p></dd>
 <dt>...</dt>

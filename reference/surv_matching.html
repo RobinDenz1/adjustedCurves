@@ -64,7 +64,7 @@ This page explains the details of estimating adjusted survival curves using prop
     <dl><dt>treatment_model</dt>
 <dd><p>[<strong>required</strong>] Must be either a model object with <code>variable</code> as response variable or a vector of previously estimated propensity scores.</p></dd>
 <dt>gtol</dt>
-<dd><p>Tolerance at which estimated treatment assignment probabilities are truncated. Every propensity score bigger than 1 - <code>gtol</code> is set to 1 - <code>gtol</code> and every propensity score smaller than <code>gtol</code> is set to <code>gtol</code>. Useful when there are extreme propensity scores close to 0 or 1.</p></dd>
+<dd><p>Tolerance at which estimated treatment assignment probabilities are truncated. Every propensity score bigger than 1 - <code>gtol</code> is set to 1 - <code>gtol</code> and every propensity score smaller than <code>gtol</code> is set to <code>gtol</code>. Useful when there are extreme propensity scores close to 0 or 1. Defaults to 0.001.</p></dd>
 <dt>...</dt>
 <dd><p>Further arguments passed to the <code><a href="https://rdrr.io/pkg/Matching/man/Match.html" class="external-link">Match</a></code> function of the <span class="pkg">Matching</span> Package.</p></dd>
 </dl></div>

@@ -3,7 +3,7 @@ pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
   introduction: introduction.html
-last_built: 2022-03-18T08:52Z
+last_built: 2022-03-23T13:25Z
 urls:
   reference: https://robindenz1.github.io/adjustedCurves/reference
   article: https://robindenz1.github.io/adjustedCurves/articles

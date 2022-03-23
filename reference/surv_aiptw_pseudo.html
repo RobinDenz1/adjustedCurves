@@ -66,9 +66,9 @@ This page explains the details of estimating augmented inverse probability of tr
 <dt>treatment_model</dt>
 <dd><p>[<strong>required</strong>] Must be a <code>glm</code> or <code>multinom</code> model object with <code>variable</code> as response variable. Alternatively you can supply a numeric vector of propensity scores directly. See details and examples.</p></dd>
 <dt>type_time</dt>
-<dd><p>A character string specifying how the time should be modeled. See details.</p></dd>
+<dd><p>A character string specifying how the time should be modeled. Possible values are <code>"factor"</code> (modeling each point in time as a separate variable, the default), <code>"bs"</code> (modeling time using B-Splines) or <code>"ns"</code> (modeling time using natural splines).</p></dd>
 <dt>spline_df</dt>
-<dd><p>The number of degrees of freedom used for the natural-spline or B-spline function. Ignored if <code>type_time="factor"</code>.</p></dd>
+<dd><p>The number of degrees of freedom used for the natural-spline or B-spline function. Ignored if <code>type_time="factor"</code>. Defaults to 5.</p></dd>
 <dt>censoring_vars</dt>
 <dd><p>An optional character vector specifying variables in <code>data</code>. Those are used in the calculation of inverse probability of censoring weighted pseudo observations. See <code>?pseudo_aareg</code> for more information. Set to <code>NULL</code> (default) to use standard pseudo-values without corrections for dependent censoring instead.</p></dd>
 <dt>ipcw_method</dt>

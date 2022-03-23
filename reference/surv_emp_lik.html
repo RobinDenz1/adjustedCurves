@@ -66,9 +66,9 @@ This page explains the details of estimating adjusted survival curves using the 
 <dt>moment</dt>
 <dd><p>A character string specifying which moment to adjust for. Can be either <code>"first"</code> (default) or <code>"second"</code>.</p></dd>
 <dt>standardize</dt>
-<dd><p>A logical variable indicating whether the <code>treatment_vars</code> variables should be standardized. See details.</p></dd>
+<dd><p>A logical variable indicating whether the <code>treatment_vars</code> variables should be standardized. Defaults to <code>FALSE</code>. See details.</p></dd>
 <dt>gtol</dt>
-<dd><p>A number specifying the tolerance for the weights. Is basically only used to avoid division by 0 errors in cases where the weights are estimated to be 0.</p></dd>
+<dd><p>A number specifying the tolerance for the weights. Is basically only used to avoid division by 0 errors in cases where the weights are estimated to be 0. Defaults to 0.00001.</p></dd>
 <dt>max_iter</dt>
 <dd><p>Maximum number of iterations allowed in the newton-raphson algorithm. Set to 100 by default which is more than enough in most cases.</p></dd>
 <dt>newton_tol</dt>
