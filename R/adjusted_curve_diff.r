@@ -25,141 +25,18 @@ adjusted_curve_diff <- function(adj, to, from=0, conf_level=0.95) {
   adj_method <- adj$method
 
   if (est=="surv") {
-    treat_labs <- unique(adj$adjsurv$group)
+    treat_labs <- levels(adj$adjsurv$group)
   } else {
-    treat_labs <- unique(adj$adjcif$group)
+    treat_labs <- levels(adj$adjcif$group)
   }
 
   ## using multiply imputed results
   if (!is.null(adj$mids_analyses)) {
 
-    if (adj$categorical) {
-
-      # call function once on every adjsurv object, extract values
-      len <- length(adj$mids_analyses)
-      mids_out <- dat <- vector(mode="list", length=len)
-      for (i in seq_len(len)) {
-
-        results_imp <- adjusted_curve_diff(adj$mids_analyses[[i]],
-                                           to=to, from=from,
-                                           conf_level=conf_level)
-        mids_out[[i]] <- results_imp
-        comp_names <- names(results_imp)
-
-        # for each pairwise comparison, extract values
-        for (j in seq_len((length(results_imp)-2))) {
-
-          row <- data.frame(area_est=results_imp[[j]]$observed_diff_integral,
-                            area_se=results_imp[[j]]$integral_se,
-                            p_val=results_imp[[j]]$p_value,
-                            n_boot=results_imp[[j]]$n_boot,
-                            comparison=comp_names[j])
-          dat[[length(dat)+1]] <- row
-        }
-
-      }
-      dat <- dplyr::bind_rows(dat)
-
-      # pool values
-      pooled_dat <- dat %>%
-        dplyr::group_by(., comparison) %>%
-        dplyr::summarise(area_est=mean(area_est),
-                         area_se=mean(area_se),
-                         p_value=pool_p_values(p_val),
-                         n_boot=min(n_boot))
-
-      # create one curve_test object for each comparison
-      output <- list(mids_analyses=mids_out)
-      for (i in seq_len(nrow(pooled_dat))) {
-
-        pooled_ci <- confint_surv(surv=pooled_dat$area_est[i],
-                                  se=pooled_dat$area_se[i],
-                                  conf_level=conf_level,
-                                  conf_type="plain")
-        pooled_ci <- c(pooled_ci$left, pooled_ci$right)
-        names(pooled_ci) <- c("ci_lower", "ci_upper")
-
-        # do this so it shows up in print function
-        fun_call <- match.call()
-        fun_call$from <- from
-        fun_call$to <- to
-
-        mids_p <- dat$p_val[pooled_dat$comparison[i]==dat$comparison]
-        out <- list(mids_p_values=mids_p,
-                    observed_diff_integral=pooled_dat$area_est[i],
-                    p_value=pooled_dat$p_value[i],
-                    n_boot=pooled_dat$n_boot[i],
-                    kind=est,
-                    integral_se=pooled_dat$area_se[i],
-                    conf_int=pooled_ci,
-                    categorical=FALSE,
-                    treat_labs=mids_out[[1]][[i]]$treat_labs,
-                    method=adj_method,
-                    call=fun_call)
-        class(out) <- "curve_test"
-        output[[pooled_dat$comparison[i]]] <- out
-
-      }
-      output$categorical <- TRUE
-      output$method <- adj_method
-      class(output) <- "curve_test"
-
-      return(output)
-
-    } else {
-
-      len <- length(adj$mids_analyses)
-      mids_out <- vector(mode="list", length=len)
-      area_ests <- area_se <- p_vals <- n_boots <- vector(mode="numeric",
-                                                          length=len)
-      for (i in seq_len(len)) {
-
-        results_imp <- adjusted_curve_diff(adj$mids_analyses[[i]],
-                                           to=to, from=from,
-                                           conf_level=conf_level)
-        mids_out[[i]] <- results_imp
-        area_ests[i] <- results_imp$observed_diff_integral
-        area_se[i] <- results_imp$integral_se
-        p_vals[i] <- results_imp$p_value
-        n_boots[i] <- results_imp$n_boot
-
-      }
-
-      # pool the values
-      observed_diff_integral <- mean(area_ests)
-      pooled_se <- mean(area_se)
-      pooled_ci <- confint_surv(surv=observed_diff_integral,
-                                se=pooled_se,
-                                conf_level=conf_level,
-                                conf_type="plain")
-      pooled_ci <- c(pooled_ci$left, pooled_ci$right)
-      names(pooled_ci) <- c("ci_lower", "ci_upper")
-
-      pooled_p_value <- pool_p_values(p_values=p_vals)
-
-      # do this so it shows up in print function
-      fun_call <- match.call()
-      fun_call$from <- from
-      fun_call$to <- to
-
-      out <- list(mids_analyses=mids_out,
-                  mids_p_values=p_vals,
-                  observed_diff_integral=observed_diff_integral,
-                  p_value=pooled_p_value,
-                  n_boot=min(n_boots),
-                  kind=est,
-                  integral_se=pooled_se,
-                  conf_int=pooled_ci,
-                  categorical=FALSE,
-                  treat_labs=treat_labs,
-                  method=adj_method,
-                  call=fun_call)
-      class(out) <- "curve_test"
-
-    }
-
-    return(out)
-
+    output <- adjusted_curve_diff.MI(adj=adj, to=to, from=from,
+                                     conf_level=conf_level, est=est,
+                                     adj_method=adj_method,
+                                     treat_labs=treat_labs)
   ## using regular results
   } else {
 
@@ -253,9 +130,9 @@ adjusted_curve_diff <- function(adj, to, from=0, conf_level=0.95) {
     } else {
 
       if (class(adj)=="adjustedsurv") {
-        combs <- all_combs_length_2(unique(adj$adjsurv$group))
+        combs <- all_combs_length_2(treat_labs)
       } else {
-        combs <- all_combs_length_2(unique(adj$adjcif$group))
+        combs <- all_combs_length_2(treat_labs)
       }
 
       out <- list()
@@ -270,8 +147,14 @@ adjusted_curve_diff <- function(adj, to, from=0, conf_level=0.95) {
 
           observed_dat <- adj$adjsurv[which(adj$adjsurv$group %in%
                                             c(group_0, group_1)), ]
+          observed_dat$group <- factor(observed_dat$group,
+                                       levels=c(group_0, group_1))
+
           boot_dat <- adj$boot_data[which(adj$boot_data$group %in%
                                           c(group_0, group_1)), ]
+          boot_dat$group <- factor(boot_dat$group,
+                                   levels=c(group_0, group_1))
+
           fake_adjsurv <- list(adjsurv=observed_dat,
                                boot_data=boot_dat,
                                categorical=FALSE,
@@ -282,8 +165,14 @@ adjusted_curve_diff <- function(adj, to, from=0, conf_level=0.95) {
 
           observed_dat <- adj$adjcif[which(adj$adjcif$group %in%
                                            c(group_0, group_1)), ]
+          observed_dat$group <- factor(observed_dat$group,
+                                       levels=c(group_0, group_1))
+
           boot_dat <- adj$boot_data[which(adj$boot_data$group %in%
                                           c(group_0, group_1)), ]
+          boot_dat$group <- factor(boot_dat$group,
+                                   levels=c(group_0, group_1))
+
           fake_adjsurv <- list(adjcif=observed_dat,
                                boot_data=boot_dat,
                                categorical=FALSE,
@@ -305,6 +194,140 @@ adjusted_curve_diff <- function(adj, to, from=0, conf_level=0.95) {
 
     return(out)
   }
+}
+
+## Same test but using multiple imputation
+adjusted_curve_diff.MI <- function(adj, to, from, conf_level, est,
+                                   adj_method, treat_labs) {
+
+  # silence devtools::check() notes
+  . <- comparison <- area_est <- p_val <- n_boot <- NULL
+
+  if (adj$categorical) {
+
+    # call function once on every adjsurv object, extract values
+    len <- length(adj$mids_analyses)
+    mids_out <- dat <- vector(mode="list", length=len)
+    for (i in seq_len(len)) {
+
+      results_imp <- adjusted_curve_diff(adj$mids_analyses[[i]],
+                                         to=to, from=from,
+                                         conf_level=conf_level)
+      mids_out[[i]] <- results_imp
+      comp_names <- names(results_imp)
+
+      # for each pairwise comparison, extract values
+      for (j in seq_len((length(results_imp)-2))) {
+
+        row <- data.frame(area_est=results_imp[[j]]$observed_diff_integral,
+                          area_se=results_imp[[j]]$integral_se,
+                          p_val=results_imp[[j]]$p_value,
+                          n_boot=results_imp[[j]]$n_boot,
+                          comparison=comp_names[j])
+        dat[[length(dat)+1]] <- row
+      }
+
+    }
+    dat <- dplyr::bind_rows(dat)
+
+    # pool values
+    pooled_dat <- dat %>%
+      dplyr::group_by(., comparison) %>%
+      dplyr::summarise(area_est=mean(area_est),
+                       area_se=mean(area_se),
+                       p_value=pool_p_values(p_val),
+                       n_boot=min(n_boot))
+
+    # create one curve_test object for each comparison
+    output <- list(mids_analyses=mids_out)
+    for (i in seq_len(nrow(pooled_dat))) {
+
+      pooled_ci <- confint_surv(surv=pooled_dat$area_est[i],
+                                se=pooled_dat$area_se[i],
+                                conf_level=conf_level,
+                                conf_type="plain")
+      pooled_ci <- c(pooled_ci$left, pooled_ci$right)
+      names(pooled_ci) <- c("ci_lower", "ci_upper")
+
+      # do this so it shows up in print function
+      fun_call <- match.call()
+      fun_call$from <- from
+      fun_call$to <- to
+
+      mids_p <- dat$p_val[pooled_dat$comparison[i]==dat$comparison]
+      out <- list(mids_p_values=mids_p,
+                  observed_diff_integral=pooled_dat$area_est[i],
+                  p_value=pooled_dat$p_value[i],
+                  n_boot=pooled_dat$n_boot[i],
+                  kind=est,
+                  integral_se=pooled_dat$area_se[i],
+                  conf_int=pooled_ci,
+                  categorical=FALSE,
+                  treat_labs=mids_out[[1]][[i]]$treat_labs,
+                  method=adj_method,
+                  call=fun_call)
+      class(out) <- "curve_test"
+      output[[pooled_dat$comparison[i]]] <- out
+
+    }
+    output$categorical <- TRUE
+    output$method <- adj_method
+    class(output) <- "curve_test"
+
+    return(output)
+
+  } else {
+
+    len <- length(adj$mids_analyses)
+    mids_out <- vector(mode="list", length=len)
+    area_ests <- area_se <- p_vals <- n_boots <- vector(mode="numeric",
+                                                        length=len)
+    for (i in seq_len(len)) {
+
+      results_imp <- adjusted_curve_diff(adj$mids_analyses[[i]],
+                                         to=to, from=from,
+                                         conf_level=conf_level)
+      mids_out[[i]] <- results_imp
+      area_ests[i] <- results_imp$observed_diff_integral
+      area_se[i] <- results_imp$integral_se
+      p_vals[i] <- results_imp$p_value
+      n_boots[i] <- results_imp$n_boot
+
+    }
+
+    # pool the values
+    observed_diff_integral <- mean(area_ests)
+    pooled_se <- mean(area_se)
+    pooled_ci <- confint_surv(surv=observed_diff_integral,
+                              se=pooled_se,
+                              conf_level=conf_level,
+                              conf_type="plain")
+    pooled_ci <- c(pooled_ci$left, pooled_ci$right)
+    names(pooled_ci) <- c("ci_lower", "ci_upper")
+
+    pooled_p_value <- pool_p_values(p_values=p_vals)
+
+    # do this so it shows up in print function
+    fun_call <- match.call()
+    fun_call$from <- from
+    fun_call$to <- to
+
+    out <- list(mids_analyses=mids_out,
+                mids_p_values=p_vals,
+                observed_diff_integral=observed_diff_integral,
+                p_value=pooled_p_value,
+                n_boot=min(n_boots),
+                kind=est,
+                integral_se=pooled_se,
+                conf_int=pooled_ci,
+                categorical=FALSE,
+                treat_labs=treat_labs,
+                method=adj_method,
+                call=fun_call)
+    class(out) <- "curve_test"
+
+  }
+  return(out)
 }
 
 ## create data.frame of pairwise comparisons
@@ -507,7 +530,9 @@ plot.curve_test <- function(x, type="curves", xlab=NULL, ylab=NULL,
         diff_curves[[i]] <- diff
       }
       observed_diff_curves <- dplyr::bind_rows(observed_diff_curves)
+      colnames(observed_diff_curves) <- c("time", "surv", "comp")
       diff_curves <- dplyr::bind_rows(diff_curves)
+      colnames(diff_curves) <- c("time", "surv", "boot", "comp")
 
       p <- ggplot2::ggplot(diff_curves, ggplot2::aes(x=time, y=surv)) +
         ggplot2::geom_step(ggplot2::aes(group=boot), color="grey", alpha=0.8) +
@@ -557,9 +582,15 @@ plot.curve_test <- function(x, type="curves", xlab=NULL, ylab=NULL,
         xlab <- "Time"
       }
 
-      p <- ggplot2::ggplot(x$diff_curves, ggplot2::aes(x=time, y=surv)) +
+      diff_curves <- x$diff_curves
+      colnames(diff_curves) <- c("time", "surv", "boot")
+
+      observed_diff_curve <- x$observed_diff_curve
+      colnames(observed_diff_curve) <- c("time", "surv")
+
+      p <- ggplot2::ggplot(diff_curves, ggplot2::aes(x=time, y=surv)) +
         ggplot2::geom_step(ggplot2::aes(group=boot), color="grey", alpha=0.8) +
-        ggplot2::geom_step(data=x$observed_diff_curve,
+        ggplot2::geom_step(data=observed_diff_curve,
                            ggplot2::aes(x=time, y=surv)) +
         ggplot2::geom_hline(yintercept=0, linetype="dashed") +
         ggplot2::theme_bw() +

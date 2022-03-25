@@ -266,7 +266,8 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
                          "adjustedsurv_boot", "trim_weights",
                          "calc_pseudo_surv", "geese_predictions",
                          "load_needed_packages", "specific_times",
-                         "surv_g_comp")
+                         "surv_g_comp", "method_iptw_pseudo",
+                         "method_aiptw_pseudo", "method_direct_pseudo")
 
         boot_out <- foreach::foreach(i=1:n_boot, .packages=pkgs,
                                      .export=export_objs) %dorng% {

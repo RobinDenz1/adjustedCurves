@@ -328,9 +328,9 @@ adjcif <- adjustedcif(data=imp,
 
 test_that("adjusted_curve_diff, two treatments", {
   adj_test <- adjusted_curve_diff(adjcif, from=0, to=1)
-  expect_equal(round(adj_test$observed_diff_integral, 4), 0.0543)
-  expect_equal(round(adj_test$integral_se, 4), 0.1337)
-  expect_equal(round(adj_test$p_value, 4), 1)
+  expect_equal(round(adj_test$observed_diff_integral, 4), -0.0543)
+  expect_equal(round(adj_test$integral_se, 4), 0.0268)
+  expect_equal(round(adj_test$p_value, 4), 0)
   expect_equal(adj_test$n_boot, 2)
 })
 
@@ -358,9 +358,9 @@ adjcif <- adjustedcif(data=imp,
 test_that("adjusted_curve_diff, three treatments", {
   adj_test <- adjusted_curve_diff(adjcif, from=0, to=1)
   expect_equal(round(adj_test$`Chemo vs. Placebo`$observed_diff_integral, 4),
-               0.0309)
-  expect_equal(round(adj_test$`Chemo vs. Placebo`$integral_se, 4), 0.0315)
+               -0.0309)
+  expect_equal(round(adj_test$`Chemo vs. Placebo`$integral_se, 4), 0.0670)
   expect_equal(round(adj_test$`Chemo vs. Placebo`$p_value, 4), NaN)
-  expect_equal(adj_test$`Chemo vs. Placebo`$mids_p_values, c(0, 1, 0))
+  expect_equal(adj_test$`Chemo vs. Placebo`$mids_p_values, c(1, 1, 0))
   expect_equal(adj_test$`Chemo vs. Placebo`$n_boot, 2)
 })

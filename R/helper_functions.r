@@ -157,7 +157,8 @@ read_from_step_function <- function(x, step_data, est="surv") {
 ## calculate difference between two step functions
 exact_stepfun_difference <- function(adj, times, est="surv") {
 
-  levs <- unique(adj$group)
+  #levs <- unique(adj$group)
+  levs <- levels(adj$group)
   adjsurv_0 <- adj[which(adj$group==levs[1]), ]
   adjsurv_1 <- adj[which(adj$group==levs[2]), ]
 
@@ -180,7 +181,7 @@ exact_stepfun_difference <- function(adj, times, est="surv") {
                      est=est, FUN.VALUE=numeric(1))
   }
 
-  surv_diff <- surv_1 - surv_0
+  surv_diff <- surv_0 - surv_1
 
   diff_dat <- data.frame(time=times)
   diff_dat[, est] <- surv_diff
@@ -310,7 +311,6 @@ calc_pseudo_surv <- function(data, ev_time, event, times, censoring_vars,
                      formula.censoring=cens_formula,
                      ipcw.method=ipcw.method,
                      FUN.VALUE=numeric(nrow(data)))
-
   }
   return(pseudo)
 }
@@ -398,7 +398,6 @@ remove_unnecessary_covars <- function(data, method, variable, ev_time,
   data <- dplyr::select(data, dplyr::all_of(needed_covars))
 
   return(data)
-
 }
 
 ## require needed packages

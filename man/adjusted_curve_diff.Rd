@@ -39,6 +39,10 @@ When there are more than two survival curves or CIFs this function automatically
 
 When the \code{adjustedsurv} or \code{adjustedcif} object was fitted using multiply imputed datasets, the tests are performed separately for each dataset. The estimates for the integral of the difference are combined using Rubins Rule. The confidence intervals for this quantity are calculated by pooling the bootstrap standard errors and recalculating the confidence interval using the normal approximation. The p-values are also pooled using a method described in Licht (2010). It is recommended to check if the pooled p-value is in agreement with the pooled confidence interval.
 
+\strong{\emph{Graphical Displays}}
+
+To plot the curves of the differences directly, we recommend using the  \code{\link{plot_difference}} function. Similar to the main plot functions, it has a lot of arguments to customize the plot. If the main goal is to check the assumptions, we recommend using the \code{\link[=plot.curve_test]{plot}} method instead.
+
 \strong{\emph{Computational Details}}
 
 Instead of relying on numerical integration, this function uses step-function interpolation, treating all supplied curves as step functions. The integral is then calculated using a simple sum of the squares defined by each step.

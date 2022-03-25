@@ -451,7 +451,7 @@ test_that("adjusted_rmst, 2 treatments, boot", {
 ### adjusted_curve_diff
 test_that("adjusted_curve_diff, 2 treatments", {
   adj_test <- adjusted_curve_diff(adjsurv, from=0, to=1)
-  expect_equal(round(adj_test$observed_diff_integral, 4), 0.1004)
+  expect_equal(round(adj_test$observed_diff_integral, 4), -0.1004)
   expect_equal(round(adj_test$integral_se, 4), 0.0376)
   expect_equal(round(adj_test$p_value, 4), 0)
   expect_equal(adj_test$n_boot, 3)
@@ -498,7 +498,7 @@ test_that("adjusted_rmst, 3 treatments, with boot", {
 test_that("adjusted_curve_diff, 3 treatments", {
   adj_test <- adjusted_curve_diff(adjsurv, from=0, to=1, conf_level=0.95)
   expect_equal(round(adj_test$`Chemo vs. OP`$observed_diff_integral, 4),
-               -0.1304)
+               0.1304)
   expect_equal(round(adj_test$`Chemo vs. OP`$integral_se, 4), 0.0501)
   expect_equal(round(adj_test$`Chemo vs. OP`$p_value, 4), 0)
   expect_equal(round(adj_test$`Chemo vs. OP`$mids_p_values, 4),

@@ -70,11 +70,11 @@ The primary purpose of the \code{adjustedcif} function is to provide a convenien
   \item{"\link[=cif_direct_pseudo]{direct_pseudo}": Direct Standardization based on Pseudo-Values.}
   \item{"\link[=cif_iptw]{iptw}": A weighted Aalen-Johansen estimator.}
   \item{"\link[=cif_iptw_pseudo]{iptw_pseudo}": A weighted estimator based on Pseudo-Values.}
-  \item{"\link[=cif_matching]{matching}": Using propensity score matching to estimate the adjusted CIFs.}
+  \item{"\link[=cif_matching]{matching}": Using Propensity Score Matching to estimate the adjusted CIFs.}
   \item{"\link[=cif_aiptw]{aiptw}": An Augmented Inverse Probability of Treatment Weighting estimator.}
   \item{"\link[=cif_aiptw_pseudo]{aiptw_pseudo}": An Augmented Inverse Probability of Treatment Weighting estimator using Pseudo-Values.}
   \item{"\link[=cif_tmle]{tmle}": Targeted Maximum Likelihood Estimation for CIFs.}
-  \item{"\link[=cif_aalen_johansen]{aalen_johansen}": A simple stratified Nelson-Aalen estimator without any form of adjustment.}
+  \item{"\link[=cif_aalen_johansen]{aalen_johansen}": A simple stratified Aalen-Johansen estimator without any form of adjustment.}
 }
 
 A short description of each method is contained in the documentation of the respective \code{cif_method} function. For more detailed descriptions the cited literature in that same documentation can be used. The documentation for \code{method="direct"} for example can be accessed using \code{?cif_direct}.
@@ -91,7 +91,7 @@ For most methods approximations for the asymptotic variance of point estimates o
 
 There are two ways to deal with missing data using this function. The first is using the \code{na.action} argument. It simply calls the respective \code{na.action} function on the data before doing any further processing. By using \code{na.action="na.omit"} for example, only rows with complete data are kept for the analysis.
 
-Alternatively, this function also supports the use of multiple imputation via the \pkg{mice} package. Instead of supplying a single data.frame, the user should create a \code{mids} object using the \code{mice} function and directly pass this to the \code{data} argument. When methods are used which rely on previously estimated treatment or outcome models such as \code{direct} or \code{aiptw}, the user is required to supply a \code{mira} object instead of a single model. In other words: the models have to be fit on every imputed dataset before supplying them to this function. See \code{?mice} and the associated documentation for more information on how to use multiple imputation. When using \code{bootstrap=TRUE} and multiple imputation, the bootstrapping is performed on every imputed dataset separately. Cumulative Incidences are simply averaged across the imputed datasets according to Rubins Rule. Confidence intervals are calculated by first averaging the standard errors over all imputed datasets and afterwards using this pooled value to obtain a new confidence interval with the normal approximation. This method has only been tested with missing values in covariates. It is not clear how good this works with missing values in \code{ev_time} or \code{event} so users should be cautious in those cases.
+Alternatively, this function also supports the use of multiple imputation via the \pkg{mice} package. Instead of supplying a single data.frame, the user should create a \code{mids} object using the \code{mice} function and directly pass this to the \code{data} argument. When methods are used which rely on previously estimated treatment or outcome models such as \code{"direct"} or \code{"aiptw"}, the user is required to supply a \code{mira} object instead of a single model. In other words: the models have to be fit on every imputed dataset before supplying them to this function. See \code{?mice} and the associated documentation for more information on how to use multiple imputation. When using \code{bootstrap=TRUE} and multiple imputation, the bootstrapping is performed on every imputed dataset separately. Cumulative Incidences are simply averaged across the imputed datasets according to Rubins Rule. Confidence intervals are calculated by first averaging the standard errors over all imputed datasets and afterwards using this pooled value to obtain a new confidence interval with the normal approximation. This method has only been tested with missing values in covariates. It is not clear how good this works with missing values in \code{ev_time} or \code{event} so users should be cautious in those cases.
 
 \strong{\emph{Competing Risks}}
 

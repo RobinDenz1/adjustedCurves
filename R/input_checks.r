@@ -1005,3 +1005,46 @@ check_inputs_sim_crisk_fun <- function(n, lcovars, outcome_betas, gamma,
     }
   }
 }
+
+## check inputs for plot_difference function
+check_inputs_plot_difference <- function(x, group_1, group_2, conf_int,
+                                         type, max_t) {
+
+  if (!inherits(x, c("adjustedsurv", "adjustedcif"))) {
+    stop("'x' must be an 'adjustedsurv' object created using the adjustedsurv",
+         " function or an 'adjustedcif' object created using the adjustedcif",
+         " function.")
+  } else if (!(length(group_1)==1 && is.character(group_1) | is.null(group_1))) {
+    stop("'group_1' has to be a single character vector, specifying one",
+         " of the treatment groups in 'variable'.")
+  } else if (!(length(group_2)==1 && is.character(group_2) | is.null(group_2))) {
+    stop("'group_2' has to be a single character vector, specifying one",
+         " of the treatment groups in 'variable'.")
+  } else if (inherits(x, "adjustedsurv") && !is.null(group_1) &&
+             !group_1 %in% levels(x$adjsurv$group)) {
+    stop(group_1, " is not a valid group in 'variable'.")
+  } else if (inherits(x, "adjustedcif") && !is.null(group_1) &&
+             !group_1 %in% levels(x$adjcif$group)) {
+    stop(group_1, " is not a valid group in 'variable'.")
+  } else if (inherits(x, "adjustedsurv") && !is.null(group_1) &&
+             !group_2 %in% levels(x$adjsurv$group)) {
+    stop(group_2, " is not a valid group in 'variable'.")
+  } else if (inherits(x, "adjustedcif") && !is.null(group_1) &&
+             !group_2 %in% levels(x$adjcif$group)) {
+    stop(group_2, " is not a valid group in 'variable'.")
+  } else if (!is.null(group_1) && !is.null(group_2) && group_1 == group_2) {
+    stop("'group_1' and 'group_2' may not be equal.")
+  } else if (conf_int & !is.null(x$mids_analyses)) {
+    stop("Confidence interval calculation is currently not possible when",
+         " multiple imputation was used.")
+  } else if (conf_int & is.null(x$boot_data)) {
+    stop("Confidence interval calculation is only possible when bootstrap=TRUE",
+         " was used in the original adjustedsurv or adjustedcif function call.")
+  } else if (!(length(type)==1 && is.character(type) &&
+               type %in% c("steps", "lines", "points", "none"))) {
+    stop("'type' must be a single character string equal to one of: ",
+         " c('steps', 'lines', 'points', 'none').")
+  } else if (!(length(max_t)==1 && is.numeric(max_t) && max_t > 0)) {
+    stop("'max_t' must be a single number bigger than 0.")
+  }
+}

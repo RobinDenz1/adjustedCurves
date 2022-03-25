@@ -68,12 +68,12 @@ The primary purpose of the \code{adjustedsurv} function is to provide a convenie
   \item{"\link[=surv_iptw_km]{iptw_km}": A weighted Kaplan-Meier estimator.}
   \item{"\link[=surv_iptw_cox]{iptw_cox}": A weighted estimator based on a stratified weighted Cox-Regression model.}
   \item{"\link[=surv_iptw_pseudo]{iptw_pseudo}": A weighted estimator based on Pseudo-Values.}
-  \item{"\link[=surv_matching]{matching}": Using propensity score matching to estimate the adjusted survival curves.}
-  \item{"\link[=surv_emp_lik]{emp_lik}": Empirical Likelihood based estimator of the survival function.}
+  \item{"\link[=surv_matching]{matching}": Using Propensity Score Matching to estimate the adjusted survival curves.}
+  \item{"\link[=surv_emp_lik]{emp_lik}": An Empirical Likelihood based estimator.}
   \item{"\link[=surv_aiptw]{aiptw}": An Augmented Inverse Probability of Treatment Weighting estimator.}
   \item{"\link[=surv_aiptw_pseudo]{aiptw_pseudo}": An Augmented Inverse Probability of Treatment Weighting estimator using Pseudo-Values.}
-  \item{"\link[=surv_tmle]{tmle}": Targeted Maximum Likelihood Estimation for survival curves.}
-  \item{"\link[=surv_ostmle]{ostmle}": One-Step Targeted Maximum Likelihood Estimation for survival curves.}
+  \item{"\link[=surv_tmle]{tmle}": Targeted Maximum Likelihood Estimation.}
+  \item{"\link[=surv_ostmle]{ostmle}": One-Step Targeted Maximum Likelihood Estimation.}
   \item{"\link[=surv_strat_amato]{strat_amato}": A method based on stratification and weighting by Amato (1988).}
   \item{"\link[=surv_strat_gregory_nieto]{strat_gregory_nieto}": A method based on stratification and weighting by Gregory (1988) and Nieto & Coresh (1996).}
   \item{"\link[=surv_strat_cupples]{strat_cupples}": A method based on stratification and weighting by Cupples et al. (1995).}
@@ -94,7 +94,7 @@ For most methods approximations for the asymptotic variance of point estimates o
 
 There are two ways to deal with missing data using this function. The first is using the \code{na.action} argument. It simply calls the respective \code{na.action} function on the data before doing any further processing. By using \code{na.action="na.omit"} for example, only rows with complete data are kept for the analysis.
 
-Alternatively, this function also supports the use of multiple imputation via the \pkg{mice} package. Instead of supplying a single data.frame, the user should create a \code{mids} object using the \code{mice} function and directly pass this to the \code{data} argument. When methods are used which rely on previously estimated treatment assignment or outcome models such as \code{direct} or \code{aiptw}, the user is required to supply a \code{mira} object instead of a single model. In other words: the models have to be fit on every imputed dataset before supplying them to this function. See \code{?mice} and the associated documentation for more information on how to use multiple imputation. When using \code{bootstrap=TRUE} and multiple imputation, the bootstrapping is performed on every imputed dataset separately. Survival probabilities are simply averaged across the imputed datasets according to Rubins Rule. Confidence intervals are calculated by first averaging the standard errors over all imputed datasets and afterwards using this pooled value to obtain a new confidence interval with the normal approximation. This method has only been tested with missing values in covariates. It is not clear how good this works with missing values in \code{ev_time} or \code{event} so users should be cautious in those cases.
+Alternatively, this function also supports the use of multiple imputation via the \pkg{mice} package. Instead of supplying a single data.frame, the user should create a \code{mids} object using the \code{mice} function and directly pass this to the \code{data} argument. When methods are used which rely on previously estimated treatment assignment or outcome models such as \code{"direct"} or \code{"aiptw"}, the user is required to supply a \code{mira} object instead of a single model. In other words: the models have to be fit on every imputed dataset before supplying them to this function. See \code{?mice} and the associated documentation for more information on how to use multiple imputation. When using \code{bootstrap=TRUE} and multiple imputation, the bootstrapping is performed on every imputed dataset separately. Survival probabilities are simply averaged across the imputed datasets according to Rubins Rule. Confidence intervals are calculated by first averaging the standard errors over all imputed datasets and afterwards using this pooled value to obtain a new confidence interval with the normal approximation. This method has only been tested with missing values in covariates. It is not clear how good this works with missing values in \code{ev_time} or \code{event} so users should be cautious in those cases.
 
 \strong{\emph{Competing Risks}}
 
