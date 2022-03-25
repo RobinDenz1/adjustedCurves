@@ -78,6 +78,8 @@
 <p>When there are more than two survival curves or CIFs this function automatically performs pairwise comparisons between those. It is recommended to adjust the p-values obtained using this method for multiple testing. See <code><a href="https://rdrr.io/r/stats/p.adjust.html" class="external-link">?p.adjust</a></code> for more information.</p>
 <p><strong><em>Multiple Imputation</em></strong></p>
 <p>When the <code>adjustedsurv</code> or <code>adjustedcif</code> object was fitted using multiply imputed datasets, the tests are performed separately for each dataset. The estimates for the integral of the difference are combined using Rubins Rule. The confidence intervals for this quantity are calculated by pooling the bootstrap standard errors and recalculating the confidence interval using the normal approximation. The p-values are also pooled using a method described in Licht (2010). It is recommended to check if the pooled p-value is in agreement with the pooled confidence interval.</p>
+<p><strong><em>Graphical Displays</em></strong></p>
+<p>To plot the curves of the differences directly, we recommend using the  <code><a href="plot_difference.html">plot_difference</a></code> function. Similar to the main plot functions, it has a lot of arguments to customize the plot. If the main goal is to check the assumptions, we recommend using the <code><a href="plot.curve_test.html">plot</a></code> method instead.</p>
 <p><strong><em>Computational Details</em></strong></p>
 <p>Instead of relying on numerical integration, this function uses step-function interpolation, treating all supplied curves as step functions. The integral is then calculated using a simple sum of the squares defined by each step.</p>
     </div>
