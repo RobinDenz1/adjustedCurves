@@ -68,6 +68,7 @@
                 loess_smoother<span class="op">=</span><span class="cn">FALSE</span>, loess_span<span class="op">=</span><span class="fl">0.75</span>,
                 loess_color<span class="op">=</span><span class="va">color</span>, loess_size<span class="op">=</span><span class="va">size</span>,
                 loess_linetype<span class="op">=</span><span class="st">"dashed"</span>, loess_alpha<span class="op">=</span><span class="va">alpha</span>,
+                fill_area<span class="op">=</span><span class="cn">FALSE</span>, area_color<span class="op">=</span><span class="st">"blue"</span>, area_alpha<span class="op">=</span><span class="fl">0.4</span>,
                 <span class="va">...</span><span class="op">)</span></code></pre></div>
     </div>
 
@@ -76,9 +77,9 @@
     <dl><dt>x</dt>
 <dd><p>An <code>adjustedsurv</code> object created using the <code><a href="adjustedsurv.html">adjustedsurv</a></code> function or an <code>adjustedcif</code> object created using the <code><a href="adjustedcif.html">adjustedcif</a></code> function.</p></dd>
 <dt>group_1</dt>
-<dd><p>A single character string specifying one of the levels of the <code>variable</code> used in the original <code>adjustedsurv</code> or <code>adjustedcif</code> function call. This group will be subtracted from. For example if <code>group_1="A"</code> and <code>group_2="B"</code> the plotted curve will correspond to the survival probability of <code>A</code> minus the survival probability of <code>B</code> over time.</p></dd>
+<dd><p>A single character string specifying one of the levels of the <code>variable</code> used in the original <code>adjustedsurv</code> or <code>adjustedcif</code> function call. This group will be subtracted from. For example if <code>group_1="A"</code> and <code>group_2="B"</code> the plotted curve will correspond to the survival probability of <code>A</code> minus the survival probability of <code>B</code> over time. If <code>NULL</code>, this will default to the first level of <code>variable</code>.</p></dd>
 <dt>group_2</dt>
-<dd><p>Also a single character string specifying one of the levels of <code>variable</code>. This corresponds to the right side of the difference equation. See argument <code>group_2</code>.</p></dd>
+<dd><p>Also a single character string specifying one of the levels of <code>variable</code>. This corresponds to the right side of the difference equation. See argument <code>group_2</code>. If <code>NULL</code>, this will default to the second level of <code>variable</code>.</p></dd>
 <dt>conf_int</dt>
 <dd><p>A logical variable indicating whether the confidence intervals should be drawn. This only works when <code>bootstrap=TRUE</code> was used in the original <code>adjustedsurv</code> or <code>adjustedcif</code> function call. It also currently does not work if multiply imputed data was used.</p></dd>
 <dt>conf_level</dt>
@@ -133,12 +134,19 @@
 <dd><p>The linetype of the LOESS smoother line. Ignored if <code>loess_smoother=FALSE</code>.</p></dd>
 <dt>loess_alpha</dt>
 <dd><p>The transparency level of the LOESS smoother line. Ignored if <code>loess_smoother=FALSE</code>.</p></dd>
+<dt>fill_area</dt>
+<dd><p>Whether to add color to the area between 0 and the difference.</p></dd>
+<dt>area_color</dt>
+<dd><p>The color used to fill in the area between 0 and the difference when using <code>fill_area=TRUE</code>. Ignored otherwise.</p></dd>
+<dt>area_alpha</dt>
+<dd><p>The transparency level used to fill in the area between 0 and the difference when using <code>fill_area=TRUE</code>. Ignored otherwise.</p></dd>
 <dt>...</dt>
 <dd><p>Currently not used.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>This function allows the easy creation of difference curves. The syntax is exactly the same for both adjusted survival curves and adjusted CIFs. It currently does not support plotting multiple difference curves at once, which could be useful when there are more than two treatment groups in <code>variable</code>. If the user is interested in this, we recommend calling this function multiple times with the desired comparisons and concatenating the individual plots into one plot afterwards using a suitable function such as <code>par</code> or <code>ggarrange</code>.</p>
+    <p>This function allows the easy creation of difference curves. The syntax is exactly the same for both adjusted survival curves and adjusted CIFs. By default it calculates the difference up to the last point where estimates for both the <code>group_1</code> curve and the <code>group_2</code> curve are available.</p>
+<p>It currently does not support plotting multiple difference curves at once, which could be useful when there are more than two treatment groups in <code>variable</code>. If the user is interested in this, we recommend calling this function multiple times with the desired comparisons and concatenating the individual plots into one plot afterwards using a suitable function such as <code>par</code> or <code>ggarrange</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
