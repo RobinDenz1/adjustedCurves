@@ -22,6 +22,7 @@ plot_difference(x, group_1=NULL, group_2=NULL,
                 loess_smoother=FALSE, loess_span=0.75,
                 loess_color=color, loess_size=size,
                 loess_linetype="dashed", loess_alpha=alpha,
+                fill_area=FALSE, area_color="blue", area_alpha=0.4,
                 ...)
 }
 
@@ -30,10 +31,10 @@ plot_difference(x, group_1=NULL, group_2=NULL,
 An \code{adjustedsurv} object created using the \code{\link[adjustedCurves]{adjustedsurv}} function or an \code{adjustedcif} object created using the \code{\link[adjustedCurves]{adjustedcif}} function.
   }
   \item{group_1}{
-A single character string specifying one of the levels of the \code{variable} used in the original \code{adjustedsurv} or \code{adjustedcif} function call. This group will be subtracted from. For example if \code{group_1="A"} and \code{group_2="B"} the plotted curve will correspond to the survival probability of \code{A} minus the survival probability of \code{B} over time.
+A single character string specifying one of the levels of the \code{variable} used in the original \code{adjustedsurv} or \code{adjustedcif} function call. This group will be subtracted from. For example if \code{group_1="A"} and \code{group_2="B"} the plotted curve will correspond to the survival probability of \code{A} minus the survival probability of \code{B} over time. If \code{NULL}, this will default to the first level of \code{variable}.
   }
   \item{group_2}{
-Also a single character string specifying one of the levels of \code{variable}. This corresponds to the right side of the difference equation. See argument \code{group_2}.
+Also a single character string specifying one of the levels of \code{variable}. This corresponds to the right side of the difference equation. See argument \code{group_2}. If \code{NULL}, this will default to the second level of \code{variable}.
   }
   \item{conf_int}{
 A logical variable indicating whether the confidence intervals should be drawn. This only works when \code{bootstrap=TRUE} was used in the original \code{adjustedsurv} or \code{adjustedcif} function call. It also currently does not work if multiply imputed data was used.
@@ -116,12 +117,23 @@ The linetype of the LOESS smoother line. Ignored if \code{loess_smoother=FALSE}.
   \item{loess_alpha}{
 The transparency level of the LOESS smoother line. Ignored if \code{loess_smoother=FALSE}.
   }
+  \item{fill_area}{
+Whether to add color to the area between 0 and the difference.
+  }
+  \item{area_color}{
+The color used to fill in the area between 0 and the difference when using \code{fill_area=TRUE}. Ignored otherwise.
+  }
+  \item{area_alpha}{
+The transparency level used to fill in the area between 0 and the difference when using \code{fill_area=TRUE}. Ignored otherwise.
+  }
   \item{...}{
 Currently not used.
   }
 }
 \details{
-This function allows the easy creation of difference curves. The syntax is exactly the same for both adjusted survival curves and adjusted CIFs. It currently does not support plotting multiple difference curves at once, which could be useful when there are more than two treatment groups in \code{variable}. If the user is interested in this, we recommend calling this function multiple times with the desired comparisons and concatenating the individual plots into one plot afterwards using a suitable function such as \code{par} or \code{ggarrange}.
+This function allows the easy creation of difference curves. The syntax is exactly the same for both adjusted survival curves and adjusted CIFs. By default it calculates the difference up to the last point where estimates for both the \code{group_1} curve and the \code{group_2} curve are available.
+
+It currently does not support plotting multiple difference curves at once, which could be useful when there are more than two treatment groups in \code{variable}. If the user is interested in this, we recommend calling this function multiple times with the desired comparisons and concatenating the individual plots into one plot afterwards using a suitable function such as \code{par} or \code{ggarrange}.
 }
 \value{
 Returns a \code{ggplot2} object.

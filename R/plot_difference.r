@@ -87,6 +87,7 @@ plot_difference <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
                             loess_smoother=FALSE, loess_span=0.75,
                             loess_color=color, loess_size=size,
                             loess_linetype="dashed", loess_alpha=alpha,
+                            fill_area=FALSE, area_color="blue", area_alpha=0.4,
                             ...) {
   requireNamespace("ggplot2")
 
@@ -97,6 +98,7 @@ plot_difference <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
   diff_obj <- get_diff_curve(x=x, group_1=group_1, group_2=group_2,
                              use_boot=conf_int, conf_level=conf_level)
   plotdata <- diff_obj$diff_curve
+  plotdata <- plotdata[which(!is.na(plotdata$est)), ]
   plotdata <- plotdata[which(plotdata$time <= max_t), ]
 
   # initialize plot
@@ -156,6 +158,21 @@ plot_difference <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
                                       color=color)
     }
     p <- p + ggplot2::geom_point(size=size, color=color, alpha=alpha)
+  }
+
+  # add color to non-zero area if specified
+  if (type=="lines" & fill_area) {
+    p <- p + ggplot2::geom_area(fill=area_color, alpha=area_alpha)
+  } else if (type=="steps" & fill_area) {
+    p <- p + pammtools::geom_stepribbon(ggplot2::aes(ymin=0,
+                                                     ymax=.data$est,
+                                                     x=.data$time,
+                                                     y=.data$est),
+                                        fill=area_color,
+                                        alpha=area_alpha)
+  } else if ((type=="none" | type=="points") & fill_area) {
+    warning("'fill_area' can only be used with type='lines' and",
+            " type='steps'.")
   }
 
   # add loess smoother line

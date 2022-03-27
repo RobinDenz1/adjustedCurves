@@ -39,10 +39,22 @@ test_that("plot, with lines", {
   vdiffr::expect_doppelganger("plot, with lines", fig=plt)
 })
 
+test_that("plot, with lines ci", {
+  plt <- plot_difference(adj, type="lines", conf_int=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, with lines ci", fig=plt)
+})
+
 test_that("plot, with points", {
   plt <- plot_difference(adj, type="points")
   expect_s3_class(plt, "ggplot")
   vdiffr::expect_doppelganger("plot, with points", fig=plt)
+})
+
+test_that("plot, with points ci", {
+  plt <- plot_difference(adj, type="points", conf_int=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, with points ci", fig=plt)
 })
 
 test_that("plot, with none", {
@@ -63,10 +75,39 @@ test_that("plot, without line at 0", {
   vdiffr::expect_doppelganger("plot, without line at 0", fig=plt)
 })
 
+test_that("plot, with fill_area lines", {
+  plt <- plot_difference(adj, type="lines", fill_area=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, with fill_area lines", fig=plt)
+})
+
+test_that("plot, with fill_area steps", {
+  plt <- plot_difference(adj, type="steps", fill_area=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, with fill_area steps", fig=plt)
+})
+
 test_that("plot, with much stuff", {
   plt <- plot_difference(adj, conf_int=TRUE, color="blue", linetype="dotted",
                          alpha=0.8, line_at_0_size=1.1, line_at_0_color="red",
                          loess_smoother=TRUE, loess_span=0.55)
   expect_s3_class(plt, "ggplot")
   vdiffr::expect_doppelganger("plot, with much stuff", fig=plt)
+})
+
+sim_dat$event[1] <- 2
+adj <- adjustedcif(data=sim_dat,
+                   variable="group",
+                   ev_time="time",
+                   event="event",
+                   method="aalen_johansen",
+                   conf_int=TRUE,
+                   bootstrap=TRUE,
+                   n_boot=2,
+                   cause=1)
+
+test_that("plot, cif no arguments", {
+  plt <- plot_difference(adj, group_1="1", group_2="0")
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, cif no arguments", fig=plt)
 })
