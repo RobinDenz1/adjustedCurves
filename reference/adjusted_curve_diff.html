@@ -54,7 +54,8 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">adjusted_curve_diff</span><span class="op">(</span><span class="va">adj</span>, <span class="va">to</span>, from<span class="op">=</span><span class="fl">0</span>, conf_level<span class="op">=</span><span class="fl">0.95</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">adjusted_curve_diff</span><span class="op">(</span><span class="va">adj</span>, <span class="va">to</span>, from<span class="op">=</span><span class="fl">0</span>, conf_level<span class="op">=</span><span class="fl">0.95</span>,
+                    interpolation<span class="op">=</span><span class="st">"steps"</span>, subdivisions<span class="op">=</span><span class="fl">1000</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -67,6 +68,10 @@
 <dd><p>A number specifying the left side of the time interval of interest. It has to be a value of time that can be read from both of the estimated survival curves or CIFs. It is set to 0 by default.</p></dd>
 <dt>conf_level</dt>
 <dd><p>A number specifying the confidence level of the bootstrap confidence intervals.</p></dd>
+<dt>interpolation</dt>
+<dd><p>Either <code>"steps"</code> (default) or <code>"linear"</code>. This parameter controls how interpolation is performed. If this argument is set to <code>"steps"</code>, the curves will be treated as step functions. If it is set to <code>"linear"</code>, the curves wil be treated as if there are straight lines between the point estimates instead. Points that lie between estimated points will be interpolated accordingly. Should usually be kept at <code>"steps"</code>. See Details.</p></dd>
+<dt>subdivisions</dt>
+<dd><p>When using <code>interpolation="linear"</code>, the composite trapezoid method is used to calculate the integral of the difference between the curves. This argument defines the number of subdivisions that should be used when calculating the integral. Bigger number give a more accurate estimate, but take longer to compute.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -81,7 +86,7 @@
 <p><strong><em>Graphical Displays</em></strong></p>
 <p>To plot the curves of the differences directly, we recommend using the  <code><a href="plot_difference.html">plot_difference</a></code> function. Similar to the main plot functions, it has a lot of arguments to customize the plot. If the main goal is to check the assumptions, we recommend using the <code><a href="plot.curve_test.html">plot</a></code> method instead.</p>
 <p><strong><em>Computational Details</em></strong></p>
-<p>Instead of relying on numerical integration, this function uses step-function interpolation, treating all supplied curves as step functions. The integral is then calculated using a simple sum of the squares defined by each step.</p>
+<p>Instead of relying on numerical integration, this function uses step-function interpolation by default, treating all supplied curves as step functions. The integral is then calculated using a simple sum of the squares defined by each step. If the interpolation is correct, this gives an exact calculation of the difference integral. However, in some situations (for example when using parametric survival models with <code>method="direct"</code>), the curves are not step functions. In this case the <code>interpolation</code> argument should be set to <code>"linear"</code> to use a standard trapezoid estimate.</p>
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
