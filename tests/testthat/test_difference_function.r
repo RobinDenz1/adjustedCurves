@@ -11,7 +11,7 @@ results <- data.frame(time=c(0, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.6, 0.7),
 
 
 test_that("example test, same length", {
-  out <- exact_stepfun_difference(test_dat, times=sort(unique(test_dat$time)))
+  out <- difference_function(test_dat, times=sort(unique(test_dat$time)))
   expect_equal(out, results)
 })
 
@@ -27,6 +27,6 @@ results <- data.frame(time=c(0, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.6, 0.7,
                       surv=c(0, 0.1, -0.1, 0, -0.1, -0.05, -0.1, 0.15, NA, NA))
 
 test_that("example test, different length", {
-  out <- exact_stepfun_difference(test_dat, times=sort(unique(test_dat$time)))
+  out <- difference_function(test_dat, times=sort(unique(test_dat$time)))
   expect_equal(out, results)
 })

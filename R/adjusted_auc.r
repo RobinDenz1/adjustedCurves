@@ -14,7 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## calculate area under curve of adjustedsurv, adjustedcif objects
-area_under_curve <- function(adj, from, to, use_boot, conf_level) {
+area_under_curve <- function(adj, from, to, use_boot, conf_level,
+                             interpolation, subdivisions) {
 
   mode <- ifelse(inherits(adj, "adjustedsurv"), "surv", "cif")
   boot_str <- paste0("boot_adj", mode)
@@ -29,7 +30,9 @@ area_under_curve <- function(adj, from, to, use_boot, conf_level) {
 
       results_imp <- area_under_curve(adj$mids_analyses[[i]],
                                       to=to, from=from, use_boot=use_boot,
-                                      conf_level=conf_level)
+                                      conf_level=conf_level,
+                                      interpolation=interpolation,
+                                      subdivisions=subdivisions)
       mids_out[[i]] <- results_imp
       rmst_ests[[i]] <- results_imp$auc
       rmst_se[[i]] <- results_imp$auc_se
@@ -91,7 +94,9 @@ area_under_curve <- function(adj, from, to, use_boot, conf_level) {
 
         # recursion call
         adj_rmst <- area_under_curve(fake_object, from=from, to=to,
-                                     use_boot=FALSE)
+                                     use_boot=FALSE,
+                                     interpolation=interpolation,
+                                     subdivisions=subdivisions)
 
         booted_rmsts[[i]] <- adj_rmst$auc
       }
@@ -119,9 +124,18 @@ area_under_curve <- function(adj, from, to, use_boot, conf_level) {
       surv_dat$ci_upper <- NULL
       surv_dat$boot <- NULL
 
-      rmst <- exact_stepfun_integral(surv_dat, from=from, to=to, est=mode)
-      rmsts[i] <- rmst
+      if (interpolation=="steps") {
+        rmst <- exact_stepfun_integral(surv_dat, from=from, to=to, est=mode)
+      } else if (interpolation=="linear") {
+        times <- seq(from, to, (to-from)/subdivisions)
+        diff_dat <- data.frame(times=times)
+        diff_dat[, mode] <- vapply(X=times, FUN=read_from_linear_function,
+                                   FUN.VALUE=numeric(1), data=surv_dat,
+                                   est=mode)
+        rmst <- trapezoid_integral(x=diff_dat$time, y=diff_dat[, mode])
+      }
 
+      rmsts[i] <- rmst
     }
     names(rmsts) <- levs
 
@@ -152,7 +166,8 @@ area_under_curve <- function(adj, from, to, use_boot, conf_level) {
 ## adjusted survival curve previously estimated using the adjustedsurv function
 #' @export
 adjusted_rmst <- function(adjsurv, to, from=0, use_boot=FALSE,
-                          conf_level=0.95) {
+                          conf_level=0.95, interpolation="steps",
+                          subdivisions=1000) {
 
   check_inputs_adj_rmst(adjsurv=adjsurv, from=from, to=to, use_boot=use_boot)
 
@@ -162,7 +177,9 @@ adjusted_rmst <- function(adjsurv, to, from=0, use_boot=FALSE,
   }
 
   out <- area_under_curve(adj=adjsurv, to=to, from=from,
-                          use_boot=use_boot, conf_level=conf_level)
+                          use_boot=use_boot, conf_level=conf_level,
+                          interpolation=interpolation,
+                          subdivisions=subdivisions)
   class(out) <- "adjusted_rmst"
   return(out)
 }
@@ -171,7 +188,8 @@ adjusted_rmst <- function(adjsurv, to, from=0, use_boot=FALSE,
 ## adjusted CIF previously estimated using the adjustedsurv/adjustedcif function
 #' @export
 adjusted_rmtl <- function(adj, to, from=0, use_boot=FALSE,
-                          conf_level=0.95) {
+                          conf_level=0.95, interpolation="steps",
+                          subdivisions=1000) {
 
   check_inputs_adj_rmtl(adj=adj, from=from, to=to, use_boot=use_boot)
 
@@ -182,7 +200,9 @@ adjusted_rmtl <- function(adj, to, from=0, use_boot=FALSE,
 
   # calculate area under curve
   out <- area_under_curve(adj=adj, to=to, from=from, use_boot=use_boot,
-                          conf_level=conf_level)
+                          conf_level=conf_level,
+                          interpolation=interpolation,
+                          subdivisions=subdivisions)
   class(out) <- "adjusted_rmtl"
 
   # take area above curve instead

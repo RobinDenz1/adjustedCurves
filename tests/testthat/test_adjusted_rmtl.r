@@ -25,6 +25,11 @@ test_that("rmtl surv, no boot", {
   expect_equal(as.vector(round(adj_rmtl$auc, 4)), c(0.5789, 0.4279))
 })
 
+test_that("rmtl surv, no boot, linear", {
+  adj_rmtl <- adjusted_rmtl(adj, to=1.1, interpolation="linear")
+  expect_equal(as.vector(round(adj_rmtl$auc, 4)), c(0.5957, 0.4401))
+})
+
 test_that("rmtl surv, no boot but use_boot=TRUE", {
   adj_rmtl <- suppressWarnings(adjusted_rmtl(adj_no_boot, to=1.1,
                                              use_boot=TRUE))
@@ -35,6 +40,13 @@ test_that("rmtl surv, with boot", {
   adj_rmtl <- adjusted_rmtl(adj, to=1.1, use_boot=TRUE)
   expect_equal(as.vector(round(adj_rmtl$auc, 4)), c(0.5789, 0.4279))
   expect_equal(as.vector(round(adj_rmtl$auc_se, 4)), c(0.0511, 0.0587))
+  expect_equal(as.vector(adj_rmtl$n_boot), c(7, 5))
+})
+
+test_that("rmtl surv, with boot, linear", {
+  adj_rmtl <- adjusted_rmtl(adj, to=1.1, use_boot=TRUE, interpolation="linear")
+  expect_equal(as.vector(round(adj_rmtl$auc, 4)), c(0.5957, 0.4401))
+  expect_equal(as.vector(round(adj_rmtl$auc_se, 4)), c(0.0501, 0.0586))
   expect_equal(as.vector(adj_rmtl$n_boot), c(7, 5))
 })
 
@@ -71,10 +83,23 @@ test_that("rmtl cif, no boot", {
   expect_equal(as.vector(round(adj_rmtl$auc, 4)), c(0.1856, 0.1599))
 })
 
+test_that("rmtl cif, no boot, linear", {
+  adj_rmtl <- adjusted_rmtl(adj, to=1.1, interpolation="linear")
+  expect_equal(as.vector(round(adj_rmtl$auc, 4)), c(0.1918, 0.1618))
+})
+
 test_that("rmtl cif, with boot", {
   adj_rmtl <- adjusted_rmtl(adj, to=1.1, use_boot=TRUE)
   expect_equal(as.vector(round(adj_rmtl$auc, 4)), c(0.1856, 0.1599))
   expect_equal(as.vector(round(adj_rmtl$auc_se, 4)), c(0.1185, 0.0775))
+  expect_equal(as.vector(adj_rmtl$n_boot), c(10, 10))
+})
+
+test_that("rmtl cif, with boot, linear", {
+  adj_rmtl <- adjusted_rmtl(adj, to=1.1, use_boot=TRUE,
+                            interpolation="linear")
+  expect_equal(as.vector(round(adj_rmtl$auc, 4)), c(0.1918, 0.1618))
+  expect_equal(as.vector(round(adj_rmtl$auc_se, 4)), c(0.1204, 0.0784))
   expect_equal(as.vector(adj_rmtl$n_boot), c(10, 10))
 })
 

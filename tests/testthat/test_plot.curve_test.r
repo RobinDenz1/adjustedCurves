@@ -48,6 +48,13 @@ test_that("plot.curve_test, 2 treatments, type='integral' + labs", {
   expect_s3_class(plt, "ggplot")
 })
 
+adj_test <- adjusted_curve_diff(adj=adj, from=0, to=0.5, interpolation="linear")
+
+test_that("plot.curve_test, 2 treatments, type='curves', linear", {
+  plt <- plot(adj_test, type="curves")
+  expect_s3_class(plt, "ggplot")
+})
+
 # > 2 treatments
 
 sim_dat$group <- as.character(sim_dat$group)

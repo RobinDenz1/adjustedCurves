@@ -8,7 +8,8 @@ Test if there is a difference between two Confounder-Adjusted Survival Curves or
 This function implements a modified version of the Pepe and Flemming (1989) test for the difference between two adjusted survival curves or CIFs. In particular, the Null-Hypothesis is that the integral of the difference of the two curves in a specified time interval is equal to zero.
 }
 \usage{
-adjusted_curve_diff(adj, to, from=0, conf_level=0.95)
+adjusted_curve_diff(adj, to, from=0, conf_level=0.95,
+                    interpolation="steps", subdivisions=1000)
 }
 
 \arguments{
@@ -23,6 +24,12 @@ A number specifying the left side of the time interval of interest. It has to be
   }
   \item{conf_level}{
 A number specifying the confidence level of the bootstrap confidence intervals.
+  }
+  \item{interpolation}{
+Either \code{"steps"} (default) or \code{"linear"}. This parameter controls how interpolation is performed. If this argument is set to \code{"steps"}, the curves will be treated as step functions. If it is set to \code{"linear"}, the curves wil be treated as if there are straight lines between the point estimates instead. Points that lie between estimated points will be interpolated accordingly. Should usually be kept at \code{"steps"}. See Details.
+  }
+  \item{subdivisions}{
+When using \code{interpolation="linear"}, the composite trapezoid method is used to calculate the integral of the difference between the curves. This argument defines the number of subdivisions that should be used when calculating the integral. Bigger number give a more accurate estimate, but take longer to compute.
   }
 }
 \details{
@@ -45,7 +52,7 @@ To plot the curves of the differences directly, we recommend using the  \code{\l
 
 \strong{\emph{Computational Details}}
 
-Instead of relying on numerical integration, this function uses step-function interpolation, treating all supplied curves as step functions. The integral is then calculated using a simple sum of the squares defined by each step.
+Instead of relying on numerical integration, this function uses step-function interpolation by default, treating all supplied curves as step functions. The integral is then calculated using a simple sum of the squares defined by each step. If the interpolation is correct, this gives an exact calculation of the difference integral. However, in some situations (for example when using parametric survival models with \code{method="direct"}), the curves are not step functions. In this case the \code{interpolation} argument should be set to \code{"linear"} to use a standard trapezoid estimate.
 
 }
 \value{

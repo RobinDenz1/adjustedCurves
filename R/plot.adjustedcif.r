@@ -161,8 +161,15 @@ plot.adjustedcif <- function(x, conf_int=FALSE, max_t=Inf,
       cens_times <- sort(unique(x$data[, x$call$ev_time][
         x$data[, x$call$event]==0 & x$data[, x$call$variable]==levs[i]]))
       adjcif_temp <- plotdata[plotdata$group==levs[i], ]
-      cens_cif <- vapply(X=cens_times, FUN=read_from_step_function,
-                         FUN.VALUE=numeric(1), step_data=adjcif_temp,
+
+      if (steps) {
+        read_fun <- read_from_step_function
+      } else {
+        read_fun <- read_from_linear_function
+      }
+
+      cens_cif <- vapply(X=cens_times, FUN=read_fun,
+                         FUN.VALUE=numeric(1), data=adjcif_temp,
                          est="cif")
       cens_dat[[i]] <- data.frame(time=cens_times, cif=cens_cif,
                                   group=levs[i])

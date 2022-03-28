@@ -457,6 +457,15 @@ test_that("adjusted_curve_diff, 2 treatments", {
   expect_equal(adj_test$n_boot, 3)
 })
 
+### adjusted_curve_diff
+test_that("adjusted_curve_diff, 2 treatments, linear", {
+  adj_test <- adjusted_curve_diff(adjsurv, from=0, to=1, interpolation="linear")
+  expect_equal(round(adj_test$observed_diff_integral, 4), -0.1009)
+  expect_equal(round(adj_test$integral_se, 4), 0.0374)
+  expect_equal(round(adj_test$p_value, 4), 0)
+  expect_equal(adj_test$n_boot, 3)
+})
+
 # create 3 treatments
 sim_dat$group2 <- 0
 sim_dat$group2[sim_dat$group==1] <-

@@ -15,11 +15,17 @@ adj <- adjustedsurv(data=sim_dat,
                     conf_int=TRUE,
                     bootstrap=FALSE)
 
-test_that("median surv, no boot", {
+test_that("median surv", {
   adj_med <- adjusted_median_survival(adj, verbose=FALSE)
   expect_equal(round(adj_med$median_surv, 4), c(0.4785, 0.6252))
 })
 
 test_that("median surv, with verbose", {
   expect_snapshot_output(adjusted_median_survival(adj, verbose=TRUE))
+})
+
+test_that("median surv, no boot", {
+  adj_med <- adjusted_median_survival(adj, verbose=FALSE,
+                                      interpolation="linear")
+  expect_equal(round(adj_med$median_surv, 4), c(0.4753, 0.6292))
 })

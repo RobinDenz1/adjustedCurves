@@ -16,7 +16,8 @@
 ## Hypothesis-Test for the difference between two adjusted survival curves
 ## or two adjusted cumulative incidence functions
 #' @export
-adjusted_curve_diff <- function(adj, to, from=0, conf_level=0.95) {
+adjusted_curve_diff <- function(adj, to, from=0, conf_level=0.95,
+                                interpolation="steps", subdivisions=1000) {
 
   # silence devtools::check() notes
   . <- comparison <- area_est <- p_val <- n_boot <- NULL
@@ -35,6 +36,8 @@ adjusted_curve_diff <- function(adj, to, from=0, conf_level=0.95) {
 
     output <- adjusted_curve_diff.MI(adj=adj, to=to, from=from,
                                      conf_level=conf_level, est=est,
+                                     interpolation=interpolation,
+                                     subdivisions=subdivisions,
                                      adj_method=adj_method,
                                      treat_labs=treat_labs)
   ## using regular results
@@ -54,16 +57,23 @@ adjusted_curve_diff <- function(adj, to, from=0, conf_level=0.95) {
         # select one bootstrap data set each
         boot_dat <- adj$boot_data[adj$boot_data$boot==i, ]
 
-        # every relevant point in time
-        times <- sort(unique(boot_dat$time))
+        # 1.) get every relevant point in time
+        # 2.) create new curve of the difference
+        # 3.) get integral of that curve
+        if (interpolation=="steps") {
+          times <- sort(unique(boot_dat$time))
+          surv_diff <- difference_function(adj=boot_dat, times=times, est=est,
+                                           type="steps")
+          diff_integral <- exact_stepfun_integral(surv_diff, to=to, from=from,
+                                                  est=est)
+        } else if (interpolation=="linear") {
+          times <- seq(from, to, (to-from)/subdivisions)
+          surv_diff <- difference_function(adj=boot_dat, times=times, est=est,
+                                           type="linear")
+          diff_integral <- trapezoid_integral(x=surv_diff$time,
+                                              y=surv_diff[, est])
+        }
 
-        # new curve of the difference
-        surv_diff <- exact_stepfun_difference(adj=boot_dat, times=times,
-                                              est=est)
-
-        # integral of that curve
-        diff_integral <- exact_stepfun_integral(surv_diff, to=to, from=from,
-                                                est=est)
         stats_vec[i] <- diff_integral
 
         # also append difference curve to list
@@ -79,18 +89,17 @@ adjusted_curve_diff <- function(adj, to, from=0, conf_level=0.95) {
 
       # actually observed values
       if (est=="surv") {
-        times <- sort(unique(adj$adjsurv$time))
-        observed_diff_curve <- exact_stepfun_difference(adj=adj$adjsurv,
-                                                        times=times, est=est)
+        observed <- difference_integral(adj=adj$adjsurv, from=from, to=to,
+                                        type=interpolation, est="surv",
+                                        subdivisions=subdivisions)
       } else {
-        times <- sort(unique(adj$adjcif$time))
-        observed_diff_curve <- exact_stepfun_difference(adj=adj$adjcif,
-                                                        times=times, est=est)
+        observed <- difference_integral(adj=adj$adjcif, from=from, to=to,
+                                        type=interpolation, est="cif",
+                                        subdivisions=subdivisions)
       }
 
-      observed_diff_integral <- exact_stepfun_integral(observed_diff_curve,
-                                                       to=to, from=from,
-                                                       est=est)
+      observed_diff_curve <- observed$diff_dat
+      observed_diff_integral <- observed$area
 
       # remove NA values
       stats_vec <- stats_vec[!is.na(stats_vec)]
@@ -124,6 +133,7 @@ adjusted_curve_diff <- function(adj, to, from=0, conf_level=0.95) {
                   categorical=FALSE,
                   treat_labs=treat_labs,
                   method=adj_method,
+                  interpolation=interpolation,
                   call=fun_call)
 
     ## more than two treatments -> perform pairwise comparisons
@@ -184,7 +194,9 @@ adjusted_curve_diff <- function(adj, to, from=0, conf_level=0.95) {
         pair <- adjusted_curve_diff(adj=fake_adjsurv,
                                     from=from,
                                     to=to,
-                                    conf_level=conf_level)
+                                    conf_level=conf_level,
+                                    interpolation=interpolation,
+                                    subdivisions=subdivisions)
         out[[paste0(group_0, " vs. ", group_1)]] <- pair
       }
       out$categorical <- TRUE
@@ -198,7 +210,8 @@ adjusted_curve_diff <- function(adj, to, from=0, conf_level=0.95) {
 
 ## Same test but using multiple imputation
 adjusted_curve_diff.MI <- function(adj, to, from, conf_level, est,
-                                   adj_method, treat_labs) {
+                                   adj_method, treat_labs,
+                                   interpolation, subdivisions) {
 
   # silence devtools::check() notes
   . <- comparison <- area_est <- p_val <- n_boot <- NULL
@@ -212,7 +225,9 @@ adjusted_curve_diff.MI <- function(adj, to, from, conf_level, est,
 
       results_imp <- adjusted_curve_diff(adj$mids_analyses[[i]],
                                          to=to, from=from,
-                                         conf_level=conf_level)
+                                         conf_level=conf_level,
+                                         interpolation=interpolation,
+                                         subdivisions=subdivisions)
       mids_out[[i]] <- results_imp
       comp_names <- names(results_imp)
 
@@ -265,6 +280,7 @@ adjusted_curve_diff.MI <- function(adj, to, from, conf_level, est,
                   categorical=FALSE,
                   treat_labs=mids_out[[1]][[i]]$treat_labs,
                   method=adj_method,
+                  interpolation=interpolation,
                   call=fun_call)
       class(out) <- "curve_test"
       output[[pooled_dat$comparison[i]]] <- out
@@ -286,7 +302,9 @@ adjusted_curve_diff.MI <- function(adj, to, from, conf_level, est,
 
       results_imp <- adjusted_curve_diff(adj$mids_analyses[[i]],
                                          to=to, from=from,
-                                         conf_level=conf_level)
+                                         conf_level=conf_level,
+                                         interpolation=interpolation,
+                                         subdivisions=subdivisions)
       mids_out[[i]] <- results_imp
       area_ests[i] <- results_imp$observed_diff_integral
       area_se[i] <- results_imp$integral_se
@@ -323,6 +341,7 @@ adjusted_curve_diff.MI <- function(adj, to, from, conf_level, est,
                 categorical=FALSE,
                 treat_labs=treat_labs,
                 method=adj_method,
+                interpolation=interpolation,
                 call=fun_call)
     class(out) <- "curve_test"
 
@@ -534,10 +553,21 @@ plot.curve_test <- function(x, type="curves", xlab=NULL, ylab=NULL,
       diff_curves <- dplyr::bind_rows(diff_curves)
       colnames(diff_curves) <- c("time", "surv", "boot", "comp")
 
-      p <- ggplot2::ggplot(diff_curves, ggplot2::aes(x=time, y=surv)) +
-        ggplot2::geom_step(ggplot2::aes(group=boot), color="grey", alpha=0.8) +
-        ggplot2::geom_step(data=observed_diff_curves,
-                           ggplot2::aes(x=time, y=surv)) +
+      p <- ggplot2::ggplot(diff_curves, ggplot2::aes(x=time, y=surv))
+
+      if (x[[1]]$interpolation=="steps") {
+        p <- p + ggplot2::geom_step(ggplot2::aes(group=boot), color="grey",
+                                    alpha=0.8) +
+          ggplot2::geom_step(data=observed_diff_curves,
+                             ggplot2::aes(x=time, y=surv))
+      } else {
+        p <- p + ggplot2::geom_line(ggplot2::aes(group=boot), color="grey",
+                                    alpha=0.8) +
+          ggplot2::geom_line(data=observed_diff_curves,
+                             ggplot2::aes(x=time, y=surv))
+      }
+
+      p <- p +
         ggplot2::geom_hline(yintercept=0, linetype="dashed") +
         ggplot2::theme_bw() +
         ggplot2::labs(x=xlab, y=ylab) +
@@ -588,11 +618,21 @@ plot.curve_test <- function(x, type="curves", xlab=NULL, ylab=NULL,
       observed_diff_curve <- x$observed_diff_curve
       colnames(observed_diff_curve) <- c("time", "surv")
 
-      p <- ggplot2::ggplot(diff_curves, ggplot2::aes(x=time, y=surv)) +
-        ggplot2::geom_step(ggplot2::aes(group=boot), color="grey", alpha=0.8) +
-        ggplot2::geom_step(data=observed_diff_curve,
-                           ggplot2::aes(x=time, y=surv)) +
-        ggplot2::geom_hline(yintercept=0, linetype="dashed") +
+      p <- ggplot2::ggplot(diff_curves, ggplot2::aes(x=time, y=surv))
+
+      if (x$interpolation=="steps") {
+        p <- p + ggplot2::geom_step(ggplot2::aes(group=boot), color="grey",
+                                    alpha=0.8) +
+          ggplot2::geom_step(data=observed_diff_curve,
+                             ggplot2::aes(x=time, y=surv))
+      } else {
+        p <- p + ggplot2::geom_line(ggplot2::aes(group=boot), color="grey",
+                                    alpha=0.8) +
+          ggplot2::geom_line(data=observed_diff_curve,
+                             ggplot2::aes(x=time, y=surv))
+      }
+
+      p <- p + ggplot2::geom_hline(yintercept=0, linetype="dashed") +
         ggplot2::theme_bw() +
         ggplot2::labs(x=xlab, y=ylab)
 

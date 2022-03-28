@@ -334,6 +334,14 @@ test_that("adjusted_curve_diff, two treatments", {
   expect_equal(adj_test$n_boot, 2)
 })
 
+test_that("adjusted_curve_diff, two treatments, linear", {
+  adj_test <- adjusted_curve_diff(adjcif, from=0, to=1, interpolation="linear")
+  expect_equal(round(adj_test$observed_diff_integral, 4), -0.0529)
+  expect_equal(round(adj_test$integral_se, 4), 0.0267)
+  expect_equal(round(adj_test$p_value, 4), 0)
+  expect_equal(adj_test$n_boot, 2)
+})
+
 # create 3 treatments
 sim_dat$group2 <- 0
 sim_dat$group2[sim_dat$group==1] <-
@@ -360,6 +368,16 @@ test_that("adjusted_curve_diff, three treatments", {
   expect_equal(round(adj_test$`Chemo vs. Placebo`$observed_diff_integral, 4),
                -0.0309)
   expect_equal(round(adj_test$`Chemo vs. Placebo`$integral_se, 4), 0.0670)
+  expect_equal(round(adj_test$`Chemo vs. Placebo`$p_value, 4), NaN)
+  expect_equal(adj_test$`Chemo vs. Placebo`$mids_p_values, c(1, 1, 0))
+  expect_equal(adj_test$`Chemo vs. Placebo`$n_boot, 2)
+})
+
+test_that("adjusted_curve_diff, three treatmentsm linear", {
+  adj_test <- adjusted_curve_diff(adjcif, from=0, to=1, interpolation="linear")
+  expect_equal(round(adj_test$`Chemo vs. Placebo`$observed_diff_integral, 4),
+               -0.0312)
+  expect_equal(round(adj_test$`Chemo vs. Placebo`$integral_se, 4), 0.0685)
   expect_equal(round(adj_test$`Chemo vs. Placebo`$p_value, 4), NaN)
   expect_equal(adj_test$`Chemo vs. Placebo`$mids_p_values, c(1, 1, 0))
   expect_equal(adj_test$`Chemo vs. Placebo`$n_boot, 2)

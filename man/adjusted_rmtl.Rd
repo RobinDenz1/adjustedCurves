@@ -9,7 +9,8 @@ This function can be utilized to calculate the confounder-adjusted restricted me
 }
 \usage{
 adjusted_rmtl(adj, to, from=0, use_boot=FALSE,
-              conf_level=0.95)
+              conf_level=0.95, interpolation="steps",
+              subdivisions=1000)
 }
 
 \arguments{
@@ -28,12 +29,18 @@ Whether bootstrap estimates should be used to calculate the standard deviation a
   \item{conf_level}{
 A number specifying the confidence level of the bootstrap confidence intervals.
   }
+  \item{interpolation}{
+Either \code{"steps"} (default) or \code{"linear"}. This parameter controls how interpolation is performed. If this argument is set to \code{"steps"}, the curves will be treated as step functions. If it is set to \code{"linear"}, the curves wil be treated as if there are straight lines between the point estimates instead. Points that lie between estimated points will be interpolated accordingly. Should usually be kept at \code{"steps"}. See Details.
+  }
+  \item{subdivisions}{
+When using \code{interpolation="linear"}, the composite trapezoid method is used to calculate the integral of the curves. This argument defines the number of subdivisions that should be used when calculating the integral. Bigger number give a more accurate estimate, but take longer to compute.
+  }
 }
 \details{
 
 The adjusted restricted mean time lost is very similar to the adjusted restricted mean survival time. The only difference is that instead of using the integral of the survival curve, the integral of the cumulative incidence function is taken. This is mostly usefull when there are competing risks and the survival function is not identifiable. It can however also be calculated using single-event survival data. When supplying \code{adjustedsurv} objects the survival curves are simply transformed to CIFs before the integrals are calculated.
 
-This quantity can be interpreted as the mean time it takes to succumb to the event of interest. More information on the method itself can be found in the references. More information on the implementation (concerning multiple imputation etc.) can be found in the documentation of the \code{\link{adjusted_rmst}} function.
+This quantity can be interpreted as the mean time it takes to succumb to the event of interest. More information on the method itself can be found in the references. More information on the implementation (concerning missing data, confidence interval calculation, etc.) can be found in the documentation of the \code{\link{adjusted_rmst}} function.
 
 }
 \value{

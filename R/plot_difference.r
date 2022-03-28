@@ -1,6 +1,7 @@
 
 ## calculate the curve of the difference
-get_diff_curve <- function(x, group_1, group_2, use_boot, conf_level) {
+get_diff_curve <- function(x, group_1, group_2, use_boot, conf_level,
+                           interpolation) {
 
   # silence devtools::check()
   . <- time <- est <- NULL
@@ -26,8 +27,8 @@ get_diff_curve <- function(x, group_1, group_2, use_boot, conf_level) {
 
   # observed
   times <- sort(unique(plotdata$time))
-  diff_curve <- exact_stepfun_difference(adj=plotdata, times=times,
-                                         est=est_type)
+  diff_curve <- difference_function(adj=plotdata, times=times, est=est_type,
+                                    type=interpolation)
   colnames(diff_curve) <- c("time", "est")
 
   # bootstrapped
@@ -39,8 +40,8 @@ get_diff_curve <- function(x, group_1, group_2, use_boot, conf_level) {
       boot_dat <- x$boot_data[x$boot_data$boot==i, ]
       boot_dat$group <- factor(boot_dat$group, levels=c(group_1, group_2))
 
-      boot_diff <- exact_stepfun_difference(adj=boot_dat, times=times,
-                                            est=est_type)
+      boot_diff <- difference_function(adj=boot_dat, times=times, est=est_type,
+                                       type=interpolation)
       boot_diff$boot <- i
       boot_diff_curves[[i]] <- boot_diff
     }
@@ -94,9 +95,17 @@ plot_difference <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
   check_inputs_plot_difference(x=x, group_1=group_1, group_2=group_2,
                                conf_int=conf_int, type=type, max_t=max_t)
 
+  # what kind of interpolation to use
+  if (type=="lines") {
+    interpolation <- "linear"
+  } else {
+    interpolation <- "steps"
+  }
+
   # get relevant data
   diff_obj <- get_diff_curve(x=x, group_1=group_1, group_2=group_2,
-                             use_boot=conf_int, conf_level=conf_level)
+                             use_boot=conf_int, conf_level=conf_level,
+                             interpolation=interpolation)
   plotdata <- diff_obj$diff_curve
   plotdata <- plotdata[which(!is.na(plotdata$est)), ]
   plotdata <- plotdata[which(plotdata$time <= max_t), ]

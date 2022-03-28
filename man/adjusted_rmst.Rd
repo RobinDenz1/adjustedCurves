@@ -9,7 +9,8 @@ This function can be utilized to calculate the confounder-adjusted restricted me
 }
 \usage{
 adjusted_rmst(adjsurv, to, from=0, use_boot=FALSE,
-              conf_level=0.95)
+              conf_level=0.95, interpolation="steps",
+              subdivisions=1000)
 }
 
 \arguments{
@@ -27,6 +28,12 @@ Whether bootstrap estimates should be used to calculate the standard deviation a
   }
   \item{conf_level}{
 A number specifying the confidence level of the bootstrap confidence intervals.
+  }
+  \item{interpolation}{
+Either \code{"steps"} (default) or \code{"linear"}. This parameter controls how interpolation is performed. If this argument is set to \code{"steps"}, the curves will be treated as step functions. If it is set to \code{"linear"}, the curves wil be treated as if there are straight lines between the point estimates instead. Points that lie between estimated points will be interpolated accordingly. Should usually be kept at \code{"steps"}. See Details.
+  }
+  \item{subdivisions}{
+When using \code{interpolation="linear"}, the composite trapezoid method is used to calculate the integral of the curves. This argument defines the number of subdivisions that should be used when calculating the integral. Bigger number give a more accurate estimate, but take longer to compute.
   }
 }
 \details{
@@ -53,7 +60,7 @@ This function cannot be used with \code{adjustedcif} objects, because the surviv
 
 \strong{\emph{Computational Details}}
 
-Since the estimated survival functions are step functions the integrals are calculated exactly instead of relying on trapezoid approximations.
+Since the estimated survival functions are usually step functions, the integrals are by default calculated exactly instead of relying on trapezoid approximations. By setting \code{interpolation="linear"} the trapezoid version can be calculated instead. This, however, should only be used when the curves are not step functions. For example, this is the case when using a parametric survival model with \code{method="direct"}. The produced curves are smooth functions then, requiring linear interpolation for correct integral calculations.
 
 }
 \value{

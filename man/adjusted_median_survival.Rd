@@ -8,7 +8,8 @@ Calculate Confounder-Adjusted Median Survival Times
 This function can be utilized to calculate the confounder-adjusted median survival time, given previously estimated adjusted survival curves.
 }
 \usage{
-adjusted_median_survival(adjsurv, p=0.5, verbose=TRUE)
+adjusted_median_survival(adjsurv, p=0.5, verbose=TRUE,
+                         interpolation="steps")
 }
 
 \arguments{
@@ -20,6 +21,9 @@ The quantile of interest. To calculate the median survival time, set this parame
   }
   \item{verbose}{
 Whether to print the output or not.
+  }
+  \item{interpolation}{
+Either \code{"steps"} (default) or \code{"linear"}. This parameter controls how interpolation is performed. If this argument is set to \code{"steps"}, the curves will be treated as step functions. If it is set to \code{"linear"}, the curves wil be treated as if there are straight lines between the point estimates instead. Points that lie between estimated points will be interpolated accordingly.
   }
 }
 \details{

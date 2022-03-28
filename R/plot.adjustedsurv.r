@@ -183,8 +183,15 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
       # y axis place to put them
       adjsurv_temp <- plotdata[plotdata$group==levs[i] &
                                  !is.na(plotdata$surv), ]
-      cens_surv <- vapply(cens_times, read_from_step_function,
-                          step_data=adjsurv_temp, FUN.VALUE=numeric(1))
+
+      if (steps) {
+        read_fun <- read_from_step_function
+      } else {
+        read_fun <- read_from_linear_function
+      }
+
+      cens_surv <- vapply(cens_times, read_fun,
+                          data=adjsurv_temp, FUN.VALUE=numeric(1))
       if (length(cens_times)!=0) {
         cens_dat[[i]] <- data.frame(time=cens_times, surv=cens_surv,
                                     group=levs[i])
@@ -295,9 +302,17 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
     # calculate median survival and add other needed values
     fake_adjsurv <- x
     fake_adjsurv$adjsurv <- plotdata
+
+    if (steps) {
+      interpolation <- "steps"
+    } else {
+      interpolation <- "linear"
+    }
+
     median_surv <- adjusted_median_survival(fake_adjsurv,
                                             p=median_surv_quantile,
-                                            verbose=FALSE)
+                                            verbose=FALSE,
+                                            interpolation=interpolation)
     median_surv$y <- median_surv_quantile
     # set to NA if not in plot
     median_surv$median_surv[median_surv$median_surv > max_t] <- NA

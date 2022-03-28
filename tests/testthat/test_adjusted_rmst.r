@@ -23,6 +23,11 @@ test_that("rmst 2 treatments, no boot", {
   expect_equal(as.vector(round(adj_rmst$auc, 4)), c(0.5211, 0.6721))
 })
 
+test_that("rmst 2 treatments, no boot, linear", {
+  adj_rmst <- adjusted_rmst(adj, to=1.1, interpolation="linear")
+  expect_equal(as.vector(round(adj_rmst$auc, 4)), c(0.50430, 0.6599))
+})
+
 test_that("rmst 2 treatments, no boot but use_boot=TRUE", {
   adj_rmst <- suppressWarnings(adjusted_rmst(adj_no_boot, to=1.1,
                                              use_boot=TRUE))
@@ -33,6 +38,14 @@ test_that("rmst 2 treatments, with boot", {
   adj_rmst <- adjusted_rmst(adj, to=1.1, use_boot=TRUE)
   expect_equal(as.vector(round(adj_rmst$auc, 4)), c(0.5211, 0.6721))
   expect_equal(as.vector(round(adj_rmst$auc_se, 4)), c(0.0511, 0.0587))
+  expect_equal(as.vector(adj_rmst$n_boot), c(7, 5))
+})
+
+test_that("rmst 2 treatments, with boot, linear", {
+  adj_rmst <- adjusted_rmst(adj, to=1.1, use_boot=TRUE,
+                            interpolation="linear")
+  expect_equal(as.vector(round(adj_rmst$auc, 4)), c(0.5043, 0.6599))
+  expect_equal(as.vector(round(adj_rmst$auc_se, 4)), c(0.0501, 0.0586))
   expect_equal(as.vector(adj_rmst$n_boot), c(7, 5))
 })
 
@@ -63,16 +76,20 @@ adj <- adjustedsurv(data=sim_dat,
                     bootstrap=TRUE,
                     n_boot=10)
 
+test_that("rmst 3 treatments, no boot", {
+  adj_rmst <- adjusted_rmst(adj, to=1)
+  expect_equal(as.vector(round(adj_rmst$auc, 4)), c(0.5115, 0.7021, 0.6293))
+})
 
 test_that("rmst 3 treatments, no boot", {
   adj_rmst <- adjusted_rmst(adj, to=1)
   expect_equal(as.vector(round(adj_rmst$auc, 4)), c(0.5115, 0.7021, 0.6293))
 })
 
-test_that("rmst 3 treatments, with boot", {
-  adj_rmst <- adjusted_rmst(adj, to=1, use_boot=TRUE)
-  expect_equal(as.vector(round(adj_rmst$auc, 4)), c(0.5115, 0.7021, 0.6293))
-  expect_equal(as.vector(round(adj_rmst$auc_se, 4)), c(0.0692, 0.0639, 0.0706))
+test_that("rmst 3 treatments, with boot, linear", {
+  adj_rmst <- adjusted_rmst(adj, to=1, use_boot=TRUE, interpolation="linear")
+  expect_equal(as.vector(round(adj_rmst$auc, 4)), c(0.4958, 0.6867, 0.6221))
+  expect_equal(as.vector(round(adj_rmst$auc_se, 4)), c(0.0691, 0.0628, 0.0703))
   expect_equal(as.vector(adj_rmst$n_boot), c(10, 6, 8))
 })
 
