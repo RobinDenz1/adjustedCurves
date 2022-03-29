@@ -1008,7 +1008,8 @@ check_inputs_sim_crisk_fun <- function(n, lcovars, outcome_betas, gamma,
 
 ## check inputs for plot_difference function
 check_inputs_plot_difference <- function(x, group_1, group_2, conf_int,
-                                         type, max_t) {
+                                         type, max_t, test, integral_from,
+                                         integral_to, p_value, integral) {
 
   if (!inherits(x, c("adjustedsurv", "adjustedcif"))) {
     stop("'x' must be an 'adjustedsurv' object created using the adjustedsurv",
@@ -1046,5 +1047,25 @@ check_inputs_plot_difference <- function(x, group_1, group_2, conf_int,
          " c('steps', 'lines', 'points', 'none').")
   } else if (!(length(max_t)==1 && is.numeric(max_t) && max_t > 0)) {
     stop("'max_t' must be a single number bigger than 0.")
+  } else if (!is.null(test) & !inherits(test, "curve_test")) {
+    stop("'test' must be either NULL or a 'curve_test' object created using",
+         " the adjusted_curve_diff function.")
+  } else if (!is.null(integral_from) & !(length(integral_from)==1 &&
+             is.numeric(integral_from) && integral_from >= 0)) {
+    stop("'integral_from' must be a single number > 0 or NULL.")
+  } else if (!is.null(integral_to) & !(length(integral_to)==1 &&
+                                       is.numeric(integral_to))) {
+    stop("'integral_to' must be a single number.")
+  } else if (!is.null(integral_to) && integral_from >= integral_to) {
+    stop("'integral_from' must be smaller than 'integral_to'.")
+  } else if (integral & is.null(test) & is.null(integral_to)) {
+    stop("If 'integral' is specified, either 'test' or 'integral_to' also",
+         " need to be specified. See details.")
+  } else if (p_value & is.null(test) & is.null(integral_to)) {
+    stop("If 'p_value' is specified, either 'test' or 'integral_to' also",
+         " need to be specified. See details.")
+  } else if (p_value & is.null(test) & is.null(x$boot_data)) {
+    stop("'p_value' can only be used when bootstrap=TRUE was used in the",
+         " original adjustedsurv or adjustedcif function call.")
   }
 }

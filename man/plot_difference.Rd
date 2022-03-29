@@ -22,7 +22,16 @@ plot_difference(x, group_1=NULL, group_2=NULL,
                 loess_smoother=FALSE, loess_span=0.75,
                 loess_color=color, loess_size=size,
                 loess_linetype="dashed", loess_alpha=alpha,
+                test=NULL, integral_from=0, integral_to=NULL,
+                integral_subdivisions=1000,
+                p_value=FALSE, integral=FALSE,
+                interval=FALSE, text_pos_x="left",
+                text_pos_y="bottom", text_size=3.5,
+                text_family="serif", text_fontface="italic",
+                text_color="black", text_alpha=1,
+                text_digits=3, text_format_p=TRUE,
                 fill_area=FALSE, area_color="blue", area_alpha=0.4,
+                fill_only_interval=TRUE,
                 ...)
 }
 
@@ -31,7 +40,7 @@ plot_difference(x, group_1=NULL, group_2=NULL,
 An \code{adjustedsurv} object created using the \code{\link[adjustedCurves]{adjustedsurv}} function or an \code{adjustedcif} object created using the \code{\link[adjustedCurves]{adjustedcif}} function.
   }
   \item{group_1}{
-A single character string specifying one of the levels of the \code{variable} used in the original \code{adjustedsurv} or \code{adjustedcif} function call. This group will be subtracted from. For example if \code{group_1="A"} and \code{group_2="B"} the plotted curve will correspond to the survival probability of \code{A} minus the survival probability of \code{B} over time. If \code{NULL}, this will default to the first level of \code{variable}.
+A single character string specifying one of the levels of the \code{variable} used in the original \code{adjustedsurv} or \code{adjustedcif} function call. This group will be subtracted from. For example if \code{group_1="A"} and \code{group_2="B"} the plotted curve will correspond to the survival probability (or CIF) of \code{A} minus the survival probability (or CIF) of \code{B} over time. If \code{NULL}, this will default to the first level of \code{variable}.
   }
   \item{group_2}{
 Also a single character string specifying one of the levels of \code{variable}. This corresponds to the right side of the difference equation. See argument \code{group_2}. If \code{NULL}, this will default to the second level of \code{variable}.
@@ -117,6 +126,54 @@ The linetype of the LOESS smoother line. Ignored if \code{loess_smoother=FALSE}.
   \item{loess_alpha}{
 The transparency level of the LOESS smoother line. Ignored if \code{loess_smoother=FALSE}.
   }
+  \item{test}{
+An optional \code{curve_test} object created using the \code{adjusted_curve_diff} function. If supplied it can be used to add a p-value and the integral statistic to the plot. Alternatively, the needed arguments below can be specified to obtain the values needed for the test. See below. Set to \code{NULL} (default) to ignore this.
+  }
+  \item{integral_from}{
+A number specifying the left limit of the integral. When \code{p_value=TRUE} and \code{test=NULL}, this argument will be passed to the \code{from} argument in the \code{adjusted_curve_diff} function to perform the test.
+  }
+  \item{integral_to}{
+A number specifying the right limit of the integral. When \code{p_value=TRUE} and \code{test=NULL}, this argument will be passed to the \code{from} argument in the \code{adjusted_curve_diff} function to perform the test.
+  }
+  \item{integral_subdivisions}{
+How many subdivisions to use when calculating the integral using the trapezoid rule (\code{integral_interpolation="linear"}). When \code{p_value=TRUE} and \code{test=NULL}, this argument will be passed to the \code{from} argument in the \code{adjusted_curve_diff} function to perform the test.
+  }
+  \item{p_value}{
+Whether to add a p-value to the plot or not. This requires either that the user supplies a previously created \code{curve_test} object to the \code{test} argument, or that the required arguments to call this function are supplied (at least \code{integral_to}).
+  }
+  \item{integral}{
+Whether to add the integral of the difference in the interval [\code{from}, \code{to}] to the plot or not. This requires either that the user supplies a previously created \code{curve_test} object to the \code{test} argument, or that the required arguments to call this function are supplied (at least \code{integral_to}).
+  }
+  \item{interval}{
+Whether to add the interval in which the integral was calculated to the plot as well.
+  }
+  \item{text_pos_x}{
+X position of the text. Can be either \code{"left"} (default), \code{"middle"}, \code{"right"} or a number specifying the exact position.
+  }
+  \item{text_pos_y}{
+Y position of the text. Can be either \code{"bottom"} (default), \code{"middle"}, \code{"top"} or a number specifying the exact position.
+  }
+  \item{text_digits}{
+The number of digits to which the p-value and the integral of the difference should be rounded to.
+  }
+  \item{text_size}{
+The size of the text.
+  }
+  \item{text_family}{
+The family of the text. Defaults to \code{"serif"}.
+  }
+  \item{text_fontface}{
+The fontface of the text. Defaults to \code{"italic"}.
+  }
+  \item{text_color}{
+The color of the text. Defaults to \code{"black"}.
+  }
+  \item{text_alpha}{
+The transparency level of the text.
+  }
+  \item{text_format_p}{
+Whether to format p-values smaller than 0.01 to < 0.01.
+  }
   \item{fill_area}{
 Whether to add color to the area between 0 and the difference.
   }
@@ -125,6 +182,9 @@ The color used to fill in the area between 0 and the difference when using \code
   }
   \item{area_alpha}{
 The transparency level used to fill in the area between 0 and the difference when using \code{fill_area=TRUE}. Ignored otherwise.
+  }
+  \item{fill_only_interval}{
+Whether only the area corresponding to the interval defined by \code{integral_from} and \code{integral_to} should be filled. Only used when \code{fill_area=TRUE}.
   }
   \item{...}{
 Currently not used.
@@ -195,6 +255,16 @@ plot_difference(adjsurv, line_at_0=FALSE)
 plot_difference(adjsurv, conf_int=TRUE, color="blue", linetype="dotted",
                 alpha=0.8, line_at_0_size=1.1, line_at_0_color="red",
                 loess_smoother=TRUE, loess_span=0.55)
+
+# adding a p-value for a difference test in the interval [0, 0.75]
+plot_difference(adjsurv, conf_int=TRUE, p_value=TRUE, integral_from=0,
+                integral_to=0.75, integral=TRUE)
+
+# adding a p-value for a difference test in the interval [0, 0.75],
+# and also showing that integral visually in the plot
+plot_difference(adjsurv, conf_int=FALSE, p_value=TRUE, integral_from=0,
+                integral_to=0.75, integral=TRUE, fill_area=TRUE,
+                interval=TRUE)
 
 }
 }

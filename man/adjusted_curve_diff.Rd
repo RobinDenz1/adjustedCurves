@@ -9,7 +9,8 @@ This function implements a modified version of the Pepe and Flemming (1989) test
 }
 \usage{
 adjusted_curve_diff(adj, to, from=0, conf_level=0.95,
-                    interpolation="steps", subdivisions=1000)
+                    interpolation="steps", subdivisions=1000,
+                    group_1=NULL, group_2=NULL)
 }
 
 \arguments{
@@ -31,6 +32,12 @@ Either \code{"steps"} (default) or \code{"linear"}. This parameter controls how 
   \item{subdivisions}{
 When using \code{interpolation="linear"}, the composite trapezoid method is used to calculate the integral of the difference between the curves. This argument defines the number of subdivisions that should be used when calculating the integral. Bigger number give a more accurate estimate, but take longer to compute.
   }
+  \item{group_1}{
+Optional argument to get one specific hypothesis test. This argument takes a single character string specifying one of the levels of the \code{variable} used in the original \code{adjustedsurv} or \code{adjustedcif} function call. This group will be subtracted from. For example if \code{group_1="A"} and \code{group_2="B"} the difference \code{A - B} will be used. If \code{NULL}, the order of the factor levels in the original \code{data} determines the test order. If not \code{NULL}, the \code{group_2} argument also needs to be specified. When these arguments are used, all other potential pairwise comparisons are ignored.
+  }
+  \item{group_2}{
+Also a single character string specifying one of the levels of \code{variable}. This corresponds to the right side of the difference equation. See argument \code{group_2}.
+  }
 }
 \details{
 
@@ -40,7 +47,7 @@ The associated \code{print} and \code{summary} methods can be used to obtain a n
 
 \strong{\emph{Pairwise Comparisons}}
 
-When there are more than two survival curves or CIFs this function automatically performs pairwise comparisons between those. It is recommended to adjust the p-values obtained using this method for multiple testing. See \code{?p.adjust} for more information.
+When there are more than two survival curves or CIFs this function automatically performs pairwise comparisons between those. It is recommended to adjust the p-values obtained using this method for multiple testing. See \code{?p.adjust} for more information. If only one of the potential pairwise comparisons is of interest, the \code{group_1} and \code{group_2} arguments can be used to obtain only this specific one.
 
 \strong{\emph{Multiple Imputation}}
 
@@ -48,7 +55,7 @@ When the \code{adjustedsurv} or \code{adjustedcif} object was fitted using multi
 
 \strong{\emph{Graphical Displays}}
 
-To plot the curves of the differences directly, we recommend using the  \code{\link{plot_difference}} function. Similar to the main plot functions, it has a lot of arguments to customize the plot. If the main goal is to check the assumptions, we recommend using the \code{\link[=plot.curve_test]{plot}} method instead.
+To plot the curves of the differences directly, we recommend using the  \code{\link{plot_difference}} function. Similar to the main plot functions, it has a lot of arguments to customize the plot. If the main goal is to check the assumptions, we recommend using the associated \code{\link[=plot.curve_test]{plot}} method instead.
 
 \strong{\emph{Computational Details}}
 
@@ -81,6 +88,8 @@ Returns a \code{curve_test} object. If there are exactly two treatments this lis
 \item{treat_labs}{The labels of all treatments/groups.
 }
 \item{method}{The adjustment method used in the original \code{adjustedsurv} or \code{adjustedcif} object.
+}
+\item{interpolation}{The interpolation method specified in the original \code{adjustedsurv} or \code{adjustedcif} object.
 }
 \item{call}{The original function call.
 }

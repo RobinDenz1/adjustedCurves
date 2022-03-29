@@ -44,7 +44,6 @@ read_from_linear_function <- function(x, data, est="surv") {
   } else {
     val <- suppressWarnings(stats::approx(x=time_vec, y=est_vec, xout=x)$y)
   }
-
   return(val)
 }
 

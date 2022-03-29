@@ -17,7 +17,8 @@
 ## or two adjusted cumulative incidence functions
 #' @export
 adjusted_curve_diff <- function(adj, to, from=0, conf_level=0.95,
-                                interpolation="steps", subdivisions=1000) {
+                                interpolation="steps", subdivisions=1000,
+                                group_1=NULL, group_2=NULL) {
 
   # silence devtools::check() notes
   . <- comparison <- area_est <- p_val <- n_boot <- NULL
@@ -39,14 +40,41 @@ adjusted_curve_diff <- function(adj, to, from=0, conf_level=0.95,
                                      interpolation=interpolation,
                                      subdivisions=subdivisions,
                                      adj_method=adj_method,
-                                     treat_labs=treat_labs)
+                                     treat_labs=treat_labs,
+                                     group_1=group_1, group_2=group_2)
   ## using regular results
   } else {
 
     check_inputs_adj_test(adj=adj, from=from, to=to)
 
+    # using just two groups in custom order
+    if (!is.null(group_1) & !is.null(group_2)) {
+
+      # keep only the two groups, change their level order and call
+      # usual adjusted_curve_diff function
+      if (est=="surv") {
+        adj$adjsurv <- adj$adjsurv[adj$adjsurv$group %in% c(group_1, group_2), ]
+        adj$adjsurv$group <- factor(adj$adjsurv$group,
+                                    levels=c(group_1, group_2))
+      } else {
+        adj$adjcif <- adj$adjcif[adj$adjcif$group %in% c(group_1, group_2), ]
+        adj$adjcif$group <- factor(adj$adjcif$group,
+                                   levels=c(group_1, group_2))
+      }
+
+      adj$boot_data <- adj$boot_data[adj$boot_data$group %in%
+                                     c(group_1, group_2), ]
+      adj$boot_data$group <- factor(adj$boot_data$group,
+                                    levels=c(group_1, group_2))
+
+      out <- adjusted_curve_diff(adj=adj, to=to, from=from,
+                                 conf_level=conf_level,
+                                 interpolation=interpolation,
+                                 subdivisions=subdivisions,
+                                 group_1=NULL, group_2=NULL)
+
     # just two treatments, standard procedure
-    if (!adj$categorical) {
+    } else if (!adj$categorical) {
 
       # calculate the integral of the difference for every bootstrap sample
       stats_vec <- vector(mode="numeric", length=max(adj$boot_data$boot))
@@ -196,7 +224,8 @@ adjusted_curve_diff <- function(adj, to, from=0, conf_level=0.95,
                                     to=to,
                                     conf_level=conf_level,
                                     interpolation=interpolation,
-                                    subdivisions=subdivisions)
+                                    subdivisions=subdivisions,
+                                    group_1=group_1, group_2=group_2)
         out[[paste0(group_0, " vs. ", group_1)]] <- pair
       }
       out$categorical <- TRUE
@@ -211,7 +240,8 @@ adjusted_curve_diff <- function(adj, to, from=0, conf_level=0.95,
 ## Same test but using multiple imputation
 adjusted_curve_diff.MI <- function(adj, to, from, conf_level, est,
                                    adj_method, treat_labs,
-                                   interpolation, subdivisions) {
+                                   interpolation, subdivisions,
+                                   group_1, group_2) {
 
   # silence devtools::check() notes
   . <- comparison <- area_est <- p_val <- n_boot <- NULL
@@ -227,7 +257,8 @@ adjusted_curve_diff.MI <- function(adj, to, from, conf_level, est,
                                          to=to, from=from,
                                          conf_level=conf_level,
                                          interpolation=interpolation,
-                                         subdivisions=subdivisions)
+                                         subdivisions=subdivisions,
+                                         group_1=group_1, group_2=group_2)
       mids_out[[i]] <- results_imp
       comp_names <- names(results_imp)
 
@@ -304,7 +335,8 @@ adjusted_curve_diff.MI <- function(adj, to, from, conf_level, est,
                                          to=to, from=from,
                                          conf_level=conf_level,
                                          interpolation=interpolation,
-                                         subdivisions=subdivisions)
+                                         subdivisions=subdivisions,
+                                         group_1=group_1, group_2=group_2)
       mids_out[[i]] <- results_imp
       area_ests[i] <- results_imp$observed_diff_integral
       area_se[i] <- results_imp$integral_se

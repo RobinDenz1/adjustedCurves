@@ -128,20 +128,26 @@ confint_surv <- function(surv, se, conf_level, conf_type="plain") {
 
 ## function to change plotdata in iptw and standard methods when
 ## custom points in time are supplied
-specific_times <- function(plotdata, times, cif=FALSE) {
+specific_times <- function(plotdata, times, cif=FALSE, interpolation="steps") {
+
+  if (interpolation=="steps") {
+    read_fun <- read_from_step_function
+  } else if (interpolation=="linear") {
+    read_fun <- read_from_linear_function
+  }
 
   levs <- unique(plotdata$group)
   new_plotdata <- vector(mode="list", length=length(levs))
   for (i in seq_len(length(levs))) {
 
     if (cif) {
-      new_est <- vapply(times, read_from_step_function, est="cif",
+      new_est <- vapply(times, read_fun, est="cif",
                         data=plotdata[which(plotdata$group==levs[i]), ],
                         FUN.VALUE=numeric(1))
       new_dat <- data.frame(time=times, cif=new_est, group=levs[i])
     } else {
 
-      new_est <- vapply(times, read_from_step_function, est="surv",
+      new_est <- vapply(times, read_fun, est="surv",
                         data=plotdata[which(plotdata$group==levs[i]), ],
                         FUN.VALUE=numeric(1))
       new_dat <- data.frame(time=times, surv=new_est, group=levs[i])
@@ -149,13 +155,13 @@ specific_times <- function(plotdata, times, cif=FALSE) {
 
     if ("se" %in% colnames(plotdata)) {
       # read from curve using custom function
-      new_se <- vapply(times, read_from_step_function, est="se",
+      new_se <- vapply(times, read_fun, est="se",
                        data=plotdata[which(plotdata$group==levs[i]), ],
                        FUN.VALUE=numeric(1))
-      new_ci_lower <- vapply(times, read_from_step_function, est="ci_lower",
+      new_ci_lower <- vapply(times, read_fun, est="ci_lower",
                           data=plotdata[which(plotdata$group==levs[i]), ],
                           FUN.VALUE=numeric(1))
-      new_ci_upper <- vapply(times, read_from_step_function, est="ci_upper",
+      new_ci_upper <- vapply(times, read_fun, est="ci_upper",
                           data=plotdata[which(plotdata$group==levs[i]), ],
                           FUN.VALUE=numeric(1))
       # add to output in same order

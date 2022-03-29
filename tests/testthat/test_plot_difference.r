@@ -76,15 +76,65 @@ test_that("plot, without line at 0", {
 })
 
 test_that("plot, with fill_area lines", {
-  plt <- plot_difference(adj, type="lines", fill_area=TRUE)
+  plt <- plot_difference(adj, type="lines", fill_area=TRUE,
+                         fill_only_interval=FALSE)
   expect_s3_class(plt, "ggplot")
   vdiffr::expect_doppelganger("plot, with fill_area lines", fig=plt)
 })
 
 test_that("plot, with fill_area steps", {
-  plt <- plot_difference(adj, type="steps", fill_area=TRUE)
+  plt <- plot_difference(adj, type="steps", fill_area=TRUE,
+                         fill_only_interval=FALSE)
   expect_s3_class(plt, "ggplot")
   vdiffr::expect_doppelganger("plot, with fill_area steps", fig=plt)
+})
+
+test_that("plot, with p_value", {
+  plt <- plot_difference(adj, type="steps", p_value=TRUE, integral_to=0.3)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, with p_value", fig=plt)
+})
+
+test_that("plot, with p_value linear", {
+  plt <- plot_difference(adj, type="lines", p_value=TRUE, integral_to=0.3)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, with p_value linear", fig=plt)
+})
+
+test_that("plot, with integral", {
+  plt <- plot_difference(adj, type="steps", integral=TRUE, integral_to=0.3)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, with integral", fig=plt)
+})
+
+test_that("plot, with integral linear", {
+  plt <- plot_difference(adj, type="lines", integral=TRUE, integral_to=0.3)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, with integral linear", fig=plt)
+})
+
+test_that("plot, with all texts", {
+  plt <- plot_difference(adj, type="steps", p_value=TRUE, integral=TRUE,
+                         integral_to=0.3, interval=TRUE, text_pos_x="right",
+                         text_pos_y="top", text_size=4, text_family="serif",
+                         text_fontface="bold", text_color="blue",
+                         text_alpha=0.6, text_digits=5, text_format_p=FALSE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, with all texts", fig=plt)
+})
+
+adj_test <- adjusted_curve_diff(adj, to=0.75, from=0, interpolation="steps")
+
+test_that("plot, with p_value test", {
+  plt <- plot_difference(adj, type="steps", p_value=TRUE, test=adj_test)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, with p_value test", fig=plt)
+})
+
+test_that("plot, with integral test", {
+  plt <- plot_difference(adj, type="steps", integral=TRUE, test=adj_test)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, with integral test", fig=plt)
 })
 
 test_that("plot, with much stuff", {

@@ -88,18 +88,41 @@ plot_difference <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
                             loess_smoother=FALSE, loess_span=0.75,
                             loess_color=color, loess_size=size,
                             loess_linetype="dashed", loess_alpha=alpha,
+                            test=NULL, integral_from=0, integral_to=NULL,
+                            integral_subdivisions=1000,
+                            p_value=FALSE, integral=FALSE,
+                            interval=FALSE, text_pos_x="left",
+                            text_pos_y="bottom", text_size=3.5,
+                            text_family="serif", text_fontface="italic",
+                            text_color="black", text_alpha=1,
+                            text_digits=3, text_format_p=TRUE,
                             fill_area=FALSE, area_color="blue", area_alpha=0.4,
+                            fill_only_interval=TRUE,
                             ...) {
   requireNamespace("ggplot2")
 
   check_inputs_plot_difference(x=x, group_1=group_1, group_2=group_2,
-                               conf_int=conf_int, type=type, max_t=max_t)
+                               conf_int=conf_int, type=type, max_t=max_t,
+                               test=test, integral_from=integral_from,
+                               integral_to=integral_to, p_value=p_value,
+                               integral=integral)
+
+  # object specific stuff
+  if (inherits(x, "adjustedsurv")) {
+    mode <- "surv"
+    adj_data <- x$adjsurv
+  } else {
+    mode <- "cif"
+    adj_data <- x$adjcif
+  }
 
   # what kind of interpolation to use
   if (type=="lines") {
     interpolation <- "linear"
+    read_fun <- read_from_linear_function
   } else {
     interpolation <- "steps"
+    read_fun <- read_from_step_function
   }
 
   # get relevant data
@@ -149,6 +172,7 @@ plot_difference <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
                                     fill=color,
                                     inherit.aes=FALSE)
     }
+  # plot difference using points and maybe errorbars
   } else if (type=="points") {
     if (conf_int) {
 
@@ -167,21 +191,6 @@ plot_difference <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
                                       color=color)
     }
     p <- p + ggplot2::geom_point(size=size, color=color, alpha=alpha)
-  }
-
-  # add color to non-zero area if specified
-  if (type=="lines" & fill_area) {
-    p <- p + ggplot2::geom_area(fill=area_color, alpha=area_alpha)
-  } else if (type=="steps" & fill_area) {
-    p <- p + pammtools::geom_stepribbon(ggplot2::aes(ymin=0,
-                                                     ymax=.data$est,
-                                                     x=.data$time,
-                                                     y=.data$est),
-                                        fill=area_color,
-                                        alpha=area_alpha)
-  } else if ((type=="none" | type=="points") & fill_area) {
-    warning("'fill_area' can only be used with type='lines' and",
-            " type='steps'.")
   }
 
   # add loess smoother line
@@ -207,6 +216,107 @@ plot_difference <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
 
   p <- p + gg_theme
   p <- p + ggplot2::labs(x=xlab, y=ylab, title=title, subtitle=subtitle)
+
+  # perform test here if "test" is NULL and p-val is wanted
+  if (p_value & is.null(test)) {
+    test <- adjusted_curve_diff(adj=x, to=integral_to, from=integral_from,
+                                conf_level=conf_level,
+                                interpolation=interpolation,
+                                subdivisions=integral_subdivisions,
+                                group_1=group_1, group_2=group_2)
+    p_val <- test$p_value
+  # if only the integral should be printed, calculate this only
+  } else if (integral & is.null(test)) {
+    area <- difference_integral(adj=adj_data, from=integral_from,
+                                to=integral_to, type=interpolation,
+                                subdivisions=integral_subdivisions,
+                                est=mode)$area
+  }
+
+  # add p-value and other text to the plot, based on a test performed by
+  # the adjusted_curve_diff function
+  if (p_value | integral) {
+    requireNamespace("ggpp")
+
+    if (!is.null(test)) {
+      p_val <- test$p_value
+      area <- test$observed_diff_integral
+      to <- test$call$to
+
+      if (!is.numeric(test$call$from)) {
+        from <- 0
+      } else {
+        from <- test$call$from
+      }
+    } else {
+      to <- integral_to
+      from <- integral_from
+    }
+
+    # create label
+    lab <- ""
+    if (p_value & text_format_p) {
+      p_form <- format.pval(p_val, digits=text_digits, eps=0.01)
+      if (startsWith(p_form, "<")) {
+        lab <- paste0(lab, "p ", p_form)
+      } else {
+        lab <- paste0(lab, "p = ", p_form)
+      }
+    } else if (p_value) {
+      lab <- paste0(lab, "p = ", round(p_val, text_digits))
+    }
+    if (integral) {
+      lab <- paste0(lab, "\nArea = ", round(area, text_digits))
+    }
+    if (interval) {
+      lab <- paste0(lab, "\nInterval: [", from, ", ", to, "]")
+    }
+
+    # put together
+    p_dat <- data.frame(x=text_pos_x,
+                        y=text_pos_y,
+                        label=lab)
+    p <- p + ggpp::geom_text_npc(data=p_dat,
+                                 ggplot2::aes(npcx=.data$x, npcy=.data$y,
+                                              label=.data$label),
+                                 size=text_size,
+                                 family=text_family,
+                                 fontface=text_fontface,
+                                 color=text_color,
+                                 alpha=text_alpha)
+  }
+
+  # restrict area to interval used for calculations
+  if (fill_area & fill_only_interval) {
+    restricted_times <- sort(unique(plotdata$time))
+    restricted_times <- restricted_times[restricted_times <= to &
+                                         restricted_times >= from]
+
+    restricted_est <- vapply(X=restricted_times, FUN=read_fun,
+                             FUN.VALUE=numeric(1), est="est", data=plotdata)
+    plotdata_r <- data.frame(time=restricted_times,
+                             est=restricted_est)
+
+  } else {
+    plotdata_r <- plotdata
+  }
+
+  # add color to non-zero area if specified
+  if (type=="lines" & fill_area) {
+    p <- p + ggplot2::geom_area(data=plotdata_r, fill=area_color,
+                                alpha=area_alpha)
+  } else if (type=="steps" & fill_area) {
+    p <- p + pammtools::geom_stepribbon(ggplot2::aes(ymin=0,
+                                                     ymax=.data$est,
+                                                     x=.data$time,
+                                                     y=.data$est),
+                                        fill=area_color,
+                                        alpha=area_alpha,
+                                        data=plotdata_r)
+  } else if ((type=="none" | type=="points") & fill_area) {
+    warning("'fill_area' can only be used with type='lines' and",
+            " type='steps'.")
+  }
 
   return(p)
 }
