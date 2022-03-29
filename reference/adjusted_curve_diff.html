@@ -55,7 +55,8 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">adjusted_curve_diff</span><span class="op">(</span><span class="va">adj</span>, <span class="va">to</span>, from<span class="op">=</span><span class="fl">0</span>, conf_level<span class="op">=</span><span class="fl">0.95</span>,
-                    interpolation<span class="op">=</span><span class="st">"steps"</span>, subdivisions<span class="op">=</span><span class="fl">1000</span><span class="op">)</span></code></pre></div>
+                    interpolation<span class="op">=</span><span class="st">"steps"</span>, subdivisions<span class="op">=</span><span class="fl">1000</span>,
+                    group_1<span class="op">=</span><span class="cn">NULL</span>, group_2<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -72,6 +73,10 @@
 <dd><p>Either <code>"steps"</code> (default) or <code>"linear"</code>. This parameter controls how interpolation is performed. If this argument is set to <code>"steps"</code>, the curves will be treated as step functions. If it is set to <code>"linear"</code>, the curves wil be treated as if there are straight lines between the point estimates instead. Points that lie between estimated points will be interpolated accordingly. Should usually be kept at <code>"steps"</code>. See Details.</p></dd>
 <dt>subdivisions</dt>
 <dd><p>When using <code>interpolation="linear"</code>, the composite trapezoid method is used to calculate the integral of the difference between the curves. This argument defines the number of subdivisions that should be used when calculating the integral. Bigger number give a more accurate estimate, but take longer to compute.</p></dd>
+<dt>group_1</dt>
+<dd><p>Optional argument to get one specific hypothesis test. This argument takes a single character string specifying one of the levels of the <code>variable</code> used in the original <code>adjustedsurv</code> or <code>adjustedcif</code> function call. This group will be subtracted from. For example if <code>group_1="A"</code> and <code>group_2="B"</code> the difference <code>A - B</code> will be used. If <code>NULL</code>, the order of the factor levels in the original <code>data</code> determines the test order. If not <code>NULL</code>, the <code>group_2</code> argument also needs to be specified. When these arguments are used, all other potential pairwise comparisons are ignored.</p></dd>
+<dt>group_2</dt>
+<dd><p>Also a single character string specifying one of the levels of <code>variable</code>. This corresponds to the right side of the difference equation. See argument <code>group_2</code>.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -80,11 +85,11 @@
 <p>The <code>adjustedsurv</code> and <code>adjustedcif</code> functions with <code>bootstrap=TRUE</code> draw <code>n_boot</code> bootstrap samples and estimate the adjusted curves for each one. This function uses those estimates and calculates the integral of the difference between two curves in the interval defined by <code>to</code> and <code>from</code>. If the curves are approximately equal, this quantity should be close to zero. The direct variance calculation of this is quantity is quite involved even in the non-adjusted case and has not been proposed for adjusted survival curves or adjusted CIFs yet. We can however use the distribution of the integrals over all bootstrap samples to approximate the variation. By shifting the bootstrap distribution to be centered around 0 we approximate the distribution of the integral under the Null-Hypothesis. The p-value can then be calculated by taking the proportion of cases where the absolute of the integral observed in the actual curves is smaller or equal to the shifted bootstrap values.</p>
 <p>The associated <code>print</code> and <code>summary</code> methods can be used to obtain a neat data.frame of the most important quantities. We also recommend checking the test assumptions using the <code><a href="plot.curve_test.html">plot</a></code> method.</p>
 <p><strong><em>Pairwise Comparisons</em></strong></p>
-<p>When there are more than two survival curves or CIFs this function automatically performs pairwise comparisons between those. It is recommended to adjust the p-values obtained using this method for multiple testing. See <code><a href="https://rdrr.io/r/stats/p.adjust.html" class="external-link">?p.adjust</a></code> for more information.</p>
+<p>When there are more than two survival curves or CIFs this function automatically performs pairwise comparisons between those. It is recommended to adjust the p-values obtained using this method for multiple testing. See <code><a href="https://rdrr.io/r/stats/p.adjust.html" class="external-link">?p.adjust</a></code> for more information. If only one of the potential pairwise comparisons is of interest, the <code>group_1</code> and <code>group_2</code> arguments can be used to obtain only this specific one.</p>
 <p><strong><em>Multiple Imputation</em></strong></p>
 <p>When the <code>adjustedsurv</code> or <code>adjustedcif</code> object was fitted using multiply imputed datasets, the tests are performed separately for each dataset. The estimates for the integral of the difference are combined using Rubins Rule. The confidence intervals for this quantity are calculated by pooling the bootstrap standard errors and recalculating the confidence interval using the normal approximation. The p-values are also pooled using a method described in Licht (2010). It is recommended to check if the pooled p-value is in agreement with the pooled confidence interval.</p>
 <p><strong><em>Graphical Displays</em></strong></p>
-<p>To plot the curves of the differences directly, we recommend using the  <code><a href="plot_difference.html">plot_difference</a></code> function. Similar to the main plot functions, it has a lot of arguments to customize the plot. If the main goal is to check the assumptions, we recommend using the <code><a href="plot.curve_test.html">plot</a></code> method instead.</p>
+<p>To plot the curves of the differences directly, we recommend using the  <code><a href="plot_difference.html">plot_difference</a></code> function. Similar to the main plot functions, it has a lot of arguments to customize the plot. If the main goal is to check the assumptions, we recommend using the associated <code><a href="plot.curve_test.html">plot</a></code> method instead.</p>
 <p><strong><em>Computational Details</em></strong></p>
 <p>Instead of relying on numerical integration, this function uses step-function interpolation by default, treating all supplied curves as step functions. The integral is then calculated using a simple sum of the squares defined by each step. If the interpolation is correct, this gives an exact calculation of the difference integral. However, in some situations (for example when using parametric survival models with <code>method="direct"</code>), the curves are not step functions. In this case the <code>interpolation</code> argument should be set to <code>"linear"</code> to use a standard trapezoid estimate.</p>
     </div>
@@ -115,6 +120,8 @@
 <dd><p>The labels of all treatments/groups.</p></dd>
 <dt>method</dt>
 <dd><p>The adjustment method used in the original <code>adjustedsurv</code> or <code>adjustedcif</code> object.</p></dd>
+<dt>interpolation</dt>
+<dd><p>The interpolation method specified in the original <code>adjustedsurv</code> or <code>adjustedcif</code> object.</p></dd>
 <dt>call</dt>
 <dd><p>The original function call.</p></dd>
 </dl><p>If there are more than two treatment groups the object returned is a list of these objects with one list for each pairwise comparison.
