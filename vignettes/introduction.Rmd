@@ -324,7 +324,7 @@ plot(adjrmst)
 
 ## Testing the Difference betweeen Two Survival Curves
 
-In some cases the researcher might be interested to formally test the hypothesis that two adjusted survival curves or two cumulative incidence functions are different in a certain interval. This can be done with the `adjusted_curve_diff` function. It calculates the integral of the difference between two curves for each bootstrap estimate, shifts that distribution to be centered around 0 and calculates a p-value based on that shifted distribution:
+In some cases the researcher might be interested to formally test the hypothesis that two adjusted survival curves or two cumulative incidence functions are different in a certain interval. This can be done with the `adjusted_curve_test` function. It calculates the integral of the difference between two curves for each bootstrap estimate, shifts that distribution to be centered around 0 and calculates a p-value based on that shifted distribution:
 
 ```{r echo=TRUE}
 # set random number generator seed to make this reproducible
@@ -349,7 +349,7 @@ adjsurv <- adjustedsurv(data=data,
                         n_boot=300)
 
 # test equality
-adjtest <- adjusted_curve_diff(adjsurv, from=0, to=1)
+adjtest <- adjusted_curve_test(adjsurv, from=0, to=1)
 print(adjtest)
 ```
 
@@ -369,7 +369,7 @@ plot(adjtest, type="integral")
 
 Similarly to the first plot, the kernel density estimate should be approximately normally distributed with 0 at the center, just like in the example above. If the distribution is very skewed, the test results might be wrong.
 
-The `adjusted_curve_diff` function can also be used with more than two groups. In that case it returns pairwise comparisons.
+The `adjusted_curve_test` function can also be used with more than two groups. In that case it returns pairwise comparisons.
 
 ## Literature
 

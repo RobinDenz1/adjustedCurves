@@ -94,7 +94,7 @@ cif_matching <- function(data, variable, ev_time, event, cause, conf_int,
 
   if (!is.null(times)) {
     plotdata$se <- NULL
-    plotdata <- specific_times(plotdata, times, cif=TRUE)
+    plotdata <- specific_times(plotdata, times, est="cif")
   }
 
   # get factor levels back

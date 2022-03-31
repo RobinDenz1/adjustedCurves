@@ -2,120 +2,85 @@
 \alias{adjusted_curve_diff}
 
 \title{
-Test if there is a difference between two Confounder-Adjusted Survival Curves or CIFs
+Calculate the difference between two Confounder-Adjusted Survival Curves or CIFs
 }
 \description{
-This function implements a modified version of the Pepe and Flemming (1989) test for the difference between two adjusted survival curves or CIFs. In particular, the Null-Hypothesis is that the integral of the difference of the two curves in a specified time interval is equal to zero.
+Given a previously created \code{adjustedsurv} or \code{adjustedcif} object, calculate the difference between two of the \code{variable} specific curves. Can either calculate the whole difference curve or the difference at specified points in time.
 }
 \usage{
-adjusted_curve_diff(adj, to, from=0, conf_level=0.95,
-                    interpolation="steps", subdivisions=1000,
-                    group_1=NULL, group_2=NULL)
+adjusted_curve_diff(adj, group_1=NULL, group_2=NULL,
+                    times=NULL, conf_int=FALSE, conf_level=0.95,
+                    use_boot=FALSE, interpolation="steps")
 }
 
 \arguments{
   \item{adj}{
-An \code{adjustedsurv} object created using the \code{adjustedsurv} function, or a \code{adjustedcif} object created using the \code{adjustedcif} function, with \code{bootstap=TRUE} in the original function call.
-  }
-    \item{to}{
-A number specifying the right side of the time interval of interest. It has to be a value of time that can be read from both of the estimated survival curves or CIFs.
-  }
-  \item{from}{
-A number specifying the left side of the time interval of interest. It has to be a value of time that can be read from both of the estimated survival curves or CIFs. It is set to 0 by default.
-  }
-  \item{conf_level}{
-A number specifying the confidence level of the bootstrap confidence intervals.
-  }
-  \item{interpolation}{
-Either \code{"steps"} (default) or \code{"linear"}. This parameter controls how interpolation is performed. If this argument is set to \code{"steps"}, the curves will be treated as step functions. If it is set to \code{"linear"}, the curves wil be treated as if there are straight lines between the point estimates instead. Points that lie between estimated points will be interpolated accordingly. Should usually be kept at \code{"steps"}. See Details.
-  }
-  \item{subdivisions}{
-When using \code{interpolation="linear"}, the composite trapezoid method is used to calculate the integral of the difference between the curves. This argument defines the number of subdivisions that should be used when calculating the integral. Bigger number give a more accurate estimate, but take longer to compute.
+An \code{adjustedsurv} object created using the \code{adjustedsurv} function, or a \code{adjustedcif} object created using the \code{adjustedcif} function.
   }
   \item{group_1}{
-Optional argument to get one specific hypothesis test. This argument takes a single character string specifying one of the levels of the \code{variable} used in the original \code{adjustedsurv} or \code{adjustedcif} function call. This group will be subtracted from. For example if \code{group_1="A"} and \code{group_2="B"} the difference \code{A - B} will be used. If \code{NULL}, the order of the factor levels in the original \code{data} determines the test order. If not \code{NULL}, the \code{group_2} argument also needs to be specified. When these arguments are used, all other potential pairwise comparisons are ignored.
+Optional argument to get a specific difference. This argument takes a single character string specifying one of the levels of the \code{variable} used in the original \code{adjustedsurv} or \code{adjustedcif} function call. This group will be subtracted from. For example if \code{group_1="A"} and \code{group_2="B"} the difference \code{A - B} will be used. If \code{NULL}, the order of the factor levels in the original \code{data} determines the order. If not \code{NULL}, the \code{group_2} argument also needs to be specified.
   }
   \item{group_2}{
 Also a single character string specifying one of the levels of \code{variable}. This corresponds to the right side of the difference equation. See argument \code{group_2}.
   }
+  \item{times}{
+An optional numeric vector of points in time at which the difference should be estimated. If \code{NULL} (default) the differences are estimated for the whole curve.
+  }
+  \item{conf_int}{
+Whether standard errors, confidence intervals and p-values should be calculated. Only possible when either \code{conf_int=TRUE} or \code{bootstap=TRUE} was used in the original function call. P-values are calculated using a one-sample t-test with the null-hypothesis being that the difference is equal to 0.
+  }
+  \item{conf_level}{
+A number specifying the confidence level of the confidence intervals.
+  }
+  \item{use_boot}{
+Whether to use the standard errors estimated using bootstrapping for the confidence interval and p-value calculation. Can only be used if \code{bootstrap=TRUE} was used in the original \code{adjustedsurv} or \code{adjustedcif} function call. Ignored if \code{conf_int=FALSE}.
+  }
+  \item{interpolation}{
+Either \code{"steps"} (default) or \code{"linear"}. This parameter controls how interpolation is performed. If this argument is set to \code{"steps"}, the curves will be treated as step functions. If it is set to \code{"linear"}, the curves wil be treated as if there are straight lines between the point estimates instead. Points that lie between estimated points will be interpolated accordingly. Should usually be kept at \code{"steps"}. See Details.
+  }
 }
 \details{
 
-The \code{adjustedsurv} and \code{adjustedcif} functions with \code{bootstrap=TRUE} draw \code{n_boot} bootstrap samples and estimate the adjusted curves for each one. This function uses those estimates and calculates the integral of the difference between two curves in the interval defined by \code{to} and \code{from}. If the curves are approximately equal, this quantity should be close to zero. The direct variance calculation of this is quantity is quite involved even in the non-adjusted case and has not been proposed for adjusted survival curves or adjusted CIFs yet. We can however use the distribution of the integrals over all bootstrap samples to approximate the variation. By shifting the bootstrap distribution to be centered around 0 we approximate the distribution of the integral under the Null-Hypothesis. The p-value can then be calculated by taking the proportion of cases where the absolute of the integral observed in the actual curves is smaller or equal to the shifted bootstrap values.
+\strong{\emph{Confidence Intervals & P-Values}}
 
-The associated \code{print} and \code{summary} methods can be used to obtain a neat data.frame of the most important quantities. We also recommend checking the test assumptions using the \code{\link[=plot.curve_test]{plot}} method.
+The standard error of the difference is estimated using the pooled standard error of the two probability estimates, given by:
+\deqn{SE_{group_1 - group_2} = \sqrt{SE_{group_1}^2 + SE_{group_2}^2}}
 
-\strong{\emph{Pairwise Comparisons}}
+Confidence intervals are then calculated using this pooled standard error and the normal approximation. The P-Values are also obtained using this standard error combined with a two-sided one-sample t-test. The null-hypothesis is that the difference is equal to 0, and the alternative hypothesis is that the difference is not equal to 0. If p-values are calculated for multiple points in time simultaneously, the user should adjust those. See \code{?p.adjust} for more information.
 
-When there are more than two survival curves or CIFs this function automatically performs pairwise comparisons between those. It is recommended to adjust the p-values obtained using this method for multiple testing. See \code{?p.adjust} for more information. If only one of the potential pairwise comparisons is of interest, the \code{group_1} and \code{group_2} arguments can be used to obtain only this specific one.
+\strong{\emph{Overall Difference Test}}
 
-\strong{\emph{Multiple Imputation}}
+This function does not perform a test of the overall difference between two functions. To calculate the integral of the difference in a given interval the \code{\link{plot_difference}} function can be used. Additionally, to test whether that integral is equal to zero the \code{\link{adjusted_curve_test}} function can be used.
 
-When the \code{adjustedsurv} or \code{adjustedcif} object was fitted using multiply imputed datasets, the tests are performed separately for each dataset. The estimates for the integral of the difference are combined using Rubins Rule. The confidence intervals for this quantity are calculated by pooling the bootstrap standard errors and recalculating the confidence interval using the normal approximation. The p-values are also pooled using a method described in Licht (2010). It is recommended to check if the pooled p-value is in agreement with the pooled confidence interval.
+\strong{\emph{More than Two Groups}}
+
+If more than two groups are present in \code{variable}, all other comparisons except for \code{group_1 - group_2} are ignored. If multiple comparisons are desired, the user needs to call this function multiple times and adjust the \code{group_1} and \code{group_2} arguments accordingly.
 
 \strong{\emph{Graphical Displays}}
 
-To plot the curves of the differences directly, we recommend using the  \code{\link{plot_difference}} function. Similar to the main plot functions, it has a lot of arguments to customize the plot. If the main goal is to check the assumptions, we recommend using the associated \code{\link[=plot.curve_test]{plot}} method instead.
+There is no directly associated \code{plot} method for this function. However, this function is used internally when calling the \code{\link{plot_difference}} function. In order to get a plot of the difference curve or point estimates, that function can be used.
+
+\strong{\emph{Multiple Imputation}}
+
+This function works exactly the same way for adjusted survival curves or adjusted CIFs estimated using multiple imputation as it does without any missing values. If multiple imputation was used previously, this function simply uses the pooled estimates to calculate the differences.
 
 \strong{\emph{Computational Details}}
 
-Instead of relying on numerical integration, this function uses step-function interpolation by default, treating all supplied curves as step functions. The integral is then calculated using a simple sum of the squares defined by each step. If the interpolation is correct, this gives an exact calculation of the difference integral. However, in some situations (for example when using parametric survival models with \code{method="direct"}), the curves are not step functions. In this case the \code{interpolation} argument should be set to \code{"linear"} to use a standard trapezoid estimate.
+When estimating the difference at some point in time at which no direct point estimates are available, this function needs to interpolate the curves. The interpolation method can be controlled using the \code{interpolation} function. In most cases, the estimated curves are step functions and the default (\code{interpolation="steps"}) is therefore appropriate. However, when parametric survival models where used in the estimation process it might be preferable to use linear interpolation instead.
 
 }
 \value{
-Returns a \code{curve_test} object. If there are exactly two treatments this list contains the following object:
+Returns a \code{data.frame} containing the columns \code{time} (the points in time where the difference was estimated) and \code{diff} (the estimated difference).
 
-\item{diff_curves}{A \code{data.frame} containing the difference curves used for calculating the integrals.
-}
-\item{diff_intergals}{A numeric vector containing the integrals of the difference for the estimated adjusted survival curves or CIFs.
-}
-\item{observed_diff_curve}{The curve of the difference between the two non-bootstrapped adjusted survival curves or CIFs.
-}
-\item{observed_diff_integral}{The integral of the curve in \code{observed_diff_curve}.
-}
-\item{integral_se}{The bootstrap standard error of the difference integral.
-}
-\item{p_value}{The p-value for the modified Pepe-Fleming Test. See details.
-}
-\item{n_boot}{The number of bootstrap repetitions used.
-}
-\item{kind}{Whether survival curves or cumulative incidence functions where used.
-}
-\item{conf_int}{The percentile bootstrap confidence interval of the difference between the two curves.
-}
-\item{categorical}{Whether there are more than two treatments/groups.
-}
-\item{treat_labs}{The labels of all treatments/groups.
-}
-\item{method}{The adjustment method used in the original \code{adjustedsurv} or \code{adjustedcif} object.
-}
-\item{interpolation}{The interpolation method specified in the original \code{adjustedsurv} or \code{adjustedcif} object.
-}
-\item{call}{The original function call.
+If \code{conf_int=TRUE} was used in the function call, it additionally contains the columns \code{se} (the estimated standard error of the difference), \code{ci_lower} (lower limit of the confidence interval of the difference), \code{ci_upper} (upper limit of the confidence interval of the difference) and \code{p_value} (the p-value for the test of pointwise difference).
 }
 
-If there are more than two treatment groups the object returned is a list of these objects with one list for each pairwise comparison.
-
-If multiply imputed datasets where used, the object also includes a \code{mids_analyses} object, including a \code{curve_test} object for each imputed dataset. It also includes a \code{mids_p_values} object containing the separately estimated p-values.
-
-}
-\references{
-Margaret Sullivan Pepe and Thomas R. Fleming (1989). "Weighted Kaplan-Meier Statistics: A Class of Distance Tests for Censored Survival Data". In: Biometrics 45.2, pp. 497-507
-
-Margaret Sullivan Pepe and Thomas R. Fleming (1991). "Weighted Kaplan-Meier Statistics: Large Sample and Optimality Considerations". In: Journal of the Royal Statistical Society: Series B 53.2, pp. 341-352
-
-Nicholas I. Fisher and Peter Hall (1990). "On Bootstrap Hypothesis Testing". In: Australian Journal of Statistics 32.2, pp. 177-190
-
-Florent Le Borgne, Bruno Giraudeau, Anne Héléne Querard, Magali Giral, and Yohann Foucher (2016). "Comparisons of the Performance of Different Statistical Tests for Time-To-Event Analysis with Confounding Factors: Practical Illustrations in Kidney Transplantation". In: Statistics in Medicine 35, pp. 1103-1116
-
-Christine Licht (2010). "New Methods for Generating Significance Levels from Multiply-Imputed Data". PhD thesis. Otto-Friedrich-Universität Bamberg, Fakultät Sozial- und Wirtschaftswissenschaften
-}
 \author{
 Robin Denz
 }
 
 \seealso{
-\code{\link{plot.curve_test}}, \code{\link{adjustedsurv}}, \code{\link{adjustedcif}}
+\code{\link{plot_difference}}, \code{\link{adjustedsurv}}, \code{\link{adjustedcif}}
 }
 \examples{
 \dontrun{
@@ -132,7 +97,6 @@ sim_dat$group <- as.factor(sim_dat$group)
 cox_mod <- coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
                  data=sim_dat, x=TRUE)
 
-
 # use it to calculate adjusted survival curves with bootstrapping
 adjsurv <- adjustedsurv(data=sim_dat,
                         variable="group",
@@ -144,9 +108,14 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         bootstrap=TRUE,
                         n_boot=500)
 
-# test the equality of both curves in the interval 0 to 1
-adjtest <- adjusted_curve_diff(adjsurv, from=0, to=1)
-print(adjtest)
+# calculate the whole difference curve
+adjdiff <- adjusted_curve_test(adjsurv)
+
+# with confidence intervals
+adjdiff <- adjusted_curve_test(adjsurv, conf_int=TRUE)
+
+# only at specific points in time
+adjdiff <- adjusted_curve_test(adjsurv, times=c(0.2, 0.4))
 
 #### Competing Risks Case with adjusted CIFs ####
 library(riskRegression)
@@ -173,9 +142,14 @@ adjcif <- adjustedcif(data=sim_dat,
                       n_boot=500,
                       cause=1)
 
-# test the equality of both curves in the interval 0 to 1
-adjtest <- adjusted_curve_diff(adjcif, from=0, to=1)
-print(adjtest)
+# calculate the whole difference curve
+adjdiff <- adjusted_curve_test(adjcif)
+
+# with confidence intervals
+adjdiff <- adjusted_curve_test(adjcif, conf_int=TRUE)
+
+# only at specific points in time
+adjdiff <- adjusted_curve_test(adjcif, times=c(0.2, 0.4))
 
 }
 }

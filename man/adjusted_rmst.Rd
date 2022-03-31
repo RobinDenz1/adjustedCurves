@@ -42,7 +42,7 @@ The adjusted restricted mean survival times (RMST) are calculated by integrating
 
 \deqn{RMST_{z} = \int_{from}^{to} \hat{S}_z(t)}
 
-It can be interpreted as the mean survival time of individuals in group \eqn{Z = z} in the interval [\code{from}, \code{to}]. Note however that simply subtracting the estimates from each other does not give a correct estimate of the area between the survival curves if the respective curves cross at some point. The \code{\link{adjusted_curve_diff}} function can be used to calculate the actual area between the curves instead. See \code{?adjusted_curve_diff} for more information.
+It can be interpreted as the mean survival time of individuals in group \eqn{Z = z} in the interval [\code{from}, \code{to}]. Note however that simply subtracting the estimates from each other does not give a correct estimate of the area between the survival curves if the respective curves cross at some point. The \code{\link{adjusted_curve_test}} function can be used to calculate the actual area between the curves instead. See \code{?adjusted_curve_test} for more information.
 
 The associated \code{print} and \code{summary} methods can be used to obtain a neat data.frame of the most important quantities. There is also a small \code{plot} method to graphically display the results.
 

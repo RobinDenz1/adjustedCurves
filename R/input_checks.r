@@ -1009,47 +1009,26 @@ check_inputs_sim_crisk_fun <- function(n, lcovars, outcome_betas, gamma,
 ## check inputs for plot_difference function
 check_inputs_plot_difference <- function(x, group_1, group_2, conf_int,
                                          type, max_t, test, integral_from,
-                                         integral_to, p_value, integral) {
+                                         integral_to, p_value, integral,
+                                         use_boot) {
 
   if (!inherits(x, c("adjustedsurv", "adjustedcif"))) {
     stop("'x' must be an 'adjustedsurv' object created using the adjustedsurv",
          " function or an 'adjustedcif' object created using the adjustedcif",
          " function.")
-  } else if (!(length(group_1)==1 && is.character(group_1) | is.null(group_1))) {
-    stop("'group_1' has to be a single character vector, specifying one",
-         " of the treatment groups in 'variable'.")
-  } else if (!(length(group_2)==1 && is.character(group_2) | is.null(group_2))) {
-    stop("'group_2' has to be a single character vector, specifying one",
-         " of the treatment groups in 'variable'.")
-  } else if (inherits(x, "adjustedsurv") && !is.null(group_1) &&
-             !group_1 %in% levels(x$adjsurv$group)) {
-    stop(group_1, " is not a valid group in 'variable'.")
-  } else if (inherits(x, "adjustedcif") && !is.null(group_1) &&
-             !group_1 %in% levels(x$adjcif$group)) {
-    stop(group_1, " is not a valid group in 'variable'.")
-  } else if (inherits(x, "adjustedsurv") && !is.null(group_1) &&
-             !group_2 %in% levels(x$adjsurv$group)) {
-    stop(group_2, " is not a valid group in 'variable'.")
-  } else if (inherits(x, "adjustedcif") && !is.null(group_1) &&
-             !group_2 %in% levels(x$adjcif$group)) {
-    stop(group_2, " is not a valid group in 'variable'.")
-  } else if (!is.null(group_1) && !is.null(group_2) && group_1 == group_2) {
-    stop("'group_1' and 'group_2' may not be equal.")
-  } else if (conf_int & !is.null(x$mids_analyses)) {
-    stop("Confidence interval calculation is currently not possible when",
-         " multiple imputation was used.")
-  } else if (conf_int & is.null(x$boot_data)) {
-    stop("Confidence interval calculation is only possible when bootstrap=TRUE",
-         " was used in the original adjustedsurv or adjustedcif function call.")
   } else if (!(length(type)==1 && is.character(type) &&
-               type %in% c("steps", "lines", "points", "none"))) {
+        type %in% c("steps", "lines", "points", "none"))) {
     stop("'type' must be a single character string equal to one of: ",
          " c('steps', 'lines', 'points', 'none').")
   } else if (!(length(max_t)==1 && is.numeric(max_t) && max_t > 0)) {
     stop("'max_t' must be a single number bigger than 0.")
   } else if (!is.null(test) & !inherits(test, "curve_test")) {
     stop("'test' must be either NULL or a 'curve_test' object created using",
-         " the adjusted_curve_diff function.")
+         " the adjusted_curve_test function.")
+  } else if (!is.null(test) && test$categorical) {
+    stop("The curve_test object supplied in the 'test' argument may only",
+         " contain two groups, corresponding to the groups used in",
+         " the plot_difference function.")
   } else if (!is.null(integral_from) & !(length(integral_from)==1 &&
              is.numeric(integral_from) && integral_from >= 0)) {
     stop("'integral_from' must be a single number > 0 or NULL.")
@@ -1064,8 +1043,71 @@ check_inputs_plot_difference <- function(x, group_1, group_2, conf_int,
   } else if (p_value & is.null(test) & is.null(integral_to)) {
     stop("If 'p_value' is specified, either 'test' or 'integral_to' also",
          " need to be specified. See details.")
-  } else if (p_value & is.null(test) & is.null(x$boot_data)) {
+  } else if (p_value & is.null(test) & is.null(x$boot_adjsurv) &
+             is.null(x$boot_adjcif)) {
     stop("'p_value' can only be used when bootstrap=TRUE was used in the",
          " original adjustedsurv or adjustedcif function call.")
+  } else if (use_boot & is.null(x$boot_adjsurv) & is.null(x$boot_adjcif)) {
+    stop("Bootstrapped estimates can only be calculated if 'bootstrap=TRUE'",
+         " was used in the original adjustedsurv or adjustedcif function",
+         " call.")
+  } else if (conf_int & !use_boot) {
+    if (inherits(x, "adjustedcif") && !"ci_lower" %in% colnames(x$adjcif)) {
+      stop("There are no approximate standard error calculations to use.",
+           " Either set 'use_boot=TRUE' or rerun the adjustedcif function",
+           " with 'conf_int=TRUE' if possible.")
+    } else if (inherits(x, "adjustedsurv") &&
+               !"ci_lower" %in% colnames(x$adjsurv)) {
+      stop("There are no approximate standard error calculations to use.",
+           " Either set 'use_boot=TRUE' or rerun the adjustedsurv function",
+           " with 'conf_int=TRUE' if possible.")
+    }
+  }
+}
+
+## check inputs for adjusted_curve_diff function
+check_inputs_adj_diff <- function(adj, group_1, group_2, conf_int, use_boot) {
+
+  if (!inherits(adj, c("adjustedsurv", "adjustedcif"))) {
+    stop("'x' must be an 'adjustedsurv' object created using the adjustedsurv",
+         " function or an 'adjustedcif' object created using the adjustedcif",
+         " function.")
+  } else if (!(length(group_1)==1 && is.character(group_1) |
+               is.null(group_1))) {
+    stop("'group_1' has to be a single character vector, specifying one",
+         " of the treatment groups in 'variable'.")
+  } else if (!(length(group_2)==1 && is.character(group_2) |
+               is.null(group_2))) {
+    stop("'group_2' has to be a single character vector, specifying one",
+         " of the treatment groups in 'variable'.")
+  } else if (inherits(adj, "adjustedsurv") && !is.null(group_1) &&
+             !group_1 %in% levels(adj$adjsurv$group)) {
+    stop(group_1, " is not a valid group in 'variable'.")
+  } else if (inherits(adj, "adjustedcif") && !is.null(group_1) &&
+             !group_1 %in% levels(adj$adjcif$group)) {
+    stop(group_1, " is not a valid group in 'variable'.")
+  } else if (inherits(adj, "adjustedsurv") && !is.null(group_1) &&
+             !group_2 %in% levels(adj$adjsurv$group)) {
+    stop(group_2, " is not a valid group in 'variable'.")
+  } else if (inherits(adj, "adjustedcif") && !is.null(group_1) &&
+             !group_2 %in% levels(adj$adjcif$group)) {
+    stop(group_2, " is not a valid group in 'variable'.")
+  } else if (!is.null(group_1) && !is.null(group_2) && group_1 == group_2) {
+    stop("'group_1' and 'group_2' may not be equal.")
+  } else if (use_boot & is.null(adj$boot_adjsurv) & is.null(adj$boot_adjcif)) {
+    stop("Bootstrapped estimates can only be calculated if 'bootstrap=TRUE'",
+         " was used in the original adjustedsurv or adjustedcif function",
+         " call.")
+  } else if (conf_int & !use_boot) {
+    if (inherits(adj, "adjustedcif") && !"ci_lower" %in% colnames(adj$adjcif)) {
+      stop("There are no approximate standard error calculations to use.",
+           " Either set 'use_boot=TRUE' or rerun the adjustedcif function",
+           " with 'conf_int=TRUE' if possible.")
+    } else if (inherits(adj, "adjustedsurv") &&
+               !"ci_lower" %in% colnames(adj$adjsurv)) {
+      stop("There are no approximate standard error calculations to use.",
+           " Either set 'use_boot=TRUE' or rerun the adjustedsurv function",
+           " with 'conf_int=TRUE' if possible.")
+    }
   }
 }

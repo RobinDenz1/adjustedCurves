@@ -9,8 +9,8 @@ A function to graphically display the difference between two confounder-adjusted
 }
 \usage{
 plot_difference(x, group_1=NULL, group_2=NULL,
-                conf_int=FALSE, conf_level=0.95,
-                type="steps", max_t=Inf,
+                conf_int=FALSE, conf_level=0.95, type="steps",
+                times=NULL, max_t=Inf, use_boot=FALSE,
                 size=0.7, color="black", linetype="solid",
                 alpha=1, conf_int_alpha=0.4,
                 points_ci_size=NULL, points_ci_width=NULL,
@@ -46,7 +46,7 @@ A single character string specifying one of the levels of the \code{variable} us
 Also a single character string specifying one of the levels of \code{variable}. This corresponds to the right side of the difference equation. See argument \code{group_2}. If \code{NULL}, this will default to the second level of \code{variable}.
   }
   \item{conf_int}{
-A logical variable indicating whether the confidence intervals should be drawn. This only works when \code{bootstrap=TRUE} was used in the original \code{adjustedsurv} or \code{adjustedcif} function call. It also currently does not work if multiply imputed data was used.
+A logical variable indicating whether the confidence intervals should be drawn. This only works when \code{conf_int=TRUE} or \code{bootstrap=TRUE} was used in the original \code{adjustedsurv} or \code{adjustedcif} function call.
   }
   \item{conf_level}{
 The confidence level that should be used when calculating the confidence intervals. Ignored if \code{conf_int=FALSE}.
@@ -54,8 +54,14 @@ The confidence level that should be used when calculating the confidence interva
   \item{type}{
 Must be one of \code{"steps"} (drawing the difference as a step function), \code{"lines"} (drawing the difference using linear interpolation), \code{"points"} (drawing points only) or \code{"none"} (drawing nothing, useful when only the smoothed difference is of interest). It defaults to \code{"steps"}.
   }
+  \item{times}{
+An optional numeric vector of points in time at which the difference should be estimated. If \code{NULL} (default) the differences are estimated for the whole curve. This only affects the plot and has no effect on the \code{integral} or \code{p_value} if those are also specified.
+  }
   \item{max_t}{
 A number indicating the latest time to which the curve should be extended to.
+  }
+  \item{use_boot}{
+Whether to use the bootstrapped estimates to calculate the confidence intervals or not. Can only be used if \code{bootstrap=TRUE} was used in the original \code{adjustedsurv} or \code{adjustedcif} function call. Ignored if \code{conf_int=FALSE}.
   }
   \item{size}{
 A number controlling the thickness of the difference curve.
@@ -127,19 +133,19 @@ The linetype of the LOESS smoother line. Ignored if \code{loess_smoother=FALSE}.
 The transparency level of the LOESS smoother line. Ignored if \code{loess_smoother=FALSE}.
   }
   \item{test}{
-An optional \code{curve_test} object created using the \code{adjusted_curve_diff} function. If supplied it can be used to add a p-value and the integral statistic to the plot. Alternatively, the needed arguments below can be specified to obtain the values needed for the test. See below. Set to \code{NULL} (default) to ignore this.
+An optional \code{curve_test} object created using the \code{adjusted_curve_test} function. If supplied it can be used to add a p-value and the integral statistic to the plot. Alternatively, the needed arguments below can be specified to obtain the values needed for the test. See below. Set to \code{NULL} (default) to ignore this.
   }
   \item{integral_from}{
-A number specifying the left limit of the integral. When \code{p_value=TRUE} and \code{test=NULL}, this argument will be passed to the \code{from} argument in the \code{adjusted_curve_diff} function to perform the test.
+A number specifying the left limit of the integral. When \code{p_value=TRUE} and \code{test=NULL}, this argument will be passed to the \code{from} argument in the \code{adjusted_curve_test} function to perform the test.
   }
   \item{integral_to}{
-A number specifying the right limit of the integral. When \code{p_value=TRUE} and \code{test=NULL}, this argument will be passed to the \code{from} argument in the \code{adjusted_curve_diff} function to perform the test.
+A number specifying the right limit of the integral. When \code{p_value=TRUE} and \code{test=NULL}, this argument will be passed to the \code{from} argument in the \code{adjusted_curve_test} function to perform the test.
   }
   \item{integral_subdivisions}{
-How many subdivisions to use when calculating the integral using the trapezoid rule (\code{integral_interpolation="linear"}). When \code{p_value=TRUE} and \code{test=NULL}, this argument will be passed to the \code{from} argument in the \code{adjusted_curve_diff} function to perform the test.
+How many subdivisions to use when calculating the integral using the trapezoid rule (\code{integral_interpolation="linear"}). When \code{p_value=TRUE} and \code{test=NULL}, this argument will be passed to the \code{from} argument in the \code{adjusted_curve_test} function to perform the test.
   }
   \item{p_value}{
-Whether to add a p-value to the plot or not. This requires either that the user supplies a previously created \code{curve_test} object to the \code{test} argument, or that the required arguments to call this function are supplied (at least \code{integral_to}).
+Whether to add a p-value to the plot or not. This requires either that the user supplies a previously created \code{curve_test} object to the \code{test} argument, or that the required arguments to call this function are supplied (at least \code{integral_to}). Either way it only works if \code{bootstrap=TRUE} was used in the original \code{adjustedsurv} or \code{adjustedcif} function call.
   }
   \item{integral}{
 Whether to add the integral of the difference in the interval [\code{from}, \code{to}] to the plot or not. This requires either that the user supplies a previously created \code{curve_test} object to the \code{test} argument, or that the required arguments to call this function are supplied (at least \code{integral_to}).
@@ -194,6 +200,8 @@ Currently not used.
 This function allows the easy creation of difference curves. The syntax is exactly the same for both adjusted survival curves and adjusted CIFs. By default it calculates the difference up to the last point where estimates for both the \code{group_1} curve and the \code{group_2} curve are available.
 
 It currently does not support plotting multiple difference curves at once, which could be useful when there are more than two treatment groups in \code{variable}. If the user is interested in this, we recommend calling this function multiple times with the desired comparisons and concatenating the individual plots into one plot afterwards using a suitable function such as \code{par} or \code{ggarrange}.
+
+More information on how the differences and their confidence intervals are calculated can be found in the documentation of the \code{\link{adjusted_curve_diff}} function. More information on how the overall p-value and the integral are calculated can be found in the \code{\link{adjusted_curve_test}} function.
 }
 \value{
 Returns a \code{ggplot2} object.
@@ -203,7 +211,7 @@ Robin Denz
 }
 
 \seealso{
-\code{\link{adjustedsurv}}, \code{\link{adjustedcif}}, \code{\link[ggplot2]{ggplot}}, \code{\link[pammtools]{pammtools}}
+\code{\link{adjusted_curve_diff}}, \code{\link{adjusted_curve_test}}, \code{\link{adjustedsurv}}, \code{\link{adjustedcif}}, \code{\link[ggplot2]{ggplot}}, \code{\link[pammtools]{pammtools}}
 }
 \examples{
 \dontrun{

@@ -73,7 +73,7 @@ cif_aalen_johansen <- function(data, variable, ev_time, event, cause,
   plotdata <- plotdata[ids, ]
 
   if (!is.null(times)) {
-    plotdata <- specific_times(plotdata, times, cif=TRUE)
+    plotdata <- specific_times(plotdata, times, est="cif")
   }
 
   output <- list(plotdata=plotdata,

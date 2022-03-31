@@ -1,83 +1,11 @@
 
-## calculate the curve of the difference
-get_diff_curve <- function(x, group_1, group_2, use_boot, conf_level,
-                           interpolation) {
-
-  # silence devtools::check()
-  . <- time <- est <- NULL
-
-  # get plotdata out of x
-  if (inherits(x, "adjustedsurv")) {
-    est_type <- "surv"
-    plotdata <- x$adjsurv
-  } else if (inherits(x, "adjustedcif")) {
-    est_type <- "cif"
-    plotdata <- x$adjcif
-  }
-
-  # set groups
-  if (is.null(group_1) | is.null(group_2)) {
-    group_1 <- levels(plotdata$group)[1]
-    group_2 <- levels(plotdata$group)[2]
-  }
-
-  # keep only data with the groups of interest
-  plotdata <- plotdata[plotdata$group==group_1 | plotdata$group==group_2,]
-  plotdata$group <- factor(plotdata$group, levels=c(group_1, group_2))
-
-  # observed
-  times <- sort(unique(plotdata$time))
-  diff_curve <- difference_function(adj=plotdata, times=times, est=est_type,
-                                    type=interpolation)
-  colnames(diff_curve) <- c("time", "est")
-
-  # bootstrapped
-  if (use_boot) {
-
-    boot_diff_curves <- vector(mode="list", length=max(x$boot_data$boot))
-    for (i in seq_len(max(x$boot_data$boot))) {
-
-      boot_dat <- x$boot_data[x$boot_data$boot==i, ]
-      boot_dat$group <- factor(boot_dat$group, levels=c(group_1, group_2))
-
-      boot_diff <- difference_function(adj=boot_dat, times=times, est=est_type,
-                                       type=interpolation)
-      boot_diff$boot <- i
-      boot_diff_curves[[i]] <- boot_diff
-    }
-    boot_diff_curves <- dplyr::bind_rows(boot_diff_curves)
-    colnames(boot_diff_curves) <- c("time", "est", "boot")
-
-    # calculate bootstrap confidence intervals
-    boot_diff_curve <- boot_diff_curves %>%
-      dplyr::group_by(., time) %>%
-      dplyr::summarise(se=stats::sd(est, na.rm=TRUE),
-                       ci_lower=stats::quantile(est,
-                                                probs=(1-conf_level)/2,
-                                                na.rm=TRUE),
-                       ci_upper=stats::quantile(est,
-                                                probs=1-((1-conf_level)/2),
-                                                na.rm=TRUE),
-                       n_boot=sum(!is.na(est)),
-                       .groups="drop_last")
-    boot_diff_curve$est <- diff_curve$est
-    diff_curve <- boot_diff_curve
-  }
-
-  output <- list(diff_curve=diff_curve,
-                 group_1=group_1,
-                 group_2=group_2,
-                 est_type=est_type)
-
-  return(output)
-}
-
 ## plot the difference between two adjusted survival curves
 #' @importFrom rlang .data
 #' @export
 plot_difference <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
-                            conf_level=0.95, type="steps", max_t=Inf,
-                            size=0.7, color="black", linetype="solid", alpha=1,
+                            conf_level=0.95, type="steps", times=NULL,
+                            max_t=Inf, use_boot=FALSE, size=0.7, color="black",
+                            linetype="solid", alpha=1,
                             conf_int_alpha=0.4, points_ci_size=NULL,
                             points_ci_width=NULL, xlab="Time", ylab=NULL,
                             title=NULL, subtitle=NULL,
@@ -105,7 +33,7 @@ plot_difference <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
                                conf_int=conf_int, type=type, max_t=max_t,
                                test=test, integral_from=integral_from,
                                integral_to=integral_to, p_value=p_value,
-                               integral=integral)
+                               integral=integral, use_boot=use_boot)
 
   # object specific stuff
   if (inherits(x, "adjustedsurv")) {
@@ -126,15 +54,15 @@ plot_difference <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
   }
 
   # get relevant data
-  diff_obj <- get_diff_curve(x=x, group_1=group_1, group_2=group_2,
-                             use_boot=conf_int, conf_level=conf_level,
-                             interpolation=interpolation)
-  plotdata <- diff_obj$diff_curve
-  plotdata <- plotdata[which(!is.na(plotdata$est)), ]
+  plotdata <- adjusted_curve_diff(adj=x, group_1=group_1, group_2=group_2,
+                                  conf_int=conf_int, conf_level=conf_level,
+                                  interpolation=interpolation, times=times,
+                                  use_boot=use_boot)
+  plotdata <- plotdata[which(!is.na(plotdata$diff)), ]
   plotdata <- plotdata[which(plotdata$time <= max_t), ]
 
   # initialize plot
-  p <- ggplot2::ggplot(plotdata, ggplot2::aes(x=.data$time, y=.data$est))
+  p <- ggplot2::ggplot(plotdata, ggplot2::aes(x=.data$time, y=.data$diff))
 
   # add line at 0 if specified
   if (line_at_0) {
@@ -152,7 +80,7 @@ plot_difference <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
       p <- p + pammtools::geom_stepribbon(ggplot2::aes(ymin=.data$ci_lower,
                                                        ymax=.data$ci_upper,
                                                        x=.data$time,
-                                                       y=.data$est),
+                                                       y=.data$diff),
                                           alpha=conf_int_alpha,
                                           fill=color,
                                           inherit.aes=FALSE)
@@ -167,7 +95,7 @@ plot_difference <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
       p <- p + ggplot2::geom_ribbon(ggplot2::aes(ymin=.data$ci_lower,
                                                  ymax=.data$ci_upper,
                                                  x=.data$time,
-                                                 y=.data$est),
+                                                 y=.data$diff),
                                     alpha=conf_int_alpha,
                                     fill=color,
                                     inherit.aes=FALSE)
@@ -204,13 +132,13 @@ plot_difference <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
 
   # generate default label
   if (is.null(group_1) | is.null(group_2)) {
-    group_1 <- diff_obj$group_1
-    group_2 <- diff_obj$group_2
+    group_1 <- levels(adj_data$group)[1]
+    group_2 <- levels(adj_data$group)[2]
   }
 
-  if (is.null(ylab) & diff_obj$est_type=="surv") {
+  if (is.null(ylab) & mode=="surv") {
     ylab <- bquote(hat(S)[.(group_1)](t) - hat(S)[.(group_2)](t))
-  } else if (is.null(ylab) & diff_obj$est_type=="cif") {
+  } else if (is.null(ylab) & mode=="cif") {
     ylab <- bquote(hat(F)[.(group_1)](t) - hat(F)[.(group_2)](t))
   }
 
@@ -219,7 +147,7 @@ plot_difference <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
 
   # perform test here if "test" is NULL and p-val is wanted
   if (p_value & is.null(test)) {
-    test <- adjusted_curve_diff(adj=x, to=integral_to, from=integral_from,
+    test <- adjusted_curve_test(adj=x, to=integral_to, from=integral_from,
                                 conf_level=conf_level,
                                 interpolation=interpolation,
                                 subdivisions=integral_subdivisions,
@@ -234,7 +162,7 @@ plot_difference <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
   }
 
   # add p-value and other text to the plot, based on a test performed by
-  # the adjusted_curve_diff function
+  # the adjusted_curve_test function
   if (p_value | integral) {
     requireNamespace("ggpp")
 
@@ -293,9 +221,9 @@ plot_difference <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
                                          restricted_times >= from]
 
     restricted_est <- vapply(X=restricted_times, FUN=read_fun,
-                             FUN.VALUE=numeric(1), est="est", data=plotdata)
+                             FUN.VALUE=numeric(1), est="diff", data=plotdata)
     plotdata_r <- data.frame(time=restricted_times,
-                             est=restricted_est)
+                             diff=restricted_est)
 
   } else {
     plotdata_r <- plotdata
@@ -307,9 +235,9 @@ plot_difference <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
                                 alpha=area_alpha)
   } else if (type=="steps" & fill_area) {
     p <- p + pammtools::geom_stepribbon(ggplot2::aes(ymin=0,
-                                                     ymax=.data$est,
+                                                     ymax=.data$diff,
                                                      x=.data$time,
-                                                     y=.data$est),
+                                                     y=.data$diff),
                                         fill=area_color,
                                         alpha=area_alpha,
                                         data=plotdata_r)

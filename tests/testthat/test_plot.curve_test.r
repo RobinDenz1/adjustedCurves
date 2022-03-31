@@ -14,7 +14,7 @@ adj <- adjustedsurv(data=sim_dat,
                     bootstrap=TRUE,
                     n_boot=20)
 
-adj_test <- adjusted_curve_diff(adj=adj, from=0, to=0.5)
+adj_test <- adjusted_curve_test(adj=adj, from=0, to=0.5)
 
 # 2 treatments
 # NOTE: I am not using snapshots + expect_doppelganger here
@@ -48,7 +48,7 @@ test_that("plot.curve_test, 2 treatments, type='integral' + labs", {
   expect_s3_class(plt, "ggplot")
 })
 
-adj_test <- adjusted_curve_diff(adj=adj, from=0, to=0.5, interpolation="linear")
+adj_test <- adjusted_curve_test(adj=adj, from=0, to=0.5, interpolation="linear")
 
 test_that("plot.curve_test, 2 treatments, type='curves', linear", {
   plt <- plot(adj_test, type="curves")
@@ -71,7 +71,7 @@ adj <- adjustedsurv(data=sim_dat,
                     bootstrap=TRUE,
                     n_boot=20)
 
-adj_test <- adjusted_curve_diff(adj=adj, from=0, to=0.5)
+adj_test <- adjusted_curve_test(adj=adj, from=0, to=0.5)
 
 test_that("plot.curve_test, > 2 treatments, type='curves'", {
   plt <- plot(adj_test, type="curves")

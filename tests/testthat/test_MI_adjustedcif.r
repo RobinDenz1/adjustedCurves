@@ -315,7 +315,7 @@ test_that("MI, aalen_johansen, boot", {
   expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
 })
 
-### adjusted_curve_diff
+### adjusted_curve_test
 adjcif <- adjustedcif(data=imp,
                       variable="group",
                       ev_time="time",
@@ -326,16 +326,16 @@ adjcif <- adjustedcif(data=imp,
                       na.action="na.omit",
                       cause=1)
 
-test_that("adjusted_curve_diff, two treatments", {
-  adj_test <- adjusted_curve_diff(adjcif, from=0, to=1)
+test_that("adjusted_curve_test, two treatments", {
+  adj_test <- adjusted_curve_test(adjcif, from=0, to=1)
   expect_equal(round(adj_test$observed_diff_integral, 4), -0.0543)
   expect_equal(round(adj_test$integral_se, 4), 0.0268)
   expect_equal(round(adj_test$p_value, 4), 0)
   expect_equal(adj_test$n_boot, 2)
 })
 
-test_that("adjusted_curve_diff, two treatments, linear", {
-  adj_test <- adjusted_curve_diff(adjcif, from=0, to=1, interpolation="linear")
+test_that("adjusted_curve_test, two treatments, linear", {
+  adj_test <- adjusted_curve_test(adjcif, from=0, to=1, interpolation="linear")
   expect_equal(round(adj_test$observed_diff_integral, 4), -0.0529)
   expect_equal(round(adj_test$integral_se, 4), 0.0267)
   expect_equal(round(adj_test$p_value, 4), 0)
@@ -363,8 +363,8 @@ adjcif <- adjustedcif(data=imp,
                       na.action="na.omit",
                       cause=1)
 
-test_that("adjusted_curve_diff, three treatments", {
-  adj_test <- adjusted_curve_diff(adjcif, from=0, to=1)
+test_that("adjusted_curve_test, three treatments", {
+  adj_test <- adjusted_curve_test(adjcif, from=0, to=1)
   expect_equal(round(adj_test$`Chemo vs. Placebo`$observed_diff_integral, 4),
                -0.0309)
   expect_equal(round(adj_test$`Chemo vs. Placebo`$integral_se, 4), 0.0670)
@@ -373,8 +373,8 @@ test_that("adjusted_curve_diff, three treatments", {
   expect_equal(adj_test$`Chemo vs. Placebo`$n_boot, 2)
 })
 
-test_that("adjusted_curve_diff, three treatmentsm linear", {
-  adj_test <- adjusted_curve_diff(adjcif, from=0, to=1, interpolation="linear")
+test_that("adjusted_curve_test, three treatmentsm linear", {
+  adj_test <- adjusted_curve_test(adjcif, from=0, to=1, interpolation="linear")
   expect_equal(round(adj_test$`Chemo vs. Placebo`$observed_diff_integral, 4),
                -0.0312)
   expect_equal(round(adj_test$`Chemo vs. Placebo`$integral_se, 4), 0.0685)

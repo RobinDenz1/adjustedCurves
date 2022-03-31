@@ -33,6 +33,12 @@ test_that("plot, with conf_int", {
   vdiffr::expect_doppelganger("plot, with conf_int", fig=plt)
 })
 
+test_that("plot, with conf_int boot", {
+  plt <- plot_difference(adj, conf_int=TRUE, use_boot=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot, with conf_int boot", fig=plt)
+})
+
 test_that("plot, with lines", {
   plt <- plot_difference(adj, type="lines")
   expect_s3_class(plt, "ggplot")
@@ -123,7 +129,7 @@ test_that("plot, with all texts", {
   vdiffr::expect_doppelganger("plot, with all texts", fig=plt)
 })
 
-adj_test <- adjusted_curve_diff(adj, to=0.75, from=0, interpolation="steps")
+adj_test <- adjusted_curve_test(adj, to=0.75, from=0, interpolation="steps")
 
 test_that("plot, with p_value test", {
   plt <- plot_difference(adj, type="steps", p_value=TRUE, test=adj_test)

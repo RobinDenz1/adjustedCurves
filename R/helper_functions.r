@@ -128,7 +128,7 @@ confint_surv <- function(surv, se, conf_level, conf_type="plain") {
 
 ## function to change plotdata in iptw and standard methods when
 ## custom points in time are supplied
-specific_times <- function(plotdata, times, cif=FALSE, interpolation="steps") {
+specific_times <- function(plotdata, times, est="surv", interpolation="steps") {
 
   if (interpolation=="steps") {
     read_fun <- read_from_step_function
@@ -140,22 +140,25 @@ specific_times <- function(plotdata, times, cif=FALSE, interpolation="steps") {
   new_plotdata <- vector(mode="list", length=length(levs))
   for (i in seq_len(length(levs))) {
 
-    if (cif) {
-      new_est <- vapply(times, read_fun, est="cif",
-                        data=plotdata[which(plotdata$group==levs[i]), ],
-                        FUN.VALUE=numeric(1))
-      new_dat <- data.frame(time=times, cif=new_est, group=levs[i])
-    } else {
+    new_est <- vapply(times, read_fun, est=est,
+                      data=plotdata[which(plotdata$group==levs[i]), ],
+                      FUN.VALUE=numeric(1))
 
-      new_est <- vapply(times, read_fun, est="surv",
-                        data=plotdata[which(plotdata$group==levs[i]), ],
-                        FUN.VALUE=numeric(1))
+    if (est=="cif") {
+      new_dat <- data.frame(time=times, cif=new_est, group=levs[i])
+    } else if (est=="surv") {
       new_dat <- data.frame(time=times, surv=new_est, group=levs[i])
+    } else {
+      new_dat <- data.frame(time=times, diff=new_est, group=levs[i])
     }
 
     if ("se" %in% colnames(plotdata)) {
       # read from curve using custom function
-      new_se <- vapply(times, read_fun, est="se",
+      # NOTE: while the confidence intervals should be interpolated according
+      #       to the respective specification, the standard error stays
+      #       the same over the interpolation period and therefore always
+      #       needs to be interpolated using the step function method
+      new_se <- vapply(times, read_from_step_function, est="se",
                        data=plotdata[which(plotdata$group==levs[i]), ],
                        FUN.VALUE=numeric(1))
       new_ci_lower <- vapply(times, read_fun, est="ci_lower",

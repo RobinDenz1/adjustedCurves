@@ -111,7 +111,8 @@ exact_stepfun_integral <- function(stepfun, from, to, est="surv") {
 
 ## calculate difference between two functions at arbitrary time values
 ## using either linear or step-function interpolation
-difference_function <- function(adj, times, est="surv", type="steps") {
+difference_function <- function(adj, times, est="surv", type="steps",
+                                conf_int=FALSE, conf_level=0.95) {
 
   levs <- levels(adj$group)
   adjsurv_0 <- adj[which(adj$group==levs[1]), ]
@@ -128,17 +129,39 @@ difference_function <- function(adj, times, est="surv", type="steps") {
     surv_0 <- adjsurv_0[, est]
     surv_1 <- adjsurv_1[, est]
 
+    if (conf_int) {
+      se_0 <- adjsurv_0$se
+      se_1 <- adjsurv_1$se
+    }
   } else {
     surv_0 <- vapply(times, read_fun, data=adjsurv_0,
                      est=est, FUN.VALUE=numeric(1))
     surv_1 <- vapply(times, read_fun, data=adjsurv_1,
                      est=est, FUN.VALUE=numeric(1))
+
+    if (conf_int) {
+      se_0 <- vapply(times, read_from_step_function, data=adjsurv_0,
+                     est="se", FUN.VALUE=numeric(1))
+      se_1 <- vapply(times, read_from_step_function, data=adjsurv_1,
+                     est="se", FUN.VALUE=numeric(1))
+    }
   }
 
   surv_diff <- surv_0 - surv_1
 
   diff_dat <- data.frame(time=times)
   diff_dat[, est] <- surv_diff
+
+  if (conf_int) {
+    # calculate confidence interval from pooled SE
+    diff_se <- sqrt(se_0^2 + se_1^2)
+    diff_ci <- confint_surv(surv=surv_diff, se=diff_se, conf_level=conf_level,
+                            conf_type="plain")
+    # put together
+    diff_dat$se <- diff_se
+    diff_dat$ci_lower <- diff_ci$left
+    diff_dat$ci_upper <- diff_ci$right
+  }
 
   return(diff_dat)
 }
