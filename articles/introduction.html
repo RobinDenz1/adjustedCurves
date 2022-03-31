@@ -387,7 +387,7 @@
 <div class="section level2">
 <h2 id="testing-the-difference-betweeen-two-survival-curves">Testing the Difference betweeen Two Survival Curves<a class="anchor" aria-label="anchor" href="#testing-the-difference-betweeen-two-survival-curves"></a>
 </h2>
-<p>In some cases the researcher might be interested to formally test the hypothesis that two adjusted survival curves or two cumulative incidence functions are different in a certain interval. This can be done with the <code>adjusted_curve_diff</code> function. It calculates the integral of the difference between two curves for each bootstrap estimate, shifts that distribution to be centered around 0 and calculates a p-value based on that shifted distribution:</p>
+<p>In some cases the researcher might be interested to formally test the hypothesis that two adjusted survival curves or two cumulative incidence functions are different in a certain interval. This can be done with the <code>adjusted_curve_test</code> function. It calculates the integral of the difference between two curves for each bootstrap estimate, shifts that distribution to be centered around 0 and calculates a p-value based on that shifted distribution:</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># set random number generator seed to make this reproducible</span>
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">41</span><span class="op">)</span>
@@ -411,7 +411,7 @@
                         n_boot<span class="op">=</span><span class="fl">300</span><span class="op">)</span>
 
 <span class="co"># test equality</span>
-<span class="va">adjtest</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/adjusted_curve_diff.html">adjusted_curve_diff</a></span><span class="op">(</span><span class="va">adjsurv</span>, from<span class="op">=</span><span class="fl">0</span>, to<span class="op">=</span><span class="fl">1</span><span class="op">)</span>
+<span class="va">adjtest</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/adjusted_curve_test.html">adjusted_curve_test</a></span><span class="op">(</span><span class="va">adjsurv</span>, from<span class="op">=</span><span class="fl">0</span>, to<span class="op">=</span><span class="fl">1</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">adjtest</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## ------------------------------------------------------------------</span>
 <span class="co">##    Test of the Difference between two adjusted Survival Curves</span>
@@ -432,7 +432,7 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjtest</span>, type<span class="op">=</span><span class="st">"integral"</span><span class="op">)</span></code></pre></div>
 <p><img src="introduction_files/figure-html/unnamed-chunk-28-1.png" width="672"></p>
 <p>Similarly to the first plot, the kernel density estimate should be approximately normally distributed with 0 at the center, just like in the example above. If the distribution is very skewed, the test results might be wrong.</p>
-<p>The <code>adjusted_curve_diff</code> function can also be used with more than two groups. In that case it returns pairwise comparisons.</p>
+<p>The <code>adjusted_curve_test</code> function can also be used with more than two groups. In that case it returns pairwise comparisons.</p>
 </div>
 <div class="section level2">
 <h2 id="literature">Literature<a class="anchor" aria-label="anchor" href="#literature"></a>
