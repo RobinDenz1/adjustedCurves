@@ -66,6 +66,7 @@ adjusted_curve_test <- function(adj, to, from=0, conf_level=0.95,
                                      c(group_1, group_2), ]
       adj$boot_data$group <- factor(adj$boot_data$group,
                                     levels=c(group_1, group_2))
+      adj$categorical <- FALSE
 
       out <- adjusted_curve_test(adj=adj, to=to, from=from,
                                  conf_level=conf_level,

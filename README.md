@@ -91,6 +91,13 @@ plot(adjsurv, conf_int=TRUE)
 ```
 <img src="man/figures/example_iptw_km.png" />
 
+It is also possible to plot the difference between two curves using the `plot_difference()` function:
+
+```R
+plot_difference(adjsurv, conf_int=TRUE, color="blue")
+```
+<img src="man/figures/example_diffplot.png" />
+
 To test whether the two adjusted survival curves are different in a specified interval (here 0 to 0.75), the `adjustedsurv` call has to be made with `bootstrap=TRUE`:
 ```R
 adjsurv <- adjustedsurv(data=sim_dat,
@@ -103,7 +110,7 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         bootstrap=TRUE,
                         n_boot=1000)
 
-adj_test <- adjusted_curve_diff(adjsurv, from=0, to=0.75)
+adj_test <- adjusted_curve_test(adjsurv, from=0, to=0.75)
 summary(adj_test)
 ```
 

@@ -437,12 +437,12 @@ test_that("adjusted_median_survival, 2 treatments, no boot", {
 
 ### adjusted_rmst
 test_that("adjusted_rmst, 2 treatments, no boot", {
-  adj_rmst <- adjusted_rmst(adjsurv, from=0, to=1, use_boot=FALSE)
+  adj_rmst <- adjusted_rmst(adjsurv, from=0, to=1, conf_int=FALSE)
   expect_equal(as.vector(round(adj_rmst$auc, 4)), c(0.5284, 0.6288))
 })
 
 test_that("adjusted_rmst, 2 treatments, boot", {
-  adj_rmst <- adjusted_rmst(adjsurv, from=0, to=1, use_boot=TRUE)
+  adj_rmst <- adjusted_rmst(adjsurv, from=0, to=1, conf_int=TRUE)
   expect_equal(as.vector(round(adj_rmst$auc, 4)), c(0.5284, 0.6288))
   expect_equal(as.vector(round(adj_rmst$auc_se, 4)), c(0.0357, 0.0447))
   expect_equal(as.vector(adj_rmst$n_boot), c(3, 3))
@@ -493,12 +493,12 @@ test_that("adjusted_median_survival, 3 treatments, no boot", {
 
 ### adjusted_rmst
 test_that("adjusted_rmst, 3 treatments, no boot", {
-  adj_rmst <- adjusted_rmst(adjsurv, from=0, to=1, use_boot=FALSE)
+  adj_rmst <- adjusted_rmst(adjsurv, from=0, to=1, conf_int=FALSE)
   expect_equal(as.vector(round(adj_rmst$auc, 4)), c(0.6588, 0.5284, 0.5924))
 })
 
 test_that("adjusted_rmst, 3 treatments, with boot", {
-  adj_rmst <- adjusted_rmst(adjsurv, from=0, to=1, use_boot=TRUE)
+  adj_rmst <- adjusted_rmst(adjsurv, from=0, to=1, conf_int=TRUE)
   expect_equal(as.vector(round(adj_rmst$auc, 4)), c(0.6588, 0.5284, 0.5924))
   expect_equal(as.vector(round(adj_rmst$auc_se, 4)), c(0.0346, 0.0215, 0.0328))
   expect_equal(as.vector(adj_rmst$n_boot), c(3, 3, 3))

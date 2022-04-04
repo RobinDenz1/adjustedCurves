@@ -59,7 +59,8 @@ cif_aalen_johansen <- function(data, variable, ev_time, event, cause,
   plotdata <- as.data.frame(dplyr::bind_rows(plotdata))
 
   if (conf_int) {
-    cif_cis <- confint_surv(surv=plotdata$cif, se=sqrt(plotdata$se),
+    plotdata$se <- sqrt(plotdata$se)
+    cif_cis <- confint_surv(surv=plotdata$cif, se=plotdata$se,
                             conf_level=conf_level, conf_type="plain")
     plotdata$ci_lower <- cif_cis$left
     plotdata$ci_upper <- cif_cis$right

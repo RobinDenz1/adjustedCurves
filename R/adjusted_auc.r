@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## calculate area under curve of adjustedsurv, adjustedcif objects
-area_under_curve <- function(adj, from, to, use_boot, conf_level,
+area_under_curve <- function(adj, from, to, conf_int, conf_level,
                              interpolation, subdivisions) {
 
   mode <- ifelse(inherits(adj, "adjustedsurv"), "surv", "cif")
@@ -29,7 +29,7 @@ area_under_curve <- function(adj, from, to, use_boot, conf_level,
     for (i in seq_len(len)) {
 
       results_imp <- area_under_curve(adj$mids_analyses[[i]],
-                                      to=to, from=from, use_boot=use_boot,
+                                      to=to, from=from, conf_int=conf_int,
                                       conf_level=conf_level,
                                       interpolation=interpolation,
                                       subdivisions=subdivisions)
@@ -47,7 +47,7 @@ area_under_curve <- function(adj, from, to, use_boot, conf_level,
                 from=from,
                 to=to)
 
-    if (use_boot) {
+    if (conf_int) {
 
       rmst_se_dat <- dplyr::bind_rows(rmst_se)
       rmst_se_dat <- apply(rmst_se_dat, 2, mean)
@@ -73,7 +73,7 @@ area_under_curve <- function(adj, from, to, use_boot, conf_level,
   ## single analysis
   } else {
 
-    if (use_boot & !is.null(adj[boot_str])) {
+    if (conf_int & !is.null(adj[boot_str])) {
 
       n_boot <- max(adj$boot_data$boot)
       booted_rmsts <- vector(mode="list", length=n_boot)
@@ -94,7 +94,7 @@ area_under_curve <- function(adj, from, to, use_boot, conf_level,
 
         # recursion call
         adj_rmst <- area_under_curve(fake_object, from=from, to=to,
-                                     use_boot=FALSE,
+                                     conf_int=FALSE,
                                      interpolation=interpolation,
                                      subdivisions=subdivisions)
 
@@ -104,9 +104,9 @@ area_under_curve <- function(adj, from, to, use_boot, conf_level,
     }
 
     if (inherits(adj, "adjustedsurv")) {
-      levs <- unique(adj$adjsurv$group)
+      levs <- levels(adj$adjsurv$group)
     } else {
-      levs <- unique(adj$adjcif$group)
+      levs <- levels(adj$adjcif$group)
     }
 
     rmsts <- vector(mode="numeric", length=length(levs))
@@ -143,7 +143,7 @@ area_under_curve <- function(adj, from, to, use_boot, conf_level,
                 from=from,
                 to=to)
 
-    if (use_boot & !is.null(adj[boot_str])) {
+    if (conf_int & !is.null(adj[boot_str])) {
 
       n_boot_rmst <- apply(booted_rmsts, 2, function(x) {sum(!is.na(x))})
       names(n_boot_rmst) <- levs
@@ -165,19 +165,19 @@ area_under_curve <- function(adj, from, to, use_boot, conf_level,
 ## function to calculate the restricted mean survival time of each
 ## adjusted survival curve previously estimated using the adjustedsurv function
 #' @export
-adjusted_rmst <- function(adjsurv, to, from=0, use_boot=FALSE,
+adjusted_rmst <- function(adjsurv, to, from=0, conf_int=FALSE,
                           conf_level=0.95, interpolation="steps",
                           subdivisions=1000) {
 
-  check_inputs_adj_rmst(adjsurv=adjsurv, from=from, to=to, use_boot=use_boot)
+  check_inputs_adj_rmst(adjsurv=adjsurv, from=from, to=to, conf_int=conf_int)
 
   # set to FALSE if it can't be done
-  if (use_boot & is.null(adjsurv$boot_adjsurv)) {
-    use_boot <- FALSE
+  if (conf_int & is.null(adjsurv$boot_adjsurv)) {
+    conf_int <- FALSE
   }
 
   out <- area_under_curve(adj=adjsurv, to=to, from=from,
-                          use_boot=use_boot, conf_level=conf_level,
+                          conf_int=conf_int, conf_level=conf_level,
                           interpolation=interpolation,
                           subdivisions=subdivisions)
   class(out) <- "adjusted_rmst"
@@ -187,19 +187,19 @@ adjusted_rmst <- function(adjsurv, to, from=0, use_boot=FALSE,
 ## function to calculate the restricted mean time lost of each
 ## adjusted CIF previously estimated using the adjustedsurv/adjustedcif function
 #' @export
-adjusted_rmtl <- function(adj, to, from=0, use_boot=FALSE,
+adjusted_rmtl <- function(adj, to, from=0, conf_int=FALSE,
                           conf_level=0.95, interpolation="steps",
                           subdivisions=1000) {
 
-  check_inputs_adj_rmtl(adj=adj, from=from, to=to, use_boot=use_boot)
+  check_inputs_adj_rmtl(adj=adj, from=from, to=to, conf_int=conf_int)
 
   # set to FALSE if it can't be done
-  if (use_boot & is.null(adj$boot_adjsurv) & is.null(adj$boot_adjcif)) {
-    use_boot <- FALSE
+  if (conf_int & is.null(adj$boot_adjsurv) & is.null(adj$boot_adjcif)) {
+    conf_int <- FALSE
   }
 
   # calculate area under curve
-  out <- area_under_curve(adj=adj, to=to, from=from, use_boot=use_boot,
+  out <- area_under_curve(adj=adj, to=to, from=from, conf_int=conf_int,
                           conf_level=conf_level,
                           interpolation=interpolation,
                           subdivisions=subdivisions)
@@ -212,7 +212,7 @@ adjusted_rmtl <- function(adj, to, from=0, use_boot=FALSE,
     out$auc <- full_area - out$auc
 
     # recalculate SE / CI
-    if (use_boot) {
+    if (conf_int) {
       out$booted_auc <- full_area - out$booted_auc
       out$auc_se <- apply(out$booted_auc, 2, stats::sd, na.rm=TRUE)
       out$auc_ci_lower <- apply(out$booted_auc, 2, stats::quantile,

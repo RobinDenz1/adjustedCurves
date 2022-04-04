@@ -499,7 +499,7 @@ check_inputs_sim_fun <- function(n, lcovars, outcome_betas, surv_dist,
 }
 
 ## for adjusted_rmst function
-check_inputs_adj_rmst <- function(adjsurv, from, to, use_boot) {
+check_inputs_adj_rmst <- function(adjsurv, from, to, conf_int) {
 
   if ((!is.numeric(from) | !is.numeric(to)) &
       length(from)==1 & length(to)==1) {
@@ -511,9 +511,9 @@ check_inputs_adj_rmst <- function(adjsurv, from, to, use_boot) {
          "the 'adjustedsurv()' function.")
   } else if (from >= to) {
     stop("'from' must be smaller than 'to'.")
-  } else if (!(is.logical(use_boot) & length(use_boot)==1)) {
-    stop("'use_boot' must be either TRUE or FALSE.")
-  } else if (use_boot & is.null(adjsurv$boot_adjsurv)) {
+  } else if (!(is.logical(conf_int) & length(conf_int)==1)) {
+    stop("'conf_int' must be either TRUE or FALSE.")
+  } else if (conf_int & is.null(adjsurv$boot_adjsurv)) {
     warning("Cannot use bootstrapped estimates because",
             " they were not estimated.",
             " Need 'bootstrap=TRUE' in 'adjustedsurv' function call.",
@@ -532,7 +532,7 @@ check_inputs_adj_rmst <- function(adjsurv, from, to, use_boot) {
 }
 
 ## for adjusted_rmtl function
-check_inputs_adj_rmtl <- function(adj, from, to, use_boot) {
+check_inputs_adj_rmtl <- function(adj, from, to, conf_int) {
 
   if ((!is.numeric(from) | !is.numeric(to)) &
       length(from)==1 & length(to)==1) {
@@ -545,9 +545,9 @@ check_inputs_adj_rmtl <- function(adj, from, to, use_boot) {
          " created using the 'adjustedcif()' function.")
   } else if (from >= to) {
     stop("'from' must be smaller than 'to'.")
-  } else if (!(is.logical(use_boot) & length(use_boot)==1)) {
-    stop("'use_boot' must be either TRUE or FALSE.")
-  } else if (use_boot & is.null(adj$boot_adjsurv) & is.null(adj$boot_adjcif)) {
+  } else if (!(is.logical(conf_int) & length(conf_int)==1)) {
+    stop("'conf_int' must be either TRUE or FALSE.")
+  } else if (conf_int & is.null(adj$boot_adjsurv) & is.null(adj$boot_adjcif)) {
     warning("Cannot use bootstrapped estimates because",
             " they were not estimated.",
             " Need 'bootstrap=TRUE' in 'adjustedsurv'/'adjustedcif'",

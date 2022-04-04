@@ -299,7 +299,7 @@ An alternative measure to hazard-ratios is the restricted mean survival time, wh
 adjusted_rmst(adjsurv, to=1)
 ```
 
-The function returns adjusted RMST for every level of the "group" variable. When bootstrapping was performed when calling the `adjustedsurv` function, standard deviations and confidence intervals can be calculated using this function as well by setting the `use_boot` argument to `TRUE`:
+The function returns adjusted RMST for every level of the "group" variable. When bootstrapping was performed when calling the `adjustedsurv` function, standard deviations and confidence intervals can be calculated using this function as well by setting the `conf_int` argument to `TRUE`:
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 adjsurv <- adjustedsurv(data=data,
@@ -312,7 +312,7 @@ adjsurv <- adjustedsurv(data=data,
                         bootstrap=TRUE,
                         n_boot=300)
 
-adjrmst <- adjusted_rmst(adjsurv, to=1, use_boot=TRUE)
+adjrmst <- adjusted_rmst(adjsurv, to=1, conf_int=TRUE)
 print(adjrmst)
 ```
 

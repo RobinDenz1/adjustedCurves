@@ -39,7 +39,13 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
   plotdata <- add_rows_with_zero(plotdata)
 
   # shortcut to only show curves up to a certain time
-  plotdata <- plotdata[which(plotdata$time <= max_t), ]
+  if (is.finite(max_t) && max(plotdata$time) > max_t) {
+    max_t_data <- specific_times(plotdata, times=max_t, est="surv",
+                                 interpolation=ifelse(steps, "steps", "linear"))
+    max_t_data <- max_t_data[!is.na(max_t_data$surv), ]
+    plotdata <- plotdata[which(plotdata$time <= max_t), ]
+    plotdata <- rbind(plotdata, max_t_data)
+  }
 
   # in some methods estimates can be outside the 0, 1 bounds,
   # if specified set those to 0 or 1 respectively

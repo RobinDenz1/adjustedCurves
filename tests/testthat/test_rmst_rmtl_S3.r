@@ -14,11 +14,11 @@ adj <- adjustedsurv(data=sim_dat,
                     bootstrap=TRUE,
                     n_boot=10)
 
-adj_rmst <- adjusted_rmst(adjsurv=adj, to=1.1, from=0, use_boot=TRUE)
-adj_rmtl <- adjusted_rmtl(adj=adj, to=1.1, from=0, use_boot=TRUE)
+adj_rmst <- adjusted_rmst(adjsurv=adj, to=1.1, from=0, conf_int=TRUE)
+adj_rmtl <- adjusted_rmtl(adj=adj, to=1.1, from=0, conf_int=TRUE)
 
-adj_rmst_no_ci <- adjusted_rmst(adjsurv=adj, to=1.1, from=0, use_boot=FALSE)
-adj_rmtl_no_ci <- adjusted_rmtl(adj=adj, to=1.1, from=0, use_boot=FALSE)
+adj_rmst_no_ci <- adjusted_rmst(adjsurv=adj, to=1.1, from=0, conf_int=FALSE)
+adj_rmtl_no_ci <- adjusted_rmtl(adj=adj, to=1.1, from=0, conf_int=FALSE)
 
 ## print methods
 

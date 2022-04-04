@@ -8,7 +8,7 @@ Calculate Confounder-Adjusted Restricted Mean Time Lost
 This function can be utilized to calculate the confounder-adjusted restricted mean time lost, given previously estimated adjusted survival curves / CIFs.
 }
 \usage{
-adjusted_rmtl(adj, to, from=0, use_boot=FALSE,
+adjusted_rmtl(adj, to, from=0, conf_int=FALSE,
               conf_level=0.95, interpolation="steps",
               subdivisions=1000)
 }
@@ -23,7 +23,7 @@ A number specifying the left side of the time interval of interest. See details.
   \item{to}{
 A number specifying the right side of the time interval of interest. See details.
   }
-  \item{use_boot}{
+  \item{conf_int}{
 Whether bootstrap estimates should be used to calculate the standard deviation and confidence intervals of the RMST estimates. Can only be used if \code{bootstrap=TRUE} was used in the \code{\link{adjustedsurv}} or \code{\link{adjustedcif}} call.
   }
   \item{conf_level}{
@@ -53,7 +53,7 @@ Returns a \code{adjusted_rmtl} object containing the following object:
 \item{to}{\code{to} argument in function call.
 }
 
-If \code{use_boot} is set to \code{TRUE} and \code{bootstrap} was also set to \code{TRUE} in the original \code{adjustedsurv}/\code{adjustedcif} function call, the following objects are also added to the output:
+If \code{conf_int} is set to \code{TRUE} and \code{bootstrap} was also set to \code{TRUE} in the original \code{adjustedsurv}/\code{adjustedcif} function call, the following objects are also added to the output:
 
 \item{conf_level}{The confidence level used when calculating the confidence intervals.
 }
@@ -108,12 +108,12 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         n_boot=500)
 
 # calculate adjusted restricted mean survival times from 0 to 1
-adjrmst <- adjusted_rmst(adjsurv, from=0, to=1, use_boot=FALSE)
+adjrmst <- adjusted_rmst(adjsurv, from=0, to=1, conf_int=FALSE)
 print(adjrmst)
 
 # calculate adjusted restricted mean time lost estimates from 0 to 1,
 # including standard errors and confidence intervals
-adjrmst <- adjusted_rmst(adjsurv, from=0, to=1, use_boot=TRUE,
+adjrmst <- adjusted_rmst(adjsurv, from=0, to=1, conf_int=TRUE,
                          conf_level=0.95)
 print(adjrmst)
 
@@ -144,7 +144,7 @@ adjcif <- adjustedcif(data=sim_dat,
 
 # calculate adjusted restricted mean time lost estimates from 0 to 1
 # including standard errors and confidence intervals
-adjrmtl <- adjusted_rmtl(adjcif, from=0, to=1, use_boot=TRUE)
+adjrmtl <- adjusted_rmtl(adjcif, from=0, to=1, conf_int=TRUE)
 print(adjrmtl)
 
 }

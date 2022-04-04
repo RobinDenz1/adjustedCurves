@@ -139,7 +139,7 @@ An optional \code{curve_test} object created using the \code{adjusted_curve_test
 A number specifying the left limit of the integral. When \code{p_value=TRUE} and \code{test=NULL}, this argument will be passed to the \code{from} argument in the \code{adjusted_curve_test} function to perform the test.
   }
   \item{integral_to}{
-A number specifying the right limit of the integral. When \code{p_value=TRUE} and \code{test=NULL}, this argument will be passed to the \code{from} argument in the \code{adjusted_curve_test} function to perform the test.
+A number specifying the right limit of the integral. When \code{p_value=TRUE} and \code{test=NULL}, this argument will be passed to the \code{to} argument in the \code{adjusted_curve_test} function to perform the test.
   }
   \item{integral_subdivisions}{
 How many subdivisions to use when calculating the integral using the trapezoid rule (\code{integral_interpolation="linear"}). When \code{p_value=TRUE} and \code{test=NULL}, this argument will be passed to the \code{from} argument in the \code{adjusted_curve_test} function to perform the test.

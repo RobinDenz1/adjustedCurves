@@ -8,7 +8,7 @@ Calculate Confounder-Adjusted Restricted Mean Survival Times
 This function can be utilized to calculate the confounder-adjusted restricted mean survival time, given previously estimated adjusted survival curves.
 }
 \usage{
-adjusted_rmst(adjsurv, to, from=0, use_boot=FALSE,
+adjusted_rmst(adjsurv, to, from=0, conf_int=FALSE,
               conf_level=0.95, interpolation="steps",
               subdivisions=1000)
 }
@@ -23,7 +23,7 @@ A number specifying the left side of the time interval of interest. See details.
   \item{to}{
 A number specifying the right side of the time interval of interest. See details.
   }
-  \item{use_boot}{
+  \item{conf_int}{
 Whether bootstrap estimates should be used to calculate the standard deviation and confidence intervals of the RMST estimates. Can only be used if \code{bootstrap=TRUE} was used in the \code{\link{adjustedsurv}} call.
   }
   \item{conf_level}{
@@ -48,7 +48,7 @@ The associated \code{print} and \code{summary} methods can be used to obtain a n
 
 \strong{\emph{Confidence Intervals}}
 
-If the \code{adjsurv} object was created with \code{bootstrap = TRUE} in the \code{\link{adjustedsurv}} function, bootstrap confidence intervals and standard errors for the RMSTs can be approximated by setting \code{use_boot} to \code{TRUE}. If bootstrap samples occur where the survival function is not estimated up to \code{to}, the bootstrap sample is discarded and not used in further calculations. Approximate variance calculations not relying on the bootstrap estimates are currently not implemented.
+If the \code{adjsurv} object was created with \code{bootstrap = TRUE} in the \code{\link{adjustedsurv}} function, bootstrap confidence intervals and standard errors for the RMSTs can be approximated by setting \code{conf_int} to \code{TRUE}. If bootstrap samples occur where the survival function is not estimated up to \code{to}, the bootstrap sample is discarded and not used in further calculations. Approximate variance calculations not relying on the bootstrap estimates are currently not implemented.
 
 \strong{\emph{Multiple Imputation}}
 
@@ -73,7 +73,7 @@ Returns a \code{adjusted_rmst} object containing the following object:
 \item{to}{\code{to} argument in function call.
 }
 
-If \code{use_boot} is set to \code{TRUE} and \code{bootstrap} was also set to \code{TRUE} in the original \code{adjustedsurv} function call, the following objects are also added to the output:
+If \code{conf_int} is set to \code{TRUE} and \code{bootstrap} was also set to \code{TRUE} in the original \code{adjustedsurv} function call, the following objects are also added to the output:
 
 \item{conf_level}{The confidence level used when calculating the confidence intervals.
 }
@@ -128,12 +128,12 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         n_boot=500)
 
 # calculate adjusted restricted mean survival times from 0 to 1
-adjrmst <- adjusted_rmst(adjsurv, from=0, to=1, use_boot=FALSE)
+adjrmst <- adjusted_rmst(adjsurv, from=0, to=1, conf_int=FALSE)
 print(adjrmst)
 
 # calculate adjusted restricted mean survival times from 0 to 1,
 # including standard errors and confidence intervals
-adjrmst <- adjusted_rmst(adjsurv, from=0, to=1, use_boot=TRUE,
+adjrmst <- adjusted_rmst(adjsurv, from=0, to=1, conf_int=TRUE,
                          conf_level=0.95)
 print(adjrmst)
 }

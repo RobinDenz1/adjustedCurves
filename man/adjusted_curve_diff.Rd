@@ -93,29 +93,32 @@ library(cmprsk)
 sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
-# estimate a cox-regression for the outcome
-cox_mod <- coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
-                 data=sim_dat, x=TRUE)
+# propensity score model
+ps_mod <- glm(group ~ x1 + x2 + x4 + x5, data=sim_dat, family="binomial")
 
 # use it to calculate adjusted survival curves with bootstrapping
 adjsurv <- adjustedsurv(data=sim_dat,
                         variable="group",
                         ev_time="time",
                         event="event",
-                        method="direct",
-                        outcome_model=cox_mod,
+                        method="iptw_km",
+                        treatment_model=cox_mod,
                         conf_int=FALSE,
                         bootstrap=TRUE,
                         n_boot=500)
 
 # calculate the whole difference curve
-adjdiff <- adjusted_curve_test(adjsurv)
+adjdiff <- adjusted_curve_diff(adjsurv)
 
-# with confidence intervals
-adjdiff <- adjusted_curve_test(adjsurv, conf_int=TRUE)
+# only some points in time
+adjdiff <- adjusted_curve_diff(adjsurv, times=c(0.2, 0.4))
 
-# only at specific points in time
-adjdiff <- adjusted_curve_test(adjsurv, times=c(0.2, 0.4))
+# with confidence intervals, p-values
+adjdiff <- adjusted_curve_diff(adjsurv, times=c(0.2, 0.4), conf_int=TRUE)
+
+# using bootstrapping
+adjdiff <- adjusted_curve_diff(adjsurv, times=c(0.2, 0.4), conf_int=TRUE,
+                               use_boot=TRUE)
 
 #### Competing Risks Case with adjusted CIFs ####
 library(riskRegression)
@@ -128,7 +131,6 @@ sim_dat$group <- as.factor(sim_dat$group)
 # estimate a cause-specific cox-regression for the outcome
 csc_mod <- CSC(Hist(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
                  data=sim_dat)
-
 
 # use it to calculate adjusted CIFs for cause = 1 with bootstrapping
 adjcif <- adjustedcif(data=sim_dat,
@@ -143,13 +145,13 @@ adjcif <- adjustedcif(data=sim_dat,
                       cause=1)
 
 # calculate the whole difference curve
-adjdiff <- adjusted_curve_test(adjcif)
+adjdiff <- adjusted_curve_diff(adjcif)
 
 # with confidence intervals
-adjdiff <- adjusted_curve_test(adjcif, conf_int=TRUE)
+adjdiff <- adjusted_curve_diff(adjcif, conf_int=TRUE)
 
 # only at specific points in time
-adjdiff <- adjusted_curve_test(adjcif, times=c(0.2, 0.4))
+adjdiff <- adjusted_curve_diff(adjcif, times=c(0.2, 0.4), conf_int=TRUE)
 
 }
 }
