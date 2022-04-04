@@ -123,29 +123,32 @@ If <code>conf_int=TRUE</code> was used in the function call, it additionally con
 <span class="r-in"><span class="va">sim_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="sim_confounded_surv.html">sim_confounded_surv</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">500</span>, max_t<span class="op">=</span><span class="fl">1.2</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">sim_dat</span><span class="op">$</span><span class="va">group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">sim_dat</span><span class="op">$</span><span class="va">group</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co"># estimate a cox-regression for the outcome</span></span>
-<span class="r-in"><span class="va">cox_mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/coxph.html" class="external-link">coxph</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">event</span><span class="op">)</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x3</span> <span class="op">+</span> <span class="va">x4</span> <span class="op">+</span> <span class="va">x5</span> <span class="op">+</span> <span class="va">x6</span> <span class="op">+</span> <span class="va">group</span>,</span>
-<span class="r-in">                 data<span class="op">=</span><span class="va">sim_dat</span>, x<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># propensity score model</span></span>
+<span class="r-in"><span class="va">ps_mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">group</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x4</span> <span class="op">+</span> <span class="va">x5</span>, data<span class="op">=</span><span class="va">sim_dat</span>, family<span class="op">=</span><span class="st">"binomial"</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># use it to calculate adjusted survival curves with bootstrapping</span></span>
 <span class="r-in"><span class="va">adjsurv</span> <span class="op">&lt;-</span> <span class="fu"><a href="adjustedsurv.html">adjustedsurv</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">sim_dat</span>,</span>
 <span class="r-in">                        variable<span class="op">=</span><span class="st">"group"</span>,</span>
 <span class="r-in">                        ev_time<span class="op">=</span><span class="st">"time"</span>,</span>
 <span class="r-in">                        event<span class="op">=</span><span class="st">"event"</span>,</span>
-<span class="r-in">                        method<span class="op">=</span><span class="st">"direct"</span>,</span>
-<span class="r-in">                        outcome_model<span class="op">=</span><span class="va">cox_mod</span>,</span>
+<span class="r-in">                        method<span class="op">=</span><span class="st">"iptw_km"</span>,</span>
+<span class="r-in">                        treatment_model<span class="op">=</span><span class="va">cox_mod</span>,</span>
 <span class="r-in">                        conf_int<span class="op">=</span><span class="cn">FALSE</span>,</span>
 <span class="r-in">                        bootstrap<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span class="r-in">                        n_boot<span class="op">=</span><span class="fl">500</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># calculate the whole difference curve</span></span>
-<span class="r-in"><span class="va">adjdiff</span> <span class="op">&lt;-</span> <span class="fu"><a href="adjusted_curve_test.html">adjusted_curve_test</a></span><span class="op">(</span><span class="va">adjsurv</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">adjdiff</span> <span class="op">&lt;-</span> <span class="fu">adjusted_curve_diff</span><span class="op">(</span><span class="va">adjsurv</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co"># with confidence intervals</span></span>
-<span class="r-in"><span class="va">adjdiff</span> <span class="op">&lt;-</span> <span class="fu"><a href="adjusted_curve_test.html">adjusted_curve_test</a></span><span class="op">(</span><span class="va">adjsurv</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># only some points in time</span></span>
+<span class="r-in"><span class="va">adjdiff</span> <span class="op">&lt;-</span> <span class="fu">adjusted_curve_diff</span><span class="op">(</span><span class="va">adjsurv</span>, times<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.4</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co"># only at specific points in time</span></span>
-<span class="r-in"><span class="va">adjdiff</span> <span class="op">&lt;-</span> <span class="fu"><a href="adjusted_curve_test.html">adjusted_curve_test</a></span><span class="op">(</span><span class="va">adjsurv</span>, times<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.4</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># with confidence intervals, p-values</span></span>
+<span class="r-in"><span class="va">adjdiff</span> <span class="op">&lt;-</span> <span class="fu">adjusted_curve_diff</span><span class="op">(</span><span class="va">adjsurv</span>, times<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.4</span><span class="op">)</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># using bootstrapping</span></span>
+<span class="r-in"><span class="va">adjdiff</span> <span class="op">&lt;-</span> <span class="fu">adjusted_curve_diff</span><span class="op">(</span><span class="va">adjsurv</span>, times<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.4</span><span class="op">)</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>,</span>
+<span class="r-in">                               use_boot<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#### Competing Risks Case with adjusted CIFs ####</span></span>
 <span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tagteam/riskRegression" class="external-link">riskRegression</a></span><span class="op">)</span></span>
@@ -158,7 +161,6 @@ If <code>conf_int=TRUE</code> was used in the function call, it additionally con
 <span class="r-in"><span class="co"># estimate a cause-specific cox-regression for the outcome</span></span>
 <span class="r-in"><span class="va">csc_mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/riskRegression/man/CSC.html" class="external-link">CSC</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/prodlim/man/Hist.html" class="external-link">Hist</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">event</span><span class="op">)</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x3</span> <span class="op">+</span> <span class="va">x4</span> <span class="op">+</span> <span class="va">x5</span> <span class="op">+</span> <span class="va">x6</span> <span class="op">+</span> <span class="va">group</span>,</span>
 <span class="r-in">                 data<span class="op">=</span><span class="va">sim_dat</span><span class="op">)</span></span>
-<span class="r-in"></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># use it to calculate adjusted CIFs for cause = 1 with bootstrapping</span></span>
 <span class="r-in"><span class="va">adjcif</span> <span class="op">&lt;-</span> <span class="fu"><a href="adjustedcif.html">adjustedcif</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">sim_dat</span>,</span>
@@ -173,13 +175,13 @@ If <code>conf_int=TRUE</code> was used in the function call, it additionally con
 <span class="r-in">                      cause<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># calculate the whole difference curve</span></span>
-<span class="r-in"><span class="va">adjdiff</span> <span class="op">&lt;-</span> <span class="fu"><a href="adjusted_curve_test.html">adjusted_curve_test</a></span><span class="op">(</span><span class="va">adjcif</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">adjdiff</span> <span class="op">&lt;-</span> <span class="fu">adjusted_curve_diff</span><span class="op">(</span><span class="va">adjcif</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># with confidence intervals</span></span>
-<span class="r-in"><span class="va">adjdiff</span> <span class="op">&lt;-</span> <span class="fu"><a href="adjusted_curve_test.html">adjusted_curve_test</a></span><span class="op">(</span><span class="va">adjcif</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">adjdiff</span> <span class="op">&lt;-</span> <span class="fu">adjusted_curve_diff</span><span class="op">(</span><span class="va">adjcif</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># only at specific points in time</span></span>
-<span class="r-in"><span class="va">adjdiff</span> <span class="op">&lt;-</span> <span class="fu"><a href="adjusted_curve_test.html">adjusted_curve_test</a></span><span class="op">(</span><span class="va">adjcif</span>, times<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.4</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">adjdiff</span> <span class="op">&lt;-</span> <span class="fu">adjusted_curve_diff</span><span class="op">(</span><span class="va">adjcif</span>, times<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.4</span><span class="op">)</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="op">}</span></span>
 </code></pre></div>

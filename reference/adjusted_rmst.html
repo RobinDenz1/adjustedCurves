@@ -54,7 +54,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">adjusted_rmst</span><span class="op">(</span><span class="va">adjsurv</span>, <span class="va">to</span>, from<span class="op">=</span><span class="fl">0</span>, use_boot<span class="op">=</span><span class="cn">FALSE</span>,
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">adjusted_rmst</span><span class="op">(</span><span class="va">adjsurv</span>, <span class="va">to</span>, from<span class="op">=</span><span class="fl">0</span>, conf_int<span class="op">=</span><span class="cn">FALSE</span>,
               conf_level<span class="op">=</span><span class="fl">0.95</span>, interpolation<span class="op">=</span><span class="st">"steps"</span>,
               subdivisions<span class="op">=</span><span class="fl">1000</span><span class="op">)</span></code></pre></div>
     </div>
@@ -67,7 +67,7 @@
 <dd><p>A number specifying the left side of the time interval of interest. See details. Usually this should be kept at 0 (default) unless there are good reasons to change it.</p></dd>
 <dt>to</dt>
 <dd><p>A number specifying the right side of the time interval of interest. See details.</p></dd>
-<dt>use_boot</dt>
+<dt>conf_int</dt>
 <dd><p>Whether bootstrap estimates should be used to calculate the standard deviation and confidence intervals of the RMST estimates. Can only be used if <code>bootstrap=TRUE</code> was used in the <code><a href="adjustedsurv.html">adjustedsurv</a></code> call.</p></dd>
 <dt>conf_level</dt>
 <dd><p>A number specifying the confidence level of the bootstrap confidence intervals.</p></dd>
@@ -85,7 +85,7 @@
 <p>It can be interpreted as the mean survival time of individuals in group \(Z = z\) in the interval [<code>from</code>, <code>to</code>]. Note however that simply subtracting the estimates from each other does not give a correct estimate of the area between the survival curves if the respective curves cross at some point. The <code><a href="adjusted_curve_test.html">adjusted_curve_test</a></code> function can be used to calculate the actual area between the curves instead. See <code><a href="adjusted_curve_test.html">?adjusted_curve_test</a></code> for more information.</p>
 <p>The associated <code>print</code> and <code>summary</code> methods can be used to obtain a neat data.frame of the most important quantities. There is also a small <code>plot</code> method to graphically display the results.</p>
 <p><strong><em>Confidence Intervals</em></strong></p>
-<p>If the <code>adjsurv</code> object was created with <code>bootstrap = TRUE</code> in the <code><a href="adjustedsurv.html">adjustedsurv</a></code> function, bootstrap confidence intervals and standard errors for the RMSTs can be approximated by setting <code>use_boot</code> to <code>TRUE</code>. If bootstrap samples occur where the survival function is not estimated up to <code>to</code>, the bootstrap sample is discarded and not used in further calculations. Approximate variance calculations not relying on the bootstrap estimates are currently not implemented.</p>
+<p>If the <code>adjsurv</code> object was created with <code>bootstrap = TRUE</code> in the <code><a href="adjustedsurv.html">adjustedsurv</a></code> function, bootstrap confidence intervals and standard errors for the RMSTs can be approximated by setting <code>conf_int</code> to <code>TRUE</code>. If bootstrap samples occur where the survival function is not estimated up to <code>to</code>, the bootstrap sample is discarded and not used in further calculations. Approximate variance calculations not relying on the bootstrap estimates are currently not implemented.</p>
 <p><strong><em>Multiple Imputation</em></strong></p>
 <p>If multiple imputation was used when creating the <code>adjsurv</code> object, the analysis is carries out on all multiply imputed datasets and pooled using Rubins Rule. When bootstrapping was carried out as well, the pooled standard error over all imputed datasets is used in combination with the normal approximation to re-calculate the bootstrap confidence intervals.</p>
 <p><strong><em>Competing Risks</em></strong></p>
@@ -102,7 +102,7 @@
 <dd><p><code>from</code> argument in function call.</p></dd>
 <dt>to</dt>
 <dd><p><code>to</code> argument in function call.</p></dd>
-</dl><p>If <code>use_boot</code> is set to <code>TRUE</code> and <code>bootstrap</code> was also set to <code>TRUE</code> in the original <code>adjustedsurv</code> function call, the following objects are also added to the output:</p>
+</dl><p>If <code>conf_int</code> is set to <code>TRUE</code> and <code>bootstrap</code> was also set to <code>TRUE</code> in the original <code>adjustedsurv</code> function call, the following objects are also added to the output:</p>
 <dl><dt>conf_level</dt>
 <dd><p>The confidence level used when calculating the confidence intervals.</p></dd>
 <dt>n_boot</dt>
@@ -157,12 +157,12 @@
 <span class="r-in">                        n_boot<span class="op">=</span><span class="fl">500</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># calculate adjusted restricted mean survival times from 0 to 1</span></span>
-<span class="r-in"><span class="va">adjrmst</span> <span class="op">&lt;-</span> <span class="fu">adjusted_rmst</span><span class="op">(</span><span class="va">adjsurv</span>, from<span class="op">=</span><span class="fl">0</span>, to<span class="op">=</span><span class="fl">1</span>, use_boot<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">adjrmst</span> <span class="op">&lt;-</span> <span class="fu">adjusted_rmst</span><span class="op">(</span><span class="va">adjsurv</span>, from<span class="op">=</span><span class="fl">0</span>, to<span class="op">=</span><span class="fl">1</span>, conf_int<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">adjrmst</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># calculate adjusted restricted mean survival times from 0 to 1,</span></span>
 <span class="r-in"><span class="co"># including standard errors and confidence intervals</span></span>
-<span class="r-in"><span class="va">adjrmst</span> <span class="op">&lt;-</span> <span class="fu">adjusted_rmst</span><span class="op">(</span><span class="va">adjsurv</span>, from<span class="op">=</span><span class="fl">0</span>, to<span class="op">=</span><span class="fl">1</span>, use_boot<span class="op">=</span><span class="cn">TRUE</span>,</span>
+<span class="r-in"><span class="va">adjrmst</span> <span class="op">&lt;-</span> <span class="fu">adjusted_rmst</span><span class="op">(</span><span class="va">adjsurv</span>, from<span class="op">=</span><span class="fl">0</span>, to<span class="op">=</span><span class="fl">1</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span class="r-in">                         conf_level<span class="op">=</span><span class="fl">0.95</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">adjrmst</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
