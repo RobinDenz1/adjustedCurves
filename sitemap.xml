@@ -37,13 +37,13 @@
     <loc>https://robindenz1.github.io/adjustedCurves/reference/adjusted_curve_test.html</loc>
   </url>
   <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/adjusted_median_survival.html</loc>
-  </url>
-  <url>
     <loc>https://robindenz1.github.io/adjustedCurves/reference/adjusted_rmst.html</loc>
   </url>
   <url>
     <loc>https://robindenz1.github.io/adjustedCurves/reference/adjusted_rmtl.html</loc>
+  </url>
+  <url>
+    <loc>https://robindenz1.github.io/adjustedCurves/reference/adjusted_surv_quantile.html</loc>
   </url>
   <url>
     <loc>https://robindenz1.github.io/adjustedCurves/reference/adjustedcif.html</loc>
