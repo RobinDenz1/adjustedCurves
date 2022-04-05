@@ -206,6 +206,11 @@ More information on how the differences and their confidence intervals are calcu
 \value{
 Returns a \code{ggplot2} object.
 }
+\references{
+Michael Coory, Karen E. Lamb, and Michael Sorich (2014). "Risk-Difference Curves can be used to Communicate Time-Dependent Effects of Adjuvant Therapies for Early Stage Cancer". In: Journal of Clinical Epidemiology 67, pp. 966-972
+
+Lihui Zhao, Lu Tian, Hajime Uno, Scott D. Solomon, Marc A. Pfeffer, Jerald S. Schindler, and L. J. Wei (2012). "Utilizing the Integrated Difference of Two Survival Functions to Quantify the Treatment Contrast for Designing, Monitoring and Analyzing a Comparative Clinical Study". In: Clinical Trials 9.5, pp. 570-577
+}
 \author{
 Robin Denz
 }

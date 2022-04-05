@@ -315,13 +315,13 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
       interpolation <- "linear"
     }
 
-    median_surv <- adjusted_median_survival(fake_adjsurv,
-                                            p=median_surv_quantile,
-                                            verbose=FALSE,
-                                            interpolation=interpolation)
-    median_surv$y <- median_surv_quantile
+    median_surv <- adjusted_surv_quantile(fake_adjsurv,
+                                          p=median_surv_quantile[[1]],
+                                          conf_int=FALSE,
+                                          interpolation=interpolation)
+    median_surv$y <- median_surv_quantile[[1]]
     # set to NA if not in plot
-    median_surv$median_surv[median_surv$median_surv > max_t] <- NA
+    median_surv$q_surv[median_surv$q_surv > max_t] <- NA
 
     if (is.null(ylim)) {
       median_surv$yend <- ggplot2::layer_scales(p)$y$range$range[1]
@@ -330,17 +330,17 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
     }
 
     # remove if missing
-    median_surv <- median_surv[!is.na(median_surv$median_surv), ]
+    median_surv <- median_surv[!is.na(median_surv$q_surv), ]
 
-    if (sum(is.na(median_surv$median_surv)) < nrow(median_surv)) {
+    if (sum(is.na(median_surv$q_surv)) < nrow(median_surv)) {
 
       median_surv$vert_x <- 0
-      median_surv$vert_y <- median_surv_quantile
-      median_surv$vert_yend <- median_surv_quantile
+      median_surv$vert_y <- median_surv_quantile[[1]]
+      median_surv$vert_yend <- median_surv_quantile[[1]]
 
       # draw line on surv_p = 0.5 until it hits the curve
       p <- p + ggplot2::geom_segment(ggplot2::aes(x=.data$vert_x,
-                                                  xend=.data$median_surv,
+                                                  xend=.data$q_surv,
                                                   y=.data$vert_y,
                                                   yend=.data$vert_yend),
                                      inherit.aes=FALSE,
@@ -350,9 +350,9 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
                                      alpha=median_surv_alpha,
                                      data=median_surv)
       # draw indicator lines from middle to bottom
-      p <- p + ggplot2::geom_segment(ggplot2::aes(x=.data$median_surv,
-                                                  xend=.data$median_surv,
-                                                  y=median_surv_quantile,
+      p <- p + ggplot2::geom_segment(ggplot2::aes(x=.data$q_surv,
+                                                  xend=.data$q_surv,
+                                                  y=median_surv_quantile[[1]],
                                                   yend=.data$yend),
                                      inherit.aes=FALSE,
                                      linetype=median_surv_linetype,

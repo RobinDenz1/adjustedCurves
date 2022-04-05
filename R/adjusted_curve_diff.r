@@ -42,7 +42,7 @@ adjusted_curve_diff <- function(adj, group_1=NULL, group_2=NULL, times=NULL,
   # get difference + confidence intervals
   time_points <- sort(unique(plotdata$time))
   diff_curve <- difference_function(adj=plotdata, times=time_points,
-                                    est=est_type, type=interpolation,
+                                    est=est_type, interpolation=interpolation,
                                     conf_int=conf_int, conf_level=conf_level)
   if (conf_int) {
     colnames(diff_curve) <- c("time", "diff", "se", "ci_lower", "ci_upper")

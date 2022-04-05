@@ -156,7 +156,7 @@ plot_difference <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
   # if only the integral should be printed, calculate this only
   } else if (integral & is.null(test)) {
     area <- difference_integral(adj=adj_data, from=integral_from,
-                                to=integral_to, type=interpolation,
+                                to=integral_to, interpolation=interpolation,
                                 subdivisions=integral_subdivisions,
                                 est=mode)$area
   }

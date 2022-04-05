@@ -75,6 +75,12 @@ Returns a \code{data.frame} containing the columns \code{time} (the points in ti
 If \code{conf_int=TRUE} was used in the function call, it additionally contains the columns \code{se} (the estimated standard error of the difference), \code{ci_lower} (lower limit of the confidence interval of the difference), \code{ci_upper} (upper limit of the confidence interval of the difference) and \code{p_value} (the p-value for the test of pointwise difference).
 }
 
+\references{
+John P. Klein, Brent Logan, Mette Harhoff, and Per Kragh Andersen (2007). "Analyzing Survival Curves at a Fixed Point in Time". In: Statistics in Medicine 26, pp. 4505-4519
+
+Michael Coory, Karen E. Lamb, and Michael Sorich (2014). "Risk-Difference Curves can be used to Communicate Time-Dependent Effects of Adjuvant Therapies for Early Stage Cancer". In: Journal of Clinical Epidemiology 67, pp. 966-972
+}
+
 \author{
 Robin Denz
 }

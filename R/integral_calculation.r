@@ -1,18 +1,18 @@
 
 ## takes a value x at which to read from the step function
 ## and step function data from which to read it
-read_from_step_function <- function(x, data, est="surv") {
+read_from_step_function <- function(x, data, est="surv", time="time") {
 
   # keep only data with non-missing est
   data <- data[which(!is.na(data[, est])), ]
 
   # no extrapolation
-  if (x > max(data$time)) {
+  if (x > max(data[, time])) {
     return(NA)
   }
 
   # otherwise get value
-  check <- data[which(data$time <= x), ]
+  check <- data[which(data[, time] <= x), ]
   if (nrow(check)==0) {
     if (est=="surv") {
       val <- 1
@@ -22,16 +22,16 @@ read_from_step_function <- function(x, data, est="surv") {
       val <- NA
     }
   } else {
-    val <- check[, est][which(check$time==max(check$time))][1]
+    val <- check[, est][which(check[, time]==max(check[, time]))][1]
   }
   return(val)
 }
 
 ## takes a value x at which to read from the linear function
 ## and step function data from which to read it
-read_from_linear_function <- function(x, data, est="surv") {
+read_from_linear_function <- function(x, data, est="surv", time="time") {
 
-  time_vec <- data$time
+  time_vec <- data[, time]
   est_vec <- data[, est]
 
   # add zero to beginning if necessary
@@ -43,6 +43,17 @@ read_from_linear_function <- function(x, data, est="surv") {
                                           yleft=1)$y)
   } else {
     val <- suppressWarnings(stats::approx(x=time_vec, y=est_vec, xout=x)$y)
+  }
+  return(val)
+}
+
+## shortcut to one of the two functions above
+read_from_fun <- function(x, data, interpolation, est="surv", time="time") {
+
+  if (interpolation=="steps") {
+    val <- read_from_step_function(x=x, data=data, est=est, time=time)
+  } else if (interpolation=="linear") {
+    val <- read_from_linear_function(x=x, data=data, est=est, time=time)
   }
   return(val)
 }
@@ -111,21 +122,15 @@ exact_stepfun_integral <- function(stepfun, from, to, est="surv") {
 
 ## calculate difference between two functions at arbitrary time values
 ## using either linear or step-function interpolation
-difference_function <- function(adj, times, est="surv", type="steps",
+difference_function <- function(adj, times, est="surv", interpolation="steps",
                                 conf_int=FALSE, conf_level=0.95) {
 
   levs <- levels(adj$group)
   adjsurv_0 <- adj[which(adj$group==levs[1]), ]
   adjsurv_1 <- adj[which(adj$group==levs[2]), ]
 
-  if (type=="steps") {
-    read_fun <- read_from_step_function
-  } else if (type=="linear") {
-    read_fun <- read_from_linear_function
-  }
-
   if (nrow(adjsurv_0)==nrow(adjsurv_1) && all(adjsurv_0$time==adjsurv_1$time) &&
-      type=="steps") {
+      interpolation=="steps") {
     surv_0 <- adjsurv_0[, est]
     surv_1 <- adjsurv_1[, est]
 
@@ -134,10 +139,12 @@ difference_function <- function(adj, times, est="surv", type="steps",
       se_1 <- adjsurv_1$se
     }
   } else {
-    surv_0 <- vapply(times, read_fun, data=adjsurv_0,
-                     est=est, FUN.VALUE=numeric(1))
-    surv_1 <- vapply(times, read_fun, data=adjsurv_1,
-                     est=est, FUN.VALUE=numeric(1))
+    surv_0 <- vapply(times, read_from_fun, data=adjsurv_0,
+                     est=est, interpolation=interpolation,
+                     FUN.VALUE=numeric(1))
+    surv_1 <- vapply(times, read_from_fun, data=adjsurv_1,
+                     est=est, interpolation=interpolation,
+                     FUN.VALUE=numeric(1))
 
     if (conf_int) {
       se_0 <- vapply(times, read_from_step_function, data=adjsurv_0,
@@ -168,17 +175,17 @@ difference_function <- function(adj, times, est="surv", type="steps",
 
 ## function to calculate the integral of the difference of two functions,
 ## using either linear or step-function interpolation
-difference_integral <- function(adj, from, to, type="steps", est="surv",
+difference_integral <- function(adj, from, to, interpolation="steps", est="surv",
                                 subdivisions=1000) {
-  if (type=="linear") {
+  if (interpolation=="linear") {
     times <- seq(from, to, (to-from)/subdivisions)
     diff_dat <- difference_function(adj=adj, times=times, est=est,
-                                    type="linear")
+                                    interpolation="linear")
     area <- trapezoid_integral(x=diff_dat$time, y=diff_dat[, est])
-  } else if (type=="steps") {
+  } else if (interpolation=="steps") {
     times <- sort(unique(adj$time))
     diff_dat <- difference_function(adj=adj, times=times, est=est,
-                                    type="steps")
+                                    interpolation="steps")
     area <- exact_stepfun_integral(stepfun=diff_dat, from=from, to=to,
                                    est=est)
   }

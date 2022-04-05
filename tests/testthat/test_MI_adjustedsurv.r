@@ -420,7 +420,7 @@ test_that("MI, emp_lik, boot", {
   expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
-### adjusted_median_survival
+### adjusted_surv_quantile
 adjsurv <- adjustedsurv(data=imp,
                         variable="group",
                         ev_time="time",
@@ -430,9 +430,9 @@ adjsurv <- adjustedsurv(data=imp,
                         n_boot=3,
                         na.action="na.omit")
 
-test_that("adjusted_median_survival, 2 treatments, no boot", {
-  adj_med <- adjusted_median_survival(adjsurv, verbose=FALSE)
-  expect_equal(round(adj_med$median_surv, 4), c(0.4798, 0.5900))
+test_that("adjusted_surv_quantile, 2 treatments, no boot", {
+  adj_med <- adjusted_surv_quantile(adjsurv)
+  expect_equal(round(adj_med$q_surv, 4), c(0.4798, 0.5900))
 })
 
 ### adjusted_rmst
@@ -486,9 +486,9 @@ adjsurv <- adjustedsurv(data=imp,
                         n_boot=3,
                         na.action="na.omit")
 
-test_that("adjusted_median_survival, 3 treatments, no boot", {
-  adj_med <- adjusted_median_survival(adjsurv, verbose=FALSE)
-  expect_equal(round(adj_med$median_surv, 4), c(0.7122, 0.4798, 0.5398))
+test_that("adjusted_surv_quantile, 3 treatments, no boot", {
+  adj_med <- adjusted_surv_quantile(adjsurv)
+  expect_equal(round(adj_med$q_surv, 4), c(0.7122, 0.4798, 0.5398))
 })
 
 ### adjusted_rmst

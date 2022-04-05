@@ -1111,3 +1111,28 @@ check_inputs_adj_diff <- function(adj, group_1, group_2, conf_int, use_boot) {
     }
   }
 }
+
+## check inputs for adjusted_surv_quantile function
+check_inputs_surv_q <- function(adjsurv, p, conf_int, use_boot,
+                                interpolation) {
+  if (!inherits(adjsurv, "adjustedsurv")) {
+    stop("'adjsurv' must be an adjustedsurv object created using the",
+         " adjustedsurv function.")
+  } else if (!(length(p)>0 && is.numeric(p) && all(p >= 0 & p <= 1))) {
+    stop("'p' must be a vector or single number containing only",
+         " numbers <= 1 & >= 0.")
+  } else if (conf_int && !use_boot &&
+             !"ci_lower" %in% colnames(adjsurv$adjsurv)) {
+    stop("There are no approximate confidence intervals to use.",
+         " Either set 'use_boot=TRUE' or rerun the adjustedsurv function",
+         " with 'conf_int=TRUE' if possible.")
+  } else if (conf_int & use_boot & is.null(adjsurv$boot_adjsurv)) {
+    stop("Bootstrapped estimates can only be calculated if 'bootstrap=TRUE'",
+         " was used in the original adjustedsurv or adjustedcif function",
+         " call.")
+  } else if (!(length(interpolation)==1 && is.character(interpolation) &&
+               interpolation=="steps" | interpolation=="linear")) {
+    stop("'interpolation' must be single character string in",
+         " c('steps', 'linear').")
+  }
+}

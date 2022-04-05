@@ -92,13 +92,13 @@ adjusted_curve_test <- function(adj, to, from=0, conf_level=0.95,
         if (interpolation=="steps") {
           times <- sort(unique(boot_dat$time))
           surv_diff <- difference_function(adj=boot_dat, times=times, est=est,
-                                           type="steps")
+                                           interpolation="steps")
           diff_integral <- exact_stepfun_integral(surv_diff, to=to, from=from,
                                                   est=est)
         } else if (interpolation=="linear") {
           times <- seq(from, to, (to-from)/subdivisions)
           surv_diff <- difference_function(adj=boot_dat, times=times, est=est,
-                                           type="linear")
+                                           interpolation="linear")
           diff_integral <- trapezoid_integral(x=surv_diff$time,
                                               y=surv_diff[, est])
         }
@@ -119,11 +119,11 @@ adjusted_curve_test <- function(adj, to, from=0, conf_level=0.95,
       # actually observed values
       if (est=="surv") {
         observed <- difference_integral(adj=adj$adjsurv, from=from, to=to,
-                                        type=interpolation, est="surv",
+                                        interpolation=interpolation, est="surv",
                                         subdivisions=subdivisions)
       } else {
         observed <- difference_integral(adj=adj$adjcif, from=from, to=to,
-                                        type=interpolation, est="cif",
+                                        interpolation=interpolation, est="cif",
                                         subdivisions=subdivisions)
       }
 
