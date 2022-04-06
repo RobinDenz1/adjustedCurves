@@ -68,7 +68,7 @@
 <dt>to</dt>
 <dd><p>A number specifying the right side of the time interval of interest. See details.</p></dd>
 <dt>conf_int</dt>
-<dd><p>Whether bootstrap estimates should be used to calculate the standard deviation and confidence intervals of the RMST estimates. Can only be used if <code>bootstrap=TRUE</code> was used in the <code><a href="adjustedsurv.html">adjustedsurv</a></code> or <code><a href="adjustedcif.html">adjustedcif</a></code> call.</p></dd>
+<dd><p>Whether bootstrap estimates should be used to calculate the standard errors and confidence intervals of the RMST estimates. Can only be used if <code>bootstrap=TRUE</code> was used in the <code><a href="adjustedsurv.html">adjustedsurv</a></code> or <code><a href="adjustedcif.html">adjustedcif</a></code> call.</p></dd>
 <dt>conf_level</dt>
 <dd><p>A number specifying the confidence level of the bootstrap confidence intervals.</p></dd>
 <dt>interpolation</dt>
@@ -85,27 +85,8 @@
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Returns a <code>adjusted_rmtl</code> object containing the following object:</p>
-<dl><dt>auc</dt>
-<dd><p>A named vector containing the adjusted restricted mean time lost estimates.</p></dd>
-<dt>from</dt>
-<dd><p><code>from</code> argument in function call.</p></dd>
-<dt>to</dt>
-<dd><p><code>to</code> argument in function call.</p></dd>
-</dl><p>If <code>conf_int</code> is set to <code>TRUE</code> and <code>bootstrap</code> was also set to <code>TRUE</code> in the original <code>adjustedsurv</code>/<code>adjustedcif</code> function call, the following objects are also added to the output:</p>
-<dl><dt>conf_level</dt>
-<dd><p>The confidence level used when calculating the confidence intervals.</p></dd>
-<dt>n_boot</dt>
-<dd><p>The numbers of bootstrap iterations actually used to calculate the bootstrap estimates.</p></dd>
-<dt>booted_auc</dt>
-<dd><p>A <code>data.frame</code> containing the adjusted restricted mean time lost estimates for each bootstrap sample.</p></dd>
-<dt>auc_se</dt>
-<dd><p>A named vector containing the bootstrapped standard errors of the restricted mean time lost.</p></dd>
-<dt>auc_ci_lower</dt>
-<dd><p>Lower value of the bootstrap confidence intervals.</p></dd>
-<dt>auc_ci_upper</dt>
-<dd><p>Upper value of the bootstrap confidence intervals.</p></dd>
-</dl><p>If multiple imputation was used the output also contains an <code>mids_analyses</code> object, containing one <code>adjusted_rmtl</code> object for each imputed dataset.</p>
+    <p>Returns a <code>data.frame</code> containing the columns <code>group</code> (groups in <code>variable</code>) and <code>rmtl</code> (the estimated restricted mean time lost).
+If <code>conf_int=TRUE</code> was used it additionally contains the columns <code>se</code> (the standard error of the restricted mean time lost), <code>ci_lower</code> (lower limit of the confidence interval), <code>ci_upper</code> (upper limit of the confidence interval) and <code>n_boot</code> (the actual number of bootstrap estimates used).</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -117,7 +98,7 @@
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="print.adjusted_rmtl.html">print.adjusted_rmtl</a></code>, <code><a href="adjustedcif.html">adjustedcif</a></code>, <code><a href="adjustedsurv.html">adjustedsurv</a></code></p></div>
+    <div class="dont-index"><p><code><a href="adjustedcif.html">adjustedcif</a></code>, <code><a href="adjustedsurv.html">adjustedsurv</a></code></p></div>
     </div>
 
     <div class="section level2">
@@ -149,13 +130,11 @@
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># calculate adjusted restricted mean survival times from 0 to 1</span></span>
 <span class="r-in"><span class="va">adjrmst</span> <span class="op">&lt;-</span> <span class="fu"><a href="adjusted_rmst.html">adjusted_rmst</a></span><span class="op">(</span><span class="va">adjsurv</span>, from<span class="op">=</span><span class="fl">0</span>, to<span class="op">=</span><span class="fl">1</span>, conf_int<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">adjrmst</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># calculate adjusted restricted mean time lost estimates from 0 to 1,</span></span>
 <span class="r-in"><span class="co"># including standard errors and confidence intervals</span></span>
 <span class="r-in"><span class="va">adjrmst</span> <span class="op">&lt;-</span> <span class="fu"><a href="adjusted_rmst.html">adjusted_rmst</a></span><span class="op">(</span><span class="va">adjsurv</span>, from<span class="op">=</span><span class="fl">0</span>, to<span class="op">=</span><span class="fl">1</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span class="r-in">                         conf_level<span class="op">=</span><span class="fl">0.95</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">adjrmst</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">###### when using data with competing-risks</span></span>
 <span class="r-in"></span>
@@ -185,7 +164,6 @@
 <span class="r-in"><span class="co"># calculate adjusted restricted mean time lost estimates from 0 to 1</span></span>
 <span class="r-in"><span class="co"># including standard errors and confidence intervals</span></span>
 <span class="r-in"><span class="va">adjrmtl</span> <span class="op">&lt;-</span> <span class="fu">adjusted_rmtl</span><span class="op">(</span><span class="va">adjcif</span>, from<span class="op">=</span><span class="fl">0</span>, to<span class="op">=</span><span class="fl">1</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">adjrmtl</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="op">}</span></span>
 </code></pre></div>

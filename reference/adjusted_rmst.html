@@ -68,7 +68,7 @@
 <dt>to</dt>
 <dd><p>A number specifying the right side of the time interval of interest. See details.</p></dd>
 <dt>conf_int</dt>
-<dd><p>Whether bootstrap estimates should be used to calculate the standard deviation and confidence intervals of the RMST estimates. Can only be used if <code>bootstrap=TRUE</code> was used in the <code><a href="adjustedsurv.html">adjustedsurv</a></code> call.</p></dd>
+<dd><p>Whether bootstrap estimates should be used to calculate the standard errors and confidence intervals of the RMST estimates. Can only be used if <code>bootstrap=TRUE</code> was used in the <code><a href="adjustedsurv.html">adjustedsurv</a></code> call.</p></dd>
 <dt>conf_level</dt>
 <dd><p>A number specifying the confidence level of the bootstrap confidence intervals.</p></dd>
 <dt>interpolation</dt>
@@ -83,9 +83,8 @@
 <p>The adjusted restricted mean survival times (RMST) are calculated by integrating the estimated adjusted survival curves in a specified interval. Let \(Z\) be the grouping variable (corresponding to the <code>variable</code> argument in the <code><a href="adjustedsurv.html">adjustedsurv</a></code> function) with possible levels \(Z \in \{0, 1, 2, ..., k\}\). \(T\) is defined as the time and \(\hat{S}_z(t)\) denotes the estimated counterfactual survival function. The RMST is then defined as:</p>
 <p>$$RMST_{z} = \int_{from}^{to} \hat{S}_z(t)$$</p>
 <p>It can be interpreted as the mean survival time of individuals in group \(Z = z\) in the interval [<code>from</code>, <code>to</code>]. Note however that simply subtracting the estimates from each other does not give a correct estimate of the area between the survival curves if the respective curves cross at some point. The <code><a href="adjusted_curve_test.html">adjusted_curve_test</a></code> function can be used to calculate the actual area between the curves instead. See <code><a href="adjusted_curve_test.html">?adjusted_curve_test</a></code> for more information.</p>
-<p>The associated <code>print</code> and <code>summary</code> methods can be used to obtain a neat data.frame of the most important quantities. There is also a small <code>plot</code> method to graphically display the results.</p>
 <p><strong><em>Confidence Intervals</em></strong></p>
-<p>If the <code>adjsurv</code> object was created with <code>bootstrap = TRUE</code> in the <code><a href="adjustedsurv.html">adjustedsurv</a></code> function, bootstrap confidence intervals and standard errors for the RMSTs can be approximated by setting <code>conf_int</code> to <code>TRUE</code>. If bootstrap samples occur where the survival function is not estimated up to <code>to</code>, the bootstrap sample is discarded and not used in further calculations. Approximate variance calculations not relying on the bootstrap estimates are currently not implemented.</p>
+<p>If the <code>adjsurv</code> object was created with <code>bootstrap=TRUE</code> in the <code><a href="adjustedsurv.html">adjustedsurv</a></code> function, bootstrap confidence intervals and standard errors for the RMSTs can be approximated by setting <code>conf_int</code> to <code>TRUE</code>. If bootstrap samples occur where the survival function is not estimated up to <code>to</code>, the bootstrap sample is discarded and not used in further calculations. Approximate variance calculations not relying on the bootstrap estimates are currently not implemented.</p>
 <p><strong><em>Multiple Imputation</em></strong></p>
 <p>If multiple imputation was used when creating the <code>adjsurv</code> object, the analysis is carries out on all multiply imputed datasets and pooled using Rubins Rule. When bootstrapping was carried out as well, the pooled standard error over all imputed datasets is used in combination with the normal approximation to re-calculate the bootstrap confidence intervals.</p>
 <p><strong><em>Competing Risks</em></strong></p>
@@ -95,27 +94,8 @@
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Returns a <code>adjusted_rmst</code> object containing the following object:</p>
-<dl><dt>auc</dt>
-<dd><p>A named vector containing the adjusted restricted mean survival time estimates.</p></dd>
-<dt>from</dt>
-<dd><p><code>from</code> argument in function call.</p></dd>
-<dt>to</dt>
-<dd><p><code>to</code> argument in function call.</p></dd>
-</dl><p>If <code>conf_int</code> is set to <code>TRUE</code> and <code>bootstrap</code> was also set to <code>TRUE</code> in the original <code>adjustedsurv</code> function call, the following objects are also added to the output:</p>
-<dl><dt>conf_level</dt>
-<dd><p>The confidence level used when calculating the confidence intervals.</p></dd>
-<dt>n_boot</dt>
-<dd><p>The numbers of bootstrap iterations actually used to calculate the bootstrap estimates.</p></dd>
-<dt>booted_auc</dt>
-<dd><p>A <code>data.frame</code> containing the adjusted restricted mean survival time estimates for each bootstrap sample.</p></dd>
-<dt>auc_se</dt>
-<dd><p>A named vector containing the bootstrapped standard errors of the restricted mean survival times.</p></dd>
-<dt>auc_ci_lower</dt>
-<dd><p>Lower value of the bootstrap confidence intervals.</p></dd>
-<dt>auc_ci_upper</dt>
-<dd><p>Upper value of the bootstrap confidence intervals.</p></dd>
-</dl><p>If multiple imputation was used the output also contains an <code>mids_analyses</code> object, containing one <code>adjusted_rmst</code> object for each imputed dataset.</p>
+    <p>Returns a <code>data.frame</code> containing the columns <code>group</code> (groups in <code>variable</code>) and <code>rmst</code> (the estimated restricted mean survival time).
+If <code>conf_int=TRUE</code> was used it additionally contains the columns <code>se</code> (the standard error of the restricted mean survival time), <code>ci_lower</code> (lower limit of the confidence interval), <code>ci_upper</code> (upper limit of the confidence interval) and <code>n_boot</code> (the actual number of bootstrap estimates used).</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -128,7 +108,7 @@
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="print.adjusted_rmst.html">print.adjusted_rmst</a></code>, <code><a href="adjustedsurv.html">adjustedsurv</a></code></p></div>
+    <div class="dont-index"><p><code><a href="adjustedsurv.html">adjustedsurv</a></code></p></div>
     </div>
 
     <div class="section level2">
@@ -158,13 +138,11 @@
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># calculate adjusted restricted mean survival times from 0 to 1</span></span>
 <span class="r-in"><span class="va">adjrmst</span> <span class="op">&lt;-</span> <span class="fu">adjusted_rmst</span><span class="op">(</span><span class="va">adjsurv</span>, from<span class="op">=</span><span class="fl">0</span>, to<span class="op">=</span><span class="fl">1</span>, conf_int<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">adjrmst</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># calculate adjusted restricted mean survival times from 0 to 1,</span></span>
 <span class="r-in"><span class="co"># including standard errors and confidence intervals</span></span>
 <span class="r-in"><span class="va">adjrmst</span> <span class="op">&lt;-</span> <span class="fu">adjusted_rmst</span><span class="op">(</span><span class="va">adjsurv</span>, from<span class="op">=</span><span class="fl">0</span>, to<span class="op">=</span><span class="fl">1</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span class="r-in">                         conf_level<span class="op">=</span><span class="fl">0.95</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">adjrmst</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 </code></pre></div>
     </div>
