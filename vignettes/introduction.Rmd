@@ -312,14 +312,7 @@ adjsurv <- adjustedsurv(data=data,
                         bootstrap=TRUE,
                         n_boot=300)
 
-adjrmst <- adjusted_rmst(adjsurv, to=1, conf_int=TRUE)
-print(adjrmst)
-```
-
-The results can also be plotted easily:
-
-```{r echo=TRUE, message=FALSE, warning=FALSE, fig.show=TRUE, fig.width=7, fig.height=5}
-plot(adjrmst)
+adjusted_rmst(adjsurv, to=1, conf_int=TRUE)
 ```
 
 ## Testing the Difference betweeen Two Survival Curves

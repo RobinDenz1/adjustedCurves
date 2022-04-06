@@ -24,7 +24,7 @@ A number specifying the left side of the time interval of interest. See details.
 A number specifying the right side of the time interval of interest. See details.
   }
   \item{conf_int}{
-Whether bootstrap estimates should be used to calculate the standard deviation and confidence intervals of the RMST estimates. Can only be used if \code{bootstrap=TRUE} was used in the \code{\link{adjustedsurv}} call.
+Whether bootstrap estimates should be used to calculate the standard errors and confidence intervals of the RMST estimates. Can only be used if \code{bootstrap=TRUE} was used in the \code{\link{adjustedsurv}} call.
   }
   \item{conf_level}{
 A number specifying the confidence level of the bootstrap confidence intervals.
@@ -44,11 +44,9 @@ The adjusted restricted mean survival times (RMST) are calculated by integrating
 
 It can be interpreted as the mean survival time of individuals in group \eqn{Z = z} in the interval [\code{from}, \code{to}]. Note however that simply subtracting the estimates from each other does not give a correct estimate of the area between the survival curves if the respective curves cross at some point. The \code{\link{adjusted_curve_test}} function can be used to calculate the actual area between the curves instead. See \code{?adjusted_curve_test} for more information.
 
-The associated \code{print} and \code{summary} methods can be used to obtain a neat data.frame of the most important quantities. There is also a small \code{plot} method to graphically display the results.
-
 \strong{\emph{Confidence Intervals}}
 
-If the \code{adjsurv} object was created with \code{bootstrap = TRUE} in the \code{\link{adjustedsurv}} function, bootstrap confidence intervals and standard errors for the RMSTs can be approximated by setting \code{conf_int} to \code{TRUE}. If bootstrap samples occur where the survival function is not estimated up to \code{to}, the bootstrap sample is discarded and not used in further calculations. Approximate variance calculations not relying on the bootstrap estimates are currently not implemented.
+If the \code{adjsurv} object was created with \code{bootstrap=TRUE} in the \code{\link{adjustedsurv}} function, bootstrap confidence intervals and standard errors for the RMSTs can be approximated by setting \code{conf_int} to \code{TRUE}. If bootstrap samples occur where the survival function is not estimated up to \code{to}, the bootstrap sample is discarded and not used in further calculations. Approximate variance calculations not relying on the bootstrap estimates are currently not implemented.
 
 \strong{\emph{Multiple Imputation}}
 
@@ -64,32 +62,9 @@ Since the estimated survival functions are usually step functions, the integrals
 
 }
 \value{
-Returns a \code{adjusted_rmst} object containing the following object:
+Returns a \code{data.frame} containing the columns \code{group} (groups in \code{variable}) and \code{rmst} (the estimated restricted mean survival time).
 
-\item{auc}{A named vector containing the adjusted restricted mean survival time estimates.
-}
-\item{from}{\code{from} argument in function call.
-}
-\item{to}{\code{to} argument in function call.
-}
-
-If \code{conf_int} is set to \code{TRUE} and \code{bootstrap} was also set to \code{TRUE} in the original \code{adjustedsurv} function call, the following objects are also added to the output:
-
-\item{conf_level}{The confidence level used when calculating the confidence intervals.
-}
-\item{n_boot}{The numbers of bootstrap iterations actually used to calculate the bootstrap estimates.
-}
-\item{booted_auc}{A \code{data.frame} containing the adjusted restricted mean survival time estimates for each bootstrap sample.
-}
-\item{auc_se}{A named vector containing the bootstrapped standard errors of the restricted mean survival times.
-}
-\item{auc_ci_lower}{Lower value of the bootstrap confidence intervals.
-}
-\item{auc_ci_upper}{Upper value of the bootstrap confidence intervals.
-}
-
-If multiple imputation was used the output also contains an \code{mids_analyses} object, containing one \code{adjusted_rmst} object for each imputed dataset.
-
+If \code{conf_int=TRUE} was used it additionally contains the columns \code{se} (the standard error of the restricted mean survival time), \code{ci_lower} (lower limit of the confidence interval), \code{ci_upper} (upper limit of the confidence interval) and \code{n_boot} (the actual number of bootstrap estimates used).
 }
 \references{
 Sarah C. Conner, Lisa M. Sullivan, Emelia J. Benjamin, Michael P. LaValley, Sandro Galea, and Ludovic Trinquart (2019). "Adjusted Restricted Mean Survival Times in Observational Studies". In: Statistics in Medicine 38, pp. 3832-3860
@@ -101,7 +76,7 @@ Robin Denz
 }
 
 \seealso{
-\code{\link{print.adjusted_rmst}}, \code{\link{adjustedsurv}}
+\code{\link{adjustedsurv}}
 }
 \examples{
 \dontrun{
@@ -129,12 +104,10 @@ adjsurv <- adjustedsurv(data=sim_dat,
 
 # calculate adjusted restricted mean survival times from 0 to 1
 adjrmst <- adjusted_rmst(adjsurv, from=0, to=1, conf_int=FALSE)
-print(adjrmst)
 
 # calculate adjusted restricted mean survival times from 0 to 1,
 # including standard errors and confidence intervals
 adjrmst <- adjusted_rmst(adjsurv, from=0, to=1, conf_int=TRUE,
                          conf_level=0.95)
-print(adjrmst)
 }
 }

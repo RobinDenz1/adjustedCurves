@@ -24,7 +24,7 @@ A number specifying the left side of the time interval of interest. See details.
 A number specifying the right side of the time interval of interest. See details.
   }
   \item{conf_int}{
-Whether bootstrap estimates should be used to calculate the standard deviation and confidence intervals of the RMST estimates. Can only be used if \code{bootstrap=TRUE} was used in the \code{\link{adjustedsurv}} or \code{\link{adjustedcif}} call.
+Whether bootstrap estimates should be used to calculate the standard errors and confidence intervals of the RMST estimates. Can only be used if \code{bootstrap=TRUE} was used in the \code{\link{adjustedsurv}} or \code{\link{adjustedcif}} call.
   }
   \item{conf_level}{
 A number specifying the confidence level of the bootstrap confidence intervals.
@@ -44,32 +44,9 @@ This quantity can be interpreted as the mean time it takes to succumb to the eve
 
 }
 \value{
-Returns a \code{adjusted_rmtl} object containing the following object:
+Returns a \code{data.frame} containing the columns \code{group} (groups in \code{variable}) and \code{rmtl} (the estimated restricted mean time lost).
 
-\item{auc}{A named vector containing the adjusted restricted mean time lost estimates.
-}
-\item{from}{\code{from} argument in function call.
-}
-\item{to}{\code{to} argument in function call.
-}
-
-If \code{conf_int} is set to \code{TRUE} and \code{bootstrap} was also set to \code{TRUE} in the original \code{adjustedsurv}/\code{adjustedcif} function call, the following objects are also added to the output:
-
-\item{conf_level}{The confidence level used when calculating the confidence intervals.
-}
-\item{n_boot}{The numbers of bootstrap iterations actually used to calculate the bootstrap estimates.
-}
-\item{booted_auc}{A \code{data.frame} containing the adjusted restricted mean time lost estimates for each bootstrap sample.
-}
-\item{auc_se}{A named vector containing the bootstrapped standard errors of the restricted mean time lost.
-}
-\item{auc_ci_lower}{Lower value of the bootstrap confidence intervals.
-}
-\item{auc_ci_upper}{Upper value of the bootstrap confidence intervals.
-}
-
-If multiple imputation was used the output also contains an \code{mids_analyses} object, containing one \code{adjusted_rmtl} object for each imputed dataset.
-
+If \code{conf_int=TRUE} was used it additionally contains the columns \code{se} (the standard error of the restricted mean time lost), \code{ci_lower} (lower limit of the confidence interval), \code{ci_upper} (upper limit of the confidence interval) and \code{n_boot} (the actual number of bootstrap estimates used).
 }
 \references{
 Sarah C. Conner and Ludovic Trunquart (2021). "Estimation and Modeling of the Restricted Mean Time Lost in the Presence of Competing Risks". In: Statistics in Medicine
@@ -79,7 +56,7 @@ Robin Denz
 }
 
 \seealso{
-\code{\link{print.adjusted_rmtl}}, \code{\link{adjustedcif}}, \code{\link{adjustedsurv}}
+\code{\link{adjustedcif}}, \code{\link{adjustedsurv}}
 }
 \examples{
 \dontrun{
@@ -109,13 +86,11 @@ adjsurv <- adjustedsurv(data=sim_dat,
 
 # calculate adjusted restricted mean survival times from 0 to 1
 adjrmst <- adjusted_rmst(adjsurv, from=0, to=1, conf_int=FALSE)
-print(adjrmst)
 
 # calculate adjusted restricted mean time lost estimates from 0 to 1,
 # including standard errors and confidence intervals
 adjrmst <- adjusted_rmst(adjsurv, from=0, to=1, conf_int=TRUE,
                          conf_level=0.95)
-print(adjrmst)
 
 ###### when using data with competing-risks
 
@@ -145,7 +120,6 @@ adjcif <- adjustedcif(data=sim_dat,
 # calculate adjusted restricted mean time lost estimates from 0 to 1
 # including standard errors and confidence intervals
 adjrmtl <- adjusted_rmtl(adjcif, from=0, to=1, conf_int=TRUE)
-print(adjrmtl)
 
 }
 }

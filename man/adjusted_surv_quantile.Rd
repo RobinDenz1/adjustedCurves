@@ -20,7 +20,7 @@ An \code{adjustedsurv} object created using the \code{adjustedsurv} function.
 The quantile of interest. To calculate the median survival time, set this parameter to 0.5 (default).
   }
   \item{conf_int}{
-Whether to calculate confidence intervals or not. Those are calculated in the same way as the quantiles but using the confidence limit curves. This requires either that \code{conf_int=TRUE} or \code{bootstrap=TRUE} was used in the original \code{adjustedsurv} function call.
+Whether to calculate confidence intervals or not. Those are calculated in the same way as the quantiles but using the confidence limit curves. This requires either that \code{conf_int=TRUE} or \code{bootstrap=TRUE} was used in the original \code{adjustedsurv} function call. Since this directly uses the previously estimated intervals, the same confidence level used in the original \code{adjustedsurv} call is used here.
   }
   \item{use_boot}{
 Whether to use the bootstrap confidence interval estimates of the survival curves to estimate the confidence intervals of the survival time quantiles or not. Can only be used when \code{bootstrap=TRUE} was used in the original \code{adjustedsurv} function call. Ignored if \code{conf_int=FALSE}.
@@ -38,7 +38,9 @@ This function calculates this quantity automatically. When multiple imputation w
 }
 \value{
 
-Silently returns the \code{data.frame} object which can be seen when \code{verbose=TRUE}. The column \code{median_surv} includes the confounder-adjusted median survival times.
+Returns a \code{data.frame} containing the columns \code{p} (the quantiles from the original function call), \code{group} (groups in \code{variable}) and \code{q_surv} (the survival time quantile).
+
+If \code{conf_int=TRUE} was used it also includes the confidence limits in the \code{ci_lower} and \code{ci_upper} columns.
 
 }
 \references{
@@ -65,7 +67,6 @@ sim_dat$group <- as.factor(sim_dat$group)
 cox_mod <- coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
                  data=sim_dat, x=TRUE)
 
-
 # use it to calculate adjusted survival curves with bootstrapping
 adjsurv <- adjustedsurv(data=sim_dat,
                         variable="group",
@@ -78,6 +79,5 @@ adjsurv <- adjustedsurv(data=sim_dat,
 
 # calculate adjusted median survival times
 adjusted_surv_quantile(adjsurv)
-
 }
 }
