@@ -87,11 +87,11 @@
 $$SE_{group_1 - group_2} = \sqrt{SE_{group_1}^2 + SE_{group_2}^2}$$</p>
 <p>Confidence intervals are then calculated using this pooled standard error and the normal approximation. The P-Values are also obtained using this standard error combined with a two-sided one-sample t-test. The null-hypothesis is that the difference is equal to 0, and the alternative hypothesis is that the difference is not equal to 0. If p-values are calculated for multiple points in time simultaneously, the user should adjust those. See <code><a href="https://rdrr.io/r/stats/p.adjust.html" class="external-link">?p.adjust</a></code> for more information.</p>
 <p><strong><em>Overall Difference Test</em></strong></p>
-<p>This function does not perform a test of the overall difference between two functions. To calculate the integral of the difference in a given interval the <code><a href="plot_difference.html">plot_difference</a></code> function can be used. Additionally, to test whether that integral is equal to zero the <code><a href="adjusted_curve_test.html">adjusted_curve_test</a></code> function can be used.</p>
+<p>This function does not perform a test of the overall difference between two functions. To calculate the integral of the difference in a given interval the <code><a href="plot_curve_diff.html">plot_curve_diff</a></code> function can be used. Additionally, to test whether that integral is equal to zero the <code><a href="adjusted_curve_test.html">adjusted_curve_test</a></code> function can be used.</p>
 <p><strong><em>More than Two Groups</em></strong></p>
 <p>If more than two groups are present in <code>variable</code>, all other comparisons except for <code>group_1 - group_2</code> are ignored. If multiple comparisons are desired, the user needs to call this function multiple times and adjust the <code>group_1</code> and <code>group_2</code> arguments accordingly.</p>
 <p><strong><em>Graphical Displays</em></strong></p>
-<p>There is no directly associated <code>plot</code> method for this function. However, this function is used internally when calling the <code><a href="plot_difference.html">plot_difference</a></code> function. In order to get a plot of the difference curve or point estimates, that function can be used.</p>
+<p>There is no directly associated <code>plot</code> method for this function. However, this function is used internally when calling the <code><a href="plot_curve_diff.html">plot_curve_diff</a></code> function. In order to get a plot of the difference curve or point estimates, that function can be used.</p>
 <p><strong><em>Multiple Imputation</em></strong></p>
 <p>This function works exactly the same way for adjusted survival curves or adjusted CIFs estimated using multiple imputation as it does without any missing values. If multiple imputation was used previously, this function simply uses the pooled estimates to calculate the differences.</p>
 <p><strong><em>Computational Details</em></strong></p>
@@ -113,7 +113,7 @@ If <code>conf_int=TRUE</code> was used in the function call, it additionally con
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="plot_difference.html">plot_difference</a></code>, <code><a href="adjustedsurv.html">adjustedsurv</a></code>, <code><a href="adjustedcif.html">adjustedcif</a></code></p></div>
+    <div class="dont-index"><p><code><a href="plot_curve_diff.html">plot_curve_diff</a></code>, <code><a href="adjustedsurv.html">adjustedsurv</a></code>, <code><a href="adjustedcif.html">adjustedcif</a></code></p></div>
     </div>
 
     <div class="section level2">

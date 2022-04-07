@@ -97,7 +97,13 @@
     <loc>https://robindenz1.github.io/adjustedCurves/reference/plot.curve_test.html</loc>
   </url>
   <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/plot_difference.html</loc>
+    <loc>https://robindenz1.github.io/adjustedCurves/reference/plot_curve_diff.html</loc>
+  </url>
+  <url>
+    <loc>https://robindenz1.github.io/adjustedCurves/reference/plot_rmst_curve.html</loc>
+  </url>
+  <url>
+    <loc>https://robindenz1.github.io/adjustedCurves/reference/plot_rmtl_curve.html</loc>
   </url>
   <url>
     <loc>https://robindenz1.github.io/adjustedCurves/reference/print.curve_test.html</loc>
