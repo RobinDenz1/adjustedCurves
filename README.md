@@ -94,7 +94,7 @@ plot(adjsurv, conf_int=TRUE)
 It is also possible to plot the difference between two curves using the `plot_difference()` function:
 
 ```R
-plot_difference(adjsurv, conf_int=TRUE, color="blue")
+plot_curve_diff(adjsurv, conf_int=TRUE, color="blue")
 ```
 <img src="man/figures/example_diffplot.png" />
 

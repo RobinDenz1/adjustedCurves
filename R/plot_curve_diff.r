@@ -2,7 +2,7 @@
 ## plot the difference between two adjusted survival curves
 #' @importFrom rlang .data
 #' @export
-plot_difference <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
+plot_curve_diff <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
                             conf_level=0.95, type="steps", times=NULL,
                             max_t=Inf, use_boot=FALSE, size=0.7, color="black",
                             linetype="solid", alpha=1,

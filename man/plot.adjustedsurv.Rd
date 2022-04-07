@@ -171,7 +171,7 @@ Robin Denz
 }
 
 \seealso{
-\code{\link{adjustedsurv}}, \code{\link[ggplot2]{ggplot}}, \code{\link[pammtools]{pammtools}}, \code{\link[stats]{isoreg}}
+\code{\link{adjustedsurv}}, \code{\link[ggplot2]{ggplot}}, \code{\link[pammtools]{geom_stepribbon}}, \code{\link[stats]{isoreg}}
 }
 \examples{
 \dontrun{

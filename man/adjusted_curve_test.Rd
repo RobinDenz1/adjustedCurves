@@ -55,7 +55,7 @@ When the \code{adjustedsurv} or \code{adjustedcif} object was fitted using multi
 
 \strong{\emph{Graphical Displays}}
 
-To plot the curves of the differences directly, we recommend using the  \code{\link{plot_difference}} function. Similar to the main plot functions, it has a lot of arguments to customize the plot. If the main goal is to check the assumptions, we recommend using the associated \code{\link[=plot.curve_test]{plot}} method instead.
+To plot the curves of the differences directly, we recommend using the  \code{\link{plot_curve_diff}} function. Similar to the main plot functions, it has a lot of arguments to customize the plot. If the main goal is to check the assumptions, we recommend using the associated \code{\link[=plot.curve_test]{plot}} method instead.
 
 \strong{\emph{Computational Details}}
 

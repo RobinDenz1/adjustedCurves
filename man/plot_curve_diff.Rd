@@ -1,5 +1,5 @@
-\name{plot_difference}
-\alias{plot_difference}
+\name{plot_curve_diff}
+\alias{plot_curve_diff}
 
 \title{
 Plot the Difference of Two Adjusted Survival Curves or CIFs
@@ -8,7 +8,7 @@ Plot the Difference of Two Adjusted Survival Curves or CIFs
 A function to graphically display the difference between two confounder-adjusted survival curves which where previously estimated using the \code{\link[adjustedCurves]{adjustedsurv}} function or between two confounder-adjusted CIFs which where previously estimated using the \code{\link[adjustedCurves]{adjustedcif}} function. The user can customize the plot using a variety of options. Internally it uses the \pkg{ggplot2} package, so additional not implemented features can be added using the standard \code{ggplot2} syntax.
 }
 \usage{
-plot_difference(x, group_1=NULL, group_2=NULL,
+plot_curve_diff(x, group_1=NULL, group_2=NULL,
                 conf_int=FALSE, conf_level=0.95, type="steps",
                 times=NULL, max_t=Inf, use_boot=FALSE,
                 size=0.7, color="black", linetype="solid",
@@ -216,7 +216,7 @@ Robin Denz
 }
 
 \seealso{
-\code{\link{adjusted_curve_diff}}, \code{\link{adjusted_curve_test}}, \code{\link{adjustedsurv}}, \code{\link{adjustedcif}}, \code{\link[ggplot2]{ggplot}}, \code{\link[pammtools]{pammtools}}
+\code{\link{adjusted_curve_diff}}, \code{\link{adjusted_curve_test}}, \code{\link{adjustedsurv}}, \code{\link{adjustedcif}}, \code{\link[ggplot2]{ggplot}}, \code{\link[pammtools]{geom_stepribbon}}
 }
 \examples{
 \dontrun{
@@ -244,38 +244,38 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         n_boot=500)
 
 # plot the difference with default values
-plot_difference(adjsurv)
+plot_curve_diff(adjsurv)
 
 # plot with reversed differences
-plot_difference(adjsurv, group_1="1", group_2="0")
+plot_curve_diff(adjsurv, group_1="1", group_2="0")
 
 # plot with confidence intervals
-plot_difference(adjsurv, conf_int=TRUE)
+plot_curve_diff(adjsurv, conf_int=TRUE)
 
 # plot using lines instead
-plot_difference(adjsurv, conf_int=TRUE, type="lines")
+plot_curve_diff(adjsurv, conf_int=TRUE, type="lines")
 
 # plot using points instead
-plot_difference(adjsurv, conf_int=TRUE, type="points")
+plot_curve_diff(adjsurv, conf_int=TRUE, type="points")
 
 # plot using an additional loess smoother
-plot_difference(adjsurv, loess_smoother=TRUE)
+plot_curve_diff(adjsurv, loess_smoother=TRUE)
 
 # plot without the line at 0
-plot_difference(adjsurv, line_at_0=FALSE)
+plot_curve_diff(adjsurv, line_at_0=FALSE)
 
 # plot with some custom parameters
-plot_difference(adjsurv, conf_int=TRUE, color="blue", linetype="dotted",
+plot_curve_diff(adjsurv, conf_int=TRUE, color="blue", linetype="dotted",
                 alpha=0.8, line_at_0_size=1.1, line_at_0_color="red",
                 loess_smoother=TRUE, loess_span=0.55)
 
 # adding a p-value for a difference test in the interval [0, 0.75]
-plot_difference(adjsurv, conf_int=TRUE, p_value=TRUE, integral_from=0,
+plot_curve_diff(adjsurv, conf_int=TRUE, p_value=TRUE, integral_from=0,
                 integral_to=0.75, integral=TRUE)
 
 # adding a p-value for a difference test in the interval [0, 0.75],
 # and also showing that integral visually in the plot
-plot_difference(adjsurv, conf_int=FALSE, p_value=TRUE, integral_from=0,
+plot_curve_diff(adjsurv, conf_int=FALSE, p_value=TRUE, integral_from=0,
                 integral_to=0.75, integral=TRUE, fill_area=TRUE,
                 interval=TRUE)
 

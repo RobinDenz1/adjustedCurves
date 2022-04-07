@@ -175,8 +175,8 @@ difference_function <- function(adj, times, est="surv", interpolation="steps",
 
 ## function to calculate the integral of the difference of two functions,
 ## using either linear or step-function interpolation
-difference_integral <- function(adj, from, to, interpolation="steps", est="surv",
-                                subdivisions=1000) {
+difference_integral <- function(adj, from, to, interpolation="steps",
+                                est="surv", subdivisions=1000) {
   if (interpolation=="linear") {
     times <- seq(from, to, (to-from)/subdivisions)
     diff_dat <- difference_function(adj=adj, times=times, est=est,

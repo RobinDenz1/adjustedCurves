@@ -50,7 +50,7 @@ Confidence intervals are then calculated using this pooled standard error and th
 
 \strong{\emph{Overall Difference Test}}
 
-This function does not perform a test of the overall difference between two functions. To calculate the integral of the difference in a given interval the \code{\link{plot_difference}} function can be used. Additionally, to test whether that integral is equal to zero the \code{\link{adjusted_curve_test}} function can be used.
+This function does not perform a test of the overall difference between two functions. To calculate the integral of the difference in a given interval the \code{\link{plot_curve_diff}} function can be used. Additionally, to test whether that integral is equal to zero the \code{\link{adjusted_curve_test}} function can be used.
 
 \strong{\emph{More than Two Groups}}
 
@@ -58,7 +58,7 @@ If more than two groups are present in \code{variable}, all other comparisons ex
 
 \strong{\emph{Graphical Displays}}
 
-There is no directly associated \code{plot} method for this function. However, this function is used internally when calling the \code{\link{plot_difference}} function. In order to get a plot of the difference curve or point estimates, that function can be used.
+There is no directly associated \code{plot} method for this function. However, this function is used internally when calling the \code{\link{plot_curve_diff}} function. In order to get a plot of the difference curve or point estimates, that function can be used.
 
 \strong{\emph{Multiple Imputation}}
 
@@ -86,7 +86,7 @@ Robin Denz
 }
 
 \seealso{
-\code{\link{plot_difference}}, \code{\link{adjustedsurv}}, \code{\link{adjustedcif}}
+\code{\link{plot_curve_diff}}, \code{\link{adjustedsurv}}, \code{\link{adjustedcif}}
 }
 \examples{
 \dontrun{

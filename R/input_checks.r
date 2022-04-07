@@ -1136,3 +1136,24 @@ check_inputs_surv_q <- function(adjsurv, p, conf_int, use_boot,
          " c('steps', 'linear').")
   }
 }
+
+## check inputs for plot_rmst_curve and plot_rmtl_curve
+check_inputs_auc_curve <- function(times=times, max_t=max_t, color=color,
+                                   linetype=linetype, facet=facet) {
+
+  if (!(length(times)>0 && is.numeric(times) && all(times > 0) |
+        is.null(times))) {
+    stop("'times' must be a numeric vector containing only values > 0 or NULL.")
+  } else if (!(length(max_t)==1 && (is.infinite(max_t) | is.numeric(max_t)) &&
+               max_t > 0)) {
+    stop("'max_t' must be a single number > 0.")
+  } else if (!(is.logical(color) && length(color)==1)) {
+    stop("'color' must be either TRUE or FALSE. To use custom colors, the",
+         " 'custom_colors' argument should be used.")
+  } else if (!(is.logical(linetype) && length(linetype)==1)) {
+    stop("'linetype' must be either TRUE or FALSE. To use custom linetypes,",
+         " the 'custom_linetypes' argument should be used.")
+  } else if (!(is.logical(facet) && length(facet)==1)) {
+    stop("'facet' must be either TRUE or FALSE.")
+  }
+}
