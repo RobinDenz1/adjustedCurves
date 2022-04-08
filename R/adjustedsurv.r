@@ -227,7 +227,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
     if (is.null(times) & !bootstrap & method %in% c("km", "iptw_km",
                                                     "iptw_cox",
                                                     "strat_amato",
-                                                    "strat_gregory_nieto")) {
+                                                    "strat_nieto")) {
       times <- NULL
     } else if (is.null(times)) {
       times <- sort(unique(data[, ev_time][data[, event]==1]))
@@ -349,7 +349,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
       out$boot_adjsurv <- boot_stats[!is.na(boot_stats$surv), ]
 
       if (method %in% c("km", "iptw_km", "iptw_cox", "strat_amato",
-                        "strat_gregory_nieto")) {
+                        "strat_nieto")) {
         out$adjsurv <- out$adjsurv[!is.na(out$adjsurv$surv), ]
       }
     }
@@ -456,7 +456,7 @@ summary.adjustedsurv <- function(object, ...) {
     method_name <- "Stratification & Weighting by Cupples et al."
   } else if (object$method=="strat_amato") {
     method_name <- "Stratification & Weighting by Amato"
-  } else if (object$method=="strat_gregory_nieto") {
+  } else if (object$method=="strat_nieto") {
     method_name <- "Stratification & Weighting by Gregory / Nieto & Coresh"
   }
 

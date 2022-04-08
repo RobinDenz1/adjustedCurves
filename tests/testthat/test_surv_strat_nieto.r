@@ -16,7 +16,7 @@ test_that("2 treatments, one confounder", {
                       variable="group2",
                       ev_time="time",
                       event="event",
-                      method="strat_gregory_nieto",
+                      method="strat_nieto",
                       adjust_vars="x1")
   expect_s3_class(adj, "adjustedsurv")
   expect_true(is.numeric(adj$adjsurv$surv))
@@ -28,7 +28,7 @@ test_that("2 treatments, one confounder, with conf_int", {
                       variable="group2",
                       ev_time="time",
                       event="event",
-                      method="strat_gregory_nieto",
+                      method="strat_nieto",
                       adjust_vars="x1",
                       conf_int=TRUE)
   expect_s3_class(adj, "adjustedsurv")
@@ -41,7 +41,7 @@ test_that("2 treatments, one confounder, with boot", {
                       variable="group2",
                       ev_time="time",
                       event="event",
-                      method="strat_gregory_nieto",
+                      method="strat_nieto",
                       adjust_vars="x1",
                       bootstrap=TRUE,
                       n_boot=2)
@@ -55,7 +55,7 @@ test_that("2 treatments, two confounders", {
                       variable="group2",
                       ev_time="time",
                       event="event",
-                      method="strat_gregory_nieto",
+                      method="strat_nieto",
                       adjust_vars=c("x1", "x3"))
   expect_s3_class(adj, "adjustedsurv")
   expect_true(is.numeric(adj$adjsurv$surv))
@@ -67,7 +67,7 @@ test_that("2 treatments, two confounders, with conf_int", {
                       variable="group2",
                       ev_time="time",
                       event="event",
-                      method="strat_gregory_nieto",
+                      method="strat_nieto",
                       adjust_vars=c("x1", "x3"),
                       conf_int=TRUE)
   expect_s3_class(adj, "adjustedsurv")
@@ -80,7 +80,7 @@ test_that("2 treatments, two confounders, with boot", {
                       variable="group2",
                       ev_time="time",
                       event="event",
-                      method="strat_gregory_nieto",
+                      method="strat_nieto",
                       adjust_vars=c("x1", "x3"),
                       bootstrap=TRUE,
                       n_boot=2)
@@ -100,7 +100,7 @@ test_that("> 2 treatments, one confounder", {
                       variable="group",
                       ev_time="time",
                       event="event",
-                      method="strat_gregory_nieto",
+                      method="strat_nieto",
                       adjust_vars="x1")
   expect_s3_class(adj, "adjustedsurv")
   expect_true(is.numeric(adj$adjsurv$surv))
@@ -112,7 +112,7 @@ test_that("> 2 treatments, one confounder, with conf_int", {
                       variable="group",
                       ev_time="time",
                       event="event",
-                      method="strat_gregory_nieto",
+                      method="strat_nieto",
                       adjust_vars="x1",
                       conf_int=TRUE)
   expect_s3_class(adj, "adjustedsurv")
@@ -125,7 +125,7 @@ test_that("> 2 treatments, one confounder, with boot", {
                       variable="group",
                       ev_time="time",
                       event="event",
-                      method="strat_gregory_nieto",
+                      method="strat_nieto",
                       adjust_vars="x1",
                       bootstrap=TRUE,
                       n_boot=2)
@@ -139,7 +139,7 @@ test_that("> 2 treatments, two confounders", {
                       variable="group",
                       ev_time="time",
                       event="event",
-                      method="strat_gregory_nieto",
+                      method="strat_nieto",
                       adjust_vars=c("x1", "x3"))
   expect_s3_class(adj, "adjustedsurv")
   expect_true(is.numeric(adj$adjsurv$surv))
@@ -151,7 +151,7 @@ test_that("> 2 treatments, two confounders, with conf_int", {
                       variable="group",
                       ev_time="time",
                       event="event",
-                      method="strat_gregory_nieto",
+                      method="strat_nieto",
                       adjust_vars=c("x1", "x3"),
                       conf_int=TRUE)
   expect_s3_class(adj, "adjustedsurv")
@@ -164,7 +164,7 @@ test_that("> 2 treatments, two confounders, with boot", {
                       variable="group",
                       ev_time="time",
                       event="event",
-                      method="strat_gregory_nieto",
+                      method="strat_nieto",
                       adjust_vars=c("x1", "x3"),
                       bootstrap=TRUE,
                       n_boot=2)

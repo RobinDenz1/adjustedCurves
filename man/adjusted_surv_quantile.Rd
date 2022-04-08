@@ -17,7 +17,7 @@ adjusted_surv_quantile(adjsurv, p=0.5, conf_int=FALSE,
 An \code{adjustedsurv} object created using the \code{adjustedsurv} function.
   }
   \item{p}{
-The quantile of interest. To calculate the median survival time, set this parameter to 0.5 (default).
+The quantile of interest. To calculate the median survival time, set this parameter to 0.5 (default). Multiple values in form of a numeric vector are allowed.
   }
   \item{conf_int}{
 Whether to calculate confidence intervals or not. Those are calculated in the same way as the quantiles but using the confidence limit curves. This requires either that \code{conf_int=TRUE} or \code{bootstrap=TRUE} was used in the original \code{adjustedsurv} function call. Since this directly uses the previously estimated intervals, the same confidence level used in the original \code{adjustedsurv} call is used here.
@@ -31,9 +31,13 @@ Either \code{"steps"} (default) or \code{"linear"}. This parameter controls how 
 }
 \details{
 
-The median survival time is simply the time when half the patients are expected to be alive. The chance of surviving beyond that time is 50 percent. In general, any quantile can be calculated this way. Those can be read directly from the respective survival curve by drawing a straight line from the desired quantile \code{p} on the Y-Axis and reading the X-Axis value where this line intersects with the survival curve. If the survival probability never drops below \code{p}, the survival time quantile cannot be calculated.
+The median survival time is simply the time when half the patients are expected to be alive. The chance of surviving beyond that time is 50 percent. In general, any quantile can be calculated this way. Those can be read directly from the respective survival curve by drawing a straight line from the desired quantile \code{p} on the Y-Axis and reading the X-Axis value where this line intersects with the survival curve. The adjusted survival time quantile for group \eqn{z} (corresponding to the \code{variable} argument in the \code{\link{adjustedsurv}} function) is formally defined as:
 
-This function calculates this quantity automatically. When multiple imputation was used in the original function call, the median survival times are read off the final pooled survival curves directly.
+\deqn{\hat{Q}_z(p) = min\left(t | \hat{S}_z(t) \leq p\right)}
+
+where \eqn{\hat{S}_z(t)} is the estimated counterfactual survival function for \eqn{z}.
+
+If the survival probability never drops below \code{p}, the survival time quantile cannot be calculated. This also applies to the confidence interval estimation. This function calculates this quantity automatically. When multiple imputation was used in the original function call, the survival time quantiles are read off the final pooled survival curves directly.
 
 }
 \value{
@@ -79,5 +83,8 @@ adjsurv <- adjustedsurv(data=sim_dat,
 
 # calculate adjusted median survival times
 adjusted_surv_quantile(adjsurv)
+
+# calculate other quantiles + confidence intervals
+adjusted_surv_quantile(adjsurv, conf_int=TRUE, p=c(0.2, 0.4))
 }
 }

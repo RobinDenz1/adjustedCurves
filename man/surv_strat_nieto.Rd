@@ -1,5 +1,5 @@
-\name{surv_strat_gregory_nieto}
-\alias{surv_strat_gregory_nieto}
+\name{surv_strat_nieto}
+\alias{surv_strat_nieto}
 
 \title{
 Adjusted Survival Curves for Categorical Confounders using the Method by Gregory (1988) and Nieto & Coresh (1996)
@@ -63,7 +63,7 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         variable="group",
                         ev_time="time",
                         event="event",
-                        method="strat_gregory_nieto",
+                        method="strat_nieto",
                         adjust_vars=c("x1", "x3"),
                         conf_int=FALSE)
 

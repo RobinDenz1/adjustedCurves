@@ -53,7 +53,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
                             "direct", "direct_pseudo", "aiptw_pseudo",
                             "aiptw", "tmle", "ostmle", "matching",
                             "emp_lik", "strat_cupples", "strat_amato",
-                            "strat_gregory_nieto")) {
+                            "strat_nieto")) {
     stop("Method '", method, "' is undefined. See documentation for ",
          "details on available methods.")
   # conf_int
@@ -334,7 +334,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     }
   ## Cupples / Amato / Gregory
   } else if (method=="strat_cupples" | method=="strat_amato" |
-             method=="strat_gregory_nieto") {
+             method=="strat_nieto") {
     # need adjust_vars
     if (!"adjust_vars" %in% names(obj)) {
       stop("Argument 'adjust_vars' needs to be specified when using",

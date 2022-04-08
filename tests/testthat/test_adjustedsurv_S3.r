@@ -81,8 +81,8 @@ test_that("summary.adjustedsurv, strat_amato", {
   expect_snapshot_output(summary(adj))
 })
 
-adj$method <- "strat_gregory_nieto"
-test_that("summary.adjustedsurv, strat_gregory_nieto", {
+adj$method <- "strat_nieto"
+test_that("summary.adjustedsurv, strat_nieto", {
   expect_snapshot_output(summary(adj))
 })
 

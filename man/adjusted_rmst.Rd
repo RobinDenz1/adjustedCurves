@@ -18,7 +18,7 @@ adjusted_rmst(adjsurv, to, from=0, conf_int=FALSE,
 An \code{adjustedsurv} object created using the \code{adjustedsurv} function.
   }
   \item{from}{
-A number specifying the left side of the time interval of interest. See details. Usually this should be kept at 0 (default) unless there are good reasons to change it.
+A number specifying the left side of the time interval of interest. See details. Usually this should be kept at 0 (default) to calculate the standard RMST. Should only be changed if there are good reasons for it.
   }
   \item{to}{
 A number specifying the right side of the time interval of interest. See details.
@@ -40,7 +40,7 @@ When using \code{interpolation="linear"}, the composite trapezoid method is used
 
 The adjusted restricted mean survival times (RMST) are calculated by integrating the estimated adjusted survival curves in a specified interval. Let \eqn{Z} be the grouping variable (corresponding to the \code{variable} argument in the \code{\link{adjustedsurv}} function) with possible levels \eqn{Z \in \{0, 1, 2, ..., k\}}. \eqn{T} is defined as the time and \eqn{\hat{S}_z(t)} denotes the estimated counterfactual survival function. The RMST is then defined as:
 
-\deqn{RMST_{z} = \int_{from}^{to} \hat{S}_z(t)}
+\deqn{RMST_{z}(to) = \int_{from=0}^{to} \hat{S}_z(t)dt}
 
 It can be interpreted as the mean survival time of individuals in group \eqn{Z = z} in the interval [\code{from}, \code{to}]. Note however that simply subtracting the estimates from each other does not give a correct estimate of the area between the survival curves if the respective curves cross at some point. The \code{\link{adjusted_curve_test}} function can be used to calculate the actual area between the curves instead. See \code{?adjusted_curve_test} for more information.
 
@@ -50,11 +50,15 @@ If the \code{adjsurv} object was created with \code{bootstrap=TRUE} in the \code
 
 \strong{\emph{Multiple Imputation}}
 
-If multiple imputation was used when creating the \code{adjsurv} object, the analysis is carries out on all multiply imputed datasets and pooled using Rubins Rule. When bootstrapping was carried out as well, the pooled standard error over all imputed datasets is used in combination with the normal approximation to re-calculate the bootstrap confidence intervals.
+If multiple imputation was used when creating the \code{adjsurv} object, the analysis is carried out on all multiply imputed datasets and pooled using Rubins Rule. When bootstrapping was carried out as well, the pooled standard error over all imputed datasets is used in combination with the normal approximation to re-calculate the bootstrap confidence intervals.
 
 \strong{\emph{Competing Risks}}
 
 This function cannot be used with \code{adjustedcif} objects, because the survival probability cannot be estimated in an unbiased way when competing risks are present. However, a very similar quantity, the \emph{adjusted restricted mean time lost}, can be calculated using the \code{\link{adjusted_rmtl}} function.
+
+\strong{\emph{Graphical Displays}}
+
+A plot of the RMST over time (with changing values for the \code{to} argument) can be produced using the \code{\link{plot_rmst_curve}} function.
 
 \strong{\emph{Computational Details}}
 
@@ -76,7 +80,7 @@ Robin Denz
 }
 
 \seealso{
-\code{\link{adjustedsurv}}
+\code{\link{adjustedsurv}}, \code{\link{plot_rmst_curve}}
 }
 \examples{
 \dontrun{

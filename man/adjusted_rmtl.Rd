@@ -5,7 +5,7 @@
 Calculate Confounder-Adjusted Restricted Mean Time Lost
 }
 \description{
-This function can be utilized to calculate the confounder-adjusted restricted mean time lost, given previously estimated adjusted survival curves / CIFs.
+This function can be utilized to calculate the confounder-adjusted restricted mean time lost (RMTL), possibly due to a specific cause, given previously estimated adjusted survival curves / CIFs created using the \code{\link{adjustedsurv}} or \code{\link{adjustedcif}} function.
 }
 \usage{
 adjusted_rmtl(adj, to, from=0, conf_int=FALSE,
@@ -18,7 +18,7 @@ adjusted_rmtl(adj, to, from=0, conf_int=FALSE,
 An \code{adjustedsurv} object created using the \code{adjustedsurv} function or a \code{adjustedcif} object created using the \code{adjustedcif} function.
   }
   \item{from}{
-A number specifying the left side of the time interval of interest. See details. Usually this should be kept at 0 (default) unless there are good reasons to change it.
+A number specifying the left side of the time interval of interest. See details. Usually this should be kept at 0 (default) to calculate the standard RMTL. Should only be changed if there are good reasons for it.
   }
   \item{to}{
 A number specifying the right side of the time interval of interest. See details.
@@ -38,9 +38,29 @@ When using \code{interpolation="linear"}, the composite trapezoid method is used
 }
 \details{
 
-The adjusted restricted mean time lost is very similar to the adjusted restricted mean survival time. The only difference is that instead of using the integral of the survival curve, the integral of the cumulative incidence function is taken. This is mostly usefull when there are competing risks and the survival function is not identifiable. It can however also be calculated using single-event survival data. When supplying \code{adjustedsurv} objects the survival curves are simply transformed to CIFs before the integrals are calculated.
+The cause-specific adjusted restricted mean time lost (RMTL) is calculated by integrating the estimated adjusted cause-specific CIF in a specified interval. Let \eqn{Z} be the grouping variable (corresponding to the \code{variable} argument in the \code{\link{adjustedcif}} function) with possible levels \eqn{Z \in \{0, 1, 2, ..., k\}}. \eqn{T} is defined as the time and \eqn{\hat{F}_z^d(t)} denotes the estimated counterfactual CIF for \code{cause} \eqn{d}. The RMTL is then defined as:
 
-This quantity can be interpreted as the mean time it takes to succumb to the event of interest. More information on the method itself can be found in the references. More information on the implementation (concerning missing data, confidence interval calculation, etc.) can be found in the documentation of the \code{\link{adjusted_rmst}} function.
+\deqn{RMTL_{z}^d(to) = \int_{from=0}^{to} \hat{F}_z^d(t)dt}
+
+It can be interpreted as the mean time it takes an individual to succumb to the event of interest in group \eqn{Z = z} in the interval [0, \code{to}]. . More information on the method itself can be found in the references. Note however that simply subtracting the estimates from each other does not give a correct estimate of the area between the CIFs if the respective curves cross at some point. The \code{\link{adjusted_curve_test}} function can be used to calculate the actual area between the curves instead. See \code{?adjusted_curve_test} for more information.
+
+If an \code{adjustedsurv} object is supplied in the \code{adj} argument, the CIF is calculated from the adjusted survival curves using the simple transformation: \eqn{\hat{F}_{z}(t) = 1 - \hat{S}_z(t)}. All further calculations are identical.
+
+\strong{\emph{Confidence Intervals}}
+
+If the \code{adj} object was created with \code{bootstrap=TRUE} in the corresponding function, bootstrap confidence intervals and standard errors for the RMTLs can be approximated by setting \code{conf_int} to \code{TRUE}. If bootstrap samples occur where the CIF is not estimated up to \code{to}, the bootstrap sample is discarded and not used in further calculations. Approximate variance calculations not relying on the bootstrap estimates are currently not implemented.
+
+\strong{\emph{Multiple Imputation}}
+
+If multiple imputation was used when creating the \code{adj} object, the analysis is carried out on all multiply imputed datasets and pooled using Rubins Rule. When bootstrapping was carried out as well, the pooled standard error over all imputed datasets is used in combination with the normal approximation to re-calculate the bootstrap confidence intervals.
+
+\strong{\emph{Graphical Displays}}
+
+A plot of the RMTL over time (with changing values for the \code{to} argument) can be produced using the \code{\link{plot_rmtl_curve}} function.
+
+\strong{\emph{Computational Details}}
+
+Since the estimated CIFs are usually step functions, the integrals are by default calculated exactly instead of relying on trapezoid approximations. By setting \code{interpolation="linear"} the trapezoid version can be calculated instead. This, however, should only be used when the curves are not step functions. For example, this is the case when using a parametric survival model with \code{method="direct"}. The produced curves are smooth functions then, requiring linear interpolation for correct integral calculations.
 
 }
 \value{
@@ -56,7 +76,7 @@ Robin Denz
 }
 
 \seealso{
-\code{\link{adjustedcif}}, \code{\link{adjustedsurv}}
+\code{\link{adjustedcif}}, \code{\link{adjustedsurv}}, \code{\link{plot_rmtl_curve}}
 }
 \examples{
 \dontrun{

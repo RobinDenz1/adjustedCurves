@@ -167,9 +167,9 @@ surv_strat_amato <- function(data, variable, ev_time, event,
 #       methods produce the same results when using the full data as reference,
 #       only Nieto's formulation allows the calculation of confidence intervals.
 #' @export
-surv_strat_gregory_nieto <- function(data, variable, ev_time, event,
-                                     conf_int, conf_level=0.95,
-                                     times=NULL, adjust_vars) {
+surv_strat_nieto <- function(data, variable, ev_time, event,
+                             conf_int, conf_level=0.95,
+                             times=NULL, adjust_vars) {
 
   # silence checks
   . <- time <- group <- frac <- est_var <- wji <- var_j <- NULL

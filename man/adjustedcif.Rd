@@ -5,7 +5,7 @@
 Calculate Cause-Specific Confounder-Adjusted Cumulative Incidence Functions
 }
 \description{
-This is one of two main functions of this R-Package. It allows the user to calculate cause-specific confounder-adjusted cumulative incidence functions in the presence of competing events using a variety of different methods. It is basically a wrapper for each \code{cif_method} function with some additional functionality, such as bootstrapping. Some of these methods require additional packages to be installed and, depending on the specified method, there might be additional required arguments in the function call. Documentation on that can be found in the respective \code{cif_method} function. See details and examples.
+This is one of two main functions of this R-Package. It allows the user to calculate cause-specific confounder-adjusted cumulative incidence functions in the presence of competing events using a variety of different methods. Some of these methods require additional packages to be installed and, depending on the specified method, there might be additional required arguments in the function call. More information is available on the documentation page of the respective \code{cif_method}.
 }
 \usage{
 adjustedcif(data, variable, ev_time, event, cause,
@@ -96,6 +96,11 @@ Alternatively, this function also supports the use of multiple imputation via th
 \strong{\emph{Competing Risks}}
 
 This function is meant to be used for data containing multiple competing risks. If the data does not contain competing-events, it is recommended to use the \code{adjustedsurv} function instead. It does not calculate the CIF directly, but the CIF can be calculated from the survival using CIF = 1 - \eqn{S(t)}. This can be done automatically in the \code{plot.adjustedsurv} function using \code{cif=TRUE}.
+
+\strong{\emph{Graphical Displays}}
+
+A general plot of the estimated adjusted CIFs can be obtained using the associated \code{\link[=plot.adjustedcif]{plot}} method. In addition, a plot of the difference between two estimated adjusted CIFs can be produced using the \code{\link{plot_curve_diff}} function.
+
 }
 \value{
 Returns an \code{adjustedcif} object containing the following objects:
@@ -132,8 +137,7 @@ The function itself was written by Robin Denz, but some \code{cif_method} functi
 }
 
 \seealso{
-\code{\link{plot.adjustedcif}}, \code{\link{cif_aiptw}}, \code{\link{cif_aiptw_pseudo}}, \code{\link{cif_direct}}, \code{\link{cif_direct_pseudo}},
-\code{\link{cif_iptw}}, \code{\link{cif_iptw_pseudo}}, \code{\link{cif_matching}}, \code{\link{cif_tmle}}, \code{\link{cif_aalen_johansen}}
+\code{\link{plot.adjustedcif}}, \code{\link{adjusted_rmtl}}, \code{\link{plot_curve_diff}}
 }
 \examples{
 \dontrun{

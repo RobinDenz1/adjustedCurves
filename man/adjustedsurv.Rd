@@ -5,7 +5,7 @@
 Calculate Confounder-Adjusted Survival Curves
 }
 \description{
-This is one of the two main functions of this R-Package. It allows the user to calculate confounder-adjusted survival curves using a variety of different methods. It is basically a wrapper for each \code{surv_method} function with some additional functionality, such as bootstrapping. Some of these methods require additional packages to be installed and, depending on the specified method, there might be additional required arguments in the function call. Documentation on that can be found in the respective \code{surv_method} function. See details and examples.
+This is one of the two main functions of this R-Package. It allows the user to calculate confounder-adjusted survival curves using a variety of different methods. Some of these methods require additional packages to be installed and, depending on the specified method, there might be additional required arguments in the function call. More information is available on the documentation page of the respective \code{surv_method}.
 }
 \usage{
 adjustedsurv(data, variable, ev_time, event, method,
@@ -75,7 +75,7 @@ The primary purpose of the \code{adjustedsurv} function is to provide a convenie
   \item{"\link[=surv_tmle]{tmle}": Targeted Maximum Likelihood Estimation.}
   \item{"\link[=surv_ostmle]{ostmle}": One-Step Targeted Maximum Likelihood Estimation.}
   \item{"\link[=surv_strat_amato]{strat_amato}": A method based on stratification and weighting by Amato (1988).}
-  \item{"\link[=surv_strat_gregory_nieto]{strat_gregory_nieto}": A method based on stratification and weighting by Gregory (1988) and Nieto & Coresh (1996).}
+  \item{"\link[=surv_strat_nieto]{strat_nieto}": A method based on stratification and weighting by Gregory (1988) and Nieto & Coresh (1996).}
   \item{"\link[=surv_strat_cupples]{strat_cupples}": A method based on stratification and weighting by Cupples et al. (1995).}
   \item{"\link[=surv_km]{km}": A simple stratified Kaplan-Meier estimator without any form of adjustment.}
 }
@@ -99,6 +99,11 @@ Alternatively, this function also supports the use of multiple imputation via th
 \strong{\emph{Competing Risks}}
 
 If the data contains competing-risks, this function cannot be used. It is however possible to calculate confounder-adjusted cause-specific cumulative incidence functions using the \code{adjustedcif} function.
+
+\strong{\emph{Graphical Displays}}
+
+A general plot of the estimated adjusted survival curves can be obtained using the associated \code{\link[=plot.adjustedsurv]{plot}} method. In addition, a plot of the difference between two estimated adjusted survival curves can be produced using the \code{\link{plot_curve_diff}} function.
+
 }
 \value{
 Returns an \code{adjustedsurv} object containing the following objects:
@@ -130,16 +135,16 @@ Some method specific objects might also be contained in the output.
 }
 
 \references{
-Relevant literature can be found in the respective \code{surv_method} documentation.
+Robin Denz, Renate Klaaßen-Mielke, and Nina Timmesfeld (2022). A Comparison of Different Methods to Adjust Survival Curves for Confounders. arXiv:2203.10002v1
+
+Other relevant literature can be found in the respective \code{surv_method} documentation.
 }
 \author{
 The function itself was written by Robin Denz, but some \code{surv_method} functions include wrappers for functions written by other people. More information can be found in the respective \code{surv_method} documentation.
 }
 
 \seealso{
-\code{\link{plot.adjustedsurv}}, \code{\link{surv_aiptw}}, \code{\link{surv_aiptw_pseudo}}, \code{\link{surv_direct}}, \code{\link{surv_direct_pseudo}},
-\code{\link{surv_iptw_km}}, \code{\link{surv_iptw_cox}}, \code{\link{surv_iptw_pseudo}}, \code{\link{surv_emp_lik}},
-\code{\link{surv_matching}}, \code{\link{surv_tmle}}, \code{\link{surv_ostmle}}
+\code{\link{plot.adjustedsurv}}, \code{\link{adjusted_rmst}}, \code{\link{adjusted_rmtl}}, \code{\link{adjusted_surv_quantile}}, \code{\link{adjusted_curve_diff}}, \code{\link{adjusted_curve_test}}
 }
 \examples{
 \dontrun{
