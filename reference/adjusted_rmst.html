@@ -64,7 +64,7 @@
     <dl><dt>adjsurv</dt>
 <dd><p>An <code>adjustedsurv</code> object created using the <code>adjustedsurv</code> function.</p></dd>
 <dt>from</dt>
-<dd><p>A number specifying the left side of the time interval of interest. See details. Usually this should be kept at 0 (default) unless there are good reasons to change it.</p></dd>
+<dd><p>A number specifying the left side of the time interval of interest. See details. Usually this should be kept at 0 (default) to calculate the standard RMST. Should only be changed if there are good reasons for it.</p></dd>
 <dt>to</dt>
 <dd><p>A number specifying the right side of the time interval of interest. See details.</p></dd>
 <dt>conf_int</dt>
@@ -81,14 +81,16 @@
     
 
 <p>The adjusted restricted mean survival times (RMST) are calculated by integrating the estimated adjusted survival curves in a specified interval. Let \(Z\) be the grouping variable (corresponding to the <code>variable</code> argument in the <code><a href="adjustedsurv.html">adjustedsurv</a></code> function) with possible levels \(Z \in \{0, 1, 2, ..., k\}\). \(T\) is defined as the time and \(\hat{S}_z(t)\) denotes the estimated counterfactual survival function. The RMST is then defined as:</p>
-<p>$$RMST_{z} = \int_{from}^{to} \hat{S}_z(t)$$</p>
+<p>$$RMST_{z}(to) = \int_{from=0}^{to} \hat{S}_z(t)dt$$</p>
 <p>It can be interpreted as the mean survival time of individuals in group \(Z = z\) in the interval [<code>from</code>, <code>to</code>]. Note however that simply subtracting the estimates from each other does not give a correct estimate of the area between the survival curves if the respective curves cross at some point. The <code><a href="adjusted_curve_test.html">adjusted_curve_test</a></code> function can be used to calculate the actual area between the curves instead. See <code><a href="adjusted_curve_test.html">?adjusted_curve_test</a></code> for more information.</p>
 <p><strong><em>Confidence Intervals</em></strong></p>
 <p>If the <code>adjsurv</code> object was created with <code>bootstrap=TRUE</code> in the <code><a href="adjustedsurv.html">adjustedsurv</a></code> function, bootstrap confidence intervals and standard errors for the RMSTs can be approximated by setting <code>conf_int</code> to <code>TRUE</code>. If bootstrap samples occur where the survival function is not estimated up to <code>to</code>, the bootstrap sample is discarded and not used in further calculations. Approximate variance calculations not relying on the bootstrap estimates are currently not implemented.</p>
 <p><strong><em>Multiple Imputation</em></strong></p>
-<p>If multiple imputation was used when creating the <code>adjsurv</code> object, the analysis is carries out on all multiply imputed datasets and pooled using Rubins Rule. When bootstrapping was carried out as well, the pooled standard error over all imputed datasets is used in combination with the normal approximation to re-calculate the bootstrap confidence intervals.</p>
+<p>If multiple imputation was used when creating the <code>adjsurv</code> object, the analysis is carried out on all multiply imputed datasets and pooled using Rubins Rule. When bootstrapping was carried out as well, the pooled standard error over all imputed datasets is used in combination with the normal approximation to re-calculate the bootstrap confidence intervals.</p>
 <p><strong><em>Competing Risks</em></strong></p>
 <p>This function cannot be used with <code>adjustedcif</code> objects, because the survival probability cannot be estimated in an unbiased way when competing risks are present. However, a very similar quantity, the <em>adjusted restricted mean time lost</em>, can be calculated using the <code><a href="adjusted_rmtl.html">adjusted_rmtl</a></code> function.</p>
+<p><strong><em>Graphical Displays</em></strong></p>
+<p>A plot of the RMST over time (with changing values for the <code>to</code> argument) can be produced using the <code><a href="plot_rmst_curve.html">plot_rmst_curve</a></code> function.</p>
 <p><strong><em>Computational Details</em></strong></p>
 <p>Since the estimated survival functions are usually step functions, the integrals are by default calculated exactly instead of relying on trapezoid approximations. By setting <code>interpolation="linear"</code> the trapezoid version can be calculated instead. This, however, should only be used when the curves are not step functions. For example, this is the case when using a parametric survival model with <code>method="direct"</code>. The produced curves are smooth functions then, requiring linear interpolation for correct integral calculations.</p>
     </div>
@@ -108,7 +110,7 @@ If <code>conf_int=TRUE</code> was used it additionally contains the columns <cod
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="adjustedsurv.html">adjustedsurv</a></code></p></div>
+    <div class="dont-index"><p><code><a href="adjustedsurv.html">adjustedsurv</a></code>, <code><a href="plot_rmst_curve.html">plot_rmst_curve</a></code></p></div>
     </div>
 
     <div class="section level2">

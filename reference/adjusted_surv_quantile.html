@@ -63,7 +63,7 @@
     <dl><dt>adjsurv</dt>
 <dd><p>An <code>adjustedsurv</code> object created using the <code>adjustedsurv</code> function.</p></dd>
 <dt>p</dt>
-<dd><p>The quantile of interest. To calculate the median survival time, set this parameter to 0.5 (default).</p></dd>
+<dd><p>The quantile of interest. To calculate the median survival time, set this parameter to 0.5 (default). Multiple values in form of a numeric vector are allowed.</p></dd>
 <dt>conf_int</dt>
 <dd><p>Whether to calculate confidence intervals or not. Those are calculated in the same way as the quantiles but using the confidence limit curves. This requires either that <code>conf_int=TRUE</code> or <code>bootstrap=TRUE</code> was used in the original <code>adjustedsurv</code> function call. Since this directly uses the previously estimated intervals, the same confidence level used in the original <code>adjustedsurv</code> call is used here.</p></dd>
 <dt>use_boot</dt>
@@ -75,8 +75,10 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     
 
-<p>The median survival time is simply the time when half the patients are expected to be alive. The chance of surviving beyond that time is 50 percent. In general, any quantile can be calculated this way. Those can be read directly from the respective survival curve by drawing a straight line from the desired quantile <code>p</code> on the Y-Axis and reading the X-Axis value where this line intersects with the survival curve. If the survival probability never drops below <code>p</code>, the survival time quantile cannot be calculated.</p>
-<p>This function calculates this quantity automatically. When multiple imputation was used in the original function call, the median survival times are read off the final pooled survival curves directly.</p>
+<p>The median survival time is simply the time when half the patients are expected to be alive. The chance of surviving beyond that time is 50 percent. In general, any quantile can be calculated this way. Those can be read directly from the respective survival curve by drawing a straight line from the desired quantile <code>p</code> on the Y-Axis and reading the X-Axis value where this line intersects with the survival curve. The adjusted survival time quantile for group \(z\) (corresponding to the <code>variable</code> argument in the <code><a href="adjustedsurv.html">adjustedsurv</a></code> function) is formally defined as:</p>
+<p>$$\hat{Q}_z(p) = min\left(t | \hat{S}_z(t) \leq p\right)$$</p>
+<p>where \(\hat{S}_z(t)\) is the estimated counterfactual survival function for \(z\).</p>
+<p>If the survival probability never drops below <code>p</code>, the survival time quantile cannot be calculated. This also applies to the confidence interval estimation. This function calculates this quantity automatically. When multiple imputation was used in the original function call, the survival time quantiles are read off the final pooled survival curves directly.</p>
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -122,6 +124,9 @@ If <code>conf_int=TRUE</code> was used it also includes the confidence limits in
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># calculate adjusted median survival times</span></span>
 <span class="r-in"><span class="fu">adjusted_surv_quantile</span><span class="op">(</span><span class="va">adjsurv</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># calculate other quantiles + confidence intervals</span></span>
+<span class="r-in"><span class="fu">adjusted_surv_quantile</span><span class="op">(</span><span class="va">adjsurv</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>, p<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.4</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 </code></pre></div>
     </div>
