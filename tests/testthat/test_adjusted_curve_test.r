@@ -116,8 +116,7 @@ test_that("CIF, 2 treatments, no from", {
 })
 
 test_that("CIF, 2 treatments, no from, linear", {
-  adj_test <- adjusted_curve_test(adj, to=1, interpolation="linear",
-                                  subdivisions=1000)
+  adj_test <- adjusted_curve_test(adj, to=1, interpolation="linear")
   expect_equal(round(adj_test$observed_diff_integral, 4), 0.1387)
   expect_equal(round(adj_test$integral_se, 4), 0.0403)
   expect_equal(round(adj_test$p_value, 4), 0)

@@ -15,10 +15,16 @@
 
 ## calculate area under curve of adjustedsurv, adjustedcif objects
 area_under_curve <- function(adj, from, to, conf_int, conf_level,
-                             interpolation, subdivisions) {
+                             interpolation) {
 
   # silence checks
   . <- se <- group <- NULL
+
+  if (inherits(adj, "adjustedsurv")) {
+    levs <- levels(adj$adjsurv$group)
+  } else {
+    levs <- levels(adj$adjcif$group)
+  }
 
   mode <- ifelse(inherits(adj, "adjustedsurv"), "surv", "cif")
   boot_str <- paste0("boot_adj", mode)
@@ -33,8 +39,7 @@ area_under_curve <- function(adj, from, to, conf_int, conf_level,
       mids_out[[i]] <- area_under_curve(adj$mids_analyses[[i]],
                                         to=to, from=from, conf_int=conf_int,
                                         conf_level=conf_level,
-                                        interpolation=interpolation,
-                                        subdivisions=subdivisions)
+                                        interpolation=interpolation)
     }
     mids_out <- dplyr::bind_rows(mids_out)
 
@@ -55,7 +60,7 @@ area_under_curve <- function(adj, from, to, conf_int, conf_level,
                              se=out$se,
                              conf_level=conf_level,
                              conf_type="plain")
-      out <- data.frame(group=out$group,
+      out <- data.frame(group=factor(out$group, levels=levs),
                         auc=out$auc,
                         se=out$se,
                         ci_lower=auc_ci$left,
@@ -90,18 +95,11 @@ area_under_curve <- function(adj, from, to, conf_int, conf_level,
         # recursion call
         adj_auc <- area_under_curve(fake_object, from=from, to=to,
                                     conf_int=FALSE,
-                                    interpolation=interpolation,
-                                    subdivisions=subdivisions)
+                                    interpolation=interpolation)
         adj_auc$boot <- i
         booted_aucs[[i]] <- adj_auc
       }
       booted_aucs <- as.data.frame(dplyr::bind_rows(booted_aucs))
-    }
-
-    if (inherits(adj, "adjustedsurv")) {
-      levs <- levels(adj$adjsurv$group)
-    } else {
-      levs <- levels(adj$adjcif$group)
     }
 
     auc_vec <- vector(mode="numeric", length=length(levs))
@@ -118,21 +116,13 @@ area_under_curve <- function(adj, from, to, conf_int, conf_level,
       surv_dat$ci_upper <- NULL
       surv_dat$boot <- NULL
 
-      if (interpolation=="steps") {
-        auc <- exact_stepfun_integral(surv_dat, from=from, to=to, est=mode)
-      } else if (interpolation=="linear") {
-        times <- seq(from, to, (to-from)/subdivisions)
-        diff_dat <- data.frame(times=times)
-        diff_dat[, mode] <- vapply(X=times, FUN=read_from_linear_function,
-                                   FUN.VALUE=numeric(1), data=surv_dat,
-                                   est=mode)
-        auc <- trapezoid_integral(x=diff_dat$time, y=diff_dat[, mode])
-      }
+      auc <- exact_integral(data=surv_dat, from=from, to=to, est=mode,
+                            interpolation=interpolation)
 
       auc_vec[i] <- auc
     }
 
-    out <- data.frame(group=levs, auc=auc_vec)
+    out <- data.frame(group=factor(levs, levels=levs), auc=auc_vec)
 
     if (conf_int & !is.null(adj[boot_str])) {
 
@@ -146,7 +136,7 @@ area_under_curve <- function(adj, from, to, conf_int, conf_level,
                              se=out_boot$se,
                              conf_level=conf_level,
                              conf_type="plain")
-      out <- data.frame(group=out$group,
+      out <- data.frame(group=factor(out$group, levels=levs),
                         auc=out$auc,
                         se=out_boot$se,
                         ci_lower=auc_ci$left,
@@ -158,12 +148,37 @@ area_under_curve <- function(adj, from, to, conf_int, conf_level,
   }
 }
 
+## get difference of AUC values + confidence intervals and p_value
+auc_difference <- function(data, group_1, group_2, conf_int, conf_level) {
+
+  if (is.null(group_1) | is.null(group_2)) {
+    group_1 <- levels(data$group)[1]
+    group_2 <- levels(data$group)[2]
+  }
+
+  dat_1 <- data[data$group==group_1, ]
+  dat_2 <- data[data$group==group_2, ]
+
+  out <- data.frame(diff=dat_1$auc - dat_2$auc)
+
+  if (conf_int) {
+    out$se <- sqrt(dat_1$se^2 + dat_2$se^2)
+    diff_ci <- confint_surv(surv=out$diff, se=out$se, conf_level=conf_level,
+                            conf_type="plain")
+    out$ci_lower <- diff_ci$left
+    out$ci_upper <- diff_ci$right
+    t_stat <- (out$diff - 0) / out$se
+    out$p_value <- 2 * stats::pnorm(abs(t_stat), lower.tail=FALSE)
+  }
+  return(out)
+}
+
 ## function to calculate the restricted mean survival time of each
 ## adjusted survival curve previously estimated using the adjustedsurv function
 #' @export
 adjusted_rmst <- function(adjsurv, to, from=0, conf_int=FALSE,
                           conf_level=0.95, interpolation="steps",
-                          subdivisions=1000) {
+                          difference=FALSE, group_1=NULL, group_2=NULL) {
 
   check_inputs_adj_rmst(adjsurv=adjsurv, from=from, to=to, conf_int=conf_int)
 
@@ -174,10 +189,11 @@ adjusted_rmst <- function(adjsurv, to, from=0, conf_int=FALSE,
 
   out <- area_under_curve(adj=adjsurv, to=to, from=from,
                           conf_int=conf_int, conf_level=conf_level,
-                          interpolation=interpolation,
-                          subdivisions=subdivisions)
-
-  if (conf_int) {
+                          interpolation=interpolation)
+  if (difference) {
+    out <- auc_difference(data=out, group_1=group_1, group_2=group_2,
+                          conf_int=conf_int, conf_level=conf_level)
+  } else if (conf_int) {
     colnames(out) <- c("group", "rmst", "se", "ci_lower", "ci_upper", "n_boot")
   } else {
     colnames(out) <- c("group", "rmst")
@@ -191,7 +207,7 @@ adjusted_rmst <- function(adjsurv, to, from=0, conf_int=FALSE,
 #' @export
 adjusted_rmtl <- function(adj, to, from=0, conf_int=FALSE,
                           conf_level=0.95, interpolation="steps",
-                          subdivisions=1000) {
+                          difference=FALSE, group_1=NULL, group_2=NULL) {
 
   check_inputs_adj_rmtl(adj=adj, from=from, to=to, conf_int=conf_int)
 
@@ -203,8 +219,7 @@ adjusted_rmtl <- function(adj, to, from=0, conf_int=FALSE,
   # calculate area under curve
   out <- area_under_curve(adj=adj, to=to, from=from, conf_int=conf_int,
                           conf_level=conf_level,
-                          interpolation=interpolation,
-                          subdivisions=subdivisions)
+                          interpolation=interpolation)
 
   # take area above curve instead
   if (inherits(adj, "adjustedsurv")) {
@@ -223,7 +238,10 @@ adjusted_rmtl <- function(adj, to, from=0, conf_int=FALSE,
     }
   }
 
-  if (conf_int) {
+  if (difference) {
+    out <- auc_difference(data=out, group_1=group_1, group_2=group_2,
+                          conf_int=conf_int, conf_level=conf_level)
+  } else if (conf_int) {
     colnames(out) <- c("group", "rmtl", "se", "ci_lower", "ci_upper", "n_boot")
   } else {
     colnames(out) <- c("group", "rmtl")

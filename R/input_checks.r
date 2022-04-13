@@ -1,3 +1,18 @@
+# Copyright (C) 2021  Robin Denz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 ## for adjustedsurv function
 check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
                                       conf_int, conf_level, times, bootstrap,
@@ -105,18 +120,10 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
            "method='", method, "'.")
     }
 
-    # Check if the group variable has the right format
-    if (method %in% c("matching", "emp_lik", "tmle", "ostmle") &
-        !is.factor(data[, variable]) & !is.numeric(data[, variable])) {
+    # Check if the group variable is a factor
+    if (!is.factor(data[, variable])) {
       stop("The column in 'data' specified by 'variable' needs to be ",
-           "a factor or a dichotomous integer variable if method='",
-           method, "'.")
-    }
-
-    if (!method %in% c("matching", "emp_lik", "tmle", "ostmle") &
-        !is.factor(data[, variable])) {
-      stop("The column in 'data' specified by 'variable' needs to be ",
-           "a factor variable if method='", method, "'.")
+           "a factor variable.")
     }
 
     # Check if ev_time variable has the right format
@@ -137,8 +144,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
 
     # No extrapolation
     if (!is.null(times) && (max(times) > max(data[, ev_time]))) {
-      stop("Values in '", ev_time,
-           "' must be smaller than max(data[,ev_time]).",
+      stop("Values in 'times' must be smaller than max(data[,ev_time]).",
            " No extrapolation allowed.")
     }
   # Check if mira objects where supplied when class(data) == "mids"
@@ -720,17 +726,9 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
     }
 
     # Check if the group variable has the right format
-    if (method %in% c("matching", "tmle") &
-        !is.factor(data[, variable]) & !is.numeric(data[, variable])) {
+    if (!is.factor(data[, variable])) {
       stop("The column in 'data' specified by 'variable' needs to be ",
-           "a dichotomous integer variable or a factor variable if method='",
-           method, "'.")
-    }
-
-    if (!method %in% c("matching", "tmle") &
-        !is.factor(data[, variable])) {
-      stop("The column in 'data' specified by 'variable' needs to be ",
-           "a factor variable if method='", method, "'.")
+           "a factor variable.")
     }
 
     # Check if ev_time variable has the right format
@@ -759,8 +757,7 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
 
     # No extrapolation
     if (!is.null(times) && (max(times) > max(data[, ev_time]))) {
-      stop("Values in '", ev_time,
-           "' must be smaller than max(data[,ev_time]).",
+      stop("Values in 'times' must be smaller than max(data[,ev_time]).",
            " No extrapolation allowed.")
     }
   } else {

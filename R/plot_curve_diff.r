@@ -1,3 +1,17 @@
+# Copyright (C) 2021  Robin Denz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## plot the difference between two adjusted survival curves
 #' @importFrom rlang .data
@@ -17,7 +31,6 @@ plot_curve_diff <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
                             loess_color=color, loess_size=size,
                             loess_linetype="dashed", loess_alpha=alpha,
                             test=NULL, integral_from=0, integral_to=NULL,
-                            integral_subdivisions=1000,
                             p_value=FALSE, integral=FALSE,
                             interval=FALSE, text_pos_x="left",
                             text_pos_y="bottom", text_size=3.5,
@@ -150,15 +163,13 @@ plot_curve_diff <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
     test <- adjusted_curve_test(adj=x, to=integral_to, from=integral_from,
                                 conf_level=conf_level,
                                 interpolation=interpolation,
-                                subdivisions=integral_subdivisions,
                                 group_1=group_1, group_2=group_2)
     p_val <- test$p_value
   # if only the integral should be printed, calculate this only
   } else if (integral & is.null(test)) {
-    area <- difference_integral(adj=adj_data, from=integral_from,
-                                to=integral_to, interpolation=interpolation,
-                                subdivisions=integral_subdivisions,
-                                est=mode)$area
+    area <- exact_integral(data=plotdata, from=integral_from,
+                           to=integral_to, interpolation=interpolation,
+                           est="diff")
   }
 
   # add p-value and other text to the plot, based on a test performed by

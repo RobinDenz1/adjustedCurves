@@ -23,7 +23,6 @@ plot_curve_diff(x, group_1=NULL, group_2=NULL,
                 loess_color=color, loess_size=size,
                 loess_linetype="dashed", loess_alpha=alpha,
                 test=NULL, integral_from=0, integral_to=NULL,
-                integral_subdivisions=1000,
                 p_value=FALSE, integral=FALSE,
                 interval=FALSE, text_pos_x="left",
                 text_pos_y="bottom", text_size=3.5,
@@ -140,9 +139,6 @@ A number specifying the left limit of the integral. When \code{p_value=TRUE} and
   }
   \item{integral_to}{
 A number specifying the right limit of the integral. When \code{p_value=TRUE} and \code{test=NULL}, this argument will be passed to the \code{to} argument in the \code{adjusted_curve_test} function to perform the test.
-  }
-  \item{integral_subdivisions}{
-How many subdivisions to use when calculating the integral using the trapezoid rule (\code{integral_interpolation="linear"}). When \code{p_value=TRUE} and \code{test=NULL}, this argument will be passed to the \code{from} argument in the \code{adjusted_curve_test} function to perform the test.
   }
   \item{p_value}{
 Whether to add a p-value to the plot or not. This requires either that the user supplies a previously created \code{curve_test} object to the \code{test} argument, or that the required arguments to call this function are supplied (at least \code{integral_to}). Either way it only works if \code{bootstrap=TRUE} was used in the original \code{adjustedsurv} or \code{adjustedcif} function call.

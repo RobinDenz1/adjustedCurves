@@ -1,4 +1,4 @@
-# adjusted_curve_diff, 3 treatments
+# adjusted_curve_test, 3 treatments
 
     ------------------------------------------------------------------
        Test of the Difference between two Survival Curves

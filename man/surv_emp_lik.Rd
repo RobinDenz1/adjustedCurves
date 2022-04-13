@@ -35,7 +35,7 @@ Tolerance used in the newton-raphson algorithm. Set to 1.0e-06 by default which 
 \itemize{
 \item{\strong{Type of Adjustment:} Requires a character vector of variable names used to balance the distribution of covariates (treatment assignment mechanism)}
 \item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
-\item{\strong{Categorical groups:} Only binary treatments are allowed. Column specified by \code{variable} must be an integer with only 0 and 1 as values or a factor variable with exactly two levels.}
+\item{\strong{Categorical groups:} Only binary treatments are allowed. The column specified by \code{variable} must be a factor variable with exactly two levels.}
 \item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are not available. Bootstrapping can still be used to estimate the confidence intervals (see \code{?adjustedsurv}).}
 \item{\strong{Allowed Time Values:} Allows both continuous and integer survival times.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
@@ -73,8 +73,9 @@ Robin Denz only performed small changes to that code (documented with code-comme
 }
 \examples{
 \dontrun{
-# simulate some data as example (needs a binary integer "variable")
+# simulate some data as example
 sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat$group <- as.factor(sim_dat$group)
 
 # calculate adjusted survival curves
 adjsurv <- adjustedsurv(data=sim_dat,

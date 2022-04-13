@@ -233,13 +233,9 @@ surv_emp_lik <- function(data, variable, ev_time, event, conf_int=FALSE,
                          standardize=FALSE, gtol=0.00001,
                          max_iter=100, newton_tol=1.0e-06) {
 
-  # if 'variable' is a factor, turn it into numeric
-  if (is.factor(data[, variable])) {
-    levs <- levels(data[, variable])
-    data[, variable] <- ifelse(data[, variable]==levs[1], 0, 1)
-  } else {
-    levs <- sort(unique(data[, variable]))
-  }
+  # turn it into numeric
+  levs <- levels(data[, variable])
+  data[, variable] <- ifelse(data[, variable]==levs[1], 0, 1)
 
   # create design matrix for function call
   x_dat <- data[,treatment_vars]
@@ -277,6 +273,7 @@ surv_emp_lik <- function(data, variable, ev_time, event, conf_int=FALSE,
                          surv=c(el_0, el_1),
                          group=c(rep(levs[1], length(el_0)),
                                  rep(levs[2], length(el_0))))
+  plotdata$group <- factor(plotdata$group, levels=levs)
 
   output <- list(plotdata=plotdata)
   class(output) <- "adjustedsurv.method"

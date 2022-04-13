@@ -10,7 +10,7 @@ This function can be utilized to calculate the confounder-adjusted restricted me
 \usage{
 adjusted_rmtl(adj, to, from=0, conf_int=FALSE,
               conf_level=0.95, interpolation="steps",
-              subdivisions=1000)
+              difference=FALSE, group_1=NULL, group_2=NULL)
 }
 
 \arguments{
@@ -32,8 +32,14 @@ A number specifying the confidence level of the bootstrap confidence intervals.
   \item{interpolation}{
 Either \code{"steps"} (default) or \code{"linear"}. This parameter controls how interpolation is performed. If this argument is set to \code{"steps"}, the curves will be treated as step functions. If it is set to \code{"linear"}, the curves wil be treated as if there are straight lines between the point estimates instead. Points that lie between estimated points will be interpolated accordingly. Should usually be kept at \code{"steps"}. See Details.
   }
-  \item{subdivisions}{
-When using \code{interpolation="linear"}, the composite trapezoid method is used to calculate the integral of the curves. This argument defines the number of subdivisions that should be used when calculating the integral. Bigger number give a more accurate estimate, but take longer to compute.
+  \item{difference}{
+Whether to calculate the difference between two adjusted RMTLs instead. When \code{conf_int=TRUE} is also specified, this function will also return the standard error of the difference, the associated confidence interval and a p-value. The p-value is the result of a one-sample t-test where the null-hypothesis is that the difference is equal to 0. To specify which difference should be calculated, the \code{group_1} and \code{group_1} arguments can be used. By default, the difference between the first and second level in \code{variable} is computed.
+  }
+  \item{group_1}{
+Optional argument to get a specific difference. This argument takes a single character string specifying one of the levels of the \code{variable} used in the original \code{adjustedsurv} or \code{adjustedcif} function call. This group will be subtracted from. For example if \code{group_1="A"} and \code{group_2="B"} the difference \code{A - B} will be used. If \code{NULL}, the order of the factor levels in the original \code{data} determines the order. Ignored if \code{difference=FALSE}.
+  }
+  \item{group_2}{
+Also a single character string specifying one of the levels of \code{variable}. This corresponds to the right side of the difference equation. See argument \code{group_2}. Ignored if \code{difference=FALSE}.
   }
 }
 \details{
@@ -60,7 +66,7 @@ A plot of the RMTL over time (with changing values for the \code{to} argument) c
 
 \strong{\emph{Computational Details}}
 
-Since the estimated CIFs are usually step functions, the integrals are by default calculated exactly instead of relying on trapezoid approximations. By setting \code{interpolation="linear"} the trapezoid version can be calculated instead. This, however, should only be used when the curves are not step functions. For example, this is the case when using a parametric survival model with \code{method="direct"}. The produced curves are smooth functions then, requiring linear interpolation for correct integral calculations.
+Instead of relying on numerical integration, this function uses exact calculations. This is achieved by using either step-function interpolation (\code{interpolation="steps"}, the default) or linear interpolation (\code{interpolation="linear"}). In the former case, the integral is simply the sum of the area of the squares defined by the step function. In the second case, the integral is simply the sum of the area of the rectangles. Either way, there is no need for approximations. In some situations (for example when using parametric models with \code{method="direct"}), the curves are not step functions. In this case the \code{interpolation} argument should be set to \code{"linear"}.
 
 }
 \value{

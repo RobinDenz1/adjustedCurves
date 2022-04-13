@@ -7,7 +7,6 @@ sim_dat <- readRDS(system.file("testdata",
                                package="adjustedCurves"))
 
 sim_dat_tibble <- dplyr::tibble(sim_dat)
-sim_dat$group_num <- sim_dat$group
 sim_dat$group <- as.factor(sim_dat$group)
 sim_dat$x1 <- ifelse(runif(n=nrow(sim_dat)) <= 0.7, sim_dat$x1, NA)
 
@@ -206,7 +205,7 @@ test_that("MI, iptw_pseudo, boot, weightit", {
 ### matching
 test_that("MI, matching, no boot", {
   adj <- adjustedcif(data=imp,
-                     variable="group_num",
+                     variable="group",
                      ev_time="time",
                      event="event",
                      method="matching",

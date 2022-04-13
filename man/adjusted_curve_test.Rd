@@ -9,7 +9,7 @@ This function implements a modified version of the Pepe and Flemming (1989) test
 }
 \usage{
 adjusted_curve_test(adj, to, from=0, conf_level=0.95,
-                    interpolation="steps", subdivisions=1000,
+                    interpolation="steps",
                     group_1=NULL, group_2=NULL)
 }
 
@@ -28,9 +28,6 @@ A number specifying the confidence level of the bootstrap confidence intervals.
   }
   \item{interpolation}{
 Either \code{"steps"} (default) or \code{"linear"}. This parameter controls how interpolation is performed. If this argument is set to \code{"steps"}, the curves will be treated as step functions. If it is set to \code{"linear"}, the curves wil be treated as if there are straight lines between the point estimates instead. Points that lie between estimated points will be interpolated accordingly. Should usually be kept at \code{"steps"}. See Details.
-  }
-  \item{subdivisions}{
-When using \code{interpolation="linear"}, the composite trapezoid method is used to calculate the integral of the difference between the curves. This argument defines the number of subdivisions that should be used when calculating the integral. Bigger number give a more accurate estimate, but take longer to compute.
   }
   \item{group_1}{
 Optional argument to get one specific hypothesis test. This argument takes a single character string specifying one of the levels of the \code{variable} used in the original \code{adjustedsurv} or \code{adjustedcif} function call. This group will be subtracted from. For example if \code{group_1="A"} and \code{group_2="B"} the difference \code{A - B} will be used. If \code{NULL}, the order of the factor levels in the original \code{data} determines the test order. If not \code{NULL}, the \code{group_2} argument also needs to be specified. When these arguments are used, all other potential pairwise comparisons are ignored.
@@ -59,7 +56,7 @@ To plot the curves of the differences directly, we recommend using the  \code{\l
 
 \strong{\emph{Computational Details}}
 
-Instead of relying on numerical integration, this function uses step-function interpolation by default, treating all supplied curves as step functions. The integral is then calculated using a simple sum of the squares defined by each step. If the interpolation is correct, this gives an exact calculation of the difference integral. However, in some situations (for example when using parametric survival models with \code{method="direct"}), the curves are not step functions. In this case the \code{interpolation} argument should be set to \code{"linear"} to use a standard trapezoid estimate.
+Instead of relying on numerical integration, this function uses exact calculations. This is achieved by using either step-function interpolation (\code{interpolation="steps"}, the default) or linear interpolation (\code{interpolation="linear"}). In the former case, the integral is simply the sum of the area of the squares defined by the step function. In the second case, the integral is simply the sum of the area of the rectangles. Either way, there is no need for approximations. In some situations (for example when using parametric survival models with \code{method="direct"}), the curves are not step functions. In this case the \code{interpolation} argument should be set to \code{"linear"}.
 
 }
 \value{

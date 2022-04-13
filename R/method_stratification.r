@@ -1,3 +1,17 @@
+# Copyright (C) 2021  Robin Denz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## Adjustment based on a weighted average of stratified Kaplan-Meier estimates
 ## using the method by Cupples et al.
@@ -153,7 +167,7 @@ surv_strat_amato <- function(data, variable, ev_time, event,
   # keep same order in data.frame
   plotdata <- data.frame(time=plotdata$time,
                          surv=plotdata$surv,
-                         group=plotdata$group)
+                         group=factor(plotdata$group, levels=levs))
 
   output <- list(plotdata=plotdata,
                  Pjs=Pjs)

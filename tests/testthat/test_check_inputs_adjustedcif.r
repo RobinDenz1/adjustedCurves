@@ -40,8 +40,7 @@ test_that("variable has wrong type", {
                                         clean_data=TRUE,
                                         cause=1),
                paste0("The column in 'data' specified by 'variable' ",
-                      "needs to be a factor variable if ",
-                      "method='aalen_johansen'."), fixed=TRUE)
+                      "needs to be a factor variable."), fixed=TRUE)
 })
 
 test_that("variable has really wrong type", {
@@ -80,8 +79,7 @@ test_that("variable has wrong type with matching", {
                                         clean_data=TRUE,
                                         cause=1),
                paste0("The column in 'data' specified by 'variable' needs ",
-                      "to be a dichotomous integer variable or a factor ",
-                      "variable if method='matching'."),
+                      "to be a factor variable."),
                fixed=TRUE)
 })
 
@@ -668,7 +666,7 @@ test_that("no extrapolation", {
                                         na.action="na.omit",
                                         clean_data=TRUE,
                                         cause=1),
-               paste0("Values in 'time' must be smaller than ",
+               paste0("Values in 'times' must be smaller than ",
                       "max(data[,ev_time]). No extrapolation allowed."),
                fixed=TRUE)
 })

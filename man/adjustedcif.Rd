@@ -20,7 +20,7 @@ adjustedcif(data, variable, ev_time, event, cause,
 A \code{data.frame} object containing the needed time-to-event data in standard format. Can also be a \code{mids} object created with the \pkg{mice} package. See details for how this works.
   }
   \item{variable}{
-A character string specifying the variable by which the cumulative incidence functions should be grouped. Must be a valid column name of \code{data}. The variable specified should ideally be a factor variable, but integers also work for some methods.
+A character string specifying the variable by which the cumulative incidence functions should be grouped. Must be a valid column name of \code{data}. The variable specified should needs to be a factor variable.
   }
   \item{ev_time}{
 A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of \code{data}.

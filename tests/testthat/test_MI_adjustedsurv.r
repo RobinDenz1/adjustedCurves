@@ -5,7 +5,6 @@ set.seed(42)
 sim_dat <- readRDS(system.file("testdata",
                                "d_sim_surv_n_150.Rds",
                                package="adjustedCurves"))
-sim_dat$group_num <- sim_dat$group
 sim_dat$group <- as.factor(sim_dat$group)
 sim_dat$x1 <- ifelse(runif(n=nrow(sim_dat)) <= 0.7, sim_dat$x1, NA)
 
@@ -283,7 +282,7 @@ test_that("MI, iptw_pseudo, using conf_int", {
 ### matching
 test_that("MI, matching, no boot", {
   adj <- adjustedsurv(data=imp,
-                      variable="group_num",
+                      variable="group",
                       ev_time="time",
                       event="event",
                       method="matching",
@@ -394,7 +393,7 @@ imp <- suppressWarnings(mice::mice(sim_dat, m=3, method="pmm", printFlag=FALSE))
 
 test_that("MI, emp_lik, no boot", {
   adj <- adjustedsurv(data=imp,
-                      variable="group_num",
+                      variable="group",
                       ev_time="time",
                       event="event",
                       method="emp_lik",
@@ -407,7 +406,7 @@ test_that("MI, emp_lik, no boot", {
 
 test_that("MI, emp_lik, boot", {
   adj <- adjustedsurv(data=imp,
-                      variable="group_num",
+                      variable="group",
                       ev_time="time",
                       event="event",
                       method="emp_lik",

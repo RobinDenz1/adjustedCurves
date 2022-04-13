@@ -41,7 +41,7 @@ Additional arguments passed to \code{\link[survtmle]{survtmle}}.
 \itemize{
 \item{\strong{Type of Adjustment:} Adjustments are made based on the treatment assignment mechanism, the outcome mechanism and the censoring mechanism. No models can be supplied. The adjustments are made based on \code{\link[SuperLearner]{SuperLearner}}} libraries or using the \code{glm} arguments.
 \item{\strong{Doubly-Robust:} Estimates are Doubly-Robust.}
-\item{\strong{Categorical groups:} Currently only two groups in \code{variable} are allowed. Must be an integer variable only containing 0 and 1 or a factor variable with exactly two levels. If a factor variable is supplied, the first level is assumed to correspond to the control group. Either way only two treatments are allowed.}
+\item{\strong{Categorical groups:} Currently only two groups in \code{variable} are allowed. Must be a factor variable with exactly two levels.}
 \item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
 \item{\strong{Allowed Time Values:} Allows only integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
@@ -83,8 +83,9 @@ The wrapper function was written by Robin Denz, the \code{survtmle} package (whi
 \dontrun{
 library(survtmle)
 
-# simulate some data as example (needs a binary integer "variable")
+# simulate some data as example
 sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat$group <- as.factor(sim_dat$group)
 
 # only works with integer time, only unbiased with small amounts of them
 sim_dat$time <- round(sim_dat$time*15) + 1

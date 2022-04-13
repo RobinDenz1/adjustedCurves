@@ -36,7 +36,7 @@ test_that("variable has wrong type", {
                                          na.action="na.omit",
                                          clean_data=TRUE),
               paste0("The column in 'data' specified by 'variable' needs to be",
-                     " a factor variable if method='km'."))
+                     " a factor variable."))
 })
 
 test_that("variable has wrong length", {
@@ -555,7 +555,7 @@ test_that("no extrapolation", {
                                          n_boot=2,
                                          na.action="na.omit",
                                          clean_data=TRUE),
-               paste0("Values in 'time' must be smaller than ",
+               paste0("Values in 'times' must be smaller than ",
                       "max(data[,ev_time]). No extrapolation allowed."),
                fixed=TRUE)
 })
@@ -1336,8 +1336,7 @@ test_that("'variable' is not a factor", {
                                          clean_data=TRUE,
                                          treatment_vars=c("x1", "x3")),
                paste0("The column in 'data' specified by 'variable' needs ",
-                      "to be a factor or a dichotomous integer variable ",
-                      "if method='emp_lik'."))
+                      "to be a factor variable."))
 })
 
 ## multiple imputation stuff

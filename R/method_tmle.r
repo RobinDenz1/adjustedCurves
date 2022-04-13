@@ -1,3 +1,17 @@
+# Copyright (C) 2021  Robin Denz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## redefine 'timepoints' from survtmle to fix a bug in there
 survtmle.timepoints <- function(object, times, returnModels=FALSE,
@@ -88,13 +102,9 @@ cif_tmle <- function(data, variable, ev_time, event, cause, conf_int,
                      SL.ftime=NULL, SL.ctime=NULL, SL.trt=NULL,
                      glm.ftime=NULL, glm.ctime=NULL, glm.trt=NULL,
                      ...) {
-  # if it's a factor, turn it into numeric
-  if (is.factor(data[, variable])) {
-    levs <- levels(data[, variable])
-    data[, variable] <- ifelse(data[, variable]==levs[1], 0, 1)
-  } else {
-    levs <- unique(data[, variable])
-  }
+  # turn variable it into numeric
+  levs <- levels(data[, variable])
+  data[, variable] <- ifelse(data[, variable]==levs[1], 0, 1)
 
   # gather needed data
   if (is.null(adjust_vars)) {
@@ -143,6 +153,7 @@ cif_tmle <- function(data, variable, ev_time, event, cause, conf_int,
                          cif=c(cif_0, cif_1),
                          group=c(rep(levs[1], length(times)),
                                  rep(levs[2], length(times))))
+  plotdata$group <- factor(plotdata$group, levels=levs)
 
   if (conf_int) {
 
@@ -157,7 +168,6 @@ cif_tmle <- function(data, variable, ev_time, event, cause, conf_int,
 
     plotdata$ci_lower <- c(survtmle_ci$`0 1`[, 1], survtmle_ci$`1 1`[, 1])
     plotdata$ci_upper <- c(survtmle_ci$`0 1`[, 2], survtmle_ci$`1 1`[, 2])
-
   }
 
   output <- list(plotdata=plotdata,

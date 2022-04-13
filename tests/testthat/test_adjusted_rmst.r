@@ -23,6 +23,17 @@ test_that("rmst 2 treatments, no boot", {
   expect_equal(round(adj_rmst$rmst, 4), c(0.5211, 0.6721))
 })
 
+test_that("rmst 2 treatments, no boot, diff", {
+  adj_rmst <- adjusted_rmst(adj, to=1.1, difference=TRUE)
+  expect_equal(round(adj_rmst$diff, 4), -0.1510)
+})
+
+test_that("rmst 2 treatments, no boot, diff, groups", {
+  adj_rmst <- adjusted_rmst(adj, to=1.1, difference=TRUE,
+                            group_1="1", group_2="0")
+  expect_equal(round(adj_rmst$diff, 4), 0.1510)
+})
+
 test_that("rmst 2 treatments, no boot, linear", {
   adj_rmst <- adjusted_rmst(adj, to=1.1, interpolation="linear")
   expect_equal(round(adj_rmst$rmst, 4), c(0.50430, 0.6599))
@@ -39,6 +50,15 @@ test_that("rmst 2 treatments, with boot", {
   expect_equal(round(adj_rmst$rmst, 4), c(0.5211, 0.6721))
   expect_equal(round(adj_rmst$se, 4), c(0.0511, 0.0587))
   expect_equal(adj_rmst$n_boot, c(7, 5))
+})
+
+test_that("rmst 2 treatments, with boot, diff", {
+  adj_rmst <- adjusted_rmst(adj, to=1.1, conf_int=TRUE, difference=TRUE)
+  expect_equal(round(adj_rmst$diff, 4), -0.1510)
+  expect_equal(round(adj_rmst$se, 4), 0.0778)
+  expect_equal(round(adj_rmst$ci_lower, 4), -0.3035)
+  expect_equal(round(adj_rmst$ci_upper, 4), 0.0015)
+  expect_equal(round(adj_rmst$p_value, 4), 0.0523)
 })
 
 test_that("rmst 2 treatments, with boot, linear", {
@@ -79,6 +99,11 @@ adj <- adjustedsurv(data=sim_dat,
 test_that("rmst 3 treatments, no boot", {
   adj_rmst <- adjusted_rmst(adj, to=1)
   expect_equal(round(adj_rmst$rmst, 4), c(0.5115, 0.7021, 0.6293))
+})
+
+test_that("rmst 3 treatments, no boot, diff", {
+  adj_rmst <- adjusted_rmst(adj, to=1, difference=TRUE)
+  expect_equal(round(adj_rmst$diff, 4), -0.1906)
 })
 
 test_that("rmst 3 treatments, no boot", {

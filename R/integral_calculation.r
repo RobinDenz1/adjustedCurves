@@ -1,3 +1,17 @@
+# Copyright (C) 2021  Robin Denz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## takes a value x at which to read from the step function
 ## and step function data from which to read it
@@ -37,10 +51,10 @@ read_from_linear_function <- function(x, data, est="surv", time="time") {
   # add zero to beginning if necessary
   if (est=="surv") {
     val <- suppressWarnings(stats::approx(x=time_vec, y=est_vec, xout=x,
-                                          yleft=0)$y)
+                                          yleft=1)$y)
   } else if (est=="cif") {
     val <- suppressWarnings(stats::approx(x=time_vec, y=est_vec, xout=x,
-                                          yleft=1)$y)
+                                          yleft=0)$y)
   } else {
     val <- suppressWarnings(stats::approx(x=time_vec, y=est_vec, xout=x)$y)
   }
@@ -58,7 +72,7 @@ read_from_fun <- function(x, data, interpolation, est="surv", time="time") {
   return(val)
 }
 
-## calculate integral of a function using the trapezoid rule
+## calculate integral of a linear function using the trapezoid rule
 trapezoid_integral <- function(x, y) {
   area <- 0
   for (i in seq_len((length(x)-1))) {
@@ -74,50 +88,57 @@ trapezoid_integral <- function(x, y) {
   return(area)
 }
 
-## calculate exact integral under step function
-# 'stepfun' needs to be a data.frame (!) with columns 'time' and 'est',
+## calculate exact integral of a step function
+stepfun_integral <- function(x, y) {
+  area <- 0
+  for (i in seq_len((length(x)-1))) {
+    x1 <- x[i]
+    x2 <- x[i+1]
+    rect_area <- (x2 - x1) * y[i]
+    area <- area + rect_area
+  }
+  return(area)
+}
+
+## calculate exact integral of either step or linear functions
+## in a given interval
+# NOTE: 'data' needs to be a data.frame (!) with columns 'time' and 'est',
 # sorted by time with no duplicates in time
-exact_stepfun_integral <- function(stepfun, from, to, est="surv") {
+exact_integral <- function(data, from, to, est, interpolation) {
 
-  # constrain step function end
-  latest <- read_from_step_function(to, data=stepfun, est=est)
-  stepfun <- stepfun[stepfun$time <= to, ]
+  # constrain function end
+  latest <- read_from_fun(to, data=data, est=est, interpolation=interpolation)
+  data <- data[data$time <= to, ]
 
-  if (!to %in% stepfun$time) {
+  if (!to %in% data$time) {
     temp <- data.frame(time=to)
     temp[, est] <- latest
-    stepfun <- rbind(stepfun, temp)
+    data <- rbind(data, temp)
   }
 
-  # constrain step function beginning
+  # constrain function beginning
   if (from != 0) {
-    earliest <- read_from_step_function(from, data=stepfun, est=est)
-    stepfun <- stepfun[stepfun$time >= from, ]
+    earliest <- read_from_fun(from, data=data, est=est,
+                              interpolation=interpolation)
+    data <- data[data$time >= from, ]
 
-    if (!from %in% stepfun$time) {
+    if (!from %in% data$time) {
       temp <- data.frame(time=from)
       temp[, est] <- earliest
-      stepfun <- rbind(temp, stepfun)
+      data <- rbind(temp, data)
     }
   }
 
-  # when there are unknown survival times, return NA
-  # only necessary when the last time is NA, since my
-  # algorithm technically still works in that case, but makes no sense
-  if (anyNA(stepfun)) {
+  if (anyNA(data)) {
     return(NA)
   }
 
-  # calculate exact integral
-  integral <- 0
-  for (i in seq_len((length(stepfun$time)-1))) {
-    x1 <- stepfun$time[i]
-    x2 <- stepfun$time[i+1]
-    y <- stepfun[, est][i]
-    rect_area <- (x2 - x1) * y
-    integral <- integral + rect_area
+  if (interpolation=="steps") {
+    area <- stepfun_integral(x=data$time, y=data[, est])
+  } else {
+    area <- trapezoid_integral(x=data$time, y=data[, est])
   }
-  return(integral)
+  return(area)
 }
 
 ## calculate difference between two functions at arbitrary time values
@@ -169,29 +190,5 @@ difference_function <- function(adj, times, est="surv", interpolation="steps",
     diff_dat$ci_lower <- diff_ci$left
     diff_dat$ci_upper <- diff_ci$right
   }
-
   return(diff_dat)
-}
-
-## function to calculate the integral of the difference of two functions,
-## using either linear or step-function interpolation
-difference_integral <- function(adj, from, to, interpolation="steps",
-                                est="surv", subdivisions=1000) {
-  if (interpolation=="linear") {
-    times <- seq(from, to, (to-from)/subdivisions)
-    diff_dat <- difference_function(adj=adj, times=times, est=est,
-                                    interpolation="linear")
-    area <- trapezoid_integral(x=diff_dat$time, y=diff_dat[, est])
-  } else if (interpolation=="steps") {
-    times <- sort(unique(adj$time))
-    diff_dat <- difference_function(adj=adj, times=times, est=est,
-                                    interpolation="steps")
-    area <- exact_stepfun_integral(stepfun=diff_dat, from=from, to=to,
-                                   est=est)
-  }
-
-  output <- list(times=times,
-                 diff_dat=diff_dat,
-                 area=area)
-  return(output)
 }

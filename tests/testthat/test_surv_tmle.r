@@ -3,6 +3,7 @@ library(survival)
 set.seed(35)
 
 sim_dat <- sim_confounded_surv(n=100, max_t=1.5)
+sim_dat$group <- as.factor(sim_dat$group)
 sim_dat$time <- round(sim_dat$time * 10) + 1
 
 # outcome model
@@ -164,4 +165,3 @@ test_that("2 treatments, no conf_int, no boot, using SL, factor group", {
   expect_true(is.numeric(adj$adjsurv$surv))
   expect_equal(levels(adj$adjsurv$group), c("0", "1"))
 })
-

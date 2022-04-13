@@ -1,3 +1,17 @@
+# Copyright (C) 2021  Robin Denz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## used to call the function many times
 helper_auc_fun <- function(x, ..., estimate="rmst") {
@@ -12,8 +26,8 @@ helper_auc_fun <- function(x, ..., estimate="rmst") {
 
 ## generalized plot function for both rmst and rmtl, called internally
 plot_auc_curve <- function(adj, estimate, times=NULL, conf_int=FALSE,
-                           interpolation="steps", subdivisions=1000,
-                           max_t=Inf, color=TRUE, linetype=FALSE, facet=FALSE,
+                           interpolation="steps", max_t=Inf,
+                           color=TRUE, linetype=FALSE, facet=FALSE,
                            size=1, alpha=1, xlab="Time", ylab,
                            title=NULL, subtitle=NULL, legend.title="Group",
                            legend.position="right",
@@ -42,11 +56,11 @@ plot_auc_curve <- function(adj, estimate, times=NULL, conf_int=FALSE,
   if (estimate=="rmst") {
     plotdata <- lapply(X=times, FUN=helper_auc_fun, estimate="rmst",
                        adjsurv=adj, from=0, conf_int=conf_int,
-                       interpolation=interpolation, subdivisions=subdivisions)
+                       interpolation=interpolation)
   } else if (estimate=="rmtl") {
     plotdata <- lapply(X=times, FUN=helper_auc_fun, estimate="rmtl",
                        adj=adj, from=0, conf_int=conf_int,
-                       interpolation=interpolation, subdivisions=subdivisions)
+                       interpolation=interpolation)
   }
   plotdata <- dplyr::bind_rows(plotdata)
 
@@ -105,8 +119,8 @@ plot_auc_curve <- function(adj, estimate, times=NULL, conf_int=FALSE,
 ## plot adjusted restricted mean survival time curve
 #' @export
 plot_rmst_curve <- function(adjsurv, times=NULL, conf_int=FALSE,
-                            interpolation="steps", subdivisions=1000,
-                            max_t=Inf, color=TRUE, linetype=FALSE, facet=FALSE,
+                            interpolation="steps", max_t=Inf,
+                            color=TRUE, linetype=FALSE, facet=FALSE,
                             size=1, alpha=1, xlab="Time", ylab="RMST",
                             title=NULL, subtitle=NULL, legend.title="Group",
                             legend.position="right",
@@ -120,9 +134,9 @@ plot_rmst_curve <- function(adjsurv, times=NULL, conf_int=FALSE,
   }
 
   plot_auc_curve(estimate="rmst", adj=adjsurv, times=times, conf_int=conf_int,
-                 interpolation=interpolation, subdivisions=subdivisions,
-                 max_t=max_t, color=color, linetype=linetype, facet=facet,
-                 size=size, alpha=alpha, xlab=xlab, ylab=ylab, title=title,
+                 interpolation=interpolation, max_t=max_t, color=color,
+                 linetype=linetype, facet=facet, size=size, alpha=alpha,
+                 xlab=xlab, ylab=ylab, title=title,
                  subtitle=subtitle, legend.title=legend.title,
                  legend.position=legend.position, gg_theme=gg_theme,
                  custom_colors=custom_colors, custom_linetypes=custom_linetypes,
@@ -132,8 +146,8 @@ plot_rmst_curve <- function(adjsurv, times=NULL, conf_int=FALSE,
 ## plot adjusted restricted mean time lost curve
 #' @export
 plot_rmtl_curve <- function(adj, times=NULL, conf_int=FALSE,
-                            interpolation="steps", subdivisions=1000,
-                            max_t=Inf, color=TRUE, linetype=FALSE, facet=FALSE,
+                            interpolation="steps", max_t=Inf,
+                            color=TRUE, linetype=FALSE, facet=FALSE,
                             size=1, alpha=1, xlab="Time", ylab="RMTL",
                             title=NULL, subtitle=NULL, legend.title="Group",
                             legend.position="right",
@@ -148,9 +162,9 @@ plot_rmtl_curve <- function(adj, times=NULL, conf_int=FALSE,
   }
 
   plot_auc_curve(estimate="rmtl", adj=adj, times=times, conf_int=conf_int,
-                 interpolation=interpolation, subdivisions=subdivisions,
-                 max_t=max_t, color=color, linetype=linetype, facet=facet,
-                 size=size, alpha=alpha, xlab=xlab, ylab=ylab, title=title,
+                 interpolation=interpolation, max_t=max_t, color=color,
+                 linetype=linetype, facet=facet, size=size, alpha=alpha,
+                 xlab=xlab, ylab=ylab, title=title,
                  subtitle=subtitle, legend.title=legend.title,
                  legend.position=legend.position, gg_theme=gg_theme,
                  custom_colors=custom_colors, custom_linetypes=custom_linetypes,

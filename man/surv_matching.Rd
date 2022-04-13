@@ -26,7 +26,7 @@ Further arguments passed to the \code{\link[Matching]{Match}} function of the \p
 \itemize{
 \item{\strong{Type of Adjustment:} Requires a model describing the treatment assignment mechanism. This must be either a \code{\link{glm}} object.}
 \item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
-\item{\strong{Categorical groups:} Only two groups in \code{variable} are allowed. Must be an integer variable containing only 0 and 1 or a factor variable with exactly two levels. If a factor variable is supplied, the first level is assumed to correspond to the control group.}
+\item{\strong{Categorical groups:} Only two groups in \code{variable} are allowed. Must be a factor variable with exactly two levels.}
 \item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are currently not available. Bootstrap confidence intervals can however be calculated with all supported models. See \code{?adjustedsurv} for more information on bootstrapping.}
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
@@ -67,8 +67,9 @@ Robin Denz
 }
 \examples{
 \dontrun{
-# simulate some data as example (needs a binary integer "variable")
+# simulate some data as example
 sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat$group <- as.factor(sim_dat$group)
 
 # estimate treatment assignment model
 glm_mod <- glm(group ~ x1 + x2 + x4 + x6, data=sim_dat, family="binomial")

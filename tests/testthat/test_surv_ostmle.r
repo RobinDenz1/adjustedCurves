@@ -3,6 +3,7 @@ library(survival)
 set.seed(35)
 
 sim_dat <- sim_confounded_surv(n=100, max_t=1.5)
+sim_dat$group <- factor(sim_dat$group)
 sim_dat$time <- round(sim_dat$time * 10) + 1
 
 # outcome model
@@ -149,24 +150,6 @@ test_that("2 treatments, no conf_int, no boot, with times, gtol", {
                                        adjust_vars=adjust_vars,
                                        times=c(1, 2, 3, 4),
                                        gtol=0.1))
-  expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), c("0", "1"))
-})
-
-test_that("2 treatments, no conf_int, no boot, factor group", {
-  sim_dat_err <- sim_dat
-  sim_dat_err$group <- as.factor(sim_dat_err$group)
-  adj <- suppressWarnings(adjustedsurv(data=sim_dat_err,
-                                       variable="group",
-                                       ev_time="time",
-                                       event="event",
-                                       method="ostmle",
-                                       conf_int=FALSE,
-                                       SL.trt=c("SL.glm"),
-                                       SL.ftime=c("SL.glm"),
-                                       SL.ctime=c("SL.glm"),
-                                       adjust_vars=NULL))
   expect_s3_class(adj, "adjustedsurv")
   expect_true(is.numeric(adj$adjsurv$surv))
   expect_equal(levels(adj$adjsurv$group), c("0", "1"))

@@ -17,7 +17,7 @@
 ## or two adjusted cumulative incidence functions
 #' @export
 adjusted_curve_test <- function(adj, to, from=0, conf_level=0.95,
-                                interpolation="steps", subdivisions=1000,
+                                interpolation="steps",
                                 group_1=NULL, group_2=NULL) {
 
   # silence devtools::check() notes
@@ -38,7 +38,6 @@ adjusted_curve_test <- function(adj, to, from=0, conf_level=0.95,
     output <- adjusted_curve_test.MI(adj=adj, to=to, from=from,
                                      conf_level=conf_level, est=est,
                                      interpolation=interpolation,
-                                     subdivisions=subdivisions,
                                      adj_method=adj_method,
                                      treat_labs=treat_labs,
                                      group_1=group_1, group_2=group_2)
@@ -71,7 +70,6 @@ adjusted_curve_test <- function(adj, to, from=0, conf_level=0.95,
       out <- adjusted_curve_test(adj=adj, to=to, from=from,
                                  conf_level=conf_level,
                                  interpolation=interpolation,
-                                 subdivisions=subdivisions,
                                  group_1=NULL, group_2=NULL)
 
     # just two treatments, standard procedure
@@ -89,19 +87,12 @@ adjusted_curve_test <- function(adj, to, from=0, conf_level=0.95,
         # 1.) get every relevant point in time
         # 2.) create new curve of the difference
         # 3.) get integral of that curve
-        if (interpolation=="steps") {
-          times <- sort(unique(boot_dat$time))
-          surv_diff <- difference_function(adj=boot_dat, times=times, est=est,
-                                           interpolation="steps")
-          diff_integral <- exact_stepfun_integral(surv_diff, to=to, from=from,
-                                                  est=est)
-        } else if (interpolation=="linear") {
-          times <- seq(from, to, (to-from)/subdivisions)
-          surv_diff <- difference_function(adj=boot_dat, times=times, est=est,
-                                           interpolation="linear")
-          diff_integral <- trapezoid_integral(x=surv_diff$time,
-                                              y=surv_diff[, est])
-        }
+        times <- sort(unique(boot_dat$time))
+        surv_diff <- difference_function(adj=boot_dat, times=times, est=est,
+                                         interpolation=interpolation,
+                                         conf_int=FALSE, conf_level=0.95)
+        diff_integral <- exact_integral(data=surv_diff, from=from, to=to,
+                                        est=est, interpolation=interpolation)
 
         stats_vec[i] <- diff_integral
 
@@ -118,17 +109,19 @@ adjusted_curve_test <- function(adj, to, from=0, conf_level=0.95,
 
       # actually observed values
       if (est=="surv") {
-        observed <- difference_integral(adj=adj$adjsurv, from=from, to=to,
-                                        interpolation=interpolation, est="surv",
-                                        subdivisions=subdivisions)
+        adj_observed <- adj$adjsurv
       } else {
-        observed <- difference_integral(adj=adj$adjcif, from=from, to=to,
-                                        interpolation=interpolation, est="cif",
-                                        subdivisions=subdivisions)
+        adj_observed <- adj$adjcif
       }
 
-      observed_diff_curve <- observed$diff_dat
-      observed_diff_integral <- observed$area
+      observed_diff_curve <- difference_function(adj=adj_observed, times=times,
+                                                 est=est,
+                                                 interpolation=interpolation,
+                                                 conf_int=FALSE,
+                                                 conf_level=0.95)
+      observed_diff_integral <- exact_integral(data=observed_diff_curve,
+                                               from=from, to=to, est=est,
+                                               interpolation=interpolation)
 
       # remove NA values
       stats_vec <- stats_vec[!is.na(stats_vec)]
@@ -225,7 +218,6 @@ adjusted_curve_test <- function(adj, to, from=0, conf_level=0.95,
                                     to=to,
                                     conf_level=conf_level,
                                     interpolation=interpolation,
-                                    subdivisions=subdivisions,
                                     group_1=group_1, group_2=group_2)
         out[[paste0(group_0, " vs. ", group_1)]] <- pair
       }
@@ -241,8 +233,7 @@ adjusted_curve_test <- function(adj, to, from=0, conf_level=0.95,
 ## Same test but using multiple imputation
 adjusted_curve_test.MI <- function(adj, to, from, conf_level, est,
                                    adj_method, treat_labs,
-                                   interpolation, subdivisions,
-                                   group_1, group_2) {
+                                   interpolation, group_1, group_2) {
 
   # silence devtools::check() notes
   . <- comparison <- area_est <- p_val <- n_boot <- NULL
@@ -258,7 +249,6 @@ adjusted_curve_test.MI <- function(adj, to, from, conf_level, est,
                                          to=to, from=from,
                                          conf_level=conf_level,
                                          interpolation=interpolation,
-                                         subdivisions=subdivisions,
                                          group_1=group_1, group_2=group_2)
       mids_out[[i]] <- results_imp
       comp_names <- names(results_imp)
@@ -336,7 +326,6 @@ adjusted_curve_test.MI <- function(adj, to, from, conf_level, est,
                                          to=to, from=from,
                                          conf_level=conf_level,
                                          interpolation=interpolation,
-                                         subdivisions=subdivisions,
                                          group_1=group_1, group_2=group_2)
       mids_out[[i]] <- results_imp
       area_ests[i] <- results_imp$observed_diff_integral

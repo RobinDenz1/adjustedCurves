@@ -91,7 +91,7 @@ plot(adjsurv, conf_int=TRUE)
 ```
 <img src="man/figures/example_iptw_km.png" />
 
-It is also possible to plot the difference between two curves using the `plot_difference()` function:
+It is also possible to plot the difference between two curves using the `plot_curve_diff()` function:
 
 ```R
 plot_curve_diff(adjsurv, conf_int=TRUE, color="blue")
@@ -118,13 +118,15 @@ More examples can be found in the documentation and the vignettes.
 
 ## Citation
 
-Information on the correct citation of this package in general can be found by using `citation("adjustedCurves")`.
+The main paper associated with this R-Package is:
+
+Robin Denz, Renate Klaaßen-Mielke, and Nina Timmesfeld (2022). *A Comparison of Different Methods to Adjust Survival Curves for Confounders*. arXiv:2203.10002v1
 
 In addition, the relevant primary literature of the respective method should be cited. This can be found in the documentation of the method.
 
 ## License
 
-© 2021-2022 Robin Denz
+© 2021 Robin Denz
 
 The contents of this repository are distributed under the GNU General Public License. You can find the full text of this License in this github repository. Alternatively, see <http://www.gnu.org/licenses/>.
 

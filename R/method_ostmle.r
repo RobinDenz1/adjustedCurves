@@ -724,13 +724,9 @@ surv_ostmle <- function(data, variable, ev_time, event, conf_int,
                         psi_moss_method="l2", tmle_tolerance=NULL,
                         gtol=1e-3) {
 
-  # if it's a factor, turn it into numeric
-  if (is.factor(data[, variable])) {
-    levs <- levels(data[, variable])
-    data[, variable] <- ifelse(data[, variable]==levs[1], 0, 1)
-  } else {
-    levs <- unique(data[, variable])
-  }
+  # turn variable into numeric
+  levs <- levels(data[, variable])
+  data[, variable] <- ifelse(data[, variable]==levs[1], 0, 1)
 
   # gather needed data
   if (is.null(adjust_vars)) {
@@ -807,6 +803,8 @@ surv_ostmle <- function(data, variable, ev_time, event, conf_int,
                          surv=c(psi_moss_hazard_0, psi_moss_hazard_1),
                          group=c(rep(levs[1], length(k_grid)),
                                  rep(levs[2], length(k_grid))))
+  plotdata$group <- factor(plotdata$group, levels=levs)
+
   # keep only time points in times
   plotdata <- plotdata[which(plotdata$time %in% times), ]
 
@@ -815,14 +813,14 @@ surv_ostmle <- function(data, variable, ev_time, event, conf_int,
     # for treatment == 1
     s_1 <- as.vector(psi_moss_hazard_1)
     eic_fit <- eic$new(
-      A = data[, variable],
-      T_tilde = data[, ev_time],
-      Delta = data[, event],
-      density_failure = moss_hazard_fit_1$density_failure,
-      density_censor = moss_hazard_fit_1$density_censor,
-      g1W = moss_hazard_fit_1$g1W,
-      psi = s_1,
-      A_intervene = 1
+      A=data[, variable],
+      T_tilde=data[, ev_time],
+      Delta=data[, event],
+      density_failure=moss_hazard_fit_1$density_failure,
+      density_censor=moss_hazard_fit_1$density_censor,
+      g1W=moss_hazard_fit_1$g1W,
+      psi=s_1,
+      A_intervene=1
     )
     eic_matrix <- eic_fit$all_t(k_grid=k_grid)
     se_1 <- compute_se_moss(eic_matrix, alpha=1-conf_level)
@@ -831,14 +829,14 @@ surv_ostmle <- function(data, variable, ev_time, event, conf_int,
     # for treatment == 0
     s_0 <- as.vector(psi_moss_hazard_0)
     eic_fit <- eic$new(
-      A = data[, variable],
-      T_tilde = data[, ev_time],
-      Delta = data[, event],
-      density_failure = moss_hazard_fit_0$density_failure,
-      density_censor = moss_hazard_fit_0$density_censor,
-      g1W = moss_hazard_fit_0$g1W,
-      psi = s_0,
-      A_intervene = 1
+      A=data[, variable],
+      T_tilde=data[, ev_time],
+      Delta=data[, event],
+      density_failure=moss_hazard_fit_0$density_failure,
+      density_censor=moss_hazard_fit_0$density_censor,
+      g1W=moss_hazard_fit_0$g1W,
+      psi=s_0,
+      A_intervene=0
     )
     eic_matrix <- eic_fit$all_t(k_grid=k_grid)
     se_0 <- compute_se_moss(eic_matrix, alpha=1-conf_level)
@@ -848,7 +846,6 @@ surv_ostmle <- function(data, variable, ev_time, event, conf_int,
     crit <- stats::qnorm(1-((1-conf_level)/2))
     plotdata$ci_lower <- plotdata$surv - crit * plotdata$se
     plotdata$ci_upper <- plotdata$surv + crit * plotdata$se
-
   }
 
   output <- list(plotdata=plotdata,

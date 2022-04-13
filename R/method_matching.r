@@ -1,3 +1,17 @@
+# Copyright (C) 2021  Robin Denz
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## Using Propensity Score Matching
 #' @export
@@ -5,13 +19,9 @@ surv_matching <- function(data, variable, ev_time, event, conf_int=FALSE,
                           conf_level=0.95, times, treatment_model,
                           gtol=0.001, ...) {
 
-  # if it's a factor, turn it into numeric
-  if (is.factor(data[, variable])) {
-    levs <- levels(data[, variable])
-    data[, variable] <- ifelse(data[,variable]==levs[1], 0, 1)
-  } else {
-    levs <- sort(unique(data[, variable]))
-  }
+  # turn it into numeric
+  levs <- levels(data[, variable])
+  data[, variable] <- ifelse(data[,variable]==levs[1], 0, 1)
 
   if (is.numeric(treatment_model)) {
     ps_score <- treatment_model
@@ -45,6 +55,7 @@ surv_matching <- function(data, variable, ev_time, event, conf_int=FALSE,
   if (!is.null(times)) {
     plotdata <- specific_times(plotdata, times)
   }
+  plotdata$group <- factor(plotdata$group, levels=levs)
 
   output <- list(plotdata=plotdata,
                  match_object=rr,
@@ -60,13 +71,9 @@ cif_matching <- function(data, variable, ev_time, event, cause, conf_int,
                          conf_level=0.95, times, treatment_model,
                          gtol=0.001, ...) {
 
-  # if it's a factor, turn it into numeric
-  if (is.factor(data[, variable])) {
-    levs <- levels(data[, variable])
-    data[, variable] <- ifelse(data[, variable]==levs[1], 0, 1)
-  } else {
-    levs <- unique(data[, variable])
-  }
+  # turn it into numeric
+  levs <- levels(data[, variable])
+  data[, variable] <- ifelse(data[, variable]==levs[1], 0, 1)
 
   if (is.numeric(treatment_model)) {
     ps_score <- treatment_model
@@ -100,6 +107,7 @@ cif_matching <- function(data, variable, ev_time, event, cause, conf_int,
   # get factor levels back
   plotdata$group[plotdata$group==0] <- levs[1]
   plotdata$group[plotdata$group==1] <- levs[2]
+  plotdata$group <- factor(plotdata$group, levels=levs)
 
   output <- list(plotdata=plotdata,
                  match_object=rr)
