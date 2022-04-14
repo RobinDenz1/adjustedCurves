@@ -80,7 +80,7 @@ This page explains the details of estimating adjusted survival curves using the 
 
 <ul><li><p><strong>Type of Adjustment:</strong> Requires a character vector of variable names used to balance the distribution of covariates (treatment assignment mechanism)</p></li>
 <li><p><strong>Doubly-Robust:</strong> Estimates are not Doubly-Robust.</p></li>
-<li><p><strong>Categorical groups:</strong> Only binary treatments are allowed. Column specified by <code>variable</code> must be an integer with only 0 and 1 as values or a factor variable with exactly two levels.</p></li>
+<li><p><strong>Categorical groups:</strong> Only binary treatments are allowed. The column specified by <code>variable</code> must be a factor variable with exactly two levels.</p></li>
 <li><p><strong>Approximate Variance:</strong> Calculations to approximate the variance and confidence intervals are not available. Bootstrapping can still be used to estimate the confidence intervals (see <code><a href="adjustedsurv.html">?adjustedsurv</a></code>).</p></li>
 <li><p><strong>Allowed Time Values:</strong> Allows both continuous and integer survival times.</p></li>
 <li><p><strong>Bounded Estimates:</strong> Estimates are guaranteed to be bounded in the 0 to 1 probability range.</p></li>
@@ -115,8 +115,9 @@ Department of Biostatistics and Bioinformatics, Duke University, Durham, NC, USA
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="co"># simulate some data as example (needs a binary integer "variable")</span></span>
+<span class="r-in"><span class="co"># simulate some data as example</span></span>
 <span class="r-in"><span class="va">sim_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="sim_confounded_surv.html">sim_confounded_surv</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">500</span>, max_t<span class="op">=</span><span class="fl">1.2</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">sim_dat</span><span class="op">$</span><span class="va">group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">sim_dat</span><span class="op">$</span><span class="va">group</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># calculate adjusted survival curves</span></span>
 <span class="r-in"><span class="va">adjsurv</span> <span class="op">&lt;-</span> <span class="fu"><a href="adjustedsurv.html">adjustedsurv</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">sim_dat</span>,</span>

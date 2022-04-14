@@ -56,7 +56,7 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">adjusted_rmtl</span><span class="op">(</span><span class="va">adj</span>, <span class="va">to</span>, from<span class="op">=</span><span class="fl">0</span>, conf_int<span class="op">=</span><span class="cn">FALSE</span>,
               conf_level<span class="op">=</span><span class="fl">0.95</span>, interpolation<span class="op">=</span><span class="st">"steps"</span>,
-              subdivisions<span class="op">=</span><span class="fl">1000</span><span class="op">)</span></code></pre></div>
+              difference<span class="op">=</span><span class="cn">FALSE</span>, group_1<span class="op">=</span><span class="cn">NULL</span>, group_2<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -73,8 +73,12 @@
 <dd><p>A number specifying the confidence level of the bootstrap confidence intervals.</p></dd>
 <dt>interpolation</dt>
 <dd><p>Either <code>"steps"</code> (default) or <code>"linear"</code>. This parameter controls how interpolation is performed. If this argument is set to <code>"steps"</code>, the curves will be treated as step functions. If it is set to <code>"linear"</code>, the curves wil be treated as if there are straight lines between the point estimates instead. Points that lie between estimated points will be interpolated accordingly. Should usually be kept at <code>"steps"</code>. See Details.</p></dd>
-<dt>subdivisions</dt>
-<dd><p>When using <code>interpolation="linear"</code>, the composite trapezoid method is used to calculate the integral of the curves. This argument defines the number of subdivisions that should be used when calculating the integral. Bigger number give a more accurate estimate, but take longer to compute.</p></dd>
+<dt>difference</dt>
+<dd><p>Whether to calculate the difference between two adjusted RMTLs instead. When <code>conf_int=TRUE</code> is also specified, this function will also return the standard error of the difference, the associated confidence interval and a p-value. The p-value is the result of a one-sample t-test where the null-hypothesis is that the difference is equal to 0. To specify which difference should be calculated, the <code>group_1</code> and <code>group_1</code> arguments can be used. By default, the difference between the first and second level in <code>variable</code> is computed.</p></dd>
+<dt>group_1</dt>
+<dd><p>Optional argument to get a specific difference. This argument takes a single character string specifying one of the levels of the <code>variable</code> used in the original <code>adjustedsurv</code> or <code>adjustedcif</code> function call. This group will be subtracted from. For example if <code>group_1="A"</code> and <code>group_2="B"</code> the difference <code>A - B</code> will be used. If <code>NULL</code>, the order of the factor levels in the original <code>data</code> determines the order. Ignored if <code>difference=FALSE</code>.</p></dd>
+<dt>group_2</dt>
+<dd><p>Also a single character string specifying one of the levels of <code>variable</code>. This corresponds to the right side of the difference equation. See argument <code>group_2</code>. Ignored if <code>difference=FALSE</code>.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -91,7 +95,7 @@
 <p><strong><em>Graphical Displays</em></strong></p>
 <p>A plot of the RMTL over time (with changing values for the <code>to</code> argument) can be produced using the <code><a href="plot_rmtl_curve.html">plot_rmtl_curve</a></code> function.</p>
 <p><strong><em>Computational Details</em></strong></p>
-<p>Since the estimated CIFs are usually step functions, the integrals are by default calculated exactly instead of relying on trapezoid approximations. By setting <code>interpolation="linear"</code> the trapezoid version can be calculated instead. This, however, should only be used when the curves are not step functions. For example, this is the case when using a parametric survival model with <code>method="direct"</code>. The produced curves are smooth functions then, requiring linear interpolation for correct integral calculations.</p>
+<p>Instead of relying on numerical integration, this function uses exact calculations. This is achieved by using either step-function interpolation (<code>interpolation="steps"</code>, the default) or linear interpolation (<code>interpolation="linear"</code>). In the former case, the integral is simply the sum of the area of the squares defined by the step function. In the second case, the integral is simply the sum of the area of the rectangles. Either way, there is no need for approximations. In some situations (for example when using parametric models with <code>method="direct"</code>), the curves are not step functions. In this case the <code>interpolation</code> argument should be set to <code>"linear"</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>

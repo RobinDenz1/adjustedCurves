@@ -55,7 +55,7 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">adjusted_curve_test</span><span class="op">(</span><span class="va">adj</span>, <span class="va">to</span>, from<span class="op">=</span><span class="fl">0</span>, conf_level<span class="op">=</span><span class="fl">0.95</span>,
-                    interpolation<span class="op">=</span><span class="st">"steps"</span>, subdivisions<span class="op">=</span><span class="fl">1000</span>,
+                    interpolation<span class="op">=</span><span class="st">"steps"</span>,
                     group_1<span class="op">=</span><span class="cn">NULL</span>, group_2<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></code></pre></div>
     </div>
 
@@ -71,8 +71,6 @@
 <dd><p>A number specifying the confidence level of the bootstrap confidence intervals.</p></dd>
 <dt>interpolation</dt>
 <dd><p>Either <code>"steps"</code> (default) or <code>"linear"</code>. This parameter controls how interpolation is performed. If this argument is set to <code>"steps"</code>, the curves will be treated as step functions. If it is set to <code>"linear"</code>, the curves wil be treated as if there are straight lines between the point estimates instead. Points that lie between estimated points will be interpolated accordingly. Should usually be kept at <code>"steps"</code>. See Details.</p></dd>
-<dt>subdivisions</dt>
-<dd><p>When using <code>interpolation="linear"</code>, the composite trapezoid method is used to calculate the integral of the difference between the curves. This argument defines the number of subdivisions that should be used when calculating the integral. Bigger number give a more accurate estimate, but take longer to compute.</p></dd>
 <dt>group_1</dt>
 <dd><p>Optional argument to get one specific hypothesis test. This argument takes a single character string specifying one of the levels of the <code>variable</code> used in the original <code>adjustedsurv</code> or <code>adjustedcif</code> function call. This group will be subtracted from. For example if <code>group_1="A"</code> and <code>group_2="B"</code> the difference <code>A - B</code> will be used. If <code>NULL</code>, the order of the factor levels in the original <code>data</code> determines the test order. If not <code>NULL</code>, the <code>group_2</code> argument also needs to be specified. When these arguments are used, all other potential pairwise comparisons are ignored.</p></dd>
 <dt>group_2</dt>
@@ -91,7 +89,7 @@
 <p><strong><em>Graphical Displays</em></strong></p>
 <p>To plot the curves of the differences directly, we recommend using the  <code><a href="plot_curve_diff.html">plot_curve_diff</a></code> function. Similar to the main plot functions, it has a lot of arguments to customize the plot. If the main goal is to check the assumptions, we recommend using the associated <code><a href="plot.curve_test.html">plot</a></code> method instead.</p>
 <p><strong><em>Computational Details</em></strong></p>
-<p>Instead of relying on numerical integration, this function uses step-function interpolation by default, treating all supplied curves as step functions. The integral is then calculated using a simple sum of the squares defined by each step. If the interpolation is correct, this gives an exact calculation of the difference integral. However, in some situations (for example when using parametric survival models with <code>method="direct"</code>), the curves are not step functions. In this case the <code>interpolation</code> argument should be set to <code>"linear"</code> to use a standard trapezoid estimate.</p>
+<p>Instead of relying on numerical integration, this function uses exact calculations. This is achieved by using either step-function interpolation (<code>interpolation="steps"</code>, the default) or linear interpolation (<code>interpolation="linear"</code>). In the former case, the integral is simply the sum of the area of the squares defined by the step function. In the second case, the integral is simply the sum of the area of the rectangles. Either way, there is no need for approximations. In some situations (for example when using parametric survival models with <code>method="direct"</code>), the curves are not step functions. In this case the <code>interpolation</code> argument should be set to <code>"linear"</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>

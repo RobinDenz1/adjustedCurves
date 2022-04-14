@@ -84,7 +84,7 @@ This page explains the details of estimating adjusted survival curves using the 
 
 <ul><li><p><strong>Type of Adjustment:</strong> Adjustments are made based on the treatment assignment mechanism, the outcome mechanism and the censoring mechanism. No models can be supplied. The adjustments are made based on <code><a href="https://rdrr.io/pkg/SuperLearner/man/SuperLearner.html" class="external-link">SuperLearner</a></code> libraries or using the <code>glm</code> arguments.</p></li>
 <li><p><strong>Doubly-Robust:</strong> Estimates are Doubly-Robust.</p></li>
-<li><p><strong>Categorical groups:</strong> Currently only two groups in <code>variable</code> are allowed. Must be an integer variable only containing 0 and 1 or a factor variable with exactly two levels. If a factor variable is supplied, the first level is assumed to correspond to the control group. Either way only two treatments are allowed.</p></li>
+<li><p><strong>Categorical groups:</strong> Currently only two groups in <code>variable</code> are allowed. Must be a factor variable with exactly two levels.</p></li>
 <li><p><strong>Approximate Variance:</strong> Calculations to approximate the variance and confidence intervals are available.</p></li>
 <li><p><strong>Allowed Time Values:</strong> Allows only integer time.</p></li>
 <li><p><strong>Bounded Estimates:</strong> Estimates are guaranteed to be bounded in the 0 to 1 probability range.</p></li>
@@ -119,8 +119,9 @@ This page explains the details of estimating adjusted survival curves using the 
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/benkeser/survtmle" class="external-link">survtmle</a></span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co"># simulate some data as example (needs a binary integer "variable")</span></span>
+<span class="r-in"><span class="co"># simulate some data as example</span></span>
 <span class="r-in"><span class="va">sim_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="sim_confounded_surv.html">sim_confounded_surv</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">500</span>, max_t<span class="op">=</span><span class="fl">1.2</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">sim_dat</span><span class="op">$</span><span class="va">group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">sim_dat</span><span class="op">$</span><span class="va">group</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># only works with integer time, only unbiased with small amounts of them</span></span>
 <span class="r-in"><span class="va">sim_dat</span><span class="op">$</span><span class="va">time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">sim_dat</span><span class="op">$</span><span class="va">time</span><span class="op">*</span><span class="fl">15</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span></span>

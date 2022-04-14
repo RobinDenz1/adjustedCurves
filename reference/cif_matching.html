@@ -74,7 +74,7 @@ This page explains the details of estimating adjusted cumulative incidence funct
 
 <ul><li><p><strong>Type of Adjustment:</strong> Requires a model describing the treatment assignment mechanism. This must be either a <code><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></code> object or a vector of propensity scores.</p></li>
 <li><p><strong>Doubly-Robust:</strong> Estimates are not Doubly-Robust.</p></li>
-<li><p><strong>Categorical groups:</strong> Only two groups in <code>variable</code> are allowed. Must be an integer variable containing only 0 and 1.</p></li>
+<li><p><strong>Categorical groups:</strong> Only two groups in <code>variable</code> are allowed. Must be a factor variable with exactly two levels.</p></li>
 <li><p><strong>Approximate Variance:</strong> Calculations to approximate the variance and confidence intervals are currently not available. Bootstrapping can still be used to estimate the confidence intervals (see <code><a href="adjustedcif.html">?adjustedcif</a></code>).</p></li>
 <li><p><strong>Allowed Time Values:</strong> Allows both continuous and integer time.</p></li>
 <li><p><strong>Bounded Estimates:</strong> Estimates are guaranteed to be bounded in the 0 to 1 probability range.</p></li>
@@ -104,8 +104,9 @@ This page explains the details of estimating adjusted cumulative incidence funct
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="co"># simulate some data as example (needs a binary integer "variable")</span></span>
+<span class="r-in"><span class="co"># simulate some data as example</span></span>
 <span class="r-in"><span class="va">sim_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="sim_confounded_crisk.html">sim_confounded_crisk</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">300</span>, max_t<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">sim_dat</span><span class="op">$</span><span class="va">group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">sim_dat</span><span class="op">$</span><span class="va">group</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># estimate treatment assignment model</span></span>
 <span class="r-in"><span class="va">glm_mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">group</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x4</span> <span class="op">+</span> <span class="va">x6</span>, data<span class="op">=</span><span class="va">sim_dat</span>, family<span class="op">=</span><span class="st">"binomial"</span><span class="op">)</span></span>

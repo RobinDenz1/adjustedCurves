@@ -66,7 +66,7 @@
     <dl><dt>data</dt>
 <dd><p>A <code>data.frame</code> object containing the needed time-to-event data in standard format. Ideally, this data set should only contain required variables. Can also be a <code>mids</code> object created with the <span class="pkg">mice</span> package. See details for how this works.</p></dd>
 <dt>variable</dt>
-<dd><p>A character string specifying the variable by which the survival curves should be grouped. Must be a valid column name of <code>data</code>. The variable specified should ideally be a factor variable, but integers also work for some methods.</p></dd>
+<dd><p>A character string specifying the variable by which the survival curves should be grouped. Must be a valid column name of <code>data</code>. The variable specified needs to be a factor variable.</p></dd>
 <dt>ev_time</dt>
 <dd><p>A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of <code>data</code>.</p></dd>
 <dt>event</dt>

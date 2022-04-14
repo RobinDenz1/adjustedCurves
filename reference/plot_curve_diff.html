@@ -69,7 +69,6 @@
                 loess_color<span class="op">=</span><span class="va">color</span>, loess_size<span class="op">=</span><span class="va">size</span>,
                 loess_linetype<span class="op">=</span><span class="st">"dashed"</span>, loess_alpha<span class="op">=</span><span class="va">alpha</span>,
                 test<span class="op">=</span><span class="cn">NULL</span>, integral_from<span class="op">=</span><span class="fl">0</span>, integral_to<span class="op">=</span><span class="cn">NULL</span>,
-                integral_subdivisions<span class="op">=</span><span class="fl">1000</span>,
                 p_value<span class="op">=</span><span class="cn">FALSE</span>, integral<span class="op">=</span><span class="cn">FALSE</span>,
                 interval<span class="op">=</span><span class="cn">FALSE</span>, text_pos_x<span class="op">=</span><span class="st">"left"</span>,
                 text_pos_y<span class="op">=</span><span class="st">"bottom"</span>, text_size<span class="op">=</span><span class="fl">3.5</span>,
@@ -153,8 +152,6 @@
 <dd><p>A number specifying the left limit of the integral. When <code>p_value=TRUE</code> and <code>test=NULL</code>, this argument will be passed to the <code>from</code> argument in the <code>adjusted_curve_test</code> function to perform the test.</p></dd>
 <dt>integral_to</dt>
 <dd><p>A number specifying the right limit of the integral. When <code>p_value=TRUE</code> and <code>test=NULL</code>, this argument will be passed to the <code>to</code> argument in the <code>adjusted_curve_test</code> function to perform the test.</p></dd>
-<dt>integral_subdivisions</dt>
-<dd><p>How many subdivisions to use when calculating the integral using the trapezoid rule (<code>integral_interpolation="linear"</code>). When <code>p_value=TRUE</code> and <code>test=NULL</code>, this argument will be passed to the <code>from</code> argument in the <code>adjusted_curve_test</code> function to perform the test.</p></dd>
 <dt>p_value</dt>
 <dd><p>Whether to add a p-value to the plot or not. This requires either that the user supplies a previously created <code>curve_test</code> object to the <code>test</code> argument, or that the required arguments to call this function are supplied (at least <code>integral_to</code>). Either way it only works if <code>bootstrap=TRUE</code> was used in the original <code>adjustedsurv</code> or <code>adjustedcif</code> function call.</p></dd>
 <dt>integral</dt>
