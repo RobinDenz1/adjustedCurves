@@ -45,6 +45,9 @@ read_from_step_function <- function(x, data, est="surv", time="time") {
 ## and step function data from which to read it
 read_from_linear_function <- function(x, data, est="surv", time="time") {
 
+  # keep only data with non-missing est
+  data <- data[which(!is.na(data[, est])), ]
+
   time_vec <- data[, time]
   est_vec <- data[, est]
 

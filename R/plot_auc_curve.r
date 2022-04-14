@@ -72,6 +72,9 @@ plot_auc_curve <- function(adj, estimate, times=NULL, conf_int=FALSE,
     colnames(plotdata) <- c("group", "auc", "time")
   }
 
+  # remove NAs
+  plotdata <- plotdata[!is.na(plotdata$auc), ]
+
   # start plotting
   mapping <- ggplot2::aes(x=.data$time, y=.data$auc, color=.data$group,
                           linetype=.data$group, group=.data$group)
