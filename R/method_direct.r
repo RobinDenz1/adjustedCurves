@@ -17,7 +17,7 @@
 #' @export
 surv_direct <- function(data, variable, ev_time, event, conf_int,
                         conf_level=0.95, times, outcome_model,
-                        verbose=FALSE, predict_fun=NULL,  ...) {
+                        verbose=FALSE, predict_fun=NULL, ...) {
 
   # using the ate function
   if (inherits(outcome_model, c("coxph", "cph")) & is.null(predict_fun)) {

@@ -1,6 +1,7 @@
 ---
 title: "An Introduction to the 'adjustedCurves' Package"
 output: rmarkdown::html_vignette
+author: "Robin Denz"
 vignette: >
   %\VignetteIndexEntry{An Introduction to the 'adjustedCurves' Package}
   %\VignetteEngine{knitr::rmarkdown}
@@ -93,6 +94,7 @@ More importantly however, we can plot the survival curves directly using the `pl
 ```{r echo=TRUE, fig.show=TRUE, fig.width=7, fig.height=5}
 plot(adjsurv)
 ```
+
 This plot function comes with many options which are listed in the documentation. To plot the point-wise confidence intervals, we can set the argument `conf_int` to TRUE:
 
 ```{r echo=TRUE, fig.show=TRUE, fig.width=7, fig.height=5}

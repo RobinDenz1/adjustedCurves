@@ -143,7 +143,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     }
 
     # No extrapolation
-    if (!is.null(times) && (max(times) > max(data[, ev_time]))) {
+    if (!is.null(times) && (max(times) > max(data[, ev_time], na.rm=TRUE))) {
       stop("Values in 'times' must be smaller than max(data[,ev_time]).",
            " No extrapolation allowed.")
     }
@@ -604,7 +604,7 @@ check_inputs_adj_test <- function(adj, from, to) {
       stop("'to' cannot be greater than the latest observed time.")
     }
   } else {
-    if (to > max(adj$adjcif$time)) {
+    if (to > max(adj$adjcif$time, na.rm=TRUE)) {
       stop("'to' cannot be greater than the latest observed time.")
     }
   }
@@ -756,7 +756,7 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
     }
 
     # No extrapolation
-    if (!is.null(times) && (max(times) > max(data[, ev_time]))) {
+    if (!is.null(times) && (max(times) > max(data[, ev_time], na.rm=TRUE))) {
       stop("Values in 'times' must be smaller than max(data[,ev_time]).",
            " No extrapolation allowed.")
     }
