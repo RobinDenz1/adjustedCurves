@@ -23,7 +23,7 @@ adjusted_curve_test <- function(adj, to, from=0, conf_level=0.95,
   # silence devtools::check() notes
   . <- comparison <- area_est <- p_val <- n_boot <- NULL
 
-  est <- ifelse(class(adj)=="adjustedsurv", "surv", "cif")
+  est <- ifelse(inherits(adj, "adjustedsurv"), "surv", "cif")
   adj_method <- adj$method
 
   if (est=="surv") {
@@ -161,7 +161,7 @@ adjusted_curve_test <- function(adj, to, from=0, conf_level=0.95,
     ## more than two treatments -> perform pairwise comparisons
     } else {
 
-      if (class(adj)=="adjustedsurv") {
+      if (inherits(adj, "adjustedsurv")) {
         combs <- all_combs_length_2(treat_labs)
       } else {
         combs <- all_combs_length_2(treat_labs)
@@ -175,7 +175,7 @@ adjusted_curve_test <- function(adj, to, from=0, conf_level=0.95,
         group_1 <- strsplit(combs[i], "\t")[[1]][2]
 
         # create pseudo adjustedsurv, adjustedcif object
-        if (class(adj)=="adjustedsurv") {
+        if (inherits(adj, "adjustedsurv")) {
 
           observed_dat <- adj$adjsurv[which(adj$adjsurv$group %in%
                                             c(group_0, group_1)), ]

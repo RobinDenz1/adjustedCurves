@@ -157,6 +157,8 @@ When using certain methods there is no guarantee that the resulting estimated su
 Similarly, some methods can produce estimates that lie outside the theoretical 0 and 1 bounds of probability. By setting \code{force_bounds} to \code{TRUE} these estimates are manually set to either 0 or 1 (whichever is closer).
 
 There is currently no option to add risk tables to the plot, because there is no way to meaningfully adjust those for confounders.
+
+If you prefer using the \code{ggsurvplot} syntax, you can also use the \code{\link[adjustedCurves]{as_ggsurvplot_df}} function to extract a \code{data.frame} from the \code{adjustedsurv} object, which can be used directly to call the \code{ggsurvplot_df} function from the \pkg{survminer} package.
 }
 \value{
 Returns a \code{ggplot2} object.

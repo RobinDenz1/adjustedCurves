@@ -51,7 +51,8 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
                  FUN.VALUE=numeric(1))
     st <- cumprod(1 - (dj / yj))
 
-    plotdata_group <- data.frame(time=tj, surv=st, group=levs[i])
+    plotdata_group <- data.frame(time=tj, surv=st, group=levs[i],
+                                 n_risk=yj, n_event=dj)
 
     # adding approximate confidence intervals
     if (conf_int) {
@@ -80,15 +81,23 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
     }
     plotdata[[i]] <- plotdata_group
   }
-
   plotdata <- dplyr::bind_rows(plotdata)
+
+  # extract weighted n at risk
+  n_at_risk <- data.frame(time=plotdata$time,
+                          group=plotdata$group,
+                          n_at_risk=plotdata$n_risk,
+                          n_events=plotdata$n_event)
+  plotdata$n_risk <- NULL
+  plotdata$n_event <- NULL
 
   if (!is.null(times)) {
     plotdata <- specific_times(plotdata, times)
   }
 
   output <- list(plotdata=plotdata,
-                 weights=weights)
+                 weights=weights,
+                 n_at_risk=n_at_risk)
   class(output) <- "adjustedsurv.method"
 
   return(output)

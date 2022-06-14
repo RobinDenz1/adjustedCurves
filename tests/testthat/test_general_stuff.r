@@ -213,3 +213,41 @@ test_that("adjustedcif, all data removed by na.action call", {
                "There is no non-missing data left after call to 'na.action'.")
 })
 
+test_that("adjustedsurv, NA in relevant data when using weights", {
+  sim_dat_err <- sim_dat
+  sim_dat_err$group[1] <- NA
+  weights <- runif(n=nrow(sim_dat_err), min=1, max=3)
+
+  expect_error(adjustedsurv(data=sim_dat_err,
+                            variable="group",
+                            ev_time="time",
+                            event="event",
+                            method="iptw_pseudo",
+                            treatment_model=weights,
+                            bootstrap=FALSE,
+                            conf_int=FALSE,
+                            na.action="na.omit"),
+               paste0("Weights cannot be supplied directly to the",
+                      " 'treatment_model' argument if there are missing",
+                      " values in relevant columns of 'data'."))
+})
+
+test_that("adjustedcif, NA in relevant data when using weights", {
+  sim_dat_err <- sim_dat2
+  sim_dat_err$group[1] <- NA
+  weights <- runif(n=nrow(sim_dat_err), min=1, max=3)
+
+  expect_error(adjustedcif(data=sim_dat_err,
+                           variable="group",
+                           ev_time="time",
+                           event="event",
+                           method="iptw_pseudo",
+                           treatment_model=weights,
+                           bootstrap=FALSE,
+                           conf_int=FALSE,
+                           na.action="na.omit",
+                           cause=1),
+               paste0("Weights cannot be supplied directly to the",
+                      " 'treatment_model' argument if there are missing",
+                      " values in relevant columns of 'data'."))
+})

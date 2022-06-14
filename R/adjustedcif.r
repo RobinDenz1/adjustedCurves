@@ -44,7 +44,6 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
   load_needed_packages(method=method, kind="cif",
                        treatment_model=three_dots$treatment_model,
                        censoring_vars=three_dots$censoring_vars)
-  rm(three_dots)
 
   if (inherits(data, "mids")) {
 
@@ -201,6 +200,14 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
       data <- remove_unnecessary_covars(data=data, variable=variable,
                                         method=method, ev_time=ev_time,
                                         event=event, ...)
+    }
+
+    # cant move to input checks because it has to be called after
+    # removal of useless covariates
+    if (anyNA(data) && is.numeric(three_dots$treatment_model)) {
+      stop("Weights cannot be supplied directly to the 'treatment_model'",
+           " argument if there are missing values in relevant",
+           " columns of 'data'.")
     }
 
     # perform na.action
