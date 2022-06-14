@@ -31,6 +31,9 @@ This page explains the details of estimating adjusted survival curves using the 
     <a class="dropdown-item" href="../articles/introduction.html">An Introduction to the 'adjustedCurves' Package</a>
   </div>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -63,20 +66,28 @@ This page explains the details of estimating adjusted survival curves using the 
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>adjust_vars</dt>
 <dd><p>A character vector of column names specifying variables to be used when modeling the outcome, treatment and censoring mechanism. Can be set to <code>NULL</code> (default), in which case all covariates are used. See details and examples.</p></dd>
-<dt>SL.ftime</dt>
+
+  <dt>SL.ftime</dt>
 <dd><p>A character vector or list specification to be passed to the <code>SL.library</code> option in the call to <code>SuperLearner</code> for the outcome regression. See<code>?SuperLearner</code> for more information on how to specify valid <code>SuperLearner</code> libraries. It is expected that the wrappers used in the library will play nicely with the input variables, which will be called "trt", <code>names(adjust_vars)</code>, and "t".</p></dd>
-<dt>SL.ctime</dt>
+
+  <dt>SL.ctime</dt>
 <dd><p>A character vector or list specification to be passed to the <code>SL.library</code> argument in the call to <code>SuperLearner</code> for the estimate of the conditional hazard for censoring. It is expected that the wrappers used in the library will play nicely with the input variables, which will be called "trt" and <code>names(adjust_vars)</code>.</p></dd>
-<dt>SL.trt</dt>
+
+  <dt>SL.trt</dt>
 <dd><p>A character vector or list specification to be passed to the <code>SL.library</code> argument in the call to <code>SuperLearner</code> for the estimate of the conditional probability of treatment. It is expected that the wrappers used in the library will play nicely with the input variables, which will be <code>names(adjust_vars)</code>.</p></dd>
-<dt>glm.ftime</dt>
+
+  <dt>glm.ftime</dt>
 <dd><p>A character specification of the right-hand side of the equation passed to the <code>formula</code> option of a call to <code>glm</code> for the outcome regression. Ignored if <code>SL.ftime</code> is not equal to <code>NULL</code>. Use "trt" to specify the treatment in this formula (see examples). The formula can additionally include any variables found in <code>names(adjust_vars)</code>.</p></dd>
-<dt>glm.ctime</dt>
+
+  <dt>glm.ctime</dt>
 <dd><p>A character specification of the right-hand side of the equation passed to the <code>formula</code> option of a call to <code>glm</code> for the estimate of the conditional hazard for censoring.  Ignored if <code>SL.ctime</code> is not equal to <code>NULL</code>. Use "trt" to specify the treatment in this formula (see examples).  The formula can additionally include any variables found in <code>names(adjust_vars)</code>.</p></dd>
-<dt>glm.trt</dt>
+
+  <dt>glm.trt</dt>
 <dd><p>A character specification of the right-hand side of the equation passed to the <code>formula</code> option of a call to <code>glm</code> for the estimate of the conditional probability of treatment. Ignored if <code>SL.trt</code> is not equal to <code>NULL</code>. The formula can include any variables found in <code>names(adjust_vars)</code>.</p></dd>
-<dt>...</dt>
+
+  <dt>...</dt>
 <dd><p>Additional arguments passed to <code><a href="https://rdrr.io/pkg/survtmle/man/survtmle.html" class="external-link">survtmle</a></code>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -96,7 +107,13 @@ This page explains the details of estimating adjusted survival curves using the 
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Adds the following additional objects to the output of the <code>adjustedsurv</code> function:</p><ul><li><p><code>survtmle_object</code>: The object created using the <code><a href="https://rdrr.io/pkg/survtmle/man/survtmle.html" class="external-link">survtmle</a></code> function.</p></li>
+    
+
+
+<p>Adds the following additional objects to the output of the <code>adjustedsurv</code> function:</p>
+
+
+<ul><li><p><code>survtmle_object</code>: The object created using the <code><a href="https://rdrr.io/pkg/survtmle/man/survtmle.html" class="external-link">survtmle</a></code> function.</p></li>
 <li><p><code>survtmle.timepoints_object</code>: The object created using the <code>survtmle.timepoints</code> function.</p></li>
 </ul></div>
     <div class="section level2">
@@ -153,7 +170,7 @@ This page explains the details of estimating adjusted survival curves using the 
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
     </footer></div>

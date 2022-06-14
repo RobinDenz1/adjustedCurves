@@ -27,6 +27,9 @@
     <a class="dropdown-item" href="../articles/introduction.html">An Introduction to the 'adjustedCurves' Package</a>
   </div>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -86,90 +89,131 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>x</dt>
 <dd><p>An <code>adjustedsurv</code> object created using the <code><a href="adjustedsurv.html">adjustedsurv</a></code> function.</p></dd>
-<dt>conf_int</dt>
+
+  <dt>conf_int</dt>
 <dd><p>A logical variable indicating whether the confidence intervals should be drawn.</p></dd>
-<dt>max_t</dt>
+
+  <dt>max_t</dt>
 <dd><p>A number indicating the latest survival time which is to be plotted.</p></dd>
-<dt>iso_reg</dt>
+
+  <dt>iso_reg</dt>
 <dd><p>A logical variable indicating whether the estimates should be monotonized using isotonic regression. See details.</p></dd>
-<dt>force_bounds</dt>
+
+  <dt>force_bounds</dt>
 <dd><p>A logical variable indicating whether the 0 and 1 bounds of the survival probabilities should be forced in the plot. See details.</p></dd>
-<dt>use_boot</dt>
+
+  <dt>use_boot</dt>
 <dd><p>A logical variable denoting whether the bootstrapped estimates should be used for the curves and their confidence intervals. Can only be used if they were calculated. See <code><a href="adjustedsurv.html">adjustedsurv</a></code>.</p></dd>
-<dt>cif</dt>
+
+  <dt>cif</dt>
 <dd><p>If <code>TRUE</code> the cumulative incidence functions are drawn instead of the survival curves. Those are calculated by taking 1 - the adjusted survival probability. If <code>FALSE</code> (default) the usual survival curves are shown.</p></dd>
-<dt>color</dt>
+
+  <dt>color</dt>
 <dd><p>A logical variable indicating whether the curves should be colored differently. The <code>custom_colors</code> argument can be used to directly specify which colors to use. Alternatively the <code>single_color</code> argument can be used if evertyhing should have the same color.</p></dd>
-<dt>linetype</dt>
+
+  <dt>linetype</dt>
 <dd><p>A logical variable indicating whether the curves should have different linetypes. The <code>custom_linetypes</code> argument can be used to directly specify which linetypes to use. Alternatively the <code>single_linetype</code> argument can be used if all curves should have the same linetype.</p></dd>
-<dt>facet</dt>
+
+  <dt>facet</dt>
 <dd><p>A logical variable indicating whether the curves should be in different facets.</p></dd>
-<dt>line_size</dt>
+
+  <dt>line_size</dt>
 <dd><p>A number controlling the thickness of the survival curves.</p></dd>
-<dt>line_alpha</dt>
+
+  <dt>line_alpha</dt>
 <dd><p>A number controlling the transparency level of the survival curves.</p></dd>
-<dt>xlab</dt>
+
+  <dt>xlab</dt>
 <dd><p>A character string to be used as the X-Axis label of the plot.</p></dd>
-<dt>ylab</dt>
+
+  <dt>ylab</dt>
 <dd><p>A character string to be used as the Y-Axis label of the plot.</p></dd>
-<dt>title</dt>
+
+  <dt>title</dt>
 <dd><p>A character string to be used as the title of the plot. Set to <code>NULL</code> if no title should be used.</p></dd>
-<dt>subtitle</dt>
+
+  <dt>subtitle</dt>
 <dd><p>A character string to be used as the subtitle of the plot. Set to <code>NULL</code> if no subtitle should be used.</p></dd>
-<dt>legend.title</dt>
+
+  <dt>legend.title</dt>
 <dd><p>A character string to be used as the title of the legend. Set to <code>NULL</code> if no legend should be included.</p></dd>
-<dt>legend.position</dt>
+
+  <dt>legend.position</dt>
 <dd><p>A character string specifying the position of the legend. Ignored if <code>legend_title=NULL</code>.</p></dd>
-<dt>gg_theme</dt>
+
+  <dt>gg_theme</dt>
 <dd><p>A <code>ggplot2</code> theme object which will be used for the plot.</p></dd>
-<dt>ylim</dt>
+
+  <dt>ylim</dt>
 <dd><p>A numeric vector of length two, specifying the limits of the Y-Axis. Set to <code>NULL</code> to use the <code>ggplot2</code> default values.</p></dd>
-<dt>custom_colors</dt>
+
+  <dt>custom_colors</dt>
 <dd><p>A (named) vector to specify the colors of each adjusted survival curve and possibly its confidence region. Set to <code>NULL</code> to use the <code>ggplot2</code> default values. Ignored if <code>color=FALSE</code>.</p></dd>
-<dt>custom_linetypes</dt>
+
+  <dt>custom_linetypes</dt>
 <dd><p>A (named) vector to specify the linetype of each adjusted survival curve. Set to <code>NULL</code> to use the <code>ggplot2</code> default values. Ignored if <code>color=FALSE</code>. Ignored if <code>linetype=FALSE</code>.</p></dd>
-<dt>single_color</dt>
+
+  <dt>single_color</dt>
 <dd><p>A single color to use for every survival curve, irrespective of group status. If <code>color</code> is specified as well this argument will override it, but also generate a warning. Set to <code>NULL</code> (default) to ignore this argument.</p></dd>
-<dt>single_linetype</dt>
+
+  <dt>single_linetype</dt>
 <dd><p>A single linetype to use for every survival curve, irrespective of group status. If <code>linetype</code> is specified as well this argument will override it, but also generate a warning. Set to <code>NULL</code> (default) to ignore this argument.</p></dd>
-<dt>conf_int_alpha</dt>
+
+  <dt>conf_int_alpha</dt>
 <dd><p>A number indicating the level of transparency that should be used when drawing the confidence regions.</p></dd>
-<dt>steps</dt>
+
+  <dt>steps</dt>
 <dd><p>A logical variable indicating whether the survival curves should be plotted as a step function or using straight lines. Straight lines should not be used with a simple Kaplan-Meier estimator. It is recommended to only use straight lines when a sufficiently fine grid of time points was used in the estimation step.</p></dd>
-<dt>median_surv_lines</dt>
+
+  <dt>median_surv_lines</dt>
 <dd><p>Whether to draw indicator lines for the median survival times, which makes it easier to read those off the curves. Survival curves with undefined median survival times receive no lines.</p></dd>
-<dt>median_surv_size</dt>
+
+  <dt>median_surv_size</dt>
 <dd><p>The size of the median survival indicator lines. Ignored if <code>median_surv_lines=FALSE</code>.</p></dd>
-<dt>median_surv_linetype</dt>
+
+  <dt>median_surv_linetype</dt>
 <dd><p>The linetype of the median survival indicator lines. Ignored if <code>median_surv_lines=FALSE</code>.</p></dd>
-<dt>median_surv_color</dt>
+
+  <dt>median_surv_color</dt>
 <dd><p>The color of the median survival indicator lines. Ignored if <code>median_surv_lines=FALSE</code>.</p></dd>
-<dt>median_surv_alpha</dt>
+
+  <dt>median_surv_alpha</dt>
 <dd><p>The transparency level of the median survival indicator lines. Ignored if <code>median_surv_lines=FALSE</code>.</p></dd>
-<dt>median_surv_quantile</dt>
+
+  <dt>median_surv_quantile</dt>
 <dd><p>The survival quantile which should be drawn. To draw the median survival time, set this parameter to 0.5 (default).</p></dd>
-<dt>censoring_ind</dt>
+
+  <dt>censoring_ind</dt>
 <dd><p>What kind of indicator to plot for censored observations on the survival curves. Must be one of <code>"none"</code> (plotting no indicators at all, the default), <code>"lines"</code> (plotting small vertical lines) and <code>"points"</code> (plotting points). Those will be affected by <code>linetype</code> and <code>color</code> as well.</p></dd>
-<dt>censoring_ind_size</dt>
+
+  <dt>censoring_ind_size</dt>
 <dd><p>A numeric value specifying the size of the censoring indicators. Ignored if <code>censoring_ind="none"</code>.</p></dd>
-<dt>censoring_ind_alpha</dt>
+
+  <dt>censoring_ind_alpha</dt>
 <dd><p>A numeric value specifying the alpha level of the censoring indicators. Ignored if <code>censoring_ind="none"</code>.</p></dd>
-<dt>censoring_ind_shape</dt>
+
+  <dt>censoring_ind_shape</dt>
 <dd><p>A numeric value specifying the shape of the censoring indicators when using <code>censoring_ind="points"</code>. Ignored otherwise. For available shapes see <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">?geom_point</a></code>.</p></dd>
-<dt>censoring_ind_width</dt>
+
+  <dt>censoring_ind_width</dt>
 <dd><p>A numeric value specifying the width of the censoring indicators. Ignored unless <code>censoring_ind="lines"</code>. By default (<code>censoring_ind_width=NULL</code>) the width of the censoring indicators is equal to 5 percent of the plot height.</p></dd>
-<dt>...</dt>
+
+  <dt>...</dt>
 <dd><p>Currently not used.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>When using certain methods there is no guarantee that the resulting estimated survival curves are monotonically decreasing. This is unfortunate since we know that it has to be the case. Isotonic regression can be used to fix this problem by ensuring that the survival curves are actually monotonically decreasing everywhere, while also being as close to the observations as possible. Westling et al. (2020) showed mathematically that this does not add any systematic bias to the estimates. More information on the method can be found in Robertson et al. (1988). This adjustment can be done using this function by setting <code>iso_reg</code> to <code>TRUE</code>.</p>
 <p>Similarly, some methods can produce estimates that lie outside the theoretical 0 and 1 bounds of probability. By setting <code>force_bounds</code> to <code>TRUE</code> these estimates are manually set to either 0 or 1 (whichever is closer).</p>
 <p>There is currently no option to add risk tables to the plot, because there is no way to meaningfully adjust those for confounders.</p>
+<p>If you prefer using the <code>ggsurvplot</code> syntax, you can also use the <code><a href="as_ggsurvplot_df.html">as_ggsurvplot_df</a></code> function to extract a <code>data.frame</code> from the <code>adjustedsurv</code> object, which can be used directly to call the <code>ggsurvplot_df</code> function from the <span class="pkg">survminer</span> package.</p>
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Returns a <code>ggplot2</code> object.</p>
+    
+
+<p>Returns a <code>ggplot2</code> object.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -261,7 +305,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
     </footer></div>

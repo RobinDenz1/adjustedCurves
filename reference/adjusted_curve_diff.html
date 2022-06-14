@@ -27,6 +27,9 @@
     <a class="dropdown-item" href="../articles/introduction.html">An Introduction to the 'adjustedCurves' Package</a>
   </div>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -63,20 +66,28 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>adj</dt>
 <dd><p>An <code>adjustedsurv</code> object created using the <code>adjustedsurv</code> function, or a <code>adjustedcif</code> object created using the <code>adjustedcif</code> function.</p></dd>
-<dt>group_1</dt>
+
+  <dt>group_1</dt>
 <dd><p>Optional argument to get a specific difference. This argument takes a single character string specifying one of the levels of the <code>variable</code> used in the original <code>adjustedsurv</code> or <code>adjustedcif</code> function call. This group will be subtracted from. For example if <code>group_1="A"</code> and <code>group_2="B"</code> the difference <code>A - B</code> will be used. If <code>NULL</code>, the order of the factor levels in the original <code>data</code> determines the order. If not <code>NULL</code>, the <code>group_2</code> argument also needs to be specified.</p></dd>
-<dt>group_2</dt>
+
+  <dt>group_2</dt>
 <dd><p>Also a single character string specifying one of the levels of <code>variable</code>. This corresponds to the right side of the difference equation. See argument <code>group_2</code>.</p></dd>
-<dt>times</dt>
+
+  <dt>times</dt>
 <dd><p>An optional numeric vector of points in time at which the difference should be estimated. If <code>NULL</code> (default) the differences are estimated for the whole curve.</p></dd>
-<dt>conf_int</dt>
+
+  <dt>conf_int</dt>
 <dd><p>Whether standard errors, confidence intervals and p-values should be calculated. Only possible when either <code>conf_int=TRUE</code> or <code>bootstap=TRUE</code> was used in the original function call. P-values are calculated using a one-sample t-test with the null-hypothesis being that the difference is equal to 0.</p></dd>
-<dt>conf_level</dt>
+
+  <dt>conf_level</dt>
 <dd><p>A number specifying the confidence level of the confidence intervals.</p></dd>
-<dt>use_boot</dt>
+
+  <dt>use_boot</dt>
 <dd><p>Whether to use the standard errors estimated using bootstrapping for the confidence interval and p-value calculation. Can only be used if <code>bootstrap=TRUE</code> was used in the original <code>adjustedsurv</code> or <code>adjustedcif</code> function call. Ignored if <code>conf_int=FALSE</code>.</p></dd>
-<dt>interpolation</dt>
+
+  <dt>interpolation</dt>
 <dd><p>Either <code>"steps"</code> (default) or <code>"linear"</code>. This parameter controls how interpolation is performed. If this argument is set to <code>"steps"</code>, the curves will be treated as step functions. If it is set to <code>"linear"</code>, the curves wil be treated as if there are straight lines between the point estimates instead. Points that lie between estimated points will be interpolated accordingly. Should usually be kept at <code>"steps"</code>. See Details.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -99,8 +110,12 @@ $$SE_{group_1 - group_2} = \sqrt{SE_{group_1}^2 + SE_{group_2}^2}$$</p>
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Returns a <code>data.frame</code> containing the columns <code>time</code> (the points in time where the difference was estimated) and <code>diff</code> (the estimated difference).
-If <code>conf_int=TRUE</code> was used in the function call, it additionally contains the columns <code>se</code> (the estimated standard error of the difference), <code>ci_lower</code> (lower limit of the confidence interval of the difference), <code>ci_upper</code> (upper limit of the confidence interval of the difference) and <code>p_value</code> (the p-value for the test of pointwise difference).</p>
+    
+
+<p>Returns a <code>data.frame</code> containing the columns <code>time</code> (the points in time where the difference was estimated) and <code>diff</code> (the estimated difference).</p>
+
+
+<p>If <code>conf_int=TRUE</code> was used in the function call, it additionally contains the columns <code>se</code> (the estimated standard error of the difference), <code>ci_lower</code> (lower limit of the confidence interval of the difference), <code>ci_upper</code> (upper limit of the confidence interval of the difference) and <code>p_value</code> (the p-value for the test of pointwise difference).</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -200,7 +215,7 @@ If <code>conf_int=TRUE</code> was used in the function call, it additionally con
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
     </footer></div>

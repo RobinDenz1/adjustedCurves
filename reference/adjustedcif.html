@@ -27,6 +27,9 @@
     <a class="dropdown-item" href="../articles/introduction.html">An Introduction to the 'adjustedCurves' Package</a>
   </div>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -65,34 +68,49 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>data</dt>
 <dd><p>A <code>data.frame</code> object containing the needed time-to-event data in standard format. Can also be a <code>mids</code> object created with the <span class="pkg">mice</span> package. See details for how this works.</p></dd>
-<dt>variable</dt>
+
+  <dt>variable</dt>
 <dd><p>A character string specifying the variable by which the cumulative incidence functions should be grouped. Must be a valid column name of <code>data</code>. The variable specified should needs to be a factor variable.</p></dd>
-<dt>ev_time</dt>
+
+  <dt>ev_time</dt>
 <dd><p>A character string specifying the variable indicating the time-to-event or time-to-censoring. Must be a valid column name of <code>data</code>.</p></dd>
-<dt>event</dt>
+
+  <dt>event</dt>
 <dd><p>A character string specifying the numeric event indicator. The censoring indicator should be coded as 0 and all other events of interest as 1, 2, etc. Must be a valid column name of <code>data</code>.</p></dd>
-<dt>cause</dt>
+
+  <dt>cause</dt>
 <dd><p>The cause of interest for which the cumulative incidence functions should be calculated. Should be a number that appears in the <code>event</code> column of <code>data</code>.</p></dd>
-<dt>method</dt>
+
+  <dt>method</dt>
 <dd><p>A character string specifying the adjustment method to use. Case sensitive. See details.</p></dd>
-<dt>conf_int</dt>
+
+  <dt>conf_int</dt>
 <dd><p>A logical variable, indicating whether the asymptotic variances and confidence intervals of the cumulative incidence should be calculated. Not available for all methods. More information can be found in the documentation of each method. For an alternative way to get confidence intervals, see the <code>bootstrap</code> argument.</p></dd>
-<dt>conf_level</dt>
+
+  <dt>conf_level</dt>
 <dd><p>A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.</p></dd>
-<dt>times</dt>
+
+  <dt>times</dt>
 <dd><p>A numeric vector of time points at which the cumulative incidences should be estimated or <code>NULL</code>. If <code>NULL</code> the cumulative incidence is estimated at all points in time at which any event occurred in the pooled sample.</p></dd>
-<dt>bootstrap</dt>
+
+  <dt>bootstrap</dt>
 <dd><p>A logical variable indicating whether bootstrapping should be performed or not. In bootstrapping, a number of simple random samples with replacement of size <code>nrow(data)</code> are drawn from <code>data</code>. For each sample the calculations are repeated and used to estimate standard errors and confidence intervals. This can be used to obtain confidence intervals when asymptotic variance calculations are not available.</p></dd>
-<dt>n_boot</dt>
+
+  <dt>n_boot</dt>
 <dd><p>Number of bootstrap replications to perform. Ignored if <code>bootstrap</code> is <code>FALSE</code>.</p></dd>
-<dt>n_cores</dt>
+
+  <dt>n_cores</dt>
 <dd><p>The number of cores to use when calculating bootstrap estimates. Ignored if <code>bootstrap=FALSE</code>. Is set to 1 by default, resulting in single threaded processing. Internally uses the <span class="pkg">doParallel</span> package if <code>n_cores &gt; 1</code>. In that case it also uses the <span class="pkg">doRNG</span> package to make the results replicable. See <code><a href="https://rdrr.io/pkg/doRNG/man/infoDoRNG.html" class="external-link">?doRNG</a></code> and <code>?doParallel</code> for more details. Using multiple cores will speed up the calculation considerably in most cases.</p></dd>
-<dt>na.action</dt>
+
+  <dt>na.action</dt>
 <dd><p>How missing values should be handled. Can be one of: na.fail, na.omit, na.pass or na.exclude. Also accepts strings of the function names. See <code><a href="https://rdrr.io/r/stats/na.action.html" class="external-link">?na.action</a></code> for more details. By default it uses the na.action which is set in the global options by the respective user.</p></dd>
-<dt>clean_data</dt>
+
+  <dt>clean_data</dt>
 <dd><p>If <code>TRUE</code> all columns which are not needed for the estimation are removed from <code>data</code> before any further calculations are performed. This ensures that calls to <code>na.omit</code> (see argument <code>na.action</code>) do not remove rows which are fully observed in respect to relevant columns due to missing values in irrelevant columns. Set to <code>FALSE</code> to skip this step. Usually this argument can be ignored. When using non-standard outcome models however it should be set to <code>FALSE</code>.</p></dd>
-<dt>...</dt>
+
+  <dt>...</dt>
 <dd><p>Further arguments passed to the respective <code>cif_method</code>. For example when using <code>method="direct"</code> all further arguments are passed to the <code>cif_direct</code> function. See details.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -121,22 +139,36 @@
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Returns an <code>adjustedcif</code> object containing the following objects:</p>
+    
+
+<p>Returns an <code>adjustedcif</code> object containing the following objects:</p>
 <dl><dt>adjcif</dt>
 <dd><p>A <code>data.frame</code> of estimated cumulative incidences for <code>cause</code> at some points in time for each level of <code>variable</code>. Depending on the arguments used also includes standard errors and confidence intervals.</p></dd>
+
 <dt>method</dt>
 <dd><p>The method used to adjust the CIFs.</p></dd>
+
 <dt>categorical</dt>
 <dd><p>Whether there are more than 2 groups in <code>variable</code>.</p></dd>
+
 <dt>call</dt>
 <dd><p>The original function call.</p></dd>
+
+
 </dl><p>When the argument <code>bootstrap</code> is set to <code>TRUE</code> it additionally contains the following objects:</p>
 <dl><dt>boot_data</dt>
 <dd><p>The adjusted CIFs estimated in each bootstrap sample.</p></dd>
+
 <dt>boot_adjcif</dt>
 <dd><p>The mean CIFs of all bootstrap samples and corresponding standard errors and percentile confidence intervals.</p></dd>
-</dl><p>When multiple imputation was used, the function additionally contains a <code>mids_analyses</code> object, containing the <code>adjustedcif</code> objects for each imputed dataset.
-Some method specific objects might also be contained in the output.</p>
+
+
+</dl><p>When multiple imputation was used, the function additionally contains a <code>mids_analyses</code> object, containing the <code>adjustedcif</code> objects for each imputed dataset.</p>
+
+
+<p>Some method specific objects might also be contained in the output.</p>
+
+
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -287,7 +319,7 @@ Some method specific objects might also be contained in the output.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
     </footer></div>

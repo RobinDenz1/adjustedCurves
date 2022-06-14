@@ -22,6 +22,9 @@
     <loc>https://robindenz1.github.io/adjustedCurves/index.html</loc>
   </url>
   <url>
+    <loc>https://robindenz1.github.io/adjustedCurves/news/index.html</loc>
+  </url>
+  <url>
     <loc>https://robindenz1.github.io/adjustedCurves/reference/CSC_MI.html</loc>
   </url>
   <url>
@@ -50,6 +53,9 @@
   </url>
   <url>
     <loc>https://robindenz1.github.io/adjustedCurves/reference/adjustedsurv.html</loc>
+  </url>
+  <url>
+    <loc>https://robindenz1.github.io/adjustedCurves/reference/as_ggsurvplot_df.html</loc>
   </url>
   <url>
     <loc>https://robindenz1.github.io/adjustedCurves/reference/cif_aalen_johansen.html</loc>

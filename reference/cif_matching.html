@@ -31,6 +31,9 @@ This page explains the details of estimating adjusted cumulative incidence funct
     <a class="dropdown-item" href="../articles/introduction.html">An Introduction to the 'adjustedCurves' Package</a>
   </div>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -63,10 +66,13 @@ This page explains the details of estimating adjusted cumulative incidence funct
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>treatment_model</dt>
 <dd><p>[<strong>required</strong>] Must be either a model object with <code>variable</code> as response variable or a vector of previously estimated propensity scores.</p></dd>
-<dt>gtol</dt>
+
+  <dt>gtol</dt>
 <dd><p>Tolerance at which estimated treatment assignment probabilities are truncated. Every propensity score bigger than 1 - <code>gtol</code> is set to 1 - <code>gtol</code> and every propensity score smaller than <code>gtol</code> is set to <code>gtol</code>. Useful when there are extreme propensity scores close to 0 or 1. Defaults to 0.001,</p></dd>
-<dt>...</dt>
+
+  <dt>...</dt>
 <dd><p>Further arguments passed to the <code>Match</code> function of the <span class="pkg">Matching</span> Package.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -85,7 +91,12 @@ This page explains the details of estimating adjusted cumulative incidence funct
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Adds the following additional objects to the output of the <code>adjustedcif</code> function:</p><ul><li><p><code>match_object</code>: The object creates using the <code>Match</code> function.</p></li>
+    
+
+<p>Adds the following additional objects to the output of the <code>adjustedcif</code> function:</p>
+
+
+<ul><li><p><code>match_object</code>: The object creates using the <code>Match</code> function.</p></li>
 <li><p><code>cuminc_object</code>: The <code>cuminc</code> object fit on the matched data.</p></li>
 </ul></div>
     <div class="section level2">
@@ -149,7 +160,7 @@ This page explains the details of estimating adjusted cumulative incidence funct
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
     </footer></div>

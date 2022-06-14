@@ -27,6 +27,9 @@
     <a class="dropdown-item" href="../articles/introduction.html">An Introduction to the 'adjustedCurves' Package</a>
   </div>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -63,22 +66,31 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>adj</dt>
 <dd><p>An <code>adjustedsurv</code> object created using the <code>adjustedsurv</code> function or a <code>adjustedcif</code> object created using the <code>adjustedcif</code> function.</p></dd>
-<dt>from</dt>
+
+  <dt>from</dt>
 <dd><p>A number specifying the left side of the time interval of interest. See details. Usually this should be kept at 0 (default) to calculate the standard RMTL. Should only be changed if there are good reasons for it.</p></dd>
-<dt>to</dt>
+
+  <dt>to</dt>
 <dd><p>A number specifying the right side of the time interval of interest. See details.</p></dd>
-<dt>conf_int</dt>
+
+  <dt>conf_int</dt>
 <dd><p>Whether bootstrap estimates should be used to calculate the standard errors and confidence intervals of the RMST estimates. Can only be used if <code>bootstrap=TRUE</code> was used in the <code><a href="adjustedsurv.html">adjustedsurv</a></code> or <code><a href="adjustedcif.html">adjustedcif</a></code> call.</p></dd>
-<dt>conf_level</dt>
+
+  <dt>conf_level</dt>
 <dd><p>A number specifying the confidence level of the bootstrap confidence intervals.</p></dd>
-<dt>interpolation</dt>
+
+  <dt>interpolation</dt>
 <dd><p>Either <code>"steps"</code> (default) or <code>"linear"</code>. This parameter controls how interpolation is performed. If this argument is set to <code>"steps"</code>, the curves will be treated as step functions. If it is set to <code>"linear"</code>, the curves wil be treated as if there are straight lines between the point estimates instead. Points that lie between estimated points will be interpolated accordingly. Should usually be kept at <code>"steps"</code>. See Details.</p></dd>
-<dt>difference</dt>
+
+  <dt>difference</dt>
 <dd><p>Whether to calculate the difference between two adjusted RMTLs instead. When <code>conf_int=TRUE</code> is also specified, this function will also return the standard error of the difference, the associated confidence interval and a p-value. The p-value is the result of a one-sample t-test where the null-hypothesis is that the difference is equal to 0. To specify which difference should be calculated, the <code>group_1</code> and <code>group_1</code> arguments can be used. By default, the difference between the first and second level in <code>variable</code> is computed.</p></dd>
-<dt>group_1</dt>
+
+  <dt>group_1</dt>
 <dd><p>Optional argument to get a specific difference. This argument takes a single character string specifying one of the levels of the <code>variable</code> used in the original <code>adjustedsurv</code> or <code>adjustedcif</code> function call. This group will be subtracted from. For example if <code>group_1="A"</code> and <code>group_2="B"</code> the difference <code>A - B</code> will be used. If <code>NULL</code>, the order of the factor levels in the original <code>data</code> determines the order. Ignored if <code>difference=FALSE</code>.</p></dd>
-<dt>group_2</dt>
+
+  <dt>group_2</dt>
 <dd><p>Also a single character string specifying one of the levels of <code>variable</code>. This corresponds to the right side of the difference equation. See argument <code>group_2</code>. Ignored if <code>difference=FALSE</code>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -99,8 +111,12 @@
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Returns a <code>data.frame</code> containing the columns <code>group</code> (groups in <code>variable</code>) and <code>rmtl</code> (the estimated restricted mean time lost).
-If <code>conf_int=TRUE</code> was used it additionally contains the columns <code>se</code> (the standard error of the restricted mean time lost), <code>ci_lower</code> (lower limit of the confidence interval), <code>ci_upper</code> (upper limit of the confidence interval) and <code>n_boot</code> (the actual number of bootstrap estimates used).</p>
+    
+
+<p>Returns a <code>data.frame</code> containing the columns <code>group</code> (groups in <code>variable</code>) and <code>rmtl</code> (the estimated restricted mean time lost).</p>
+
+
+<p>If <code>conf_int=TRUE</code> was used it additionally contains the columns <code>se</code> (the standard error of the restricted mean time lost), <code>ci_lower</code> (lower limit of the confidence interval), <code>ci_upper</code> (upper limit of the confidence interval) and <code>n_boot</code> (the actual number of bootstrap estimates used).</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -191,7 +207,7 @@ If <code>conf_int=TRUE</code> was used it additionally contains the columns <cod
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
     </footer></div>

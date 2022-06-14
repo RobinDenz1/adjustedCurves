@@ -31,6 +31,9 @@ This page explains the details of estimating adjusted survival curves using the 
     <a class="dropdown-item" href="../articles/introduction.html">An Introduction to the 'adjustedCurves' Package</a>
   </div>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -63,16 +66,22 @@ This page explains the details of estimating adjusted survival curves using the 
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>treatment_vars</dt>
 <dd><p>[<strong>required</strong>] A character vector of column names specifying variables to be used as covariates in the empirical likelihood estimation. See details and examples.</p></dd>
-<dt>moment</dt>
+
+  <dt>moment</dt>
 <dd><p>A character string specifying which moment to adjust for. Can be either <code>"first"</code> (default) or <code>"second"</code>.</p></dd>
-<dt>standardize</dt>
+
+  <dt>standardize</dt>
 <dd><p>A logical variable indicating whether the <code>treatment_vars</code> variables should be standardized. Defaults to <code>FALSE</code>. See details.</p></dd>
-<dt>gtol</dt>
+
+  <dt>gtol</dt>
 <dd><p>A number specifying the tolerance for the weights. Is basically only used to avoid division by 0 errors in cases where the weights are estimated to be 0. Defaults to 0.00001.</p></dd>
-<dt>max_iter</dt>
+
+  <dt>max_iter</dt>
 <dd><p>Maximum number of iterations allowed in the newton-raphson algorithm. Set to 100 by default which is more than enough in most cases.</p></dd>
-<dt>newton_tol</dt>
+
+  <dt>newton_tol</dt>
 <dd><p>Tolerance used in the newton-raphson algorithm. Set to 1.0e-06 by default which is more than enough in most cases.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -90,7 +99,9 @@ This page explains the details of estimating adjusted survival curves using the 
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Adds no additional objects to the output of the <code>adjustedsurv</code> function.</p>
+    
+
+<p>Adds no additional objects to the output of the <code>adjustedsurv</code> function.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -142,7 +153,7 @@ Department of Biostatistics and Bioinformatics, Duke University, Durham, NC, USA
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
     </footer></div>
