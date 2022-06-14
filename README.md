@@ -1,5 +1,5 @@
 <!-- badges: start -->
-[![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+[![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![](https://www.r-pkg.org/badges/version/adjustedCurves?color=green)](https://cran.r-project.org/package=adjustedCurves)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/adjustedCurves?color=blue)](https://cran.r-project.org/package=adjustedCurves)
 [![R-CMD-check](https://github.com/RobinDenz1/adjustedCurves/workflows/R-CMD-check/badge.svg)](https://github.com/RobinDenz1/adjustedCurves/actions)

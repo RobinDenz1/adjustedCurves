@@ -58,7 +58,7 @@ A logical variable denoting whether the bootstrapped estimates should be used fo
 If \code{TRUE} the cumulative incidence functions are drawn instead of the survival curves. Those are calculated by taking 1 - the adjusted survival probability. If \code{FALSE} (default) the usual survival curves are shown.
   }
   \item{color}{
-A logical variable indicating whether the curves should be colored differently. The \code{custom_colors} argument can be used to directly specify which colors to use. Alternatively the \code{single_color} argument can be used if evertyhing should have the same color.
+A logical variable indicating whether the curves should be colored differently. The \code{custom_colors} argument can be used to directly specify which colors to use. Alternatively the \code{single_color} argument can be used if everything should have the same color.
   }
   \item{linetype}{
 A logical variable indicating whether the curves should have different linetypes. The \code{custom_linetypes} argument can be used to directly specify which linetypes to use. Alternatively the \code{single_linetype} argument can be used if all curves should have the same linetype.

@@ -17,7 +17,7 @@ This page explains the details of estimating confounder-adjusted survival curves
 Whether to print estimation information of the \code{ate} function in the \pkg{riskRegression} package. Ignored if \code{outcome_model} is not a \code{coxph} object. Defaults to \code{FALSE}.
 }
   \item{predict_fun}{
-A function which should be used to calculate the predicted survival probabilties given covariates and some points in time. This argument only needs to be specified if the kind of model supplied in the \code{outcome_model} is not directly supported. See \code{\link[adjustedCurves]{models_surv_direct}} for more information. Defaults to \code{NULL}.
+A function which should be used to calculate the predicted survival probabilities given covariates and some points in time. This argument only needs to be specified if the kind of model supplied in the \code{outcome_model} is not directly supported. See \code{\link[adjustedCurves]{models_surv_direct}} for more information. Defaults to \code{NULL}.
 }
   \item{...}{
 Further arguments passed to \code{ate} if \code{outcome_model} is a \code{coxph} object. Otherwise the additional arguments are passed to the respective \code{predict} method. See \code{\link[adjustedCurves]{models_surv_direct}} for more information.

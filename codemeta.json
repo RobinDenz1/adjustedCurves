@@ -1,5 +1,8 @@
 {
-  "@context": ["https://doi.org/10.5063/schema/codemeta-2.0", "http://schema.org"],
+  "@context": [
+    "https://doi.org/10.5063/schema/codemeta-2.0",
+    "http://schema.org"
+  ],
   "@type": "SoftwareSourceCode",
   "identifier": "adjustedCurves",
   "description": "Estimate and plot confounder-adjusted survival curves using either 'Direct Adjustment', 'Direct Adjustment with Pseudo-Values', various forms of 'Inverse Probability of Treatment Weighting', two forms of 'Augmented Inverse Probability of Treatment Weighting', 'Empirical Likelihood Estimation' and 'Targeted Maximum Likelihood Estimation'. Also includes a significance test for the difference between two adjusted survival curves and the calculation of adjusted restricted mean survival times. Additionally enables the user to estimate and plot cause-specific confounder-adjusted cumulative incidence functions in the competing risks setting using the same methods (with some exceptions).",
@@ -303,6 +306,19 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "ggpp",
+      "name": "ggpp",
+      "version": ">= 0.4.3",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=ggpp"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "vdiffr",
       "name": "vdiffr",
       "version": ">= 1.0.0",
@@ -313,6 +329,18 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=vdiffr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "covr",
+      "name": "covr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=covr"
     }
   ],
   "softwareRequirements": [
@@ -391,14 +419,19 @@
     }
   ],
   "readme": "https://github.com/RobinDenz1/adjustedCurves/blob/main/README.md",
-  "fileSize": "2078.68KB",
-  "contIntegration": "https://github.com/RobinDenz1/adjustedCurves/actions",
-  "developmentStatus": "https://www.repostatus.org/#wip",
-  "keywords": ["adjusted", "survival-curves", "cumulative-incidence", "confidence-intervals"],
+  "fileSize": "2390.851KB",
+  "contIntegration": ["https://github.com/RobinDenz1/adjustedCurves/actions", "https://app.codecov.io/gh/RobinDenz1/adjustedCurves?branch=main"],
+  "developmentStatus": "https://www.repostatus.org/#active",
+  "keywords": [
+    "adjusted",
+    "survival-curves",
+    "cumulative-incidence",
+    "confidence-intervals"
+  ],
   "citation": [
     {
       "@type": "ScholarlyArticle",
-      "datePublished": "2021",
+      "datePublished": "2022",
       "author": [
         {
           "@type": "Person",
@@ -421,12 +454,14 @@
       "description": "R package version 0.9.0",
       "isPartOf": {
         "@type": "PublicationIssue",
-        "datePublished": "2021",
+        "datePublished": "2022",
         "isPartOf": {
           "@type": ["PublicationVolume", "Periodical"],
-          "name": "Work in Progress"
+          "name": "http://arxiv.org/abs/2203.10002"
         }
       }
     }
-  ]
+  ],
+  "relatedLink": "https://robindenz1.github.io/adjustedCurves/",
+  "releaseNotes": "https://github.com/RobinDenz1/adjustedCurves/blob/master/NEWS.md"
 }

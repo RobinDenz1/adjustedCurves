@@ -24,7 +24,7 @@ plot_rmst_curve(adjsurv, times=NULL, conf_int=FALSE,
 An \code{adjustedsurv} object created using the \code{\link[adjustedCurves]{adjustedsurv}} function.
   }
   \item{times}{
-A vector of points in time, passed to the \code{to} argument of the \code{\link{adjusted_rmst}} function or \code{NULL} (default). If \code{NULL}, the adjusted RMST is estimated at all points at which an event occured. Otherwise it is estimated at \code{times}.
+A vector of points in time, passed to the \code{to} argument of the \code{\link{adjusted_rmst}} function or \code{NULL} (default). If \code{NULL}, the adjusted RMST is estimated at all points at which an event occurred. Otherwise it is estimated at \code{times}.
   }
   \item{conf_int}{
 A logical variable indicating whether the bootstrap confidence intervals should be drawn.
