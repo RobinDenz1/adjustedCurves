@@ -120,16 +120,14 @@ exact_integral <- function(data, from, to, est, interpolation) {
   }
 
   # constrain function beginning
-  if (from != 0) {
-    earliest <- read_from_fun(from, data=data, est=est,
-                              interpolation=interpolation)
-    data <- data[data$time >= from, ]
+  earliest <- read_from_fun(from, data=data, est=est,
+                            interpolation=interpolation)
+  data <- data[data$time >= from, ]
 
-    if (!from %in% data$time) {
-      temp <- data.frame(time=from)
-      temp[, est] <- earliest
-      data <- rbind(temp, data)
-    }
+  if (!from %in% data$time) {
+    temp <- data.frame(time=from)
+    temp[, est] <- earliest
+    data <- rbind(temp, data)
   }
 
   if (anyNA(data)) {

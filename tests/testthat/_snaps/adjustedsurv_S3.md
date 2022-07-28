@@ -139,7 +139,7 @@
        - Approximate CI: Not calculated
        - Using a single dataset
 
-# summary.adjustedsurv, strat_gregory_nieto
+# summary.adjustedsurv, strat_nieto
 
     Confounder Adjusted Survival Probabilities 
        - Method: Stratification & Weighting by Gregory / Nieto & Coresh

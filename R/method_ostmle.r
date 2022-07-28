@@ -550,7 +550,7 @@ survival_curve <- R6::R6Class("survival_curve",
       if (is.null(W)) {
         df <- data.frame(t = rep(self$t, self$n()))
       } else {
-        if (class(W) != "numeric") stop("W only be univariate vector")
+        if (!inherits(W, "numeric")) stop("W only be univariate vector")
         if (length(W) != self$n()) stop("W length not correct")
         # the first Tmax rows are for the first subject
         df <- data.frame(
@@ -594,7 +594,7 @@ survival_curve <- R6::R6Class("survival_curve",
         # only for marginal survival curve
         return(data.frame(t = self$t, s = as.numeric(self$survival)))
       } else {
-        if (class(W) != "numeric") stop("W only be univariate vector")
+        if (!inherits(W, "numeric")) stop("W only be univariate vector")
         if (length(W) != self$n()) stop("W length not correct")
         # the first Tmax rows are for the first subject
         df <- data.frame(

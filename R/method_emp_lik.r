@@ -238,11 +238,14 @@ surv_emp_lik <- function(data, variable, ev_time, event, conf_int=FALSE,
   data[, variable] <- ifelse(data[, variable]==levs[1], 0, 1)
 
   # create design matrix for function call
-  x_dat <- data[,treatment_vars]
+  x_dat <- as.data.frame(data[,treatment_vars])
+  if (length(treatment_vars==1)) {
+    colnames(x_dat) <- treatment_vars
+  }
   form <- stats::as.formula(paste0("~ ",
                                    paste0(treatment_vars, collapse=" + ")))
   mod_mat <- stats::model.matrix(form, data=x_dat)
-  mod_mat <- mod_mat[,seq(2, ncol(mod_mat))]
+  mod_mat <- as.matrix(mod_mat[,seq(2, ncol(mod_mat))])
 
   # call function twice
   el_0 <- el.est(y=data[, ev_time],
