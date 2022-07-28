@@ -1,9 +1,9 @@
 pandoc: 2.7.3
-pkgdown: 2.0.4
+pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   introduction: introduction.html
-last_built: 2022-06-14T11:17Z
+last_built: 2022-07-28T10:13Z
 urls:
   reference: https://robindenz1.github.io/adjustedCurves/reference
   article: https://robindenz1.github.io/adjustedCurves/articles
