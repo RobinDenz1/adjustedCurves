@@ -1,12 +1,10 @@
 {
-  "@context": [
-    "https://doi.org/10.5063/schema/codemeta-2.0",
-    "http://schema.org"
-  ],
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
   "identifier": "adjustedCurves",
   "description": "Estimate and plot confounder-adjusted survival curves using either 'Direct Adjustment', 'Direct Adjustment with Pseudo-Values', various forms of 'Inverse Probability of Treatment Weighting', two forms of 'Augmented Inverse Probability of Treatment Weighting', 'Empirical Likelihood Estimation' and 'Targeted Maximum Likelihood Estimation'. Also includes a significance test for the difference between two adjusted survival curves and the calculation of adjusted restricted mean survival times. Additionally enables the user to estimate and plot cause-specific confounder-adjusted cumulative incidence functions in the competing risks setting using the same methods (with some exceptions).",
   "name": "adjustedCurves: Confounder-Adjusted Survival Curves and Cumulative Incidence\n    Functions",
+  "relatedLink": "https://robindenz1.github.io/adjustedCurves/",
   "codeRepository": "https://github.com/RobinDenz1/adjustedCurves",
   "issueTracker": "https://github.com/RobinDenz1/adjustedCurves/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
@@ -16,7 +14,7 @@
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.1.2 (2021-11-01)",
+  "runtimePlatform": "R version 4.2.1 (2022-06-23 ucrt)",
   "author": [
     {
       "@type": "Person",
@@ -25,9 +23,6 @@
       "email": "robin.denz@rub.de"
     }
   ],
-  "contributor": {},
-  "copyrightHolder": {},
-  "funder": {},
   "maintainer": [
     {
       "@type": "Person",
@@ -343,8 +338,8 @@
       "sameAs": "https://CRAN.R-project.org/package=covr"
     }
   ],
-  "softwareRequirements": [
-    {
+  "softwareRequirements": {
+    "1": {
       "@type": "SoftwareApplication",
       "identifier": "R.utils",
       "name": "R.utils",
@@ -356,7 +351,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=R.utils"
     },
-    {
+    "2": {
       "@type": "SoftwareApplication",
       "identifier": "doParallel",
       "name": "doParallel",
@@ -368,7 +363,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=doParallel"
     },
-    {
+    "3": {
       "@type": "SoftwareApplication",
       "identifier": "doRNG",
       "name": "doRNG",
@@ -380,7 +375,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=doRNG"
     },
-    {
+    "4": {
       "@type": "SoftwareApplication",
       "identifier": "dplyr",
       "name": "dplyr",
@@ -393,7 +388,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=dplyr"
     },
-    {
+    "5": {
       "@type": "SoftwareApplication",
       "identifier": "foreach",
       "name": "foreach",
@@ -405,7 +400,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=foreach"
     },
-    {
+    "6": {
       "@type": "SoftwareApplication",
       "identifier": "rlang",
       "name": "rlang",
@@ -416,18 +411,10 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=rlang"
-    }
-  ],
-  "readme": "https://github.com/RobinDenz1/adjustedCurves/blob/main/README.md",
-  "fileSize": "2390.851KB",
-  "contIntegration": ["https://github.com/RobinDenz1/adjustedCurves/actions", "https://app.codecov.io/gh/RobinDenz1/adjustedCurves?branch=main"],
-  "developmentStatus": "https://www.repostatus.org/#active",
-  "keywords": [
-    "adjusted",
-    "survival-curves",
-    "cumulative-incidence",
-    "confidence-intervals"
-  ],
+    },
+    "SystemRequirements": null
+  },
+  "fileSize": "2369.605KB",
   "citation": [
     {
       "@type": "ScholarlyArticle",
@@ -462,6 +449,9 @@
       }
     }
   ],
-  "relatedLink": "https://robindenz1.github.io/adjustedCurves/",
-  "releaseNotes": "https://github.com/RobinDenz1/adjustedCurves/blob/master/NEWS.md"
+  "releaseNotes": "https://github.com/RobinDenz1/adjustedCurves/blob/master/NEWS.md",
+  "readme": "https://github.com/RobinDenz1/adjustedCurves/blob/main/README.md",
+  "contIntegration": ["https://github.com/RobinDenz1/adjustedCurves/actions", "https://app.codecov.io/gh/RobinDenz1/adjustedCurves?branch=main"],
+  "developmentStatus": "https://www.repostatus.org/#active",
+  "keywords": ["adjusted", "survival-curves", "cumulative-incidence", "confidence-intervals"]
 }

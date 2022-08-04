@@ -28,7 +28,7 @@ This page explains the details of estimating confounder-adjusted survival curves
 \item{\strong{Dependencies:} This method has no additional dependencies.}
 }
 
-This is one of the older adjustment methods described in the literature. It only works for categorical confounders. If adjustments for continuous confounders are desired, the user needs to explicitly categorize the continuous confounders. It is recommended to use one of the other methods implemented in this package in that case. The method works exactly as described in Gregory (1988). Similarly to the method described in \link[=surv_strat_cupples]{strat_cupples}, Kaplan-Meier estimates are calculated for each strata and a weighted average is taken. The only difference is a slighlty different weighting scheme. Weights are calculated using the pooled sample (\code{data}). In contrast to other stratification based methods, external reference data is not allowed. A more detailed description can be found in the original article.
+This is one of the older adjustment methods described in the literature. It only works for categorical confounders. If adjustments for continuous confounders are desired, the user needs to explicitly categorize the continuous confounders. It is recommended to use one of the other methods implemented in this package in that case. The method works exactly as described in Gregory (1988). Similarly to the method described in \link[=surv_strat_cupples]{strat_cupples}, Kaplan-Meier estimates are calculated for each strata and a weighted average is taken. The only difference is a slightly different weighting scheme. Weights are calculated using the pooled sample (\code{data}). In contrast to other stratification based methods, external reference data is not allowed. A more detailed description can be found in the original article.
 
 If a character vector is supplied in the \code{adjust_vars} argument, the Kaplan-Meier estimates are created for each combination of all supplied variables. If the sample size is small and/or there are many levels in these variables, the estimates can become unstable or undefined. Because it is a weighted average of Kaplan-Meier curves, estimates for this method are only defined for points in time with a valid Kaplan-Meier estimate in all strata. For example, if the Kaplan-Meier curve of the strata "Treatment + male" only extends to t = 100, it will be impossible to estimate the adjusted survival curve for t > 100 using this method.
 
@@ -51,11 +51,13 @@ Robin Denz
 \code{\link[adjustedCurves]{adjustedsurv}}
 }
 \examples{
-\dontrun{
+library(adjustedCurves)
 library(survival)
 
+set.seed(42)
+
 # simulate some data as example
-sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat <- sim_confounded_surv(n=50, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # adjust survival curves for some categorical confounders
@@ -69,5 +71,4 @@ adjsurv <- adjustedsurv(data=sim_dat,
 
 # plot the curves
 plot(adjsurv)
-}
 }

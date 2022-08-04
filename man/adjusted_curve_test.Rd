@@ -115,20 +115,20 @@ Robin Denz
 \code{\link{plot.curve_test}}, \code{\link{adjustedsurv}}, \code{\link{adjustedcif}}
 }
 \examples{
-\dontrun{
+library(adjustedCurves)
 library(survival)
 library(cmprsk)
 
 #### Simple Survival Case with adjusted survival curves ####
 
 # simulate some data as example
-sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+set.seed(42)
+sim_dat <- sim_confounded_surv(n=50, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # estimate a cox-regression for the outcome
 cox_mod <- coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
                  data=sim_dat, x=TRUE)
-
 
 # use it to calculate adjusted survival curves with bootstrapping
 adjsurv <- adjustedsurv(data=sim_dat,
@@ -139,7 +139,7 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         outcome_model=cox_mod,
                         conf_int=FALSE,
                         bootstrap=TRUE,
-                        n_boot=500)
+                        n_boot=10) # n_boot should be much higher in reality
 
 # test the equality of both curves in the interval 0 to 1
 adjtest <- adjusted_curve_test(adjsurv, from=0, to=1)
@@ -150,13 +150,12 @@ library(riskRegression)
 library(prodlim)
 
 # simulate some data as example
-sim_dat <- sim_confounded_crisk(n=500, max_t=1.2)
+sim_dat <- sim_confounded_crisk(n=50, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # estimate a cause-specific cox-regression for the outcome
 csc_mod <- CSC(Hist(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
-                 data=sim_dat)
-
+               data=sim_dat)
 
 # use it to calculate adjusted CIFs for cause = 1 with bootstrapping
 adjcif <- adjustedcif(data=sim_dat,
@@ -167,12 +166,10 @@ adjcif <- adjustedcif(data=sim_dat,
                       outcome_model=csc_mod,
                       conf_int=FALSE,
                       bootstrap=TRUE,
-                      n_boot=500,
+                      n_boot=10,
                       cause=1)
 
 # test the equality of both curves in the interval 0 to 1
 adjtest <- adjusted_curve_test(adjcif, from=0, to=1)
 print(adjtest)
-
-}
 }

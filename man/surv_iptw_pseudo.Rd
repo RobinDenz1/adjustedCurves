@@ -49,7 +49,7 @@ Further arguments passed to \code{\link[WeightIt]{weightit}}.
 \item{\strong{Dependencies:} This method relies on the \pkg{prodlim} package. The \pkg{WeightIt} package is also required if \code{treatment_model} is a formula object. Additionally requires the \pkg{eventglm} package if \code{censoring_vars} is specified.}
 }
 
-This method works by modelling the treatment assignment mechanism. Adjusted survival curves are calculated by first estimating appropriate case-weights for each observation in \code{data}. This can be done using inverse probability of treatment weights using the propensity score (usually estimated using a logistic regression model) or by some other method (see \code{?weightit}). Pseudo-Values are then calculated for every observation in \code{data} at some points in time \eqn{T}. Since Pseudo-Values bypass the problem of censoring, a simple weighted average of the Pseudo-Values can be taken for every \eqn{T}. See Andersen et al. (2017) for more details on this method and Andersen and Perme (2010) for more information on Pseudo-Values in general.
+This method works by modeling the treatment assignment mechanism. Adjusted survival curves are calculated by first estimating appropriate case-weights for each observation in \code{data}. This can be done using inverse probability of treatment weights using the propensity score (usually estimated using a logistic regression model) or by some other method (see \code{?weightit}). Pseudo-Values are then calculated for every observation in \code{data} at some points in time \eqn{T}. Since Pseudo-Values bypass the problem of censoring, a simple weighted average of the Pseudo-Values can be taken for every \eqn{T}. See Andersen et al. (2017) for more details on this method and Andersen and Perme (2010) for more information on Pseudo-Values in general.
 
 The standard error of this estimator can be approximated by calculation a weighted version of the standard error estimator. Interestingly, no exact method exists in the weighted case. Four approximations are implemented which can be chosen using the \code{se_method} argument. The equations for \code{"miller"}, \code{"galloway"} and \code{"cochrane"} are described and compared in Gatz and Smith (1995). \code{"Hmisc"} is the standard equation with a weight term added, as specified in the \pkg{Hmisc} package, and should only be used with stabilized weights (\code{stabilize=TRUE}). It is generally recommended to use bootstrap estimates instead.
 
@@ -87,9 +87,12 @@ Robin Denz
 \code{\link[WeightIt]{weightit}}, \code{\link[prodlim]{prodlim}}
 }
 \examples{
-\dontrun{
+library(adjustedCurves)
+
+set.seed(42)
+
 # simulate some data as example
-sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat <- sim_confounded_surv(n=50, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # estimate a treatment assignment model
@@ -126,6 +129,8 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         treatment_model=group ~ x1 + x3 + x5 + x6,
                         weight_method="ps")
 
+# not run to avoid dependency on optweight
+if (interactive()) {
 # here an example using Optimization-Based Weighting:
 adjsurv <- adjustedsurv(data=sim_dat,
                         variable="group",

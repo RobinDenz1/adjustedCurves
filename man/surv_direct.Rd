@@ -64,12 +64,14 @@ The function itself was written by Robin Denz. When using \code{coxph} models ho
 \code{\link[adjustedCurves]{models_surv_direct}}, \code{\link[riskRegression]{ate}}, \code{\link[survival]{coxph}}
 }
 \examples{
-\dontrun{
+library(adjustedCurves)
 library(survival)
 library(riskRegression)
 
+set.seed(42)
+
 # simulate some data as example
-sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat <- sim_confounded_surv(n=50, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # estimate a cox-regression for the outcome
@@ -88,8 +90,9 @@ adjsurv <- adjustedsurv(data=sim_dat,
 # plot the curves
 plot(adjsurv)
 
-## using a flexsurv() model
-library(flexsurv)
+# not run to avoid dependency on flexsurv and mice too slow
+if (interactive()) {
+## using a flexsurv() model, this requires the 'fleysurv' package
 mod_flexsurvreg <- flexsurvreg(Surv(time, event) ~ group + x1 + x2 + x5 + x6,
                                data=sim_dat, dist="gengamma")
 
@@ -112,10 +115,10 @@ library(mice)
 # introduce random missingness in x1 as example
 # NOTE: This is only done as an example, in reality you would
 #       already have missing data, not introduce it yourself.
-sim_dat$x1 <- ifelse(runif(n=500) < 0.5, sim_dat$x1, NA)
+sim_dat$x1 <- ifelse(runif(n=50) < 0.5, sim_dat$x1, NA)
 
 # perform multiple imputation
-mids <- mice::mice(data=sim_dat, method="pmm", m=5, printFlag=F)
+mids <- mice::mice(data=sim_dat, method="pmm", m=5, printFlag=FALSE)
 
 # fit model for each imputed dataset
 mira <- with(mids, coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,

@@ -33,7 +33,7 @@ The specific method used in the calculation of inverse probability of censoring 
 \details{
 
 \itemize{
-\item{\strong{Type of Adjustment:} Requires a treatment assignment model (\code{\link{glm}} or \code{\link[nnet]{multinom}}) and a character vector of variable names used to model the outcome mechanism (internally uses \code{\link[geepack]{geese}}). Covariate-Dependent censoring can be corrrected for using inverse probability of censoring weighted pseudo-values (Binder et al. 2014)}
+\item{\strong{Type of Adjustment:} Requires a treatment assignment model (\code{\link{glm}} or \code{\link[nnet]{multinom}}) and a character vector of variable names used to model the outcome mechanism (internally uses \code{\link[geepack]{geese}}). Covariate-Dependent censoring can be corrected for using inverse probability of censoring weighted pseudo-values (Binder et al. 2014)}
 \item{\strong{Doubly-Robust:} Estimates are Doubly-Robust.}
 \item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
 \item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
@@ -82,9 +82,12 @@ Jixian Wang supplied the R source code used in the original article, which was u
 \code{\link[geepack]{geese}}, \code{\link[prodlim]{jackknife}}, \code{\link[splines]{ns}}, \code{\link[splines]{bs}}
 }
 \examples{
-\dontrun{
+library(adjustedCurves)
+
+set.seed(42)
+
 # simulate some data as example
-sim_dat <- sim_confounded_surv(n=100, max_t=1.2)
+sim_dat <- sim_confounded_surv(n=50, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # estimate a treatment assignment model
@@ -102,5 +105,4 @@ adjsurv <- adjustedsurv(data=sim_dat,
 
 # plot the curves
 plot(adjsurv, conf_int=TRUE)
-}
 }

@@ -63,9 +63,12 @@ Robin Denz
 \code{\link[geepack]{geese}}, \code{\link[prodlim]{jackknife}}, \code{\link[splines]{ns}}, \code{\link[splines]{bs}}, \code{\link[riskRegression]{CSC}}
 }
 \examples{
-\dontrun{
+library(adjustedCurves)
+
+set.seed(42)
+
 # simulate some data as example
-sim_dat <- sim_confounded_crisk(n=100, max_t=5)
+sim_dat <- sim_confounded_crisk(n=30, max_t=1.3)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # calculate adjusted CIFs, with time as factor
@@ -92,5 +95,4 @@ adjcif <- adjustedcif(data=sim_dat,
 
 # plot the curves
 plot(adjcif)
-}
 }

@@ -37,31 +37,31 @@ The following models are directly supported in the \code{outcome_model} in the \
 
   \item{}{\code{\link[rms]{psm}} [\strong{C}, Required Packages: \pkg{rms}, \pkg{riskRegression}]}
 
-  \item{}{\code{\link[flexsurv]{flexsurvreg}} [\strong{C}, Required Packages: \pkg{flexsurv}, \pkg{riskRegression}]}
+  \item{}{\code{flexsurvreg} [\strong{C}, Required Packages: \pkg{flexsurv}, \pkg{riskRegression}]}
 
-  \item{}{\code{\link[flexsurv]{flexsurvspline}} [\strong{C}, Required Packages: \pkg{flexsurv}, \pkg{riskRegression}]}
+  \item{}{\code{flexsurvspline} [\strong{C}, Required Packages: \pkg{flexsurv}, \pkg{riskRegression}]}
 
   \item{}{\code{\link[ranger]{ranger}} [\strong{C}, Required Packages: \pkg{ranger}, \pkg{riskRegression}]}
 
-  \item{}{\code{\link[randomForestSRC]{rfsrc}} [\strong{C}, Required Packages: \pkg{randomForestSRC}, \pkg{riskRegression}]}
+  \item{}{\code{rfsrc} [\strong{C}, Required Packages: \pkg{randomForestSRC}, \pkg{riskRegression}]}
 
   \item{}{\code{ARR} [\strong{C}, Required Packages: \pkg{riskRegression}]}
 
   \item{}{\code{\link[riskRegression]{penalizedS3}} [\strong{C}, Required Packages: \pkg{penalized}, \pkg{riskRegression}]}
 
-  \item{}{\code{\link[gbm]{gbm}} [\strong{C}, Required Packages: \pkg{gbm}, \pkg{riskRegression}]}
+  \item{}{\code{gbm} [\strong{C}, Required Packages: \pkg{gbm}, \pkg{riskRegression}]}
 
-  \item{}{\code{\link[hal9001]{fit_hal}} [\strong{C}, Required Packages: \pkg{hal9001}, \pkg{riskRegression}]}
+  \item{}{\code{fit_hal} [\strong{C}, Required Packages: \pkg{hal9001}, \pkg{riskRegression}]}
 
-  \item{}{\code{\link[casebase]{fitSmoothHazard}} [\strong{C}, Required Packages: \pkg{casebase}, \pkg{riskRegression}]}
+  \item{}{\code{fitSmoothHazard} [\strong{C}, Required Packages: \pkg{casebase}, \pkg{riskRegression}]}
 
   \item{}{\code{\link[stats]{glm}} [\strong{D}, Required Packages: \pkg{stats}, \pkg{pec}]}
 
   \item{}{\code{\link[rms]{ols}} [\strong{D}, Required Packages: \pkg{rms}, \pkg{pec}]}
 
-  \item{}{\code{\link[randomForest]{randomForest}} [\strong{D}, Required Packages: \pkg{randomForest}, \pkg{pec}]}
+  \item{}{\code{randomForest} [\strong{D}, Required Packages: \pkg{randomForest}, \pkg{pec}]}
 
-  \item{}{\code{\link[mexhaz]{mexhaz}} [\strong{E}, Required Packages: \pkg{mexhaz}]}
+  \item{}{\code{mexhaz} [\strong{E}, Required Packages: \pkg{mexhaz}]}
 
   \item{}{Any model with a fitting S3 prediction method or a valid \code{predict_fun} can be used as well. See below.}
 }

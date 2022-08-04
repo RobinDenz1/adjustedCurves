@@ -282,11 +282,11 @@ adjsurv <- adjustedsurv(data=data_1,
                         treatment_model=treatment_model,
                         conf_int=TRUE,
                         bootstrap=TRUE,
-                        n_boot=150)
+                        n_boot=50)
 plot(adjsurv, conf_int=TRUE)
 ```
 
-We use `bootstrap=TRUE` here because we will need it in the next section. In practice, however, 150 bootstrap samples might not be enough to guarantee convergence.
+We use `bootstrap=TRUE` here because we will need it in the next section. In practice, however, 50 bootstrap samples would definitely not be enough to guarantee convergence. We choose this low number here only due to speed considerations enforced by CRAN.
 
 ## Comparing Groups
 
@@ -341,7 +341,7 @@ adjusted_rmst(adjsurv, to=0.4, conf_int=TRUE, difference=TRUE,
               group_1="0", group_2="1")
 ```
 
-There seems to be no statistically significant difference between the two RMSTs.
+There seems to be no statistically significant difference between the two RMSTs. However, due to the very low number of bootstrap replications used here these results should not be trusted. In practice one should use a much higher number, such as 500 or 1000 replications.
 
 Instead of focusing on a single point in time, it is also possible to plot the RMST as it evolves over time using the `plot_rmst_curve` function:
 

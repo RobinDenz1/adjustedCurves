@@ -50,11 +50,13 @@ The wrapper function was written by Robin Denz, the \code{survfit} function (whi
 \code{\link{survfit}}
 }
 \examples{
-\dontrun{
+library(adjustedCurves)
 library(survival)
 
+set.seed(42)
+
 # simulate some data as example
-sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat <- sim_confounded_surv(n=50, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # calculate un-adjusted kaplan-meier survival curves
@@ -66,5 +68,4 @@ adjsurv <- adjustedsurv(data=sim_dat,
 
 # plot the curves
 plot(adjsurv)
-}
 }

@@ -176,12 +176,14 @@ Robin Denz
 \code{\link{adjustedsurv}}, \code{\link[ggplot2]{ggplot}}, \code{\link[pammtools]{geom_stepribbon}}, \code{\link[stats]{isoreg}}
 }
 \examples{
-\dontrun{
+library(adjustedCurves)
 library(survival)
 library(ggplot2)
 
+set.seed(42)
+
 # simulate some data as example
-sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat <- sim_confounded_surv(n=50, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # estimate a cox-regression for the outcome
@@ -198,7 +200,7 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         outcome_model=cox_mod,
                         conf_int=TRUE,
                         bootstrap=TRUE,
-                        n_boot=500)
+                        n_boot=15) # should be much bigger in reality
 
 # plot the curves with default values
 plot(adjsurv)
@@ -238,5 +240,4 @@ plot(adjsurv, legend.position="bottom", linetype=TRUE,
 
 # adding further ggplot2 elements
 plot(adjsurv) + theme_bw()
-}
 }

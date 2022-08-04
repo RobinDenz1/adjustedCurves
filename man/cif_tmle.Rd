@@ -77,11 +77,15 @@ The wrapper function was written by Robin Denz, the \pkg{survtmle} package (whic
 \code{\link[survtmle]{survtmle}}, \code{\link[SuperLearner]{SuperLearner}}, \code{\link{glm}}
 }
 \examples{
-\dontrun{
+# not run because any meaningful example is too slow
+\donttest{
+library(adjustedCurves)
 library(survtmle)
 
+set.seed(42)
+
 # simulate some data as example
-sim_dat <- sim_confounded_crisk(n=200, max_t=5)
+sim_dat <- sim_confounded_crisk(n=50, max_t=5)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # only works with integer time, only unbiased with small amounts of them

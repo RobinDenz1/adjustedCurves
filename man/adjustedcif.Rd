@@ -140,12 +140,14 @@ The function itself was written by Robin Denz, but some \code{cif_method} functi
 \code{\link{plot.adjustedcif}}, \code{\link{adjusted_rmtl}}, \code{\link{plot_curve_diff}}
 }
 \examples{
-\dontrun{
+library(adjustedCurves)
 library(survival)
 library(riskRegression)
 
+set.seed(42)
+
 # simulate some example data
-sim_dat <- sim_confounded_crisk(n=500, max_t=5)
+sim_dat <- sim_confounded_crisk(n=50, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # treatment assignment model
@@ -203,7 +205,7 @@ adjcif <- adjustedcif(data=sim_dat,
 
 # using bootstrapping with direct adjustment
 # NOTE: In practice the number of bootstrap replications should be
-#       greater than 100. This is only shown here for convenience.
+#       greater than 10. This is only shown here for convenience.
 adjcif <- adjustedcif(data=sim_dat,
                       variable="group",
                       ev_time="time",
@@ -213,10 +215,12 @@ adjcif <- adjustedcif(data=sim_dat,
                       outcome_model=cox_mod,
                       conf_int=TRUE,
                       bootstrap=TRUE,
-                      n_boot=100)
+                      n_boot=10)
 
+# not run because those are too slow
+\donttest{
 # using bootstrapping with direct adjustment, run in parallel
-# all but one availble processor cores
+# on two cores
 library(foreach)
 library(parallel)
 library(doRNG)
@@ -230,24 +234,24 @@ adjcif <- adjustedcif(data=sim_dat,
                       outcome_model=cox_mod,
                       conf_int=TRUE,
                       bootstrap=TRUE,
-                      n_boot=100,
-                      n_cores=parallel::detectCores()-1)
+                      n_boot=10,
+                      n_cores=2)
 
 # using multiple imputation
 library(mice)
 library(WeightIt)
 
 # simulate some data as example
-sim_dat <- sim_confounded_crisk(n=500, max_t=1.2)
+sim_dat <- sim_confounded_crisk(n=50, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # introduce random missingness in x1 as example
 # NOTE: This is only done as an example, in reality you would
 #       already have missing data, not introduce it yourself.
-sim_dat$x1 <- ifelse(runif(n=500) < 0.5, sim_dat$x1, NA)
+sim_dat$x1 <- ifelse(runif(n=50) < 0.5, sim_dat$x1, NA)
 
 # perform multiple imputation
-mids <- mice::mice(data=sim_dat, method="pmm", m=5, printFlag=F)
+mids <- mice::mice(data=sim_dat, method="pmm", m=5, printFlag=FALSE)
 
 # IPTW Pseudo using WeightIt on imputed data, for cause = 1
 adj <- adjustedcif(data=mids,

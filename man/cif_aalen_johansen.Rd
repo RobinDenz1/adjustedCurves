@@ -50,11 +50,13 @@ The wrapper function was written by Robin Denz, the \code{cuminc} function (whic
 \code{\link[cmprsk]{cuminc}}
 }
 \examples{
-\dontrun{
+library(adjustedCurves)
 library(cmprsk)
 
+set.seed(42)
+
 # simulate some data as example
-sim_dat <- sim_confounded_crisk(n=500, max_t=5)
+sim_dat <- sim_confounded_crisk(n=50, max_t=5)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # calculate un-adjusted aalen-johansen estimates
@@ -67,5 +69,4 @@ adjcif <- adjustedcif(data=sim_dat,
 
 # plot the curves
 plot(adjcif)
-}
 }

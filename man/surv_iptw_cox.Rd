@@ -40,7 +40,7 @@ Further arguments passed to \code{\link[WeightIt]{weightit}}.
 \item{\strong{Dependencies:} This method relies on the \pkg{survival} package. Additionally, the \pkg{WeightIt} package is required if \code{treatment_model} is a formula object.}
 }
 
-This method works by modelling the treatment assignment mechanism. Adjusted survival curves are calculated by first estimating appropriate case-weights for each observation in \code{data}. This can be done using inverse probability of treatment weights using the propensity score (usually estimated using a logistic regression model) or by some other method (see \code{?weightit}). Those estimates are then used to fit a weighted Cox-Regression model, stratified by \code{variable}. Survival Curves based on this model are estimated using the method implemented in the \code{survfit.coxph} function. More information can be found in the literature listed under "references". The only difference to the \code{\link[=surv_iptw_km]{iptw_km}} method is a slightly different weighting approach.
+This method works by modeling the treatment assignment mechanism. Adjusted survival curves are calculated by first estimating appropriate case-weights for each observation in \code{data}. This can be done using inverse probability of treatment weights using the propensity score (usually estimated using a logistic regression model) or by some other method (see \code{?weightit}). Those estimates are then used to fit a weighted Cox-Regression model, stratified by \code{variable}. Survival Curves based on this model are estimated using the method implemented in the \code{survfit.coxph} function. More information can be found in the literature listed under "references". The only difference to the \code{\link[=surv_iptw_km]{iptw_km}} method is a slightly different weighting approach.
 
 By default this method uses a a robust sandwich-type variance estimator (\code{robust=TRUE} in the \code{coxph} function call) to calculate the standard error used in the construction of confidence intervals. This estimator has been shown to be biased by Austin (2016). Coupled with stabilized weights however (\code{stabilize=TRUE}) this gives conservative estimates of the variance and confidence intervals (Xu et al. 2010). It is still recommended to use bootstrap confidence intervals instead. This can be done by setting \code{bootstrap=TRUE} in the \code{adjustedsurv} function call.
 }
@@ -70,9 +70,13 @@ Robin Denz
 \code{\link[WeightIt]{weightit}}, \code{\link[survival]{coxph}}, \code{\link{survfit.coxph}}
 }
 \examples{
-\dontrun{
+library(adjustedCurves)
+library(survival)
+
+set.seed(42)
+
 # simulate some data as example
-sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat <- sim_confounded_surv(n=50, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # estimate a treatment assignment model
@@ -109,6 +113,8 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         treatment_model=group ~ x1 + x3 + x5 + x6,
                         weight_method="ps")
 
+# not run to avoid dependency on optweight
+if (interactive()) {
 # here an example using Optimization-Based Weighting:
 adjsurv <- adjustedsurv(data=sim_dat,
                         variable="group",

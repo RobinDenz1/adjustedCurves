@@ -72,11 +72,14 @@ The wrapper function was written by Robin Denz, the \code{ate} function (which t
 \code{\link[riskRegression]{ate}}, \code{\link[survival]{coxph}}, \code{\link{glm}}
 }
 \examples{
-\dontrun{
+library(adjustedCurves)
+library(riskRegression)
 library(survival)
 
+set.seed(42)
+
 # simulate some data as example
-sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat <- sim_confounded_surv(n=50, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # estimate a cox-regression for the outcome
@@ -98,5 +101,4 @@ adjsurv <- adjustedsurv(data=sim_dat,
 
 # plot the curves
 plot(adjsurv)
-}
 }

@@ -71,9 +71,12 @@ Jixian Wang supplied the R source code used in the original article, which was u
 \code{\link[geepack]{geese}}, \code{\link[prodlim]{jackknife}}, \code{\link[splines]{ns}}, \code{\link[splines]{bs}}
 }
 \examples{
-\dontrun{
+library(adjustedCurves)
+
+set.seed(42)
+
 # simulate some data as example
-sim_dat <- sim_confounded_crisk(n=100, max_t=5)
+sim_dat <- sim_confounded_crisk(n=30, max_t=5)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # estimate a treatment assignment model
@@ -92,5 +95,4 @@ adjcif <- adjustedcif(data=sim_dat,
 
 # plot the curves
 plot(adjcif)
-}
 }

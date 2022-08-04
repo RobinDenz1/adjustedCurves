@@ -75,9 +75,13 @@ Robin Denz
 \code{\link[geepack]{geese}}, \code{\link[prodlim]{jackknife}}, \code{\link[splines]{ns}}, \code{\link[splines]{bs}}
 }
 \examples{
-\dontrun{
+library(adjustedCurves)
+library(geepack)
+
+set.seed(42)
+
 # simulate some data as example
-sim_dat <- sim_confounded_surv(n=100, max_t=1.2)
+sim_dat <- sim_confounded_surv(n=50, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # calculate adjusted survival curves, with time as factor
@@ -101,5 +105,4 @@ adjsurv <- adjustedsurv(data=sim_dat,
 
 # plot the curves
 plot(adjsurv)
-}
 }

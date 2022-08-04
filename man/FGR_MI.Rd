@@ -44,18 +44,20 @@ Robin Denz
 \code{\link{adjustedsurv}}
 }
 \examples{
-\dontrun{
+# not run because it would be too slow
+\donttest{
+library(adjustedCurves)
 library(survival)
 library(riskRegression)
 library(mice)
 library(prodlim)
 
 # simulate some data as example
-sim_dat <- sim_confounded_crisk(n=500, max_t=1.2)
+sim_dat <- sim_confounded_crisk(n=50, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # introduce random missingness in x1 as example
-sim_dat$x1 <- ifelse(runif(n=500) < 0.5, sim_dat$x1, NA)
+sim_dat$x1 <- ifelse(runif(n=50) < 0.5, sim_dat$x1, NA)
 
 # perform multiple imputation
 mids <- mice::mice(data=sim_dat, method="pmm", m=5, printFlag=FALSE)
@@ -64,7 +66,5 @@ mids <- mice::mice(data=sim_dat, method="pmm", m=5, printFlag=FALSE)
 fgr_mods <- FGR_MI(mids=mids,
                    formula=Hist(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
                    cause=1)
-
-
 }
 }

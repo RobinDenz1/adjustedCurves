@@ -37,7 +37,7 @@ Further arguments passed to \code{\link[riskRegression]{ate}}.
 \item{\strong{Dependencies:} This method relies on the \pkg{riskRegression} package}
 }
 
-This method works by modelling the treatment assignment mechanism. Adjusted CIFs are calculated by first estimating appropriate case-weights for each observation in \code{data}. Those weights are used in a weighted version of the Aalen-Johansen estimator. If the weights are correctly estimated the resulting estimates will be unbiased. A more detailed description can be found in Neumann et al. (2016) and Choi et al. (2019). By utilizing another set of weights, this function can also correct the estimates for covariate-dependent censoring (Ozenne et al. 2020). Asymptotic variance calculations are based on the efficient influence curve.
+This method works by modeling the treatment assignment mechanism. Adjusted CIFs are calculated by first estimating appropriate case-weights for each observation in \code{data}. Those weights are used in a weighted version of the Aalen-Johansen estimator. If the weights are correctly estimated the resulting estimates will be unbiased. A more detailed description can be found in Neumann et al. (2016) and Choi et al. (2019). By utilizing another set of weights, this function can also correct the estimates for covariate-dependent censoring (Ozenne et al. 2020). Asymptotic variance calculations are based on the efficient influence curve.
 
 Internally, this function simply calls the \code{\link[riskRegression]{ate}} function with appropriate arguments. The three-dot syntax can be used to pass further arguments to that function. It is however recommended to use the \code{\link[riskRegression]{ate}} function directly when specific settings are required.
 
@@ -64,9 +64,12 @@ The wrapper function was written by Robin Denz, the \code{\link[riskRegression]{
 \code{\link[riskRegression]{ate}}, \code{\link{glm}}, \code{\link[nnet]{multinom}}
 }
 \examples{
-\dontrun{
+library(adjustedCurves)
+
+set.seed(42)
+
 # simulate some data as example
-sim_dat <- sim_confounded_crisk(n=500, max_t=5)
+sim_dat <- sim_confounded_crisk(n=50, max_t=5)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # estimate a treatment assignment model
@@ -81,5 +84,4 @@ adjcif <- adjustedcif(data=sim_dat,
                       method="iptw",
                       treatment_model=glm_mod)
 plot(adjcif)
-}
 }

@@ -84,12 +84,15 @@ The code for step (3) and (4) described in the details was taken from the \pkg{s
 }
 
 \examples{
-\dontrun{
+library(adjustedCurves)
+
+set.seed(42)
+
 # simulate data with default values
-sim_dat <- sim_confounded_crisk(n=100)
+sim_dat <- sim_confounded_crisk(n=10)
 
 # set group betas to 0
-sim_dat <- sim_confounded_crisk(n=100, group_beta=c(0, 0))
+sim_dat <- sim_confounded_crisk(n=10, group_beta=c(0, 0))
 
 # set some custom values
 outcome_betas <- list(c(0.03, 0.4),
@@ -109,9 +112,8 @@ lcovars <- list(x1=c("rbinom", 1, 0.3),
                 x5=c("rnorm", 0, 1.1),
                 x6=c("rnorm", 0, 0.9))
 
-sim_dat <- sim_confounded_crisk(n=100,
+sim_dat <- sim_confounded_crisk(n=10,
                                 treatment_betas=treatment_betas,
                                 outcome_betas=outcome_betas,
                                 lcovars=lcovars)
-}
 }

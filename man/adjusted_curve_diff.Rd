@@ -89,14 +89,15 @@ Robin Denz
 \code{\link{plot_curve_diff}}, \code{\link{adjustedsurv}}, \code{\link{adjustedcif}}
 }
 \examples{
-\dontrun{
+library(adjustedCurves)
 library(survival)
 library(cmprsk)
 
 #### Simple Survival Case with adjusted survival curves ####
 
 # simulate some data as example
-sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+set.seed(42)
+sim_dat <- sim_confounded_surv(n=30, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # propensity score model
@@ -108,10 +109,10 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         ev_time="time",
                         event="event",
                         method="iptw_km",
-                        treatment_model=cox_mod,
-                        conf_int=FALSE,
+                        treatment_model=ps_mod,
+                        conf_int=TRUE,
                         bootstrap=TRUE,
-                        n_boot=500)
+                        n_boot=10) # n_boot should be much higher in reality
 
 # calculate the whole difference curve
 adjdiff <- adjusted_curve_diff(adjsurv)
@@ -131,12 +132,12 @@ library(riskRegression)
 library(prodlim)
 
 # simulate some data as example
-sim_dat <- sim_confounded_crisk(n=500, max_t=1.2)
+sim_dat <- sim_confounded_crisk(n=41, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # estimate a cause-specific cox-regression for the outcome
 csc_mod <- CSC(Hist(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
-                 data=sim_dat)
+               data=sim_dat)
 
 # use it to calculate adjusted CIFs for cause = 1 with bootstrapping
 adjcif <- adjustedcif(data=sim_dat,
@@ -145,9 +146,9 @@ adjcif <- adjustedcif(data=sim_dat,
                       event="event",
                       method="direct",
                       outcome_model=csc_mod,
-                      conf_int=FALSE,
+                      conf_int=TRUE,
                       bootstrap=TRUE,
-                      n_boot=500,
+                      n_boot=10,
                       cause=1)
 
 # calculate the whole difference curve
@@ -158,6 +159,4 @@ adjdiff <- adjusted_curve_diff(adjcif, conf_int=TRUE)
 
 # only at specific points in time
 adjdiff <- adjusted_curve_diff(adjcif, times=c(0.2, 0.4), conf_int=TRUE)
-
-}
 }

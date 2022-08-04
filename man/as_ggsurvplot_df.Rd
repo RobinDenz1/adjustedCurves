@@ -25,12 +25,13 @@ Robin Denz
 \code{\link{adjustedsurv}}, \code{\link{plot.adjustedsurv}}
 }
 \examples{
-\dontrun{
+library(adjustedCurves)
 library(survival)
-library(survminer)
+
+set.seed(42)
 
 # simulate some example data
-sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat <- sim_confounded_surv(n=50, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # treatment assignment model
@@ -49,7 +50,9 @@ adjsurv <- adjustedsurv(data=sim_dat,
 # extract info
 df <- as_ggsurvplot_df(adjsurv)
 
-# plot using survminer
+# not run here to avoid dependency on survminer
+if (interactive()) {
+# plot using survminer, requires the 'survminer' package
 ggsurvplot_df(df)
 }
 }

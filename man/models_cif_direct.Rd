@@ -25,13 +25,13 @@ The following models are directly supported in the \code{outcome_model} in the \
 
   \item{}{\code{\link[prodlim]{prodlim}} [\strong{B}, Required Packages: \pkg{prodlim}, \pkg{riskRegression}]}
 
-  \item{}{\code{\link[randomForestSRC]{rfsrc}} [\strong{B}, Required Packages: \pkg{randomForestSRC}, \pkg{riskRegression}]}
+  \item{}{\code{rfsrc} [\strong{B}, Required Packages: \pkg{randomForestSRC}, \pkg{riskRegression}]}
 
   \item{}{\code{ARR} [\strong{B}, Required Packages: \pkg{riskRegression}]}
 
-  \item{}{\code{\link[hal9001]{fit_hal}} [\strong{B}, Required Packages: \pkg{hal9001}, \pkg{riskRegression}]}
+  \item{}{\code{fit_hal} [\strong{B}, Required Packages: \pkg{hal9001}, \pkg{riskRegression}]}
 
-  \item{}{\code{\link[fastcmprsk]{fastCrr}} [\strong{C}, Required Packages: \pkg{fastcmprsk}]}
+  \item{}{\code{fastCrr} [\strong{C}, Required Packages: \pkg{fastcmprsk}]}
 
   \item{}{\code{\link[timereg]{comp.risk}} [\strong{C}, Required Packages: \pkg{timereg}]}
 

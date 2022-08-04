@@ -63,13 +63,15 @@ The function itself was written by Robin Denz. When using \code{CauseSpecificCox
 \code{\link[adjustedCurves]{models_cif_direct}}, \code{\link[riskRegression]{ate}}, \code{\link[riskRegression]{CSC}}, \code{\link[riskRegression]{FGR}}, \code{\link[adjustedCurves]{CSC_MI}}, \code{\link[adjustedCurves]{FGR_MI}}
 }
 \examples{
-\dontrun{
+library(adjustedCurves)
 library(survival)
 library(riskRegression)
 library(prodlim)
 
+set.seed(42)
+
 # simulate some data as example
-sim_dat <- sim_confounded_crisk(n=500, max_t=5)
+sim_dat <- sim_confounded_crisk(n=50, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # estimate a cause-specific cox-regression for the outcome
@@ -106,16 +108,18 @@ adjcif <- adjustedcif(data=sim_dat,
 # plot the curves
 plot(adjcif)
 
+# not run because it would be too slow
+\donttest{
 ## using multiple imputation
 library(mice)
 
 # introduce random missingness in x1 as example
 # NOTE: This is only done as an example, in reality you would
 #       already have missing data, not introduce it yourself.
-sim_dat$x1 <- ifelse(runif(n=500) < 0.5, sim_dat$x1, NA)
+sim_dat$x1 <- ifelse(runif(n=50) < 0.5, sim_dat$x1, NA)
 
 # perform multiple imputation
-mids <- mice::mice(data=sim_dat, method="pmm", m=5, printFlag=F)
+mids <- mice::mice(data=sim_dat, method="pmm", m=5, printFlag=FALSE)
 
 # fit model for each imputed dataset, using the CSC_MI helper function
 mira <- CSC_MI(mids, Hist(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group)

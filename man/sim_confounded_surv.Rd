@@ -84,9 +84,12 @@ Robin Denz
 }
 
 \examples{
-\dontrun{
+library(adjustedCurves)
+
+set.seed(42)
+
 # simulate data with default values
-sim_dat <- sim_confounded_surv(n=500)
+sim_dat <- sim_confounded_surv(n=10)
 
 # simulate data with some new values
 lcovars <- list(x1=c("rnorm", 1, 2),
@@ -95,8 +98,7 @@ lcovars <- list(x1=c("rnorm", 1, 2),
 treatment_betas <- c(x1=0.2, x2=0.6, x3=-0.9)
 outcome_betas <- c(x1=1.1, x2=0, x3=-0.3)
 
-sim_dat <- sim_confounded_surv(n=250, lcovars=lcovars,
+sim_dat <- sim_confounded_surv(n=10, lcovars=lcovars,
                                treatment_betas=treatment_betas,
                                outcome_betas=outcome_betas)
-}
 }

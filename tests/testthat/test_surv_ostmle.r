@@ -3,7 +3,7 @@ library(survtmle)
 
 set.seed(35)
 
-sim_dat <- sim_confounded_surv(n=35, max_t=1.5)
+sim_dat <- sim_confounded_surv(n=15, max_t=1.5)
 sim_dat$group <- factor(sim_dat$group)
 sim_dat$time <- round(sim_dat$time * 10) + 1
 

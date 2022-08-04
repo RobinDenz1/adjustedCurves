@@ -86,9 +86,12 @@ The wrapper function was written by Robin Denz, the \code{MOSS} package (which t
 \code{\link[survtmle]{survtmle}}, \code{MOSS}, \code{\link[SuperLearner]{SuperLearner}}
 }
 \examples{
+# not run because any meaningful example is too slow
 \dontrun{
+library(adjustedCurves)
+
 # simulate some data as example
-sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat <- sim_confounded_surv(n=50, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # only works with integer time, only unbiased with small amounts of them

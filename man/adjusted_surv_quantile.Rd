@@ -60,11 +60,12 @@ Robin Denz
 \code{\link{adjustedsurv}}
 }
 \examples{
-\dontrun{
+library(adjustedCurves)
 library(survival)
 
 # simulate some data as example
-sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+set.seed(42)
+sim_dat <- sim_confounded_surv(n=50, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # estimate a cox-regression for the outcome
@@ -78,7 +79,7 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         event="event",
                         method="direct",
                         outcome_model=cox_mod,
-                        conf_int=FALSE,
+                        conf_int=TRUE,
                         bootstrap=FALSE)
 
 # calculate adjusted median survival times
@@ -86,5 +87,4 @@ adjusted_surv_quantile(adjsurv)
 
 # calculate other quantiles + confidence intervals
 adjusted_surv_quantile(adjsurv, conf_int=TRUE, p=c(0.2, 0.4))
-}
 }

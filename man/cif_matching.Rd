@@ -58,9 +58,14 @@ Robin Denz
 \code{\link[Matching]{Match}}, \code{\link[cmprsk]{cuminc}}
 }
 \examples{
-\dontrun{
+library(adjustedCurves)
+library(survival)
+library(Matching)
+
+set.seed(42)
+
 # simulate some data as example
-sim_dat <- sim_confounded_crisk(n=300, max_t=5)
+sim_dat <- sim_confounded_crisk(n=50, max_t=5)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # estimate treatment assignment model
@@ -92,5 +97,4 @@ adjcif <- adjustedcif(data=sim_dat,
 
 # plot the curves
 plot(adjcif)
-}
 }

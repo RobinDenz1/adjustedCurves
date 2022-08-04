@@ -85,19 +85,18 @@ Robin Denz
 \code{\link{adjustedcif}}, \code{\link{adjustedsurv}}, \code{\link{plot_rmtl_curve}}
 }
 \examples{
-\dontrun{
+library(adjustedCurves)
 library(survival)
 
 ###### when using single-event survival data
 
 # simulate some data as example
-sim_dat <- sim_confounded_surv(n=500, max_t=1.2)
+sim_dat <- sim_confounded_surv(n=50, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # estimate a cox-regression for the outcome
 cox_mod <- coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
                  data=sim_dat, x=TRUE)
-
 
 # use it to calculate adjusted survival curves with bootstrapping
 adjsurv <- adjustedsurv(data=sim_dat,
@@ -108,7 +107,7 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         outcome_model=cox_mod,
                         conf_int=FALSE,
                         bootstrap=TRUE,
-                        n_boot=500)
+                        n_boot=10) # n_boot should be much higher in reality
 
 # calculate adjusted restricted mean survival times from 0 to 1
 adjrmst <- adjusted_rmst(adjsurv, from=0, to=1, conf_int=FALSE)
@@ -124,7 +123,8 @@ library(riskRegression)
 library(prodlim)
 
 # simulate some data as example
-sim_dat <- sim_confounded_crisk(n=500)
+set.seed(42)
+sim_dat <- sim_confounded_crisk(n=50)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # estimate a cause-specific cox-regression model for the outcome
@@ -140,12 +140,10 @@ adjcif <- adjustedcif(data=sim_dat,
                       outcome_model=csc_mod,
                       conf_int=FALSE,
                       bootstrap=TRUE,
-                      n_boot=500,
+                      n_boot=10,
                       cause=1)
 
 # calculate adjusted restricted mean time lost estimates from 0 to 1
 # including standard errors and confidence intervals
 adjrmtl <- adjusted_rmtl(adjcif, from=0, to=1, conf_int=TRUE)
-
-}
 }
