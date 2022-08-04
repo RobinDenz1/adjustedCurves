@@ -286,9 +286,7 @@
 <span>                      method<span class="op">=</span><span class="st">"iptw"</span>,</span>
 <span>                      treatment_model<span class="op">=</span><span class="va">treatment_model</span>,</span>
 <span>                      cause<span class="op">=</span><span class="fl">1</span>,</span>
-<span>                      conf_int<span class="op">=</span><span class="cn">TRUE</span>,</span>
-<span>                      bootstrap<span class="op">=</span><span class="cn">TRUE</span>,</span>
-<span>                      n_boot<span class="op">=</span><span class="fl">150</span><span class="op">)</span></span>
+<span>                      conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="introduction_files/figure-html/unnamed-chunk-19-1.png" width="672"></p>
 <p>The other estimators can be used using essentially the same syntax. We used <code>bootstrap=TRUE</code> in the last example, because we will use functionality relying on it when comparing groups later.</p>
@@ -326,9 +324,9 @@
 <span>                                  data<span class="op">=</span><span class="va">data_1</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## # weights:  24 (14 variable)</span></span>
 <span><span class="co">## initial  value 329.583687 </span></span>
-<span><span class="co">## iter  10 value 291.071580</span></span>
-<span><span class="co">## iter  20 value 288.574732</span></span>
-<span><span class="co">## final  value 288.574725 </span></span>
+<span><span class="co">## iter  10 value 286.543657</span></span>
+<span><span class="co">## iter  20 value 283.765460</span></span>
+<span><span class="co">## final  value 283.765313 </span></span>
 <span><span class="co">## converged</span></span></code></pre>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">adjsurv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/adjustedsurv.html">adjustedsurv</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">data_1</span>,</span>
@@ -354,8 +352,8 @@
 <p>One simple way to compare the groups is to pick a point in time and simply calculate the differences between the survival or failure probability at this point. The <code>adjusted_curve_diff</code> function automates this process. In the following example we calculate the difference between the adjusted survival probability of group 0 and 1 at time = 0.4:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/adjusted_curve_diff.html">adjusted_curve_diff</a></span><span class="op">(</span><span class="va">adjsurv</span>, times<span class="op">=</span><span class="fl">0.4</span>, group_1<span class="op">=</span><span class="st">"0"</span>, group_2<span class="op">=</span><span class="st">"1"</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##   time       diff         se   ci_lower ci_upper   p_value</span></span>
-<span><span class="co">## 1  0.4 0.02831903 0.07673403 -0.1220769 0.178715 0.7120872</span></span></code></pre>
+<pre><code><span><span class="co">##   time         diff         se   ci_lower  ci_upper   p_value</span></span>
+<span><span class="co">## 1  0.4 -0.008257592 0.09049062 -0.1856159 0.1691008 0.9272911</span></span></code></pre>
 <p>The confidence interval does include 0, suggesting that this difference is not statistically significant. This can also be seen from the associated p-value.</p>
 <p>Instead of focusing on a single point in time, we can also plot the entire difference curve using the <code>plot_curve_diff</code> function:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
@@ -370,9 +368,9 @@
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/adjusted_surv_quantile.html">adjusted_surv_quantile</a></span><span class="op">(</span><span class="va">adjsurv</span>, p<span class="op">=</span><span class="fl">0.5</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##     p group    q_surv  ci_lower  ci_upper</span></span>
-<span><span class="co">## 1 0.5     0 0.5067310 0.4487885 0.5685240</span></span>
-<span><span class="co">## 2 0.5     1 0.5994836 0.3975624 0.8989518</span></span>
-<span><span class="co">## 3 0.5     2 0.6037364 0.4442166 0.6896085</span></span></code></pre>
+<span><span class="co">## 1 0.5     0 0.5067310 0.4487885 0.5657139</span></span>
+<span><span class="co">## 2 0.5     1 0.8014008 0.4068963        NA</span></span>
+<span><span class="co">## 3 0.5     2 0.4835157 0.4311141 0.6283029</span></span></code></pre>
 <p>In our case, they are all very similar.</p>
 </div>
 <div class="section level3">
@@ -382,22 +380,22 @@
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/adjusted_rmst.html">adjusted_rmst</a></span><span class="op">(</span><span class="va">adjsurv</span>, to<span class="op">=</span><span class="fl">0.4</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   group      rmst</span></span>
-<span><span class="co">## 1     0 0.3485104</span></span>
-<span><span class="co">## 2     1 0.3412029</span></span>
-<span><span class="co">## 3     2 0.3573410</span></span></code></pre>
+<span><span class="co">## 1     0 0.3485056</span></span>
+<span><span class="co">## 2     1 0.3415740</span></span>
+<span><span class="co">## 3     2 0.3547187</span></span></code></pre>
 <p>The function returns adjusted RMST for every level of the <code>"group"</code> variable. When bootstrapping was performed when calling the <code>adjustedsurv</code> function, standard errors and confidence intervals can be also calculated using this function as well by setting the <code>conf_int</code> argument to <code>TRUE</code>:</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/adjusted_rmst.html">adjusted_rmst</a></span><span class="op">(</span><span class="va">adjsurv</span>, to<span class="op">=</span><span class="fl">0.4</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   group      rmst          se  ci_lower  ci_upper n_boot</span></span>
-<span><span class="co">## 1     0 0.3485104 0.007164634 0.3344680 0.3625528    150</span></span>
-<span><span class="co">## 2     1 0.3412029 0.009438748 0.3227033 0.3597025    150</span></span>
-<span><span class="co">## 3     2 0.3573410 0.010649137 0.3364691 0.3782129    150</span></span></code></pre>
+<span><span class="co">## 1     0 0.3485056 0.007808665 0.3332009 0.3638103    150</span></span>
+<span><span class="co">## 2     1 0.3415740 0.019459009 0.3034351 0.3797130    150</span></span>
+<span><span class="co">## 3     2 0.3547187 0.008969380 0.3371391 0.3722984    150</span></span></code></pre>
 <p>Similar to the <code>adjusted_curve_diff</code> function, we can perform a test of the difference between two RMST values:</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/adjusted_rmst.html">adjusted_rmst</a></span><span class="op">(</span><span class="va">adjsurv</span>, to<span class="op">=</span><span class="fl">0.4</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>, difference<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>              group_1<span class="op">=</span><span class="st">"0"</span>, group_2<span class="op">=</span><span class="st">"1"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##          diff         se    ci_lower   ci_upper   p_value</span></span>
-<span><span class="co">## 1 0.007307517 0.01184998 -0.01591801 0.03053304 0.5374528</span></span></code></pre>
+<pre><code><span><span class="co">##          diff         se    ci_lower  ci_upper   p_value</span></span>
+<span><span class="co">## 1 0.006931522 0.02096731 -0.03416366 0.0480267 0.7409565</span></span></code></pre>
 <p>There seems to be no statistically significant difference between the two RMSTs.</p>
 <p>Instead of focusing on a single point in time, it is also possible to plot the RMST as it evolves over time using the <code>plot_rmst_curve</code> function:</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
@@ -410,10 +408,10 @@
 </h3>
 <p>A similar statistic is the adjusted <em>Restricted Mean Time Lost</em> (RMTL), which is defined as the area under the cause-specific confounder adjusted CIF. It can be calculated in the same way as the RMST, but using the <code>adjusted_rmtl</code> function:</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/adjusted_rmtl.html">adjusted_rmtl</a></span><span class="op">(</span><span class="va">adjcif</span>, to<span class="op">=</span><span class="fl">0.4</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##   group       rmtl         se   ci_lower   ci_upper n_boot</span></span>
-<span><span class="co">## 1     0 0.05621035 0.01106364 0.03452602 0.07789468    150</span></span>
-<span><span class="co">## 2     1 0.04968113 0.01328988 0.02363345 0.07572880    150</span></span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/adjusted_rmtl.html">adjusted_rmtl</a></span><span class="op">(</span><span class="va">adjcif</span>, to<span class="op">=</span><span class="fl">0.4</span>, conf_int<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##   group       rmtl</span></span>
+<span><span class="co">## 1     0 0.05621035</span></span>
+<span><span class="co">## 2     1 0.04968113</span></span></code></pre>
 <p>In contrast to the <code>adjusted_rmst</code> function, this works for both <code>adjustedsurv</code> and <code>adjustedcif</code> objects because the survival curve can easily be transformed to a CIF. It also allows difference tests, just like the <code>adjusted_rmtl</code> function.</p>
 <p>We can also plot the RMTL over time, this time using the <code>plot_rmtl_curve</code> function:</p>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
