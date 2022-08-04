@@ -3,7 +3,7 @@ library(survival)
 set.seed(42)
 
 sim_dat <- readRDS(system.file("testdata",
-                               "d_sim_surv_n_150.Rds",
+                               "d_sim_surv_n_50.Rds",
                                package="adjustedCurves"))
 sim_dat$group <- as.factor(sim_dat$group)
 sim_dat$x1 <- ifelse(runif(n=nrow(sim_dat)) <= 0.7, sim_dat$x1, NA)
@@ -405,7 +405,7 @@ test_that("MI, emp_lik, no boot", {
 })
 
 test_that("MI, emp_lik, boot", {
-  adj <- adjustedsurv(data=imp,
+  adj <- suppressWarnings({adjustedsurv(data=imp,
                       variable="group",
                       ev_time="time",
                       event="event",
@@ -413,11 +413,13 @@ test_that("MI, emp_lik, boot", {
                       conf_int=FALSE,
                       bootstrap=TRUE,
                       n_boot=3,
-                      treatment_vars=treat_vars)
+                      treatment_vars=treat_vars)})
   expect_s3_class(adj, "adjustedsurv")
   expect_true(is.numeric(adj$adjsurv$surv))
   expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
+
+set.seed(3)
 
 ### adjusted_surv_quantile
 adjsurv <- adjustedsurv(data=imp,
@@ -431,39 +433,41 @@ adjsurv <- adjustedsurv(data=imp,
 
 test_that("adjusted_surv_quantile, 2 treatments, no boot", {
   adj_med <- adjusted_surv_quantile(adjsurv)
-  expect_equal(round(adj_med$q_surv, 4), c(0.4798, 0.5900))
+  expect_equal(round(adj_med$q_surv, 4), c(0.4785, 0.6252))
 })
 
 ### adjusted_rmst
 test_that("adjusted_rmst, 2 treatments, no boot", {
   adj_rmst <- adjusted_rmst(adjsurv, from=0, to=1, conf_int=FALSE)
-  expect_equal(round(adj_rmst$rmst, 4), c(0.5284, 0.6288))
+  expect_equal(round(adj_rmst$rmst, 4), c(0.5115, 0.6566))
 })
 
 test_that("adjusted_rmst, 2 treatments, boot", {
   adj_rmst <- adjusted_rmst(adjsurv, from=0, to=1, conf_int=TRUE)
-  expect_equal(round(adj_rmst$rmst, 4), c(0.5284, 0.6288))
-  expect_equal(round(adj_rmst$se, 4), c(0.0357, 0.0447))
-  expect_equal(adj_rmst$n_boot, c(3, 3))
+  expect_equal(round(adj_rmst$rmst, 4), c(0.5115, 0.6566))
+  expect_equal(round(adj_rmst$se, 4), c(0.0406, 0.0390))
+  expect_equal(adj_rmst$n_boot, c(2, 2))
 })
 
 ### adjusted_curve_test
 test_that("adjusted_curve_test, 2 treatments", {
   adj_test <- adjusted_curve_test(adjsurv, from=0, to=1)
-  expect_equal(round(adj_test$observed_diff_integral, 4), -0.1004)
-  expect_equal(round(adj_test$integral_se, 4), 0.0376)
+  expect_equal(round(adj_test$observed_diff_integral, 4), -0.1451)
+  expect_equal(round(adj_test$integral_se, 4), 0.0521)
   expect_equal(round(adj_test$p_value, 4), 0)
-  expect_equal(adj_test$n_boot, 3)
+  expect_equal(adj_test$n_boot, 2)
 })
 
 ### adjusted_curve_test
 test_that("adjusted_curve_test, 2 treatments, linear", {
   adj_test <- adjusted_curve_test(adjsurv, from=0, to=1, interpolation="linear")
-  expect_equal(round(adj_test$observed_diff_integral, 4), -0.1009)
-  expect_equal(round(adj_test$integral_se, 4), 0.0374)
+  expect_equal(round(adj_test$observed_diff_integral, 4), -0.1504)
+  expect_equal(round(adj_test$integral_se, 4), 0.0558)
   expect_equal(round(adj_test$p_value, 4), 0)
-  expect_equal(adj_test$n_boot, 3)
+  expect_equal(adj_test$n_boot, 2)
 })
+
+set.seed(4)
 
 # create 3 treatments
 sim_dat$group2 <- 0
@@ -487,30 +491,29 @@ adjsurv <- adjustedsurv(data=imp,
 
 test_that("adjusted_surv_quantile, 3 treatments, no boot", {
   adj_med <- adjusted_surv_quantile(adjsurv)
-  expect_equal(round(adj_med$q_surv, 4), c(0.7122, 0.4798, 0.5398))
+  expect_equal(round(adj_med$q_surv, 4), c(0.7408, 0.4785, 0.6084))
 })
 
 ### adjusted_rmst
 test_that("adjusted_rmst, 3 treatments, no boot", {
   adj_rmst <- adjusted_rmst(adjsurv, from=0, to=1, conf_int=FALSE)
-  expect_equal(round(adj_rmst$rmst, 4), c(0.6588, 0.5284, 0.5924))
+  expect_equal(round(adj_rmst$rmst, 4), c(0.7463, 0.5115, 0.5788))
 })
 
 test_that("adjusted_rmst, 3 treatments, with boot", {
   adj_rmst <- adjusted_rmst(adjsurv, from=0, to=1, conf_int=TRUE)
-  expect_equal(round(adj_rmst$rmst, 4), c(0.6588, 0.5284, 0.5924))
-  expect_equal(round(adj_rmst$se, 4), c(0.0346, 0.0215, 0.0328))
-  expect_equal(adj_rmst$n_boot, c(3, 3, 3))
+  expect_equal(round(adj_rmst$rmst, 4), c(0.7463, 0.5115, 0.5788))
+  expect_equal(round(adj_rmst$se, 4), c(0.0719, 0.0460, NA))
+  expect_equal(adj_rmst$n_boot, c(3, 3, 1))
 })
 
 test_that("adjusted_curve_test, 3 treatments", {
   adj_test <- adjusted_curve_test(adjsurv, from=0, to=1, conf_level=0.95)
   expect_equal(round(adj_test$`Chemo vs. OP`$observed_diff_integral, 4),
-               0.1304)
-  expect_equal(round(adj_test$`Chemo vs. OP`$integral_se, 4), 0.0501)
+               0.2348)
+  expect_equal(round(adj_test$`Chemo vs. OP`$integral_se, 4), 0.058)
   expect_equal(round(adj_test$`Chemo vs. OP`$p_value, 4), 0)
   expect_equal(round(adj_test$`Chemo vs. OP`$mids_p_values, 4),
                c(0, 0, 0))
   expect_equal(adj_test$`Chemo vs. OP`$n_boot, 3)
-  expect_snapshot_output(print(adj_test))
 })

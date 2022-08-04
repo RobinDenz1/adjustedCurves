@@ -79,8 +79,10 @@ surv_aiptw <- function(data, variable, ev_time, event, conf_int,
   plotdata$surv <- 1 - plotdata$surv
 
   if ("ci_lower" %in% colnames(plotdata)) {
-    plotdata$ci_lower <- 1 - plotdata$ci_lower
-    plotdata$ci_upper <- 1 - plotdata$ci_upper
+    upper <- 1 - plotdata$ci_lower
+    lower <- 1 - plotdata$ci_upper
+    plotdata$ci_lower <- lower
+    plotdata$ci_upper <- upper
   }
 
   out$plotdata <- plotdata

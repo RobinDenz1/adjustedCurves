@@ -3,7 +3,7 @@ library(survival)
 set.seed(42)
 
 sim_dat <- readRDS(system.file("testdata",
-                               "d_sim_crisk_n_200.Rds",
+                               "d_sim_crisk_n_50.Rds",
                                package="adjustedCurves"))
 
 sim_dat_tibble <- dplyr::tibble(sim_dat)
@@ -43,6 +43,7 @@ test_that("MI, direct, no boot", {
 })
 
 test_that("MI, direct, boot", {
+  suppressWarnings({
   adj <- adjustedcif(data=imp,
                      variable="group",
                      ev_time="time",
@@ -52,7 +53,7 @@ test_that("MI, direct, boot", {
                      bootstrap=TRUE,
                      n_boot=2,
                      outcome_model=outc_mod,
-                     cause=1)
+                     cause=1)})
   expect_s3_class(adj, "adjustedcif")
   expect_true(is.numeric(adj$adjcif$cif))
   expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
@@ -124,6 +125,7 @@ test_that("MI, iptw, no boot, glm", {
 })
 
 test_that("MI, iptw, boot, glm", {
+  suppressWarnings({
   adj <- adjustedcif(data=imp,
                      variable="group",
                      ev_time="time",
@@ -133,7 +135,7 @@ test_that("MI, iptw, boot, glm", {
                      bootstrap=TRUE,
                      n_boot=2,
                      treatment_model=treat_mod,
-                     cause=1)
+                     cause=1)})
   expect_s3_class(adj, "adjustedcif")
   expect_true(is.numeric(adj$adjcif$cif))
   expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
@@ -156,7 +158,7 @@ test_that("MI, iptw_pseudo, no boot", {
 })
 
 test_that("MI, iptw_pseudo, boot", {
-  adj <- adjustedcif(data=imp,
+  adj <- suppressWarnings({adjustedcif(data=imp,
                      variable="group",
                      ev_time="time",
                      event="event",
@@ -165,7 +167,7 @@ test_that("MI, iptw_pseudo, boot", {
                      bootstrap=TRUE,
                      n_boot=2,
                      treatment_model=treat_mod,
-                     cause=1)
+                     cause=1)})
   expect_s3_class(adj, "adjustedcif")
   expect_true(is.numeric(adj$adjcif$cif))
   expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
@@ -234,7 +236,7 @@ test_that("MI, aiptw, no boot", {
 })
 
 test_that("MI, aiptw, boot", {
-  adj <- adjustedcif(data=imp,
+  adj <- suppressWarnings({adjustedcif(data=imp,
                      variable="group",
                      ev_time="time",
                      event="event",
@@ -244,7 +246,7 @@ test_that("MI, aiptw, boot", {
                      n_boot=2,
                      outcome_model=outc_mod,
                      treatment_model=treat_mod,
-                     cause=1)
+                     cause=1)})
   expect_s3_class(adj, "adjustedcif")
   expect_true(is.numeric(adj$adjcif$cif))
   expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
@@ -327,17 +329,17 @@ adjcif <- adjustedcif(data=imp,
 
 test_that("adjusted_curve_test, two treatments", {
   adj_test <- adjusted_curve_test(adjcif, from=0, to=1)
-  expect_equal(round(adj_test$observed_diff_integral, 4), -0.0543)
-  expect_equal(round(adj_test$integral_se, 4), 0.0268)
-  expect_equal(round(adj_test$p_value, 4), 0)
+  expect_equal(round(adj_test$observed_diff_integral, 4), 0.0129)
+  expect_equal(round(adj_test$integral_se, 4), 0.0558)
+  expect_equal(adj_test$mids_p_values, c(1, 1, 1))
   expect_equal(adj_test$n_boot, 2)
 })
 
 test_that("adjusted_curve_test, two treatments, linear", {
   adj_test <- adjusted_curve_test(adjcif, from=0, to=1, interpolation="linear")
-  expect_equal(round(adj_test$observed_diff_integral, 4), -0.0529)
-  expect_equal(round(adj_test$integral_se, 4), 0.0267)
-  expect_equal(round(adj_test$p_value, 4), 0)
+  expect_equal(round(adj_test$observed_diff_integral, 4), 0.0135)
+  expect_equal(round(adj_test$integral_se, 4), 0.0566)
+  expect_equal(adj_test$mids_p_values, c(1, 1, 1))
   expect_equal(adj_test$n_boot, 2)
 })
 
@@ -365,19 +367,19 @@ adjcif <- adjustedcif(data=imp,
 test_that("adjusted_curve_test, three treatments", {
   adj_test <- adjusted_curve_test(adjcif, from=0, to=1)
   expect_equal(round(adj_test$`Chemo vs. Placebo`$observed_diff_integral, 4),
-               -0.0309)
-  expect_equal(round(adj_test$`Chemo vs. Placebo`$integral_se, 4), 0.0670)
-  expect_equal(round(adj_test$`Chemo vs. Placebo`$p_value, 4), NaN)
-  expect_equal(adj_test$`Chemo vs. Placebo`$mids_p_values, c(1, 1, 0))
-  expect_equal(adj_test$`Chemo vs. Placebo`$n_boot, 2)
+               -0.3791)
+  expect_true(is.na(adj_test$`Chemo vs. Placebo`$integral_se))
+  expect_equal(round(adj_test$`Chemo vs. Placebo`$p_value, 4), 0)
+  expect_equal(adj_test$`Chemo vs. Placebo`$mids_p_values, c(0, 0, 0))
+  expect_equal(adj_test$`Chemo vs. Placebo`$n_boot, 1)
 })
 
-test_that("adjusted_curve_test, three treatmentsm linear", {
+test_that("adjusted_curve_test, three treatments linear", {
   adj_test <- adjusted_curve_test(adjcif, from=0, to=1, interpolation="linear")
   expect_equal(round(adj_test$`Chemo vs. Placebo`$observed_diff_integral, 4),
-               -0.0312)
-  expect_equal(round(adj_test$`Chemo vs. Placebo`$integral_se, 4), 0.0685)
-  expect_equal(round(adj_test$`Chemo vs. Placebo`$p_value, 4), NaN)
-  expect_equal(adj_test$`Chemo vs. Placebo`$mids_p_values, c(1, 1, 0))
-  expect_equal(adj_test$`Chemo vs. Placebo`$n_boot, 2)
+               -0.3877)
+  expect_true(is.na(adj_test$`Chemo vs. Placebo`$integral_se))
+  expect_equal(round(adj_test$`Chemo vs. Placebo`$p_value, 4), 0)
+  expect_equal(adj_test$`Chemo vs. Placebo`$mids_p_values, c(0, 0, 0))
+  expect_equal(adj_test$`Chemo vs. Placebo`$n_boot, 1)
 })

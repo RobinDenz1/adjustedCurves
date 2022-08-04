@@ -231,9 +231,7 @@ adjcif <- adjustedcif(data=data_2,
                       method="iptw",
                       treatment_model=treatment_model,
                       cause=1,
-                      conf_int=TRUE,
-                      bootstrap=TRUE,
-                      n_boot=150)
+                      conf_int=TRUE)
 plot(adjcif, conf_int=TRUE)
 ```
 
@@ -358,7 +356,7 @@ Bootstrap confidence intervals could also be added to this plot using `conf_int=
 A similar statistic is the adjusted *Restricted Mean Time Lost* (RMTL), which is defined as the area under the cause-specific confounder adjusted CIF. It can be calculated in the same way as the RMST, but using the `adjusted_rmtl` function:
 
 ```{r echo=TRUE}
-adjusted_rmtl(adjcif, to=0.4, conf_int=TRUE)
+adjusted_rmtl(adjcif, to=0.4, conf_int=FALSE)
 ```
 
 In contrast to the `adjusted_rmst` function, this works for both `adjustedsurv` and `adjustedcif` objects because the survival curve can easily be transformed to a CIF. It also allows difference tests, just like the `adjusted_rmtl` function.
