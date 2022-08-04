@@ -337,10 +337,10 @@
 <span>                        treatment_model<span class="op">=</span><span class="va">treatment_model</span>,</span>
 <span>                        conf_int<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>                        bootstrap<span class="op">=</span><span class="cn">TRUE</span>,</span>
-<span>                        n_boot<span class="op">=</span><span class="fl">150</span><span class="op">)</span></span>
+<span>                        n_boot<span class="op">=</span><span class="fl">50</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjsurv</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="introduction_files/figure-html/unnamed-chunk-22-1.png" width="672"></p>
-<p>We use <code>bootstrap=TRUE</code> here because we will need it in the next section. In practice, however, 150 bootstrap samples might not be enough to guarantee convergence.</p>
+<p>We use <code>bootstrap=TRUE</code> here because we will need it in the next section. In practice, however, 50 bootstrap samples would definitely not be enough to guarantee convergence. We choose this low number here only due to speed considerations enforced by CRAN.</p>
 </div>
 <div class="section level2">
 <h2 id="comparing-groups">Comparing Groups<a class="anchor" aria-label="anchor" href="#comparing-groups"></a>
@@ -387,16 +387,16 @@
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/adjusted_rmst.html">adjusted_rmst</a></span><span class="op">(</span><span class="va">adjsurv</span>, to<span class="op">=</span><span class="fl">0.4</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   group      rmst          se  ci_lower  ci_upper n_boot</span></span>
-<span><span class="co">## 1     0 0.3485056 0.007808665 0.3332009 0.3638103    150</span></span>
-<span><span class="co">## 2     1 0.3415740 0.019459009 0.3034351 0.3797130    150</span></span>
-<span><span class="co">## 3     2 0.3547187 0.008969380 0.3371391 0.3722984    150</span></span></code></pre>
+<span><span class="co">## 1     0 0.3485056 0.009156084 0.3305600 0.3664512     50</span></span>
+<span><span class="co">## 2     1 0.3415740 0.019812278 0.3027427 0.3804054     50</span></span>
+<span><span class="co">## 3     2 0.3547187 0.009117535 0.3368487 0.3725888     50</span></span></code></pre>
 <p>Similar to the <code>adjusted_curve_diff</code> function, we can perform a test of the difference between two RMST values:</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/adjusted_rmst.html">adjusted_rmst</a></span><span class="op">(</span><span class="va">adjsurv</span>, to<span class="op">=</span><span class="fl">0.4</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>, difference<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>              group_1<span class="op">=</span><span class="st">"0"</span>, group_2<span class="op">=</span><span class="st">"1"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##          diff         se    ci_lower  ci_upper   p_value</span></span>
-<span><span class="co">## 1 0.006931522 0.02096731 -0.03416366 0.0480267 0.7409565</span></span></code></pre>
-<p>There seems to be no statistically significant difference between the two RMSTs.</p>
+<pre><code><span><span class="co">##          diff         se    ci_lower   ci_upper   p_value</span></span>
+<span><span class="co">## 1 0.006931522 0.02182568 -0.03584602 0.04970907 0.7507993</span></span></code></pre>
+<p>There seems to be no statistically significant difference between the two RMSTs. However, due to the very low number of bootstrap replications used here these results should not be trusted. In practice one should use a much higher number, such as 500 or 1000 replications.</p>
 <p>Instead of focusing on a single point in time, it is also possible to plot the RMST as it evolves over time using the <code>plot_rmst_curve</code> function:</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_rmst_curve.html">plot_rmst_curve</a></span><span class="op">(</span><span class="va">adjsurv</span><span class="op">)</span></span></code></pre></div>

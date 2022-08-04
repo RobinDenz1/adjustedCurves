@@ -95,7 +95,7 @@ This page explains the details of estimating inverse probability of treatment we
 <li><p><strong>Bounded Estimates:</strong> Estimates are not guaranteed to be bounded in the 0 to 1 probability range.</p></li>
 <li><p><strong>Monotone Function:</strong> Estimates are not guaranteed to be monotone.</p></li>
 <li><p><strong>Dependencies:</strong> This method relies on the <span class="pkg">prodlim</span> package. The <span class="pkg">WeightIt</span> package is also required if <code>treatment_model</code> is a formula object.</p></li>
-</ul><p>This method works by modelling the treatment assignment mechanism. Adjusted CIFs are calculated by first estimating appropriate case-weights for each observation in <code>data</code>. This can be done using inverse probability of treatment weights using the propensity score (usually estimated using a logistic regression model) or by some other method (see <code><a href="https://ngreifer.github.io/WeightIt/reference/weightit.html" class="external-link">weightit</a></code>). Pseudo-Values of the cause-specific CIF are then calculated for every observation in <code>data</code> at some points in time \(T\). Since Pseudo-Values bypass the problem of censoring, a simple weighted average of the Pseudo-Values can be taken for every \(T\). See Andersen et al. (2017) for more details on this method and Andersen and Perme (2010) for more information on Pseudo-Values in general.</p>
+</ul><p>This method works by modeling the treatment assignment mechanism. Adjusted CIFs are calculated by first estimating appropriate case-weights for each observation in <code>data</code>. This can be done using inverse probability of treatment weights using the propensity score (usually estimated using a logistic regression model) or by some other method (see <code><a href="https://ngreifer.github.io/WeightIt/reference/weightit.html" class="external-link">weightit</a></code>). Pseudo-Values of the cause-specific CIF are then calculated for every observation in <code>data</code> at some points in time \(T\). Since Pseudo-Values bypass the problem of censoring, a simple weighted average of the Pseudo-Values can be taken for every \(T\). See Andersen et al. (2017) for more details on this method and Andersen and Perme (2010) for more information on Pseudo-Values in general.</p>
 <p>The standard error of this estimator can be approximated by calculation a weighted version of the standard error estimator. Interestingly, no exact method exists in the weighted case. Four approximations are implemented which can be chosen using the <code>se_method</code> argument. The equations for <code>"miller"</code>, <code>"galloway"</code> and <code>"cochrane"</code> are described and compared in Gatz and Smith (1995). <code>"Hmisc"</code> is the standard equation with a weight term added, as specified in the <span class="pkg">Hmisc</span> package, and should only be used with stabilized weights (<code>stabilize=TRUE</code>). It is generally recommended to use bootstrap estimates instead.</p>
     </div>
     <div class="section level2">
@@ -128,9 +128,12 @@ This page explains the details of estimating inverse probability of treatment we
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RobinDenz1/adjustedCurves" class="external-link">adjustedCurves</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># simulate some data as example</span></span></span>
-<span class="r-in"><span><span class="va">sim_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="sim_confounded_crisk.html">sim_confounded_crisk</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">500</span>, max_t<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sim_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="sim_confounded_crisk.html">sim_confounded_crisk</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">50</span>, max_t<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">sim_dat</span><span class="op">$</span><span class="va">group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">sim_dat</span><span class="op">$</span><span class="va">group</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># estimate a treatment assignment model</span></span></span>
@@ -145,6 +148,7 @@ This page explains the details of estimating inverse probability of treatment we
 <span class="r-in"><span>                      method<span class="op">=</span><span class="st">"iptw_pseudo"</span>,</span></span>
 <span class="r-in"><span>                      treatment_model<span class="op">=</span><span class="va">glm_mod</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="cif_iptw_pseudo-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Alternatively, use custom weights</span></span></span>
 <span class="r-in"><span><span class="co"># In this example we use weights calculated using the propensity score,</span></span></span>
@@ -160,6 +164,7 @@ This page explains the details of estimating inverse probability of treatment we
 <span class="r-in"><span>                      method<span class="op">=</span><span class="st">"iptw_pseudo"</span>,</span></span>
 <span class="r-in"><span>                      treatment_model<span class="op">=</span><span class="va">weights</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="cif_iptw_pseudo-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># And a third alternative: use the WeightIt package</span></span></span>
 <span class="r-in"><span><span class="co"># here an example with equal results to the ones above:</span></span></span>
@@ -172,7 +177,10 @@ This page explains the details of estimating inverse probability of treatment we
 <span class="r-in"><span>                      treatment_model<span class="op">=</span><span class="va">group</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x3</span> <span class="op">+</span> <span class="va">x5</span> <span class="op">+</span> <span class="va">x6</span>,</span></span>
 <span class="r-in"><span>                      weight_method<span class="op">=</span><span class="st">"ps"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="cif_iptw_pseudo-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># not run to avoid dependency on optweight</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span><span class="co"># here an example using Optimization-Based Weighting:</span></span></span>
 <span class="r-in"><span><span class="va">adjcif</span> <span class="op">&lt;-</span> <span class="fu"><a href="adjustedcif.html">adjustedcif</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">sim_dat</span>,</span></span>
 <span class="r-in"><span>                      variable<span class="op">=</span><span class="st">"group"</span>,</span></span>

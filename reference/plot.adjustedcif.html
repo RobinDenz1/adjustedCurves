@@ -202,14 +202,16 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RobinDenz1/adjustedCurves" class="external-link">adjustedCurves</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tagteam/riskRegression" class="external-link">riskRegression</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">prodlim</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/therneau/survival" class="external-link">survival</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># simulate some data as example</span></span></span>
-<span class="r-in"><span><span class="va">sim_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="sim_confounded_crisk.html">sim_confounded_crisk</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">500</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sim_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="sim_confounded_crisk.html">sim_confounded_crisk</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">50</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">sim_dat</span><span class="op">$</span><span class="va">group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">sim_dat</span><span class="op">$</span><span class="va">group</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># calculate a Cause-Specific-Cox model</span></span></span>
@@ -225,38 +227,56 @@
 <span class="r-in"><span>                      outcome_model<span class="op">=</span><span class="va">cox_mod</span>,</span></span>
 <span class="r-in"><span>                      conf_int<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>                      bootstrap<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>                      n_boot<span class="op">=</span><span class="fl">500</span>,</span></span>
+<span class="r-in"><span>                      n_boot<span class="op">=</span><span class="fl">15</span>, <span class="co"># should be much bigger in reality</span></span></span>
 <span class="r-in"><span>                      cause<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Rare event </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Estimated risk outside the range [0,1].</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> Consider setting the argument 'product.limit' to FALSE. </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Rare event </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Rare event </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Rare event </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Loglik converged before variable  1 ; coefficient may be infinite. </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Rare event </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Rare event </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plot the curves with default values</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plot.adjustedcif-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plot after applying isotonic regression</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span>, iso_reg<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plot.adjustedcif-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plot with confidence intervals estimated using asymptotic variances</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: pammtools</span>
+<span class="r-plt img"><img src="plot.adjustedcif-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plot with confidence intervals estimated using bootstrapping</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>, use_boot<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plot.adjustedcif-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plot with different linetypes only</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span>, linetype<span class="op">=</span><span class="cn">TRUE</span>, color<span class="op">=</span><span class="cn">FALSE</span>, facet<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plot.adjustedcif-5.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plot with different facets only</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span>, linetype<span class="op">=</span><span class="cn">FALSE</span>, color<span class="op">=</span><span class="cn">FALSE</span>, facet<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plot.adjustedcif-6.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plot with different linetypes and different colors</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span>, linetype<span class="op">=</span><span class="cn">TRUE</span>, color<span class="op">=</span><span class="cn">TRUE</span>, facet<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plot.adjustedcif-7.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plot with some custom characteristics</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span>, legend.position<span class="op">=</span><span class="st">"bottom"</span>, linetype<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>     custom_colors<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"green"</span>, <span class="st">"blue"</span><span class="op">)</span>, legend.title<span class="op">=</span><span class="st">"Custom"</span>,</span></span>
 <span class="r-in"><span>     title<span class="op">=</span><span class="st">"Custom Plot"</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>, linesize<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plot.adjustedcif-8.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># adding further ggplot2 elements</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-plt img"><img src="plot.adjustedcif-9.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

@@ -87,7 +87,7 @@ This page explains the details of estimating augmented inverse probability of tr
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     
 
-<ul><li><p><strong>Type of Adjustment:</strong> Requires a treatment assignment model (<code><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></code> or <code><a href="https://rdrr.io/pkg/nnet/man/multinom.html" class="external-link">multinom</a></code>) and a character vector of variable names used to model the outcome mechanism (internally uses <code><a href="https://rdrr.io/pkg/geepack/man/geese.html" class="external-link">geese</a></code>). Covariate-Dependent censoring can be corrrected for using inverse probability of censoring weighted pseudo-values (Binder et al. 2014)</p></li>
+<ul><li><p><strong>Type of Adjustment:</strong> Requires a treatment assignment model (<code><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></code> or <code><a href="https://rdrr.io/pkg/nnet/man/multinom.html" class="external-link">multinom</a></code>) and a character vector of variable names used to model the outcome mechanism (internally uses <code><a href="https://rdrr.io/pkg/geepack/man/geese.html" class="external-link">geese</a></code>). Covariate-Dependent censoring can be corrected for using inverse probability of censoring weighted pseudo-values (Binder et al. 2014)</p></li>
 <li><p><strong>Doubly-Robust:</strong> Estimates are Doubly-Robust.</p></li>
 <li><p><strong>Categorical groups:</strong> Any number of levels in <code>variable</code> are allowed. Must be a factor variable.</p></li>
 <li><p><strong>Approximate Variance:</strong> Calculations to approximate the variance and confidence intervals are available.</p></li>
@@ -133,9 +133,12 @@ This page explains the details of estimating augmented inverse probability of tr
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RobinDenz1/adjustedCurves" class="external-link">adjustedCurves</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># simulate some data as example</span></span></span>
-<span class="r-in"><span><span class="va">sim_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="sim_confounded_surv.html">sim_confounded_surv</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">100</span>, max_t<span class="op">=</span><span class="fl">1.2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sim_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="sim_confounded_surv.html">sim_confounded_surv</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">50</span>, max_t<span class="op">=</span><span class="fl">1.2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">sim_dat</span><span class="op">$</span><span class="va">group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">sim_dat</span><span class="op">$</span><span class="va">group</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># estimate a treatment assignment model</span></span></span>
@@ -153,7 +156,7 @@ This page explains the details of estimating augmented inverse probability of tr
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plot the curves</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjsurv</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-plt img"><img src="surv_aiptw_pseudo-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
