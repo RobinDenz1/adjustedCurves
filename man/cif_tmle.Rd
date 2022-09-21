@@ -78,14 +78,14 @@ The wrapper function was written by Robin Denz, the \pkg{survtmle} package (whic
 }
 \examples{
 # not run because any meaningful example is too slow
-if(interactive()){
+\donttest{
 library(adjustedCurves)
 library(survtmle)
 
 set.seed(42)
 
 # simulate some data as example
-sim_dat <- sim_confounded_crisk(n=50, max_t=5)
+sim_dat <- sim_confounded_crisk(n=30, max_t=5)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # only works with integer time, only unbiased with small amounts of them

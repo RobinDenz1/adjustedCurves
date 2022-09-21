@@ -218,7 +218,7 @@ adjcif <- adjustedcif(data=sim_dat,
                       n_boot=10)
 
 # not run because those are too slow
-if(interactive()){
+\donttest{
 # using bootstrapping with direct adjustment, run in parallel
 # on two cores
 library(foreach)
@@ -234,7 +234,7 @@ adjcif <- adjustedcif(data=sim_dat,
                       outcome_model=cox_mod,
                       conf_int=TRUE,
                       bootstrap=TRUE,
-                      n_boot=10,
+                      n_boot=4,
                       n_cores=2)
 
 # using multiple imputation
@@ -251,7 +251,7 @@ sim_dat$group <- as.factor(sim_dat$group)
 sim_dat$x1 <- ifelse(runif(n=50) < 0.5, sim_dat$x1, NA)
 
 # perform multiple imputation
-mids <- mice::mice(data=sim_dat, method="pmm", m=5, printFlag=FALSE)
+mids <- mice::mice(data=sim_dat, method="pmm", m=2, printFlag=FALSE)
 
 # IPTW Pseudo using WeightIt on imputed data, for cause = 1
 adj <- adjustedcif(data=mids,

@@ -414,7 +414,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "2371.954KB",
+  "fileSize": "2372.788KB",
   "citation": [
     {
       "@type": "ScholarlyArticle",
@@ -448,10 +448,5 @@
         }
       }
     }
-  ],
-  "releaseNotes": "https://github.com/RobinDenz1/adjustedCurves/blob/master/NEWS.md",
-  "readme": "https://github.com/RobinDenz1/adjustedCurves/blob/main/README.md",
-  "contIntegration": ["https://github.com/RobinDenz1/adjustedCurves/actions", "https://app.codecov.io/gh/RobinDenz1/adjustedCurves?branch=main"],
-  "developmentStatus": "https://www.repostatus.org/#active",
-  "keywords": ["adjusted", "survival-curves", "cumulative-incidence", "confidence-intervals"]
+  ]
 }
