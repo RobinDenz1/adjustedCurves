@@ -33,7 +33,7 @@ Further arguments passed to \code{\link[WeightIt]{weightit}}.
 \item{\strong{Type of Adjustment:} Requires a model describing the treatment assignment mechanism. This must be either a \code{\link{glm}} or \code{\link{multinom}} object.}
 \item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
 \item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
-\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
+\item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are not available.}
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}

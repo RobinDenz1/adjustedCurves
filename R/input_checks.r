@@ -416,7 +416,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
 
   # asymptotic variance calculations
   if (conf_int & (method %in% c("emp_lik", "matching", "direct_pseudo",
-                                "strat_cupples", "strat_amato"))) {
+                                "strat_cupples", "strat_amato", "iptw_cox"))) {
     warning("Asymptotic or exact variance calculations are currently",
             " not available for method='", method, "'. Use bootstrap=TRUE",
             " to get bootstrap estimates.", call.=FALSE)

@@ -109,7 +109,7 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
 #   probably because all predict() methods ignore the weights when
 #   calculating the baseline hazard. Only this version is actually unbiased
 #' @export
-surv_iptw_cox <- function(data, variable, ev_time, event, conf_int,
+surv_iptw_cox <- function(data, variable, ev_time, event, conf_int=FALSE,
                           conf_level=0.95, times=NULL, treatment_model,
                           weight_method="ps", stabilize=FALSE,
                           trim=FALSE, ...) {
@@ -134,7 +134,7 @@ surv_iptw_cox <- function(data, variable, ev_time, event, conf_int,
   form <- paste0("survival::Surv(", ev_time, ", ", event, ") ~ strata(",
                  variable, ")")
   model <- survival::coxph(stats::as.formula(form), weights=weights, data=data)
-  surv <- survival::survfit(model, se.fit=conf_int, conf.int=conf_level)
+  surv <- survival::survfit(model, se.fit=FALSE, conf.int=conf_level)
 
   plotdata <- data.frame(time=surv$time,
                          surv=surv$surv)
@@ -146,13 +146,6 @@ surv_iptw_cox <- function(data, variable, ev_time, event, conf_int,
   }
   group <- gsub(paste0(variable, "="), "", group)
   plotdata$group <- group
-
-  # get se and confidence interval
-  if (conf_int) {
-    plotdata$se <- surv$std.err
-    plotdata$ci_lower <- surv$lower
-    plotdata$ci_upper <- surv$upper
-  }
 
   if (!is.null(times)) {
     plotdata <- specific_times(plotdata, times)

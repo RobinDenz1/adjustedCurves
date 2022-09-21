@@ -12,8 +12,7 @@ sim_dat$group <- as.factor(sim_dat$group)
 mod <- glm(group ~ x1 + x2 + x3 + x4 + x5 + x6, data=sim_dat,
            family="binomial")
 
-## Just check if function throws any errors
-test_that("2 treatments, no conf_int, no boot", {
+test_that("2 treatments, no boot", {
   adj <- adjustedsurv(data=sim_dat,
                       variable="group",
                       ev_time="time",
@@ -26,20 +25,7 @@ test_that("2 treatments, no conf_int, no boot", {
   expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
-test_that("2 treatments, with conf_int, no boot", {
-  adj <- adjustedsurv(data=sim_dat,
-                      variable="group",
-                      ev_time="time",
-                      event="event",
-                      method="iptw_cox",
-                      conf_int=TRUE,
-                      treatment_model=mod)
-  expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
-})
-
-test_that("2 treatments, no conf_int, with boot", {
+test_that("2 treatments, with boot", {
   adj <- adjustedsurv(data=sim_dat,
                       variable="group",
                       ev_time="time",
@@ -54,22 +40,7 @@ test_that("2 treatments, no conf_int, with boot", {
   expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
-test_that("2 treatments, with conf_int, with boot", {
-  adj <- adjustedsurv(data=sim_dat,
-                      variable="group",
-                      ev_time="time",
-                      event="event",
-                      method="iptw_cox",
-                      conf_int=TRUE,
-                      bootstrap=TRUE,
-                      n_boot=2,
-                      treatment_model=mod)
-  expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
-})
-
-test_that("2 treatments, no conf_int, with WeightIt", {
+test_that("2 treatments, with WeightIt", {
   adj <- adjustedsurv(data=sim_dat,
                       variable="group",
                       ev_time="time",
@@ -84,7 +55,7 @@ test_that("2 treatments, no conf_int, with WeightIt", {
   expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
-test_that("2 treatments, no conf_int, with user-weights", {
+test_that("2 treatments, with user-weights", {
   adj <- adjustedsurv(data=sim_dat,
                       variable="group",
                       ev_time="time",
@@ -109,7 +80,7 @@ test_that("3 ways of iptw calculation are equal", {
                         ev_time="time",
                         event="event",
                         method="iptw_cox",
-                        conf_int=TRUE,
+                        conf_int=FALSE,
                         bootstrap=FALSE,
                         treatment_model=weights,
                         stabilize=FALSE)$adjsurv
@@ -118,7 +89,7 @@ test_that("3 ways of iptw calculation are equal", {
                           ev_time="time",
                           event="event",
                           method="iptw_cox",
-                          conf_int=TRUE,
+                          conf_int=FALSE,
                           bootstrap=FALSE,
                           treatment_model=mod,
                           stabilize=FALSE)$adjsurv
@@ -127,7 +98,7 @@ test_that("3 ways of iptw calculation are equal", {
                                ev_time="time",
                                event="event",
                                method="iptw_cox",
-                               conf_int=TRUE,
+                               conf_int=FALSE,
                                bootstrap=FALSE,
                                treatment_model=group ~ x1 + x2 + x3 +
                                  x4 + x5 + x6,
@@ -155,12 +126,6 @@ test_that("3 ways of iptw calculation are equal", {
   expect_true(all.equal(out$w_group, out$glm_group, tolerance=tol))
   expect_true(all.equal(out$w_group, out$weightit_group, tolerance=tol))
   expect_true(all.equal(out$glm_group, out$weightit_group, tolerance=tol))
-
-  # all se equal
-  expect_true(all.equal(out$w_se, out$glm_se, tolerance=tol))
-  expect_true(all.equal(out$w_se, out$weightit_se, tolerance=tol))
-  expect_true(all.equal(out$glm_se, out$weightit_se, tolerance=tol))
-
 })
 
 sim_dat <- readRDS(system.file("testdata",
@@ -173,7 +138,7 @@ sim_dat$group <- as.factor(sim_dat$group)
 
 mod <- quiet(nnet::multinom(group ~ x1 + x2 + x3 + x4 + x5 + x6, data=sim_dat))
 
-test_that("> 2 treatments, no conf_int, no boot, no ...", {
+test_that("> 2 treatments, no boot, no ...", {
   adj <- adjustedsurv(data=sim_dat,
                       variable="group",
                       ev_time="time",
@@ -186,41 +151,13 @@ test_that("> 2 treatments, no conf_int, no boot, no ...", {
   expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
 })
 
-test_that("> 2 treatments, with conf_int, no boot, no ...", {
-  adj <- adjustedsurv(data=sim_dat,
-                      variable="group",
-                      ev_time="time",
-                      event="event",
-                      method="iptw_cox",
-                      conf_int=TRUE,
-                      treatment_model=mod)
-  expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
-})
-
-test_that("> 2 treatments, no conf_int, with boot, no ...", {
+test_that("> 2 treatments, with boot, no ...", {
   adj <- adjustedsurv(data=sim_dat,
                       variable="group",
                       ev_time="time",
                       event="event",
                       method="iptw_cox",
                       conf_int=FALSE,
-                      bootstrap=TRUE,
-                      n_boot=2,
-                      treatment_model=mod)
-  expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
-})
-
-test_that("> 2 treatments, with conf_int, with boot, no ...", {
-  adj <- adjustedsurv(data=sim_dat,
-                      variable="group",
-                      ev_time="time",
-                      event="event",
-                      method="iptw_cox",
-                      conf_int=TRUE,
                       bootstrap=TRUE,
                       n_boot=2,
                       treatment_model=mod)
@@ -242,7 +179,7 @@ test_that("> 2 treatments, with conf_int, with boot, no ...", {
 #                                            weight_method="ps"), NA)
 #})
 
-test_that("> 2 treatments, no conf_int, with user-weights", {
+test_that("> 2 treatments, with user-weights", {
   adj <- adjustedsurv(data=sim_dat,
                       variable="group",
                       ev_time="time",

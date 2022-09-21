@@ -78,7 +78,7 @@ The wrapper function was written by Robin Denz, the \pkg{survtmle} package (whic
 }
 \examples{
 # not run because any meaningful example is too slow
-\donttest{
+if(interactive()){
 library(adjustedCurves)
 library(survtmle)
 

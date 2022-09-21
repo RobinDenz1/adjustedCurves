@@ -218,7 +218,7 @@ adjcif <- adjustedcif(data=sim_dat,
                       n_boot=10)
 
 # not run because those are too slow
-\donttest{
+if(interactive()){
 # using bootstrapping with direct adjustment, run in parallel
 # on two cores
 library(foreach)

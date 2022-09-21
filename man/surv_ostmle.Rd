@@ -87,7 +87,7 @@ The wrapper function was written by Robin Denz, the \code{MOSS} package (which t
 }
 \examples{
 # not run because any meaningful example is too slow
-\dontrun{
+if(interactive()){
 library(adjustedCurves)
 
 # simulate some data as example
