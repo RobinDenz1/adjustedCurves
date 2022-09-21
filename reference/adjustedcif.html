@@ -290,12 +290,13 @@
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Rare event </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># not run because those are too slow</span></span></span>
-<span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="co"># using bootstrapping with direct adjustment, run in parallel</span></span></span>
 <span class="r-in"><span><span class="co"># on two cores</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RevolutionAnalytics/foreach" class="external-link">foreach</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">parallel</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://renozao.github.io/doRNG" class="external-link">doRNG</a></span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: rngtools</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">adjcif</span> <span class="op">&lt;-</span> <span class="fu">adjustedcif</span><span class="op">(</span>data<span class="op">=</span><span class="va">sim_dat</span>,</span></span>
 <span class="r-in"><span>                      variable<span class="op">=</span><span class="st">"group"</span>,</span></span>
@@ -306,8 +307,10 @@
 <span class="r-in"><span>                      outcome_model<span class="op">=</span><span class="va">cox_mod</span>,</span></span>
 <span class="r-in"><span>                      conf_int<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>                      bootstrap<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>                      n_boot<span class="op">=</span><span class="fl">10</span>,</span></span>
+<span class="r-in"><span>                      n_boot<span class="op">=</span><span class="fl">4</span>,</span></span>
 <span class="r-in"><span>                      n_cores<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: doParallel</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Rare event </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># using multiple imputation</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/amices/mice" class="external-link">mice</a></span><span class="op">)</span></span></span>
@@ -323,7 +326,7 @@
 <span class="r-in"><span><span class="va">sim_dat</span><span class="op">$</span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">50</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">0.5</span>, <span class="va">sim_dat</span><span class="op">$</span><span class="va">x1</span>, <span class="cn">NA</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># perform multiple imputation</span></span></span>
-<span class="r-in"><span><span class="va">mids</span> <span class="op">&lt;-</span> <span class="fu">mice</span><span class="fu">::</span><span class="fu"><a href="https://amices.org/mice/reference/mice.html" class="external-link">mice</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">sim_dat</span>, method<span class="op">=</span><span class="st">"pmm"</span>, m<span class="op">=</span><span class="fl">5</span>, printFlag<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mids</span> <span class="op">&lt;-</span> <span class="fu">mice</span><span class="fu">::</span><span class="fu"><a href="https://amices.org/mice/reference/mice.html" class="external-link">mice</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">sim_dat</span>, method<span class="op">=</span><span class="st">"pmm"</span>, m<span class="op">=</span><span class="fl">2</span>, printFlag<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># IPTW Pseudo using WeightIt on imputed data, for cause = 1</span></span></span>
 <span class="r-in"><span><span class="va">adj</span> <span class="op">&lt;-</span> <span class="fu">adjustedcif</span><span class="op">(</span>data<span class="op">=</span><span class="va">mids</span>,</span></span>
@@ -335,10 +338,11 @@
 <span class="r-in"><span>                   treatment_model<span class="op">=</span><span class="va">group</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x5</span> <span class="op">+</span> <span class="va">x6</span>,</span></span>
 <span class="r-in"><span>                   weight_method<span class="op">=</span><span class="st">"ps"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adj</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="adjustedcif-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># More specific examples can be found in the documentation of each</span></span></span>
 <span class="r-in"><span><span class="co"># respective cif_method. See ?cif_ + "method" for more information.</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
