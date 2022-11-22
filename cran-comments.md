@@ -1,12 +1,8 @@
 ## R CMD check results
 
-0 errors | 0 warnings | 2 notes
+0 errors | 0 warnings | 0 notes
 
-* This is a new release.
+* This is an update.
 
 The package was tested on Windows 10, macOS and ubuntu using github actions and rhub as well as local machines.
-There were no errors or warnings and two notes. The first note is due to this being a new release.
-The second note only appears on some rhub checks: "checking for detritus in the temp directory Found the following files/directories: 'lastMiKTeXException'"
-
-Most if(interactive()) statements have been replaced by \donttest as adviced.
-I only kept the if(interactive()) calls in the man pages of surv_iptw_cox, surv_iptw_km and surv_iptw_pseudo to avoid the dependency on the "optweight" package.
+There were no errors or warnings and no notes.

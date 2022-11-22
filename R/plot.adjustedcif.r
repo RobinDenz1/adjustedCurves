@@ -98,9 +98,9 @@ plot.adjustedcif <- function(x, conf_int=FALSE, max_t=Inf,
   p <- ggplot2::ggplot(plotdata, mapping)
 
   if (steps) {
-    line_obj <- ggplot2::geom_step(size=line_size, alpha=line_alpha)
+    line_obj <- ggplot2::geom_step(linewidth=line_size, alpha=line_alpha)
   } else {
-    line_obj <- ggplot2::geom_line(size=line_size, alpha=line_alpha)
+    line_obj <- ggplot2::geom_line(linewidth=line_size, alpha=line_alpha)
   }
 
   # override color using just one color
@@ -230,7 +230,7 @@ plot.adjustedcif <- function(x, conf_int=FALSE, max_t=Inf,
                                        shape=censoring_ind_shape)
     } else if (censoring_ind=="lines") {
       cens_geom <- ggplot2::geom_segment(data=cens_dat, cens_map,
-                                         size=censoring_ind_size,
+                                         linewidth=censoring_ind_size,
                                          alpha=censoring_ind_alpha)
     }
 

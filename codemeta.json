@@ -15,6 +15,12 @@
     "url": "https://r-project.org"
   },
   "runtimePlatform": "R version 4.2.1 (2022-06-23 ucrt)",
+  "provider": {
+    "@id": "https://cran.r-project.org",
+    "@type": "Organization",
+    "name": "Comprehensive R Archive Network (CRAN)",
+    "url": "https://cran.r-project.org"
+  },
   "author": [
     {
       "@type": "Person",
@@ -414,7 +420,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "2372.788KB",
+  "fileSize": "2381.449KB",
   "citation": [
     {
       "@type": "ScholarlyArticle",
@@ -448,5 +454,10 @@
         }
       }
     }
-  ]
+  ],
+  "releaseNotes": "https://github.com/RobinDenz1/adjustedCurves/blob/master/NEWS.md",
+  "readme": "https://github.com/RobinDenz1/adjustedCurves/blob/main/README.md",
+  "contIntegration": ["https://github.com/RobinDenz1/adjustedCurves/actions", "https://app.codecov.io/gh/RobinDenz1/adjustedCurves?branch=main"],
+  "developmentStatus": "https://www.repostatus.org/#active",
+  "keywords": ["adjusted", "survival-curves", "cumulative-incidence", "confidence-intervals"]
 }

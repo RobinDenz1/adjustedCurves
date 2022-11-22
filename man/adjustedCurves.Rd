@@ -32,6 +32,10 @@ With standard time-to-event data where only one type of event is possible both t
 
 When competing risks are present, the cause-specific confounder-adjusted survival curves can not be estimated in an unbiased way (see for example Satagopan et al. (2004) for an explanation). The cause-specific confounder-adjusted cumulative incidence functions however can be estimated using the \code{adjustedcif} function.
 
+\strong{\emph{What features are missing from this package?}}
+
+This package currently does not support time-varying treatments or covariates. It also does not support left-censoring, interval-censoring or left-truncation. These features may be added in future releases.
+
 \strong{\emph{Where can I get more information?}}
 
 The documentation pages contain a lot of information, relevant examples and literature references. Additional examples can be found in the vignette of this package, which can be accessed using \code{vignette(topic="introduction", package="adjustedCurves")}. We are also working on a separate article on this package that is going to be published in a peer-reviewed journal.

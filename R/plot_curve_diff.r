@@ -79,7 +79,7 @@ plot_curve_diff <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
 
   # add line at 0 if specified
   if (line_at_0) {
-    p <- p + ggplot2::geom_hline(yintercept=0, size=line_at_0_size,
+    p <- p + ggplot2::geom_hline(yintercept=0, linewidth=line_at_0_size,
                                  color=line_at_0_color,
                                  linetype=line_at_0_linetype,
                                  alpha=line_at_0_alpha)
@@ -98,11 +98,11 @@ plot_curve_diff <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
                                           fill=color,
                                           inherit.aes=FALSE)
     }
-    p <- p + ggplot2::geom_step(size=size, color=color, linetype=linetype,
+    p <- p + ggplot2::geom_step(linewidth=size, color=color, linetype=linetype,
                                 alpha=alpha)
   # plot difference using linear interpolation
   } else if (type=="lines") {
-    p <- p + ggplot2::geom_line(size=size, color=color, linetype=linetype,
+    p <- p + ggplot2::geom_line(linewidth=size, color=color, linetype=linetype,
                                 alpha=alpha)
     if (conf_int) {
       p <- p + ggplot2::geom_ribbon(ggplot2::aes(ymin=.data$ci_lower,
@@ -127,7 +127,7 @@ plot_curve_diff <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
 
       p <- p + ggplot2::geom_errorbar(ggplot2::aes(ymin=.data$ci_lower,
                                                    ymax=.data$ci_upper),
-                                      size=points_ci_size,
+                                      linewidth=points_ci_size,
                                       width=points_ci_width,
                                       color=color)
     }
@@ -138,7 +138,7 @@ plot_curve_diff <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
   if (loess_smoother) {
     p <- p + ggplot2::geom_line(stat="smooth", method="loess",
                                 formula=y ~ x, se=FALSE,
-                                color=loess_color, size=loess_size,
+                                color=loess_color, linewidth=loess_size,
                                 alpha=loess_alpha, linetype=loess_linetype,
                                 span=loess_span)
   }

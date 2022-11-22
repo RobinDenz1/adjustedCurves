@@ -501,17 +501,17 @@ test_that("adjusted_rmst, 3 treatments, no boot", {
 })
 
 test_that("adjusted_rmst, 3 treatments, with boot", {
-  adj_rmst <- adjusted_rmst(adjsurv, from=0, to=1, conf_int=TRUE)
-  expect_equal(round(adj_rmst$rmst, 4), c(0.7463, 0.5115, 0.5788))
-  expect_equal(round(adj_rmst$se, 4), c(0.0719, 0.0460, NA))
-  expect_equal(adj_rmst$n_boot, c(3, 3, 1))
+  adj_rmst <- adjusted_rmst(adjsurv, from=0, to=0.6, conf_int=TRUE)
+  expect_equal(round(adj_rmst$rmst, 4), c(0.5645, 0.4305, 0.5008))
+  expect_equal(round(adj_rmst$se, 4), c(0.0148, 0.0182, 0.0149))
+  expect_equal(adj_rmst$n_boot, c(3, 3, 3))
 })
 
 test_that("adjusted_curve_test, 3 treatments", {
-  adj_test <- adjusted_curve_test(adjsurv, from=0, to=1, conf_level=0.95)
+  adj_test <- adjusted_curve_test(adjsurv, from=0, to=0.6, conf_level=0.95)
   expect_equal(round(adj_test$`Chemo vs. OP`$observed_diff_integral, 4),
-               0.2348)
-  expect_equal(round(adj_test$`Chemo vs. OP`$integral_se, 4), 0.058)
+               0.134)
+  expect_equal(round(adj_test$`Chemo vs. OP`$integral_se, 4), 0.0253)
   expect_equal(round(adj_test$`Chemo vs. OP`$p_value, 4), 0)
   expect_equal(round(adj_test$`Chemo vs. OP`$mids_p_values, 4),
                c(0, 0, 0))

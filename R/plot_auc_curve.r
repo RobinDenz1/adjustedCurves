@@ -86,7 +86,7 @@ plot_auc_curve <- function(adj, estimate, times=NULL, conf_int=FALSE,
   }
 
   p <- ggplot2::ggplot(plotdata, mapping) +
-    ggplot2::geom_line(size=size, alpha=alpha) +
+    ggplot2::geom_line(linewidth=size, alpha=alpha) +
     ggplot2::labs(x=xlab, y=ylab, title=title, subtitle=subtitle,
                   color=legend.title, linetype=legend.title,
                   fill=legend.title) +
