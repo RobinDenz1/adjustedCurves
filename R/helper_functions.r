@@ -280,12 +280,6 @@ remove_unnecessary_covars <- function(data, method, variable, ev_time,
   } else if (method=="aiptw_pseudo") {
     needed_covars <- c(needed_covars, args$outcome_vars, args$censoring_vars,
                        treatment_vars)
-  } else if (method=="tmle" | method=="ostmle") {
-    if (!is.null(args$adjust_vars)) {
-      needed_covars <- c(needed_covars, args$adjust_vars)
-    } else {
-      needed_covars <- colnames(data)
-    }
   } else if (method=="strat_cupples" | method=="strat_amato" |
              method=="strat_nieto") {
     needed_covars <- c(needed_covars, args$adjust_vars)
@@ -347,17 +341,6 @@ load_needed_packages <- function(method, kind, treatment_model,
       requireNamespace("MASS")
     }
 
-    # survtmle, SuperLearner
-    if (method=="tmle") {
-      requireNamespace("survtmle")
-      requireNamespace("SuperLearner")
-    }
-
-    # SuperLearner
-    if (method=="ostmle") {
-      requireNamespace("SuperLearner")
-    }
-
   } else {
 
     # cmprsk
@@ -390,12 +373,6 @@ load_needed_packages <- function(method, kind, treatment_model,
     # geese
     if (method=="direct_pseudo" | method=="aiptw_pseudo") {
       requireNamespace("geepack")
-    }
-
-    # survtmle, SuperLearner
-    if (method=="tmle") {
-      requireNamespace("survtmle")
-      requireNamespace("SuperLearner")
     }
   }
 }

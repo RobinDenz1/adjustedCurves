@@ -424,12 +424,6 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
   return(adjsurv_boot)
 }
 
-## S3 print method for adjustedsurv objects
-#' @export
-print.adjustedsurv <- function(x, ...) {
-  print(x$adjsurv, ...)
-}
-
 ## S3 summary method for adjustedsurv objects
 #' @export
 summary.adjustedsurv <- function(object, ...) {
@@ -453,10 +447,6 @@ summary.adjustedsurv <- function(object, ...) {
   } else if (object$method=="aiptw_pseudo") {
     method_name <- paste0("Augmented Inverse Probability of Treatment",
                           " Weighting: Pseudo-Values")
-  } else if (object$method=="tmle") {
-    method_name <- "Targeted Maximum Likelihood Estimation"
-  } else if (object$method=="ostmle") {
-    method_name <- "One-Step Targeted Maximum Likelihood Estimation"
   } else if (object$method=="km") {
     method_name <- "Kaplan-Meier Estimator"
   } else if (object$method=="strat_cupples") {
@@ -502,6 +492,12 @@ summary.adjustedsurv <- function(object, ...) {
   } else {
     cat("   - Using multiply imputed dataset")
   }
+}
+
+## S3 print method for adjustedsurv objects
+#' @export
+print.adjustedsurv <- function(x, ...) {
+  summary(x, ...)
 }
 
 ## S3 print method for adjustedsurv.method objects

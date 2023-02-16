@@ -66,7 +66,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
   # method
   } else if (!method %in% c("km", "iptw_km", "iptw_cox", "iptw_pseudo",
                             "direct", "direct_pseudo", "aiptw_pseudo",
-                            "aiptw", "tmle", "ostmle", "matching",
+                            "aiptw", "matching",
                             "emp_lik", "strat_cupples", "strat_amato",
                             "strat_nieto")) {
     stop("Method '", method, "' is undefined. See documentation for ",
@@ -114,8 +114,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     levs_len <- length(unique(data[, variable]))
     if (levs_len < 2) {
       stop("There have to be at least two groups in 'variable'.")
-    } else if (levs_len > 2 & method %in% c("matching", "emp_lik", "tmle",
-                                            "ostmle", "aiptw")) {
+    } else if (levs_len > 2 & method %in% c("matching", "emp_lik", "aiptw")) {
       stop("Categorical treatments are currently not supported for ",
            "method='", method, "'.")
     }
@@ -248,13 +247,6 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
       }
     }
 
-  ## TMLE / OSTMLE
-  } else if (method=="tmle" | method=="ostmle") {
-    # times
-    if (!is.null(times) && (!all(times==floor(times)))) {
-      stop("Only integer time is allowed when using method='tmle' or",
-           " method='ostmle'.")
-    }
   ## Empirical Likelihood
   } else if (method=="emp_lik") {
     # need treatment_vars
@@ -677,7 +669,7 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
          "character strings, specifying variables in 'data'.")
   } else if (!method %in% c("aalen_johansen", "iptw", "iptw_pseudo", "direct",
                             "direct_pseudo", "aiptw_pseudo",
-                            "aiptw", "tmle", "matching")) {
+                            "aiptw", "matching")) {
     stop("Method '", method, "' is undefined. See documentation for ",
          "details on available methods.")
   # conf_int
@@ -750,7 +742,7 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
     levs_len <- length(unique(data[, variable]))
     if (levs_len < 2) {
       stop("There have to be at least two groups in 'variable'.")
-    } else if (levs_len > 2 & method %in% c("matching", "tmle", "aiptw")) {
+    } else if (levs_len > 2 & method %in% c("matching", "aiptw")) {
       stop("Categorical treatments are currently not supported for ",
            "method='", method, "'.")
     }
@@ -861,11 +853,6 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
       }
     }
 
-  ## TMLE
-  } else if (method=="tmle") {
-    if (!is.null(times) && (!all(times==floor(times)))) {
-      stop("Only integer time is allowed when using method='tmle'.")
-    }
   ## Matching
   } else if (method=="matching") {
     # treatment_model

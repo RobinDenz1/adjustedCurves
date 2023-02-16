@@ -72,8 +72,6 @@ The primary purpose of the \code{adjustedsurv} function is to provide a convenie
   \item{"\link[=surv_emp_lik]{emp_lik}": An Empirical Likelihood based estimator.}
   \item{"\link[=surv_aiptw]{aiptw}": An Augmented Inverse Probability of Treatment Weighting estimator.}
   \item{"\link[=surv_aiptw_pseudo]{aiptw_pseudo}": An Augmented Inverse Probability of Treatment Weighting estimator using Pseudo-Values.}
-  \item{"\link[=surv_tmle]{tmle}": Targeted Maximum Likelihood Estimation.}
-  \item{"\link[=surv_ostmle]{ostmle}": One-Step Targeted Maximum Likelihood Estimation.}
   \item{"\link[=surv_strat_amato]{strat_amato}": A method based on stratification and weighting by Amato (1988).}
   \item{"\link[=surv_strat_nieto]{strat_nieto}": A method based on stratification and weighting by Gregory (1988) and Nieto & Coresh (1996).}
   \item{"\link[=surv_strat_cupples]{strat_cupples}": A method based on stratification and weighting by Cupples et al. (1995).}
@@ -135,7 +133,7 @@ Some method specific objects might also be contained in the output.
 }
 
 \references{
-Robin Denz, Renate Klaaßen-Mielke, and Nina Timmesfeld (2022). A Comparison of Different Methods to Adjust Survival Curves for Confounders. arXiv:2203.10002v1
+Robin Denz, Renate Klaaßen-Mielke, and Nina Timmesfeld (2023). "A Comparison of Different Methods to Adjust Survival Curves for Confounders".  In: Statistics in Medicine InPrint
 
 Other relevant literature can be found in the respective \code{surv_method} documentation.
 }

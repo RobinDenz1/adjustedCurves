@@ -810,24 +810,6 @@ test_that("not enough time points", {
                       "'times' and run again."))
 })
 
-test_that("continuous times in tmle", {
-  expect_error(check_inputs_adjustedcif(data=sim_dat,
-                                        variable="group",
-                                        ev_time="time",
-                                        event="event",
-                                        method="tmle",
-                                        conf_int=TRUE,
-                                        conf_level=0.95,
-                                        times=0.2,
-                                        bootstrap=TRUE,
-                                        n_boot=2,
-                                        na.action="na.omit",
-                                        clean_data=TRUE,
-                                        outcome_vars=c("x1"),
-                                        cause=1),
-               "Only integer time is allowed when using method='tmle'.")
-})
-
 test_that("weights in matching", {
   expect_error(check_inputs_adjustedcif(data=sim_dat,
                                       variable="group",

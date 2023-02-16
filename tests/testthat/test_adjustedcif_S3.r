@@ -57,11 +57,6 @@ test_that("summary.adjustedcif, aiptw_pseudo", {
   expect_snapshot_output(summary(adj))
 })
 
-adj$method <- "tmle"
-test_that("summary.adjustedcif, tmle", {
-  expect_snapshot_output(summary(adj))
-})
-
 adj$call$bootstrap <- TRUE
 
 test_that("summary.adjustedcif, with boot", {

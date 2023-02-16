@@ -73,7 +73,6 @@ The primary purpose of the \code{adjustedcif} function is to provide a convenien
   \item{"\link[=cif_matching]{matching}": Using Propensity Score Matching to estimate the adjusted CIFs.}
   \item{"\link[=cif_aiptw]{aiptw}": An Augmented Inverse Probability of Treatment Weighting estimator.}
   \item{"\link[=cif_aiptw_pseudo]{aiptw_pseudo}": An Augmented Inverse Probability of Treatment Weighting estimator using Pseudo-Values.}
-  \item{"\link[=cif_tmle]{tmle}": Targeted Maximum Likelihood Estimation for CIFs.}
   \item{"\link[=cif_aalen_johansen]{aalen_johansen}": A simple stratified Aalen-Johansen estimator without any form of adjustment.}
 }
 

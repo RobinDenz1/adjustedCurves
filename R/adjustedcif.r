@@ -404,12 +404,6 @@ adjustedcif_boot <- function(data, variable, ev_time, event, cause, method,
 
 }
 
-## S3 print method for adjustedcif objects
-#' @export
-print.adjustedcif <- function(x, ...) {
-  print(x$adjcif, ...)
-}
-
 ## S3 summary method for adjustedcif objects
 #' @export
 summary.adjustedcif <- function(object, ...) {
@@ -429,8 +423,6 @@ summary.adjustedcif <- function(object, ...) {
   } else if (object$method=="aiptw_pseudo") {
     method_name <- paste0("Augmented Inverse Probability of Treatment",
                           " Weighting: Pseudo-Values")
-  } else if (object$method=="tmle") {
-    method_name <- "Targeted Maximum Likelihood Estimation"
   } else if (object$method=="aalen_johansen") {
     method_name <- "Aalen-Johansen Estimator"
   }
@@ -471,6 +463,12 @@ summary.adjustedcif <- function(object, ...) {
   } else {
     cat("   - Using multiply imputed dataset")
   }
+}
+
+## S3 print method for adjustedcif objects
+#' @export
+print.adjustedcif <- function(x, ...) {
+  summary(x, ...)
 }
 
 ## S3 print method for adjustedcif.method objects

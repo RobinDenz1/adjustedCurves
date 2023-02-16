@@ -20,7 +20,7 @@ where \eqn{T_z} is the survival time that would have been observed if treatment 
 
 \strong{\emph{What features are included in this package?}}
 
-This package includes 14 methods to calculate confounder-adjusted survival curves (single event) and eight methods to calculate confounder adjusted cumulative incidence functions (possibly with multiple competing events). It provides \code{plot} functions to easily produce highly customizable and publication-ready graphics. It also allows the user to easily calculate relevant statistics, such as confidence intervals, p-values, and adjusted restricted mean survival time estimates. Multiple Imputation is directly supported.
+This package includes 12 methods to calculate confounder-adjusted survival curves (single event) and 7 methods to calculate confounder adjusted cumulative incidence functions (possibly with multiple competing events). It provides \code{plot} functions to easily produce highly customizable and publication-ready graphics. It also allows the user to easily calculate relevant statistics, such as confidence intervals, p-values, and adjusted restricted mean survival time estimates. Multiple Imputation is directly supported.
 
 \strong{\emph{What does a typical workflow using this package look like?}}
 
@@ -34,7 +34,9 @@ When competing risks are present, the cause-specific confounder-adjusted surviva
 
 \strong{\emph{What features are missing from this package?}}
 
-This package currently does not support time-varying treatments or covariates. It also does not support left-censoring, interval-censoring or left-truncation. These features may be added in future releases.
+In a former version, this package included two targeted maximum likelihood based methods for the estimation of adjusted survival curves and one for the estimation of adjusted cumulative incidence functions. These methods have been removed because the \code{survtmle} package has been removed from CRAN and there is currently no other available implementation on CRAN. If a version becomes available or the \code{survtmle} package makes a return, it will be included back into this package.
+
+This package also currently does not support time-varying treatments or covariates. It also does not support left-censoring, interval-censoring or left-truncation. These features may be added in future releases.
 
 \strong{\emph{Where can I get more information?}}
 
@@ -45,7 +47,7 @@ The documentation pages contain a lot of information, relevant examples and lite
 Bug reports, suggestions and feature requests are highly welcome. Please file an issue on the official github page or contact the author directly using the supplied e-mail address.
 }
 \references{
-Robin Denz, Renate Klaaßen-Mielke, and Nina Timmesfeld (2022). A Comparison of Different Methods to Adjust Survival Curves for Confounders. arXiv:2203.10002v1
+Robin Denz, Renate Klaaßen-Mielke, and Nina Timmesfeld (2023). "A Comparison of Different Methods to Adjust Survival Curves for Confounders".  In: Statistics in Medicine InPrint
 
 Weixin Cai and Mark J. van der Laan (2020). "One-Step Targeted Maximum Likelihood Estimation for Time-To-Event Outcomes". In: Biometrics 76, pp. 722-733
 

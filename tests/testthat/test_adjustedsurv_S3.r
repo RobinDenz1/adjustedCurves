@@ -66,16 +66,6 @@ test_that("summary.adjustedsurv, aiptw_pseudo", {
   expect_snapshot_output(summary(adj))
 })
 
-adj$method <- "tmle"
-test_that("summary.adjustedsurv, tmle", {
-  expect_snapshot_output(summary(adj))
-})
-
-adj$method <- "ostmle"
-test_that("summary.adjustedsurv, ostmle", {
-  expect_snapshot_output(summary(adj))
-})
-
 adj$method <- "strat_amato"
 test_that("summary.adjustedsurv, strat_amato", {
   expect_snapshot_output(summary(adj))

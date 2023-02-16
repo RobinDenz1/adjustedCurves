@@ -20,20 +20,18 @@ Detailed descriptions of each method can be found in the literature cited in the
 
 ## Installation
 
-Currently this package is not available on CRAN, but can be installed easily using the `devtools` R-Package:
+A stable version can be installed directly from CRAN using:
+
+```R
+install.packages("adjustedCurves")
+```
+
+The developmental version can be installed using the `devtools` R-Package:
 
 ```R
 library(devtools)
 
 devtools::install_github("https://github.com/RobinDenz1/adjustedCurves")
-```
-
-or the `remotes` R-Package:
-
-```R
-library(remotes)
-
-remotes::install_github("https://github.com/RobinDenz1/adjustedCurves")
 ```
 
 ## Bug Reports and Feature Requests
@@ -120,7 +118,7 @@ More examples can be found in the documentation and the vignettes.
 
 The main paper associated with this R-Package is:
 
-Robin Denz, Renate Klaaßen-Mielke, and Nina Timmesfeld (2022). *A Comparison of Different Methods to Adjust Survival Curves for Confounders*. arXiv:2203.10002v1
+Robin Denz, Renate Klaaßen-Mielke, and Nina Timmesfeld (2023). *A Comparison of Different Methods to Adjust Survival Curves for Confounders*. Statistics in Medicine. InPrint. <doi:10.1002/sim.9681>
 
 In addition, the relevant primary literature of the respective method should be cited. This can be found in the documentation of the method.
 

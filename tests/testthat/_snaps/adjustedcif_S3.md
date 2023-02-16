@@ -1,11 +1,12 @@
 # print.adjustedcif
 
-           time       cif group
-    2  1.161976 0.0000000     1
-    4  1.700000 0.1058201     1
-    6  1.014822 0.0000000     0
-    8  1.291780 0.1428571     0
-    10 1.700000 0.3333333     0
+    Unadjusted Cumulative Incidences 
+       - Cause of Interest: 1
+       - Method: Aalen-Johansen Estimator
+       - Times: Event-Specific Times
+       - Bootstrapping: Not Done
+       - Approximate CI: Not Calculated
+       - Using a single dataset
 
 # summary.adjustedcif, aalen_johansen
 
@@ -87,21 +88,11 @@
        - Approximate CI: Not Calculated
        - Using a single dataset
 
-# summary.adjustedcif, tmle
-
-    Confounder Adjusted Cumulative Incidences 
-       - Cause of Interest: 1
-       - Method: Targeted Maximum Likelihood Estimation
-       - Times: Event-Specific Times
-       - Bootstrapping: Not Done
-       - Approximate CI: Not Calculated
-       - Using a single dataset
-
 # summary.adjustedcif, with boot
 
     Confounder Adjusted Cumulative Incidences 
        - Cause of Interest: 1
-       - Method: Targeted Maximum Likelihood Estimation
+       - Method: Augmented Inverse Probability of Treatment Weighting: Pseudo-Values
        - Times: Event-Specific Times
        - Bootstrapping: Performed with 500 Replications
        - Approximate CI: Not Calculated
@@ -111,7 +102,7 @@
 
     Confounder Adjusted Cumulative Incidences 
        - Cause of Interest: 1
-       - Method: Targeted Maximum Likelihood Estimation
+       - Method: Augmented Inverse Probability of Treatment Weighting: Pseudo-Values
        - Times: Event-Specific Times
        - Bootstrapping: Performed with 500 Replications
        - Approximate CI: Calculated with a Confidence level of 0.95
@@ -121,7 +112,7 @@
 
     Confounder Adjusted Cumulative Incidences 
        - Cause of Interest: 1
-       - Method: Targeted Maximum Likelihood Estimation
+       - Method: Augmented Inverse Probability of Treatment Weighting: Pseudo-Values
        - Times: Event-Specific Times
        - Bootstrapping: Performed with 500 Replications
        - Approximate CI: Calculated with a Confidence level of 0.95

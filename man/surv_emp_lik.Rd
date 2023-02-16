@@ -56,7 +56,7 @@ Xiaofei Wang, Fangfang Bai, Herbert Pang, and Stephen L. George (2019). "Bias-Ad
 
 Art B. Owen (2001). Empirical Likelihood. Boca Raton: CRC Press
 
-Robin Denz, Renate Klaaßen-Mielke, and Nina Timmesfeld (2022). A Comparison of Different Methods to Adjust Survival Curves for Confounders. arXiv:2203.10002v1
+Robin Denz, Renate Klaaßen-Mielke, and Nina Timmesfeld (2023). "A Comparison of Different Methods to Adjust Survival Curves for Confounders". In: Statistics in Medicine InPrint
 }
 \author{
 All functions used for the estimation were written by:

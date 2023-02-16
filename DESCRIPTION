@@ -1,22 +1,22 @@
 Package: adjustedCurves
 Title: Confounder-Adjusted Survival Curves and Cumulative Incidence
     Functions
-Version: 0.9.1
+Version: 0.10.0
 Authors@R: 
     person("Robin", "Denz", , "robin.denz@rub.de", role = c("aut", "cre"))
 Maintainer: Robin Denz <robin.denz@rub.de>
 Description: Estimate and plot confounder-adjusted survival curves using
     either 'Direct Adjustment', 'Direct Adjustment with Pseudo-Values',
     various forms of 'Inverse Probability of Treatment Weighting', two
-    forms of 'Augmented Inverse Probability of Treatment Weighting',
-    'Empirical Likelihood Estimation' and 'Targeted Maximum Likelihood
-    Estimation'. Also includes a significance test for the difference
+    forms of 'Augmented Inverse Probability of Treatment Weighting' and
+    'Empirical Likelihood Estimation'.
+	Also includes a significance test for the difference
     between two adjusted survival curves and the calculation of adjusted
     restricted mean survival times.  Additionally enables the user to
     estimate and plot cause-specific confounder-adjusted cumulative
     incidence functions in the competing risks setting using the same
     methods (with some exceptions).
-	For details, see Denz et. al (2022) <arXiv:2203.10002v1>.
+	For details, see Denz et. al (2023) <doi:10.1002/sim.9681>.
 License: GPL (>= 3)
 URL: https://github.com/RobinDenz1/adjustedCurves,
     https://robindenz1.github.io/adjustedCurves/
@@ -31,8 +31,6 @@ Imports:
 Suggests: 
     MASS,
     Matching (>= 4.9),
-    R6,
-    SuperLearner (>= 2.0.0),
     WeightIt (>= 0.11.0),
     cmprsk (>= 2.2),
     eventglm (>= 1.1.1),
@@ -47,7 +45,6 @@ Suggests:
     riskRegression (>= 2020.12.08),
     rmarkdown,
     survival (>= 3.0.0),
-    survtmle (>= 1.1),
     testthat (>= 3.0.0),
     tidyr,
 	ggpp (>= 0.4.3),
@@ -59,4 +56,4 @@ Config/testthat/edition: 3
 Contact: <robin.denz@rub.de>
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3

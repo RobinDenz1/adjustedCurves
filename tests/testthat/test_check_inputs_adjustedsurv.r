@@ -730,24 +730,6 @@ test_that("not enough time points", {
                       "and try again."))
 })
 
-test_that("continuous times in tmle", {
-  expect_error(check_inputs_adjustedsurv(data=sim_dat,
-                                         variable="group",
-                                         ev_time="time",
-                                         event="event",
-                                         method="tmle",
-                                         conf_int=TRUE,
-                                         conf_level=0.95,
-                                         times=0.2,
-                                         bootstrap=TRUE,
-                                         n_boot=2,
-                                         na.action="na.omit",
-                                         clean_data=TRUE,
-                                         outcome_vars=c("x1")),
-               paste0("Only integer time is allowed when ",
-                      "using method='tmle' or method='ostmle'."))
-})
-
 test_that("missing treatment_vars argument", {
   expect_error(check_inputs_adjustedsurv(data=sim_dat,
                                          variable="group",
