@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">adjustedCurves</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -122,7 +122,6 @@
 <li><p>"<a href="cif_matching.html">matching</a>": Using Propensity Score Matching to estimate the adjusted CIFs.</p></li>
 <li><p>"<a href="cif_aiptw.html">aiptw</a>": An Augmented Inverse Probability of Treatment Weighting estimator.</p></li>
 <li><p>"<a href="cif_aiptw_pseudo.html">aiptw_pseudo</a>": An Augmented Inverse Probability of Treatment Weighting estimator using Pseudo-Values.</p></li>
-<li><p>"<a href="cif_tmle.html">tmle</a>": Targeted Maximum Likelihood Estimation for CIFs.</p></li>
 <li><p>"<a href="cif_aalen_johansen.html">aalen_johansen</a>": A simple stratified Aalen-Johansen estimator without any form of adjustment.</p></li>
 </ul><p>A short description of each method is contained in the documentation of the respective <code>cif_method</code> function. For more detailed descriptions the cited literature in that same documentation can be used. The documentation for <code>method="direct"</code> for example can be accessed using <code><a href="cif_direct.html">?cif_direct</a></code>.</p>
 <p><strong><em>Required &amp; Optional Arguments</em></strong></p>
@@ -295,7 +294,7 @@
 <span class="r-in"><span><span class="co"># on two cores</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RevolutionAnalytics/foreach" class="external-link">foreach</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">parallel</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">doRNG</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://renozao.github.io/doRNG/" class="external-link">doRNG</a></span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: rngtools</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">adjcif</span> <span class="op">&lt;-</span> <span class="fu">adjustedcif</span><span class="op">(</span>data<span class="op">=</span><span class="va">sim_dat</span>,</span></span>
