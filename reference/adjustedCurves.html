@@ -17,6 +17,8 @@ When competing risks are present, the cause-specific confounder-adjusted surviva
 What features are missing from this package?
 In a former version, this package included two targeted maximum likelihood based methods for the estimation of adjusted survival curves and one for the estimation of adjusted cumulative incidence functions. These methods have been removed because the survtmle package has been removed from CRAN and there is currently no other available implementation on CRAN. If a version becomes available or the survtmle package makes a return, it will be included back into this package.
 This package also currently does not support time-varying treatments or covariates. It also does not support left-censoring, interval-censoring or left-truncation. These features may be added in future releases.
+What if the variable of interest is continuous?
+All methods in this package are designed strictly for categorical variables of interest. If the variable of interest is continuous the user has to manually categorize the variable and save it as a factor first. This is, however, generally discouraged because artificial categorization may lead to bias or misleading results. To face this issue we have developed the contsurvplot R package which implements multiple plotting methods to visualize the (causal) effect of a continuous variable when analyzing survival data (Denz &amp;amp; Timmesfeld 2023).
 Where can I get more information?
 The documentation pages contain a lot of information, relevant examples and literature references. Additional examples can be found in the vignette of this package, which can be accessed using vignette(topic="introduction", package="adjustedCurves"). We are also working on a separate article on this package that is going to be published in a peer-reviewed journal.
 I want to suggest a new feature / I want to report a bug. Where can I do this?
@@ -38,6 +40,8 @@ When competing risks are present, the cause-specific confounder-adjusted surviva
 What features are missing from this package?
 In a former version, this package included two targeted maximum likelihood based methods for the estimation of adjusted survival curves and one for the estimation of adjusted cumulative incidence functions. These methods have been removed because the survtmle package has been removed from CRAN and there is currently no other available implementation on CRAN. If a version becomes available or the survtmle package makes a return, it will be included back into this package.
 This package also currently does not support time-varying treatments or covariates. It also does not support left-censoring, interval-censoring or left-truncation. These features may be added in future releases.
+What if the variable of interest is continuous?
+All methods in this package are designed strictly for categorical variables of interest. If the variable of interest is continuous the user has to manually categorize the variable and save it as a factor first. This is, however, generally discouraged because artificial categorization may lead to bias or misleading results. To face this issue we have developed the contsurvplot R package which implements multiple plotting methods to visualize the (causal) effect of a continuous variable when analyzing survival data (Denz &amp;amp; Timmesfeld 2023).
 Where can I get more information?
 The documentation pages contain a lot of information, relevant examples and literature references. Additional examples can be found in the vignette of this package, which can be accessed using vignette(topic="introduction", package="adjustedCurves"). We are also working on a separate article on this package that is going to be published in a peer-reviewed journal.
 I want to suggest a new feature / I want to report a bug. Where can I do this?
@@ -52,7 +56,7 @@ Bug reports, suggestions and feature requests are highly welcome. Please file an
     
     <a class="navbar-brand me-2" href="../index.html">adjustedCurves</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -112,6 +116,8 @@ Bug reports, suggestions and feature requests are highly welcome. Please file an
 <p><strong><em>What features are missing from this package?</em></strong></p>
 <p>In a former version, this package included two targeted maximum likelihood based methods for the estimation of adjusted survival curves and one for the estimation of adjusted cumulative incidence functions. These methods have been removed because the <code>survtmle</code> package has been removed from CRAN and there is currently no other available implementation on CRAN. If a version becomes available or the <code>survtmle</code> package makes a return, it will be included back into this package.</p>
 <p>This package also currently does not support time-varying treatments or covariates. It also does not support left-censoring, interval-censoring or left-truncation. These features may be added in future releases.</p>
+<p><strong><em>What if the variable of interest is continuous?</em></strong></p>
+<p>All methods in this package are designed strictly for categorical variables of interest. If the variable of interest is continuous the user has to manually categorize the variable and save it as a factor first. This is, however, generally discouraged because artificial categorization may lead to bias or misleading results. To face this issue we have developed the <code>contsurvplot</code> R package which implements multiple plotting methods to visualize the (causal) effect of a continuous variable when analyzing survival data (Denz &amp; Timmesfeld 2023).</p>
 <p><strong><em>Where can I get more information?</em></strong></p>
 <p>The documentation pages contain a lot of information, relevant examples and literature references. Additional examples can be found in the vignette of this package, which can be accessed using <code><a href="../articles/introduction.html">vignette(topic="introduction", package="adjustedCurves")</a></code>. We are also working on a separate article on this package that is going to be published in a peer-reviewed journal.</p>
 <p><strong><em>I want to suggest a new feature / I want to report a bug. Where can I do this?</em></strong></p>
@@ -122,6 +128,7 @@ Bug reports, suggestions and feature requests are highly welcome. Please file an
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
     <p>Robin Denz, Renate Klaaßen-Mielke, and Nina Timmesfeld (2023). "A Comparison of Different Methods to Adjust Survival Curves for Confounders".  In: Statistics in Medicine InPrint</p>
+<p>Robin Denz, Nina Timmesfeld (2023). Visualizing the Causal Effect of a Continuous Variable on a Time-To-Event Outcome. arXiv:2208.04644v1 (accepted for publication in Epidemiology)</p>
 <p>Weixin Cai and Mark J. van der Laan (2020). "One-Step Targeted Maximum Likelihood Estimation for Time-To-Event Outcomes". In: Biometrics 76, pp. 722-733</p>
 <p>J. M. Satagopan, L. Ben-Porat, M. Berwick, M. Robson, D. Kutler, and A. D. Auerbach (2004). "A Note on Competing Risks in Survival Data Analysis". In: British Journal of Cancer 91, pp. 1229-1235.</p>
     </div>
