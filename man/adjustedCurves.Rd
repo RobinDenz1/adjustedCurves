@@ -38,6 +38,10 @@ In a former version, this package included two targeted maximum likelihood based
 
 This package also currently does not support time-varying treatments or covariates. It also does not support left-censoring, interval-censoring or left-truncation. These features may be added in future releases.
 
+\strong{\emph{What if the variable of interest is continuous?}}
+
+All methods in this package are designed strictly for categorical variables of interest. If the variable of interest is continuous the user has to manually categorize the variable and save it as a factor first. This is, however, generally discouraged because artificial categorization may lead to bias or misleading results. To face this issue we have developed the \code{contsurvplot} R package which implements multiple plotting methods to visualize the (causal) effect of a continuous variable when analyzing survival data (Denz & Timmesfeld 2023).
+
 \strong{\emph{Where can I get more information?}}
 
 The documentation pages contain a lot of information, relevant examples and literature references. Additional examples can be found in the vignette of this package, which can be accessed using \code{vignette(topic="introduction", package="adjustedCurves")}. We are also working on a separate article on this package that is going to be published in a peer-reviewed journal.
@@ -48,6 +52,8 @@ Bug reports, suggestions and feature requests are highly welcome. Please file an
 }
 \references{
 Robin Denz, Renate Klaaßen-Mielke, and Nina Timmesfeld (2023). "A Comparison of Different Methods to Adjust Survival Curves for Confounders".  In: Statistics in Medicine InPrint
+
+Robin Denz, Nina Timmesfeld (2023). Visualizing the Causal Effect of a Continuous Variable on a Time-To-Event Outcome. arXiv:2208.04644v1 (accepted for publication in Epidemiology)
 
 Weixin Cai and Mark J. van der Laan (2020). "One-Step Targeted Maximum Likelihood Estimation for Time-To-Event Outcomes". In: Biometrics 76, pp. 722-733
 

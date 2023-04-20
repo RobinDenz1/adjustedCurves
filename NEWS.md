@@ -14,3 +14,8 @@
 * Changed citation information because manuscript was published
 * Changed `print` method to be equal to `summary` method
 * Fixed issues with unit-tests that require packages under "Suggests" only
+
+# adjustedCurves 0.10.1
+
+* Fixed small issues in unit tests caused by changes in the `WeightIt` package
+* Made some small documentation updates

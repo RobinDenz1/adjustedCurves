@@ -8,7 +8,7 @@
   "codeRepository": "https://github.com/RobinDenz1/adjustedCurves",
   "issueTracker": "https://github.com/RobinDenz1/adjustedCurves/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -382,7 +382,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "2286.284KB",
+  "fileSize": "2448.647KB",
   "citation": [
     {
       "@type": "ScholarlyArticle",
@@ -406,7 +406,7 @@
       ],
       "name": "A comparison of different methods to adjust survival curves for confounders",
       "url": "https://doi.org/10.1002/sim.9681",
-      "description": "R package version 0.10.0",
+      "description": "R package version 0.10.1",
       "isPartOf": {
         "@type": "PublicationIssue",
         "datePublished": "2023",

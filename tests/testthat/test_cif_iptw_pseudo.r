@@ -7,7 +7,7 @@ sim_dat <- readRDS(system.file("testdata",
 sim_dat$group <- ifelse(sim_dat$group==0, "Control", "Treatment")
 sim_dat$group <- as.factor(sim_dat$group)
 
-mod <- glm(group ~ x1 + x2 + x3 + x4 + x5 + x6, data=sim_dat,
+mod <- glm(group ~ x1 + x2 + x5 + x6, data=sim_dat,
            family="binomial")
 
 ## Just check if function throws any errors
@@ -135,8 +135,7 @@ test_that("3 ways of iptw calculation are equal", {
                               method="iptw_pseudo",
                               conf_int=TRUE,
                               bootstrap=FALSE,
-                              treatment_model=group ~ x1 + x2 + x3 +
-                                x4 + x5 + x6,
+                              treatment_model=group ~ x1 + x2 + x5 + x6,
                               weight_method="ps",
                               stabilize=FALSE,
                               cause=1)$adjcif
@@ -146,6 +145,7 @@ test_that("3 ways of iptw calculation are equal", {
   colnames(adj_weightit) <- paste0("weightit_", colnames(adj_weightit))
 
   out <- cbind(adj_w, adj_glm, adj_weightit)
+  out <- out[!is.na(out$glm_se),]
 
   tol <- 0.0001
   # all times equal
