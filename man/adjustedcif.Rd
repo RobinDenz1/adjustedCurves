@@ -129,7 +129,9 @@ Some method specific objects might also be contained in the output.
 }
 
 \references{
-Relevant literature can be found in the respective \code{cif_method} documentation.
+Robin Denz, Renate Klaaßen-Mielke, and Nina Timmesfeld (2023). "A Comparison of Different Methods to Adjust Survival Curves for Confounders". In: Statistics in Medicine 42.10, pp. 1461-1479
+
+More relevant literature can be found in the respective \code{cif_method} documentation.
 }
 \author{
 The function itself was written by Robin Denz, but some \code{cif_method} functions include wrappers for functions written by other people. More information can be found in the respective \code{cif_method} documentation.

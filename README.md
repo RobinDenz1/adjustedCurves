@@ -118,7 +118,7 @@ More examples can be found in the documentation and the vignettes.
 
 The main paper associated with this R-Package is:
 
-Robin Denz, Renate Klaaßen-Mielke, and Nina Timmesfeld (2023). *A Comparison of Different Methods to Adjust Survival Curves for Confounders*. Statistics in Medicine. InPrint. <doi:10.1002/sim.9681>
+Robin Denz, Renate Klaaßen-Mielke, and Nina Timmesfeld (2023). *A comparison of different methods to adjust survival curves for confounders*. Statistics in Medicine. 42.10, pp. 1461-1479. <doi:10.1002/sim.9681>
 
 In addition, the relevant primary literature of the respective method should be cited. This can be found in the documentation of the method.
 
