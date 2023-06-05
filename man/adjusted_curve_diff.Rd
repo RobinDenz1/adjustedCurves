@@ -21,7 +21,7 @@ An \code{adjustedsurv} object created using the \code{adjustedsurv} function, or
 Optional argument to get a specific difference. This argument takes a single character string specifying one of the levels of the \code{variable} used in the original \code{adjustedsurv} or \code{adjustedcif} function call. This group will be subtracted from. For example if \code{group_1="A"} and \code{group_2="B"} the difference \code{A - B} will be used. If \code{NULL}, the order of the factor levels in the original \code{data} determines the order. If not \code{NULL}, the \code{group_2} argument also needs to be specified.
   }
   \item{group_2}{
-Also a single character string specifying one of the levels of \code{variable}. This corresponds to the right side of the difference equation. See argument \code{group_2}.
+Also a single character string specifying one of the levels of \code{variable}. This corresponds to the right side of the difference equation. See argument \code{group_1}.
   }
   \item{times}{
 An optional numeric vector of points in time at which the difference should be estimated. If \code{NULL} (default) the differences are estimated for the whole curve.

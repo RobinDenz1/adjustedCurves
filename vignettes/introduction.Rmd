@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo=TRUE)
 
 The main purpose of the `adjustedCurves` R-Package is to calculate and plot confounder-adjusted survival curves and cause-specific confounder-adjusted cumulative incidence functions (CIF) using a variety of methods. Group- or treatment-specific survival curves and CIFs are often used to graphically display the treatment (or group) effect on the survival probability. When the data at hand comes from a randomized controlled trial with balanced subgroups, simple stratified estimators of the survival curves or CIFs ignoring other covariates are unbiased. When randomization fails or was not done at all however, confounding can lead to biased depictions (see Rubin 1974; Pearl 2009).
 
-Luckily, a lot of different methods to adjust survival curves and CIFs for confounding have been proposed. With the `adjustedCurves` package, these methods can be used with little effort.
+Luckily, a lot of different methods to adjust survival curves and CIFs for confounding have been proposed. With the `adjustedCurves` package, these methods can be used with little effort. A review and simulation study comparing these methods can be found in Denz et al. (2023).
 
 ## Installation
 
@@ -368,6 +368,8 @@ plot_rmtl_curve(adjcif)
 ```
 
 ## Literature
+
+Robin Denz, Renate Klaaßen-Mielke, and Nina Timmesfeld (2023). "A Comparison of Different Methods to Adjust Survival Curves for Confounders". In: Statistics in Medicine 42.10, pp. 1461-1479
 
 Donald B. Rubin (1974). “Estimating Causal Effects of Treatments in Randomized and Nonrandomized Studies”. In: Journal of Educational Psychology 66.5, pp. 688-701
 

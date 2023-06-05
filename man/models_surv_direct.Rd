@@ -66,7 +66,7 @@ The following models are directly supported in the \code{outcome_model} in the \
   \item{}{Any model with a fitting S3 prediction method or a valid \code{predict_fun} can be used as well. See below.}
 }
 
-\strong{Group A:} The direct adjusted survival probabilities are estimated directly using the \code{\link[riskRegression]{ate}} function. Additional arguments supplied using the \code{...} syntax are passed to the \code{\link[riskRegression]{ate}} function. \cr
+\strong{Group A:} The direct adjusted survival probabilities are estimated directly using the \code{\link[riskRegression]{ate}} function. Additional arguments supplied using the \code{...} syntax are passed to the \code{\link[riskRegression]{ate}} function. Note that \code{Surv()} calls required to fit the model should be made inside the formula, not saved elsewhere. \cr
 \strong{Group B:} Predicted survival probabilities are obtained using the \code{\link[pec]{predictSurvProb}} function. The G-Computation is carried out using those. Additional arguments supplied using the \code{...} syntax are passed to the \code{\link[pec]{predictSurvProb}} function. \cr
 \strong{Group C:} The \code{\link[riskRegression]{predictRisk}} function is used to obtain predicted cumulative incidences, which are then transformed to survival probabilities. Additional arguments supplied using the \code{...} syntax are passed to the \code{\link[riskRegression]{predictRisk}} function.\cr
 \strong{Group D:} These models are only allowed if there is no censoring. Predicted survival probabilities are obtained using the \code{predictProb} function from the \pkg{pec} package. Additional arguments supplied using the \code{...} syntax are passed to the \code{predictProb} function.\cr

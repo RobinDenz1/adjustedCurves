@@ -86,7 +86,7 @@ test_that("variable is really wrong", {
                                          n_boot=2,
                                          na.action="na.omit",
                                          clean_data=TRUE),
-               paste0("Arguments 'variable', 'ev_time', 'event' and 'method' ",
+               paste0("Arguments 'variable', 'ev_time' and 'event' ",
                       "must be character strings, specifying variables ",
                       "in 'data'."))
 })
@@ -222,8 +222,8 @@ test_that("event wrong type", {
                                          n_boot=2,
                                          na.action="na.omit",
                                          clean_data=TRUE),
-               paste0("Arguments 'variable', 'ev_time', 'event' and ",
-                      "'method' must be ", "character strings, specifying ",
+               paste0("Arguments 'variable', 'ev_time' and 'event'",
+                      " must be ", "character strings, specifying ",
                       "variables in 'data'."))
 })
 

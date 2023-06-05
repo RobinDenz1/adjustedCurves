@@ -55,13 +55,13 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
          " not a vector. See documentation.")
   } else if (length(clean_data) != 1) {
     stop("'clean_data' must be either TRUE or FALSE, not a vector.")
-  } else if (length(method) != 1) {
+  } else if (length(method) != 1 | !is.character(method)) {
     stop("'method' must be a single character string. Using multiple",
          " methods in one call is currently not supported.")
   # needed variables
   } else if (!is.character(variable) | !is.character(ev_time) |
-             !is.character(event) | !is.character(method)) {
-    stop("Arguments 'variable', 'ev_time', 'event' and 'method' must be ",
+             !is.character(event)) {
+    stop("Arguments 'variable', 'ev_time' and 'event' must be ",
          "character strings, specifying variables in 'data'.")
   # method
   } else if (!method %in% c("km", "iptw_km", "iptw_cox", "iptw_pseudo",
