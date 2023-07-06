@@ -96,7 +96,7 @@ adjcif <- adjustedcif(data=sim_dat,
                       cause=1,
                       method="iptw_pseudo",
                       treatment_model=glm_mod)
-plot(adjcif)
+plot(adjcif, force_bounds=TRUE, iso_reg=TRUE)
 
 # Alternatively, use custom weights
 # In this example we use weights calculated using the propensity score,
@@ -111,7 +111,7 @@ adjcif <- adjustedcif(data=sim_dat,
                       cause=1,
                       method="iptw_pseudo",
                       treatment_model=weights)
-plot(adjcif)
+plot(adjcif, force_bounds=TRUE, iso_reg=TRUE)
 
 # And a third alternative: use the WeightIt package
 # here an example with equal results to the ones above:
@@ -123,7 +123,7 @@ adjcif <- adjustedcif(data=sim_dat,
                       method="iptw_pseudo",
                       treatment_model=group ~ x1 + x3 + x5 + x6,
                       weight_method="ps")
-plot(adjcif)
+plot(adjcif, force_bounds=TRUE, iso_reg=TRUE)
 
 # not run to avoid dependency on optweight
 if (interactive()) {
@@ -136,6 +136,6 @@ adjcif <- adjustedcif(data=sim_dat,
                       method="iptw_pseudo",
                       treatment_model=group ~ x1 + x3 + x5 + x6,
                       weight_method="optweight")
-plot(adjcif)
+plot(adjcif, force_bounds=TRUE, iso_reg=TRUE)
 }
 }
