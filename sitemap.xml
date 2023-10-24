@@ -82,6 +82,9 @@
     <loc>https://robindenz1.github.io/adjustedCurves/reference/cif_matching.html</loc>
   </url>
   <url>
+    <loc>https://robindenz1.github.io/adjustedCurves/reference/cif_tmle.html</loc>
+  </url>
+  <url>
     <loc>https://robindenz1.github.io/adjustedCurves/reference/index.html</loc>
   </url>
   <url>
@@ -155,5 +158,8 @@
   </url>
   <url>
     <loc>https://robindenz1.github.io/adjustedCurves/reference/surv_strat_nieto.html</loc>
+  </url>
+  <url>
+    <loc>https://robindenz1.github.io/adjustedCurves/reference/surv_tmle.html</loc>
   </url>
 </urlset>
