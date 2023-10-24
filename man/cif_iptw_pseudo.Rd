@@ -125,9 +125,7 @@ adjcif <- adjustedcif(data=sim_dat,
                       weight_method="ps")
 plot(adjcif, force_bounds=TRUE, iso_reg=TRUE)
 
-# not run to avoid dependency on optweight
-if (interactive()) {
-# here an example using Optimization-Based Weighting:
+# here an example using Entropy Balancing Weighting:
 adjcif <- adjustedcif(data=sim_dat,
                       variable="group",
                       ev_time="time",
@@ -135,7 +133,6 @@ adjcif <- adjustedcif(data=sim_dat,
                       cause=1,
                       method="iptw_pseudo",
                       treatment_model=group ~ x1 + x3 + x5 + x6,
-                      weight_method="optweight")
+                      weight_method="ebal")
 plot(adjcif, force_bounds=TRUE, iso_reg=TRUE)
-}
 }

@@ -19,3 +19,8 @@
 
 * Fixed small issues in unit tests caused by changes in the `WeightIt` package
 * Made some small documentation updates
+
+# adjustedCurves 0.10.2
+
+* Changed examples for the usage of `WeightIt` as suggested by Noah Greifer
+* Added the new methods `surv_tmle` and `cif_tmle`, based on the `concrete` package

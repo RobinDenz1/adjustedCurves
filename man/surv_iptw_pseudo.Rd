@@ -129,15 +129,12 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         treatment_model=group ~ x1 + x3 + x5 + x6,
                         weight_method="ps")
 
-# not run to avoid dependency on optweight
-if (interactive()) {
-# here an example using Optimization-Based Weighting:
+# here an example using Entropy Balancing Weighting:
 adjsurv <- adjustedsurv(data=sim_dat,
                         variable="group",
                         ev_time="time",
                         event="event",
                         method="iptw_km",
                         treatment_model=group ~ x1 + x3 + x5 + x6,
-                        weight_method="optweight")
-}
+                        weight_method="ebal")
 }

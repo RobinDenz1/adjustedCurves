@@ -88,11 +88,21 @@
        - Approximate CI: Not Calculated
        - Using a single dataset
 
+# summary.adjustedcif, tmle
+
+    Confounder Adjusted Cumulative Incidences 
+       - Cause of Interest: 1
+       - Method: Targeted Maximum Likelihood Estimator
+       - Times: Event-Specific Times
+       - Bootstrapping: Not Done
+       - Approximate CI: Not Calculated
+       - Using a single dataset
+
 # summary.adjustedcif, with boot
 
     Confounder Adjusted Cumulative Incidences 
        - Cause of Interest: 1
-       - Method: Augmented Inverse Probability of Treatment Weighting: Pseudo-Values
+       - Method: Targeted Maximum Likelihood Estimator
        - Times: Event-Specific Times
        - Bootstrapping: Performed with 500 Replications
        - Approximate CI: Not Calculated
@@ -102,7 +112,7 @@
 
     Confounder Adjusted Cumulative Incidences 
        - Cause of Interest: 1
-       - Method: Augmented Inverse Probability of Treatment Weighting: Pseudo-Values
+       - Method: Targeted Maximum Likelihood Estimator
        - Times: Event-Specific Times
        - Bootstrapping: Performed with 500 Replications
        - Approximate CI: Calculated with a Confidence level of 0.95
@@ -112,7 +122,7 @@
 
     Confounder Adjusted Cumulative Incidences 
        - Cause of Interest: 1
-       - Method: Augmented Inverse Probability of Treatment Weighting: Pseudo-Values
+       - Method: Targeted Maximum Likelihood Estimator
        - Times: Event-Specific Times
        - Bootstrapping: Performed with 500 Replications
        - Approximate CI: Calculated with a Confidence level of 0.95

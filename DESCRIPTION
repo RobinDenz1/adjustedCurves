@@ -8,8 +8,8 @@ Maintainer: Robin Denz <robin.denz@rub.de>
 Description: Estimate and plot confounder-adjusted survival curves using
     either 'Direct Adjustment', 'Direct Adjustment with Pseudo-Values',
     various forms of 'Inverse Probability of Treatment Weighting', two
-    forms of 'Augmented Inverse Probability of Treatment Weighting' and
-    'Empirical Likelihood Estimation'.
+    forms of 'Augmented Inverse Probability of Treatment Weighting',
+    'Empirical Likelihood Estimation' or 'Targeted Maximum Likelihood Estimation'.
 	Also includes a significance test for the difference
     between two adjusted survival curves and the calculation of adjusted
     restricted mean survival times.  Additionally enables the user to
@@ -49,7 +49,9 @@ Suggests:
     tidyr,
 	ggpp (>= 0.4.3),
     vdiffr (>= 1.0.0),
-    covr
+    covr,
+	data.table,
+	concrete (>= 1.0.5)
 VignetteBuilder: 
     knitr
 Config/testthat/edition: 3

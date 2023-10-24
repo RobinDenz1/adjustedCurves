@@ -97,6 +97,15 @@
        - Approximate CI: Not calculated
        - Using a single dataset
 
+# summary.adjustedsurv, tmle
+
+    Confounder Adjusted Survival Probabilities 
+       - Method: Targeted Maximum Likelihood Estimator
+       - Times: Event-Specific Times
+       - Bootstrapping: Not Done
+       - Approximate CI: Not calculated
+       - Using a single dataset
+
 # summary.adjustedsurv, strat_amato
 
     Confounder Adjusted Survival Probabilities 

@@ -53,7 +53,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
       times <- sort(unique(data$data[, ev_time][data$data[, event]==1]))
 
       # add zero if not already in there
-      if (!0 %in% times) {
+      if (!0 %in% times & method!="tmle") {
         times <- c(0, times)
       }
     }
@@ -240,7 +240,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
       times <- sort(unique(data[, ev_time][data[, event]==1]))
 
       # add zero if not already in there
-      if (!0 %in% times) {
+      if (!0 %in% times & method!="tmle") {
         times <- c(0, times)
       }
     }
@@ -455,6 +455,8 @@ summary.adjustedsurv <- function(object, ...) {
     method_name <- "Stratification & Weighting by Amato"
   } else if (object$method=="strat_nieto") {
     method_name <- "Stratification & Weighting by Gregory / Nieto & Coresh"
+  } else if (object$method=="tmle") {
+    method_name <- "Targeted Maximum Likelihood Estimator"
   }
 
   times_str <- ifelse(is.null(object$call$times), "Event-Specific Times",

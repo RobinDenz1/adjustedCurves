@@ -68,7 +68,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
                             "direct", "direct_pseudo", "aiptw_pseudo",
                             "aiptw", "matching",
                             "emp_lik", "strat_cupples", "strat_amato",
-                            "strat_nieto")) {
+                            "strat_nieto", "tmle")) {
     stop("Method '", method, "' is undefined. See documentation for ",
          "details on available methods.")
   # conf_int
@@ -114,7 +114,8 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     levs_len <- length(unique(data[, variable]))
     if (levs_len < 2) {
       stop("There have to be at least two groups in 'variable'.")
-    } else if (levs_len > 2 & method %in% c("matching", "emp_lik", "aiptw")) {
+    } else if (levs_len > 2 & method %in% c("matching", "emp_lik", "aiptw",
+                                            "tmle")) {
       stop("Categorical treatments are currently not supported for ",
            "method='", method, "'.")
     }
@@ -669,7 +670,7 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
          "character strings, specifying variables in 'data'.")
   } else if (!method %in% c("aalen_johansen", "iptw", "iptw_pseudo", "direct",
                             "direct_pseudo", "aiptw_pseudo",
-                            "aiptw", "matching")) {
+                            "aiptw", "matching", "tmle")) {
     stop("Method '", method, "' is undefined. See documentation for ",
          "details on available methods.")
   # conf_int

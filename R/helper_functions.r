@@ -220,6 +220,11 @@ calc_pseudo_surv <- function(data, ev_time, event, times, censoring_vars,
 remove_unnecessary_covars <- function(data, method, variable, ev_time,
                                       event, ...) {
 
+  # nothing is removed for tmle
+  if (method=="tmle") {
+    return(data)
+  }
+
   args <- list(...)
 
   # extract variables from treatment model
@@ -301,7 +306,8 @@ load_needed_packages <- function(method, kind, treatment_model,
   if (kind=="surv") {
 
     # survival
-    if (method=="direct" | method=="km" | method=="strat_cupples") {
+    if (method=="direct" | method=="km" | method=="strat_cupples" |
+        method=="tmle") {
       requireNamespace("survival")
     }
 
@@ -341,11 +347,21 @@ load_needed_packages <- function(method, kind, treatment_model,
       requireNamespace("MASS")
     }
 
+    # concrete
+    if (method=="tmle") {
+      requireNamespace("concrete")
+    }
+
+    # data.table
+    if (method=="tmle") {
+      requireNamespace("data.table")
+    }
+
   } else {
 
     # cmprsk
     if (method=="aalen_johansen") {
-      requireNamespace("survival")
+      requireNamespace("cmprsk")
     }
 
     # riskRegression
@@ -373,6 +389,16 @@ load_needed_packages <- function(method, kind, treatment_model,
     # geese
     if (method=="direct_pseudo" | method=="aiptw_pseudo") {
       requireNamespace("geepack")
+    }
+
+    # concrete
+    if (method=="tmle") {
+      requireNamespace("concrete")
+    }
+
+    # data.table
+    if (method=="tmle") {
+      requireNamespace("data.table")
     }
   }
 }

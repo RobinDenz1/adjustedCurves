@@ -52,7 +52,7 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
       times <- sort(unique(data$data[, ev_time][data$data[, event]>=1]))
 
       # add zero if not already in there
-      if (!0 %in% times) {
+      if (!0 %in% times & method!="tmle") {
         times <- c(0, times)
       }
     }
@@ -233,7 +233,7 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
       times <- sort(unique(data[, ev_time][data[, event]>=1]))
 
       # add zero if not already in there
-      if (!0 %in% times) {
+      if (!0 %in% times & method!="tmle") {
         times <- c(0, times)
       }
     }
@@ -425,6 +425,8 @@ summary.adjustedcif <- function(object, ...) {
                           " Weighting: Pseudo-Values")
   } else if (object$method=="aalen_johansen") {
     method_name <- "Aalen-Johansen Estimator"
+  } else if (object$method=="tmle") {
+    method_name <- "Targeted Maximum Likelihood Estimator"
   }
 
   times_str <- ifelse(is.null(object$call$times), "Event-Specific Times",
