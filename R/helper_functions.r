@@ -288,6 +288,8 @@ remove_unnecessary_covars <- function(data, method, variable, ev_time,
   } else if (method=="strat_cupples" | method=="strat_amato" |
              method=="strat_nieto") {
     needed_covars <- c(needed_covars, args$adjust_vars)
+  } else if (method=="iv_2SRIF") {
+    needed_covars <- c(needed_covars, args$adjust_vars, args$instrument)
   }
 
   # remove duplicates
@@ -307,7 +309,7 @@ load_needed_packages <- function(method, kind, treatment_model,
 
     # survival
     if (method=="direct" | method=="km" | method=="strat_cupples" |
-        method=="tmle") {
+        method=="tmle" | method=="iv_2SRIF") {
       requireNamespace("survival")
     }
 

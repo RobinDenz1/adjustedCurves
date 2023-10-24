@@ -457,6 +457,8 @@ summary.adjustedsurv <- function(object, ...) {
     method_name <- "Stratification & Weighting by Gregory / Nieto & Coresh"
   } else if (object$method=="tmle") {
     method_name <- "Targeted Maximum Likelihood Estimator"
+  } else if (object$method=="iv_2SRIF") {
+    method_name <- "Instrumental Variable Estimator (2SRI-F)"
   }
 
   times_str <- ifelse(is.null(object$call$times), "Event-Specific Times",

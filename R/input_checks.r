@@ -68,7 +68,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
                             "direct", "direct_pseudo", "aiptw_pseudo",
                             "aiptw", "matching",
                             "emp_lik", "strat_cupples", "strat_amato",
-                            "strat_nieto", "tmle")) {
+                            "strat_nieto", "tmle", "iv_2SRIF")) {
     stop("Method '", method, "' is undefined. See documentation for ",
          "details on available methods.")
   # conf_int
@@ -115,7 +115,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     if (levs_len < 2) {
       stop("There have to be at least two groups in 'variable'.")
     } else if (levs_len > 2 & method %in% c("matching", "emp_lik", "aiptw",
-                                            "tmle")) {
+                                            "tmle", "iv_2SRIF")) {
       stop("Categorical treatments are currently not supported for ",
            "method='", method, "'.")
     }

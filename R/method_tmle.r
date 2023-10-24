@@ -1,7 +1,4 @@
 
-# TODO:
-# - add unit-tests for the functions here
-
 ## targeted maximum likelihood estimation for continuously distributed
 ## time-to-event data (both with and without competing events)
 ## as implemented in the concrete R-package
