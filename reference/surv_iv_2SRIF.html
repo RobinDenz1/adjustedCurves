@@ -65,10 +65,10 @@ This page explains the details of estimating adjusted survival curves using the 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>adjust_vars</dt>
-<dd><p>[<strong>required</strong>] A character vector of column names specifying observed variables to be used as covariates in both the linear regression model and the Cox model. See details and examples.</p></dd>
+<dd><p>[<strong>required</strong>] A character vector of column names specifying observed variables to be used as covariates in both the linear regression model and the Cox model. Set to <code>NULL</code> to use no additional observed covariates. See details and examples.</p></dd>
 
   <dt>instrument</dt>
-<dd><p>A single character string specifying the instrumental variable. This variable should be numeric and fufill all conditions required to be called a instrumental variable. See details and references for more information.</p></dd>
+<dd><p>[<strong>required</strong>] A single character string specifying the instrumental variable. This variable should be numeric and fufill all conditions required to be called a instrumental variable. See details and references for more information.</p></dd>
 
   <dt>frailty_dist</dt>
 <dd><p>A single character string specifying the distribution that should be used for the frailty term (internally passed to the <code>distribution</code> argument of the <code>frailty</code> function). Defaults to <code>"gaussian"</code> and should usually be kept at this value.</p></dd>
@@ -89,7 +89,8 @@ This page explains the details of estimating adjusted survival curves using the 
 <li><p><strong>Bounded Estimates:</strong> Estimates are guaranteed to be bounded in the 0 to 1 probability range.</p></li>
 <li><p><strong>Monotone Function:</strong> Estimates are guaranteed to be monotone.</p></li>
 <li><p><strong>Dependencies:</strong> None.</p></li>
-</ul><p>Unlike all other methods included in this package, the instrumental variable approach allows adjustment for unmeasured confounding, while simulatenously allowing adjustment for observed confounders. This is the main advantage of this method. It is, however, only usable if there exists a variable that can be reasonably used as an instrumental variable. Conditions for what constitutes such a variable and more details on the estimation process can be found in the original article by Martinez-Camblor et al. (2021).</p>
+</ul><p>An <code>instrument</code> is a variable that directly influences only the <code>variable</code> of interest and has no effect on the survival probability or any known confounders. Essentially, it is a variable that determines whether a person receives a specific level of the <code>variable</code>, without influencing anything else. Through some clever calculations, such variables may be used to adjust for confounding factors. A nice non-technical explanation of the general methodology of instrumental variables is given by Iwashyna and Kennedy (2013). More specific explanations of the method used here are given in Martinez-Camblor et al. (2021).</p>
+<p>Unlike all other methods included in this package, the instrumental variable approach allows adjustment for unmeasured confounding, while simulatenously allowing adjustment for observed confounders. This is the main advantage of this method. It is, however, only usable if there exists a variable that can be reasonably used as an instrumental variable. Conditions for what constitutes such a variable and more details on the estimation process can be found in the original article by Martinez-Camblor et al. (2021).</p>
 <p>Note that this method does not target the average treatment effect (ATE), but instead targets the local average treatment effect (LATE), also sometimes called complier average causal effect (CACE) as described in Lee et al. (2023). This is the main reason this estimator was not included in the simulation study performed by the author of this package (Denz et al. 2022). It is therefore currently not easy to judge how well this method performs in comparison with other methods.</p>
     </div>
     <div class="section level2">
@@ -107,10 +108,11 @@ This page explains the details of estimating adjusted survival curves using the 
     <p>Pablo Martínez-Camblor, Todd A. MacKenzie, Douglas O. Staiger, Phillip P. Goodney, and Jamer O'Malley (2021). "Summarizing Causal Differences in Survival Curves in the Presence of Unmeasured Confounding". In: The International Journal of Biostatistics 17.2, pp. 223-240</p>
 <p>Youjin Lee, Edward H. Kennedy, and Nandita Mitra (2023). "Doubly Robust Nonparametric Instrumental Variable Estimators for Survival Outcomes". In: Biostatistics 24.2, pp. 518-537</p>
 <p>Robin Denz, Renate Klaaßen-Mielke, and Nina Timmesfeld (2023). "A Comparison of Different Methods to Adjust Survival Curves for Confounders". In: Statistics in Medicine 42.10, pp. 1461-1479</p>
+<p>Theodore J. Iwashyna and Edward H. Kennedy (2013). "Instrumental Variable Analyses: Exploting Natural Randomness to Understand Causal Mechanisms". In: Annals of the American Thoracic Society 10.3, pp. 255-260</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
-    <p>Robin Denz</p>
+    <p>Robin Denz re-factored and adapted code from the online supplementary of the original article by Martinez-Camblor et al. (2021) to implement this method.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
