@@ -12,10 +12,10 @@ This page explains the details of estimating adjusted survival curves using the 
 
 \arguments{
   \item{adjust_vars}{
-[\strong{required}] A character vector of column names specifying observed variables to be used as covariates in both the linear regression model and the Cox model. See details and examples.
+[\strong{required}] A character vector of column names specifying observed variables to be used as covariates in both the linear regression model and the Cox model. Set to \code{NULL} to use no additional observed covariates. See details and examples.
 }
   \item{instrument}{
-A single character string specifying the instrumental variable. This variable should be numeric and fufill all conditions required to be called a instrumental variable. See details and references for more information.
+[\strong{required}] A single character string specifying the instrumental variable. This variable should be numeric and fufill all conditions required to be called a instrumental variable. See details and references for more information.
 }
   \item{frailty_dist}{
 A single character string specifying the distribution that should be used for the frailty term (internally passed to the \code{distribution} argument of the \code{frailty} function). Defaults to \code{"gaussian"} and should usually be kept at this value.
@@ -37,6 +37,8 @@ Either \code{TRUE} (default) or \code{FALSE}, indicating whether the output obje
 \item{\strong{Dependencies:} None.}
 }
 
+An \code{instrument} is a variable that directly influences only the \code{variable} of interest and has no effect on the survival probability or any known confounders. Essentially, it is a variable that determines whether a person receives a specific level of the \code{variable}, without influencing anything else. Through some clever calculations, such variables may be used to adjust for confounding factors. A nice non-technical explanation of the general methodology of instrumental variables is given by Iwashyna and Kennedy (2013). More specific explanations of the method used here are given in Martinez-Camblor et al. (2021).
+
 Unlike all other methods included in this package, the instrumental variable approach allows adjustment for unmeasured confounding, while simulatenously allowing adjustment for observed confounders. This is the main advantage of this method. It is, however, only usable if there exists a variable that can be reasonably used as an instrumental variable. Conditions for what constitutes such a variable and more details on the estimation process can be found in the original article by Martinez-Camblor et al. (2021).
 
 Note that this method does not target the average treatment effect (ATE), but instead targets the local average treatment effect (LATE), also sometimes called complier average causal effect (CACE) as described in Lee et al. (2023). This is the main reason this estimator was not included in the simulation study performed by the author of this package (Denz et al. 2022). It is therefore currently not easy to judge how well this method performs in comparison with other methods.
@@ -57,9 +59,11 @@ Pablo Martínez-Camblor, Todd A. MacKenzie, Douglas O. Staiger, Phillip P. Goodn
 Youjin Lee, Edward H. Kennedy, and Nandita Mitra (2023). "Doubly Robust Nonparametric Instrumental Variable Estimators for Survival Outcomes". In: Biostatistics 24.2, pp. 518-537
 
 Robin Denz, Renate Klaaßen-Mielke, and Nina Timmesfeld (2023). "A Comparison of Different Methods to Adjust Survival Curves for Confounders". In: Statistics in Medicine 42.10, pp. 1461-1479
+
+Theodore J. Iwashyna and Edward H. Kennedy (2013). "Instrumental Variable Analyses: Exploting Natural Randomness to Understand Causal Mechanisms". In: Annals of the American Thoracic Society 10.3, pp. 255-260
 }
 \author{
-Robin Denz
+Robin Denz re-factored and adapted code from the online supplementary of the original article by Martinez-Camblor et al. (2021) to implement this method.
 }
 
 \seealso{

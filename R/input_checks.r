@@ -399,6 +399,30 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
       stop("Weights supplied directly to the 'treatment_model' argument",
            " must be positive.")
     }
+  } else if (method=="iv_2SRIF") {
+    # need adjust_vars, instrument
+    if (!"adjust_vars" %in% names(obj)) {
+      stop("Argument 'adjust_vars' needs to be specified when using",
+           " method='", method, "'.")
+    } else if (!"instrument" %in% names(obj)) {
+      stop("Argument 'instrument' needs to be specified when using",
+           " method='", method, "'.")
+    }
+    # invalid adjust_vars, instrument
+    if (!is.null(obj$adjust_vars) && !is.character(obj$adjust_vars)) {
+      stop("'adjust_vars' needs to be a character vector specifying names",
+           " in 'data'.")
+    } else if (!(is.character(obj$instrument) && length(obj$instrument)==1)) {
+      stop("'instrument' needs to be a single character string.")
+    }
+
+    # adjust_vars, instrument not in data
+    if (!is.null(obj$adjust_vars) &&
+        !all(obj$adjust_vars %in% colnames(data))) {
+      stop("'adjust_vars' must specify valid column names in 'data'.")
+    } else if (!obj$instrument %in% colnames(data)) {
+      stop("'instrument' must be a valid column name in 'data'.")
+    }
   }
 
   # bootstrapping
