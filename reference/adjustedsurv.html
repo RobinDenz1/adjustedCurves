@@ -61,7 +61,8 @@
 <span>             conf_int<span class="op">=</span><span class="cn">FALSE</span>, conf_level<span class="op">=</span><span class="fl">0.95</span>, times<span class="op">=</span><span class="cn">NULL</span>,</span>
 <span>             bootstrap<span class="op">=</span><span class="cn">FALSE</span>, n_boot<span class="op">=</span><span class="fl">500</span>,</span>
 <span>             n_cores<span class="op">=</span><span class="fl">1</span>, na.action<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">na.action</span>,</span>
-<span>             clean_data<span class="op">=</span><span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span>             clean_data<span class="op">=</span><span class="cn">TRUE</span>, iso_reg<span class="op">=</span><span class="cn">FALSE</span>,</span>
+<span>             force_bounds<span class="op">=</span><span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -105,6 +106,12 @@
   <dt>clean_data</dt>
 <dd><p>If <code>TRUE</code> all columns which are not needed for the estimation are removed from <code>data</code> before any further calculations are performed. This ensures that calls to <code>na.omit</code> (see argument <code>na.action</code>) do not remove rows which are fully observed in respect to relevant columns due to missing values in irrelevant columns. Set to <code>FALSE</code> to skip this step. Usually this argument can be ignored. When using non-standard outcome models however it should be set to <code>FALSE</code>.</p></dd>
 
+  <dt>iso_reg</dt>
+<dd><p>Either <code>TRUE</code> or <code>FALSE</code> (default), controlling whether isotonic regression is performed on the resulting survival probability estimates. This can be used to ensure that the survival curves are non-increasing. Since only a few methods may have this problem, this argument is only relevant for some methods (see method specific documentation).</p></dd>
+
+  <dt>force_bounds</dt>
+<dd><p>Either <code>TRUE</code> or <code>FALSE</code> (default), controlling whether the resulting survival probability estimates should be forced to lie between 0 and 1. If <code>TRUE</code> and there are values higher than 1, they are simply set to 1. Values lower than 0 are similarly set to 0. Since only a few methods may have this problem, this argument is only relevant for some methods (see method specific documentation).</p></dd>
+
   <dt>...</dt>
 <dd><p>Further arguments passed to the respective <code>surv_method</code>. For example when using <code>method="direct"</code> all further arguments are passed to the <code>surv_direct</code> function. See details.</p></dd>
 
@@ -121,7 +128,7 @@
 <li><p>"<a href="surv_emp_lik.html">emp_lik</a>": An Empirical Likelihood based estimator.</p></li>
 <li><p>"<a href="surv_aiptw.html">aiptw</a>": An Augmented Inverse Probability of Treatment Weighting estimator.</p></li>
 <li><p>"<a href="surv_aiptw_pseudo.html">aiptw_pseudo</a>": An Augmented Inverse Probability of Treatment Weighting estimator using Pseudo-Values.</p></li>
-<li><p>"<a href="surv_tmle.html">tmle</a>": Targeted Maximum Likelihood Estimation for continuous time time-to-event data.</p></li>
+<li><p>"<a href="surv_tmle.html">tmle</a>": Targeted Maximum Likelihood Estimation for continuously distributed time-to-event data.</p></li>
 <li><p>"<a href="surv_strat_amato.html">strat_amato</a>": A method based on stratification and weighting by Amato (1988).</p></li>
 <li><p>"<a href="surv_strat_nieto.html">strat_nieto</a>": A method based on stratification and weighting by Gregory (1988) and Nieto &amp; Coresh (1996).</p></li>
 <li><p>"<a href="surv_strat_cupples.html">strat_cupples</a>": A method based on stratification and weighting by Cupples et al. (1995).</p></li>
