@@ -516,7 +516,7 @@ iso_reg_cif <- function(plotdata) {
     new <- stats::isoreg(temp$cif)$yf
     plotdata$cif[plotdata$group==lev] <- new
 
-    if (conf_int & "ci_lower" %in% colnames(temp)) {
+    if ("ci_lower" %in% colnames(temp)) {
       diff <- temp$cif - new
 
       plotdata$ci_lower[plotdata$group==lev] <- temp$ci_lower - diff
