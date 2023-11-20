@@ -23,7 +23,8 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
                          conf_int=FALSE, conf_level=0.95, times=NULL,
                          bootstrap=FALSE, n_boot=500, n_cores=1,
                          na.action=options()$na.action,
-                         clean_data=TRUE, ...) {
+                         clean_data=TRUE, iso_reg=FALSE,
+                         force_bounds=FALSE, ...) {
 
   # use data.frame methods only, no tibbles etc.
   if (inherits(data, "data.frame")) {
@@ -164,6 +165,14 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
       plotdata <- as.data.frame(plotdata)
     }
 
+    if (force_bounds) {
+      plotdata <- force_bounds_surv(plotdata)
+    }
+
+    if (iso_reg) {
+      plotdata <- iso_reg_surv(plotdata)
+    }
+
     # output object
     out_obj <- list(mids_analyses=out,
                     adjsurv=plotdata,
@@ -295,7 +304,8 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
                                              method=method,
                                              times=times, i=i,
                                              surv_fun=surv_fun,
-                                             na.action=na.action, ...)
+                                             na.action=na.action,
+                                             ...)
         }
       }
 
@@ -330,6 +340,14 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
 
     # keep factor levels in same order as data
     plotdata$group <- factor(plotdata$group, levels=levs)
+
+    if (force_bounds) {
+      plotdata <- force_bounds_surv(plotdata)
+    }
+
+    if (iso_reg) {
+      plotdata <- iso_reg_surv(plotdata)
+    }
 
     out <- list(adjsurv=plotdata,
                 data=data,

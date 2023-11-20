@@ -23,7 +23,8 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
                         conf_int=FALSE, conf_level=0.95, times=NULL,
                         bootstrap=FALSE, n_boot=500, n_cores=1,
                         na.action=options()$na.action,
-                        clean_data=TRUE, ...) {
+                        clean_data=TRUE, iso_reg=FALSE,
+                        force_bounds=FALSE, ...) {
 
   # use data.frame methods only, no tibbles etc.
   if (inherits(data, "data.frame")) {
@@ -158,6 +159,14 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
         dplyr::summarise(cif=mean(cif),
                          .groups="drop_last")
       plotdata <- as.data.frame(plotdata)
+    }
+
+    if (force_bounds) {
+      plotdata <- force_bounds_surv(plotdata)
+    }
+
+    if (iso_reg) {
+      plotdata <- iso_reg_surv(plotdata)
     }
 
     # output object
@@ -321,6 +330,14 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
 
     # keep factor ordering the same
     plotdata$group <- factor(plotdata$group, levels=levs)
+
+    if (force_bounds) {
+      plotdata <- force_bounds_cif(plotdata)
+    }
+
+    if (iso_reg) {
+      plotdata <- iso_reg_cif(plotdata)
+    }
 
     out <- list(adjcif=plotdata,
                 data=data,

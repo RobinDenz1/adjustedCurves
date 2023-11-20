@@ -12,7 +12,8 @@ adjustedsurv(data, variable, ev_time, event, method,
              conf_int=FALSE, conf_level=0.95, times=NULL,
              bootstrap=FALSE, n_boot=500,
              n_cores=1, na.action=options()$na.action,
-             clean_data=TRUE, ...)
+             clean_data=TRUE, iso_reg=FALSE,
+             force_bounds=FALSE, ...)
 }
 
 \arguments{
@@ -55,6 +56,12 @@ How missing values should be handled. Can be one of: na.fail, na.omit, na.pass o
   \item{clean_data}{
 If \code{TRUE} all columns which are not needed for the estimation are removed from \code{data} before any further calculations are performed. This ensures that calls to \code{na.omit} (see argument \code{na.action}) do not remove rows which are fully observed in respect to relevant columns due to missing values in irrelevant columns. Set to \code{FALSE} to skip this step. Usually this argument can be ignored. When using non-standard outcome models however it should be set to \code{FALSE}.
   }
+  \item{iso_reg}{
+Either \code{TRUE} or \code{FALSE} (default), controlling whether isotonic regression is performed on the resulting survival probability estimates. This can be used to ensure that the survival curves are non-increasing. Since only a few methods may have this problem, this argument is only relevant for some methods (see method specific documentation).
+  }
+  \item{force_bounds}{
+Either \code{TRUE} or \code{FALSE} (default), controlling whether the resulting survival probability estimates should be forced to lie between 0 and 1. If \code{TRUE} and there are values higher than 1, they are simply set to 1. Values lower than 0 are similarly set to 0. Since only a few methods may have this problem, this argument is only relevant for some methods (see method specific documentation).
+  }
   \item{...}{
 Further arguments passed to the respective \code{surv_method}. For example when using \code{method="direct"} all further arguments are passed to the \code{surv_direct} function. See details.
   }
@@ -72,7 +79,7 @@ The primary purpose of the \code{adjustedsurv} function is to provide a convenie
   \item{"\link[=surv_emp_lik]{emp_lik}": An Empirical Likelihood based estimator.}
   \item{"\link[=surv_aiptw]{aiptw}": An Augmented Inverse Probability of Treatment Weighting estimator.}
   \item{"\link[=surv_aiptw_pseudo]{aiptw_pseudo}": An Augmented Inverse Probability of Treatment Weighting estimator using Pseudo-Values.}
-    \item{"\link[=surv_tmle]{tmle}": Targeted Maximum Likelihood Estimation for continuous time time-to-event data.}
+  \item{"\link[=surv_tmle]{tmle}": Targeted Maximum Likelihood Estimation for continuously distributed time-to-event data.}
   \item{"\link[=surv_strat_amato]{strat_amato}": A method based on stratification and weighting by Amato (1988).}
   \item{"\link[=surv_strat_nieto]{strat_nieto}": A method based on stratification and weighting by Gregory (1988) and Nieto & Coresh (1996).}
   \item{"\link[=surv_strat_cupples]{strat_cupples}": A method based on stratification and weighting by Cupples et al. (1995).}

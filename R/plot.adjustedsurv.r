@@ -63,30 +63,12 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
   # in some methods estimates can be outside the 0, 1 bounds,
   # if specified set those to 0 or 1 respectively
   if (force_bounds) {
-    plotdata <- within(plotdata, {
-      surv <- ifelse(surv < 0, 0, surv)
-      surv <- ifelse(surv > 1, 1, surv)
-    })
+    plotdata <- force_bounds_surv(plotdata)
   }
 
   # apply isotonic regression if specified
-  if (iso_reg & anyNA(plotdata$surv)) {
-    stop("Isotonic Regression cannot be used when there are missing",
-         " values in the final survival estimates.")
-  } else if (iso_reg) {
-    for (lev in levels(plotdata$group)) {
-      temp <- plotdata[plotdata$group==lev, ]
-      # to surv estimates
-      new <- rev(stats::isoreg(rev(temp$surv))$yf)
-      plotdata$surv[plotdata$group==lev] <- new
-      # shift confidence intervals accordingly
-      if (conf_int & "ci_lower" %in% colnames(temp)) {
-        diff <- temp$surv - new
-
-        plotdata$ci_lower[plotdata$group==lev] <- temp$ci_lower - diff
-        plotdata$ci_upper[plotdata$group==lev] <- temp$ci_upper - diff
-      }
-    }
+  if (iso_reg) {
+    plotdata <- iso_reg_surv(plotdata)
   }
 
   # plot CIF instead of survival

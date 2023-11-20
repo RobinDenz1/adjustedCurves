@@ -59,30 +59,12 @@ plot.adjustedcif <- function(x, conf_int=FALSE, max_t=Inf,
   # in some methods estimates can be outside the 0, 1 bounds,
   # if specified set those to 0 or 1 respectively
   if (force_bounds) {
-    plotdata <- within(plotdata, {
-      cif <- ifelse(cif < 0, 0, cif)
-      cif <- ifelse(cif > 1, 1, cif)
-    })
+    plotdata <- force_bounds_cif(plotdata)
   }
 
   # apply isotonic regression if specified
-  if (iso_reg & anyNA(plotdata$cif)) {
-    stop("Isotonic Regression cannot be used when there are missing",
-         " values in the final CIF estimates.")
-  } else if (iso_reg) {
-    for (lev in levels(plotdata$group)) {
-      temp <- plotdata[plotdata$group==lev, ]
-
-      new <- stats::isoreg(temp$cif)$yf
-      plotdata$cif[plotdata$group==lev] <- new
-
-      if (conf_int & "ci_lower" %in% colnames(temp)) {
-        diff <- temp$cif - new
-
-        plotdata$ci_lower[plotdata$group==lev] <- temp$ci_lower - diff
-        plotdata$ci_upper[plotdata$group==lev] <- temp$ci_upper - diff
-      }
-    }
+  if (iso_reg) {
+    plotdata <- iso_reg_cif(plotdata)
   }
 
   mapping <- ggplot2::aes(x=.data$time, y=.data$cif, color=.data$group,

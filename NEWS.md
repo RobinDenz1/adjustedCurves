@@ -25,3 +25,4 @@
 * Changed examples for the usage of `WeightIt` as suggested by Noah Greifer
 * Added the new methods `surv_tmle` and `cif_tmle`, based on the `concrete` package
 * Added new instrumental variable based method `surv_iv_2SRIF`
+* Added arguments `iso_reg` and `force_bounds` to `adjustedsurv` and `adjustedcif` functions
