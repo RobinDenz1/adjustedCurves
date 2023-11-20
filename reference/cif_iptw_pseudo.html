@@ -148,7 +148,7 @@ This page explains the details of estimating inverse probability of treatment we
 <span class="r-in"><span>                      method<span class="op">=</span><span class="st">"iptw_pseudo"</span>,</span></span>
 <span class="r-in"><span>                      treatment_model<span class="op">=</span><span class="va">glm_mod</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span>, force_bounds<span class="op">=</span><span class="cn">TRUE</span>, iso_reg<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in iso_reg_cif(plotdata):</span> object 'conf_int' not found</span>
+<span class="r-plt img"><img src="cif_iptw_pseudo-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Alternatively, use custom weights</span></span></span>
 <span class="r-in"><span><span class="co"># In this example we use weights calculated using the propensity score,</span></span></span>
@@ -164,7 +164,7 @@ This page explains the details of estimating inverse probability of treatment we
 <span class="r-in"><span>                      method<span class="op">=</span><span class="st">"iptw_pseudo"</span>,</span></span>
 <span class="r-in"><span>                      treatment_model<span class="op">=</span><span class="va">weights</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span>, force_bounds<span class="op">=</span><span class="cn">TRUE</span>, iso_reg<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in iso_reg_cif(plotdata):</span> object 'conf_int' not found</span>
+<span class="r-plt img"><img src="cif_iptw_pseudo-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># And a third alternative: use the WeightIt package</span></span></span>
 <span class="r-in"><span><span class="co"># here an example with equal results to the ones above:</span></span></span>
@@ -177,7 +177,7 @@ This page explains the details of estimating inverse probability of treatment we
 <span class="r-in"><span>                      treatment_model<span class="op">=</span><span class="va">group</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x3</span> <span class="op">+</span> <span class="va">x5</span> <span class="op">+</span> <span class="va">x6</span>,</span></span>
 <span class="r-in"><span>                      weight_method<span class="op">=</span><span class="st">"ps"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span>, force_bounds<span class="op">=</span><span class="cn">TRUE</span>, iso_reg<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in iso_reg_cif(plotdata):</span> object 'conf_int' not found</span>
+<span class="r-plt img"><img src="cif_iptw_pseudo-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># here an example using Entropy Balancing Weighting:</span></span></span>
 <span class="r-in"><span><span class="va">adjcif</span> <span class="op">&lt;-</span> <span class="fu"><a href="adjustedcif.html">adjustedcif</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">sim_dat</span>,</span></span>
@@ -189,7 +189,7 @@ This page explains the details of estimating inverse probability of treatment we
 <span class="r-in"><span>                      treatment_model<span class="op">=</span><span class="va">group</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x3</span> <span class="op">+</span> <span class="va">x5</span> <span class="op">+</span> <span class="va">x6</span>,</span></span>
 <span class="r-in"><span>                      weight_method<span class="op">=</span><span class="st">"ebal"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span>, force_bounds<span class="op">=</span><span class="cn">TRUE</span>, iso_reg<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in iso_reg_cif(plotdata):</span> object 'conf_int' not found</span>
+<span class="r-plt img"><img src="cif_iptw_pseudo-4.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
