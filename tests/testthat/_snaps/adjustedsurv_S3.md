@@ -133,10 +133,37 @@
        - Approximate CI: Not calculated
        - Using a single dataset
 
+# summary.adjustedsurv, iv_2SRIF
+
+    Confounder Adjusted Survival Probabilities 
+       - Method: Instrumental Variable Estimator (2SRI-F)
+       - Times: Event-Specific Times
+       - Bootstrapping: Not Done
+       - Approximate CI: Not calculated
+       - Using a single dataset
+
+# summary.adjustedsurv, prox_iptw
+
+    Confounder Adjusted Survival Probabilities 
+       - Method: Proximal Causal Inference Based IPTW
+       - Times: Event-Specific Times
+       - Bootstrapping: Not Done
+       - Approximate CI: Not calculated
+       - Using a single dataset
+
+# summary.adjustedsurv, prox_aiptw
+
+    Confounder Adjusted Survival Probabilities 
+       - Method: Proximal Causal Inference Based AIPTW
+       - Times: Event-Specific Times
+       - Bootstrapping: Not Done
+       - Approximate CI: Not calculated
+       - Using a single dataset
+
 # summary.adjustedsurv, with boot
 
     Confounder Adjusted Survival Probabilities 
-       - Method: Stratification & Weighting by Cupples et al.
+       - Method: Proximal Causal Inference Based AIPTW
        - Times: Event-Specific Times
        - Bootstrapping: Performed with 500 Replications
        - Approximate CI: Not calculated
@@ -145,7 +172,7 @@
 # summary.adjustedsurv, with conf_int
 
     Confounder Adjusted Survival Probabilities 
-       - Method: Stratification & Weighting by Cupples et al.
+       - Method: Proximal Causal Inference Based AIPTW
        - Times: Event-Specific Times
        - Bootstrapping: Performed with 500 Replications
        - Approximate CI: Calculated with a confidence level of 0.95
@@ -154,7 +181,7 @@
 # summary.adjustedsurv, with mids
 
     Confounder Adjusted Survival Probabilities 
-       - Method: Stratification & Weighting by Cupples et al.
+       - Method: Proximal Causal Inference Based AIPTW
        - Times: Event-Specific Times
        - Bootstrapping: Performed with 500 Replications
        - Approximate CI: Calculated with a confidence level of 0.95

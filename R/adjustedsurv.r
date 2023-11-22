@@ -477,6 +477,10 @@ summary.adjustedsurv <- function(object, ...) {
     method_name <- "Targeted Maximum Likelihood Estimator"
   } else if (object$method=="iv_2SRIF") {
     method_name <- "Instrumental Variable Estimator (2SRI-F)"
+  } else if (object$method=="prox_iptw") {
+    method_name <- "Proximal Causal Inference Based IPTW"
+  } else if (object$method=="prox_aiptw") {
+    method_name <- "Proximal Causal Inference Based AIPTW"
   }
 
   times_str <- ifelse(is.null(object$call$times), "Event-Specific Times",

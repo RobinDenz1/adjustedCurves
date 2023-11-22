@@ -290,6 +290,9 @@ remove_unnecessary_covars <- function(data, method, variable, ev_time,
     needed_covars <- c(needed_covars, args$adjust_vars)
   } else if (method=="iv_2SRIF") {
     needed_covars <- c(needed_covars, args$adjust_vars, args$instrument)
+  } else if (method=="prox_iptw" | method=="prox_aiptw") {
+    needed_covars <- c(needed_covars, args$adjust_vars, args$treatment_proxy,
+                       args$outcome_proxy)
   }
 
   # remove duplicates
@@ -357,6 +360,10 @@ load_needed_packages <- function(method, kind, treatment_model,
     # data.table
     if (method=="tmle") {
       requireNamespace("data.table")
+    }
+
+    if (method=="prox_iptw" | method=="prox_aiptw") {
+      requireNamespace("numDeriv")
     }
 
   } else {

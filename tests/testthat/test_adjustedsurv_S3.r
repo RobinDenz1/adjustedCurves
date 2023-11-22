@@ -86,6 +86,21 @@ test_that("summary.adjustedsurv, strat_cupples", {
   expect_snapshot_output(summary(adj))
 })
 
+adj$method <- "iv_2SRIF"
+test_that("summary.adjustedsurv, iv_2SRIF", {
+  expect_snapshot_output(summary(adj))
+})
+
+adj$method <- "prox_iptw"
+test_that("summary.adjustedsurv, prox_iptw", {
+  expect_snapshot_output(summary(adj))
+})
+
+adj$method <- "prox_aiptw"
+test_that("summary.adjustedsurv, prox_aiptw", {
+  expect_snapshot_output(summary(adj))
+})
+
 adj$call$bootstrap <- TRUE
 
 test_that("summary.adjustedsurv, with boot", {

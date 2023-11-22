@@ -68,7 +68,8 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
                             "direct", "direct_pseudo", "aiptw_pseudo",
                             "aiptw", "matching",
                             "emp_lik", "strat_cupples", "strat_amato",
-                            "strat_nieto", "tmle", "iv_2SRIF")) {
+                            "strat_nieto", "tmle", "iv_2SRIF",
+                            "prox_iptw", "prox_aiptw")) {
     stop("Method '", method, "' is undefined. See documentation for ",
          "details on available methods.")
   # conf_int
@@ -115,7 +116,8 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     if (levs_len < 2) {
       stop("There have to be at least two groups in 'variable'.")
     } else if (levs_len > 2 & method %in% c("matching", "emp_lik", "aiptw",
-                                            "tmle", "iv_2SRIF")) {
+                                            "tmle", "iv_2SRIF", "prox_iptw",
+                                            "prox_aiptw")) {
       stop("Categorical treatments are currently not supported for ",
            "method='", method, "'.")
     }
@@ -423,6 +425,23 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     } else if (!obj$instrument %in% colnames(data)) {
       stop("'instrument' must be a valid column name in 'data'.")
     }
+  } else if (method=="prox_iptw" | method=="prox_aiptw") {
+
+    # need adjust_vars, treatment_proxy, outcome_proxy
+    if (!"adjust_vars" %in% names(obj)) {
+      stop("Argument 'adjust_vars' needs to be specified when using",
+           " method='", method, "'.")
+    } else if (!"treatment_proxy" %in% names(obj)) {
+      stop("Argument 'treatment_proxy' needs to be specified when using",
+           " method='", method, "'.")
+    } else if (!"outcome_proxy" %in% names(obj)) {
+      stop("Argument 'outcome_proxy' needs to be specified when using",
+           " method='", method, "'.")
+    }
+
+    check_inputs_prox(data=data, adjust_vars=obj$adjust_vars,
+                      treatment_proxy=obj$treatment_proxy,
+                      outcome_proxy=obj$outcome_proxy)
   }
 
   # bootstrapping
@@ -437,6 +456,42 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     warning("Asymptotic or exact variance calculations are currently",
             " not available for method='", method, "'. Use bootstrap=TRUE",
             " to get bootstrap estimates.", call.=FALSE)
+  }
+}
+
+## checking inputs when using method="prox_iptw" or method="prox_aiptw"
+check_inputs_prox <- function(data, adjust_vars, treatment_proxy,
+                              outcome_proxy) {
+
+  # general type / length checks
+  if (!(length(adjust_vars) >= 1 && is.character(adjust_vars))) {
+    stop("'adjust_vars' needs to be a character vector with at least one",
+         " entry.")
+  } else if (!(length(treatment_proxy)==1 && is.character(treatment_proxy))) {
+    stop("'treatment_proxy' needs to be a single character string.")
+  } else if (!(length(outcome_proxy)==1 && is.character(outcome_proxy))) {
+    stop("'outcome_proxy' needs to be a single character string.")
+  }
+
+  # variables in data
+  if (!all(adjust_vars %in% colnames(data))) {
+    stop("All variables named in 'adjust_vars' need to be valid columns in",
+         " 'data'. The following variables were not found in data: ",
+         paste0(adjust_vars[!adjust_vars %in% colnames(data)],
+                collapse=", "))
+  } else if (!treatment_proxy %in% colnames(data)) {
+    stop("The variable named as 'treatment_proxy' was not found in 'data'.")
+  } else if (!outcome_proxy %in% colnames(data)) {
+    stop("The variable named as 'outcome_proxy' was not found in 'data'.")
+  }
+
+  # variables of correct type
+  if (!is.numeric(data[, treatment_proxy])) {
+    stop("The 'treatment_proxy' must be numeric, not ",
+         class(data[, treatment_proxy]))
+  } else if (!is.numeric(data[, outcome_proxy])) {
+    stop("The 'outcome_proxy' must be numeric, not ",
+         class(data[, outcome_proxy]))
   }
 }
 
