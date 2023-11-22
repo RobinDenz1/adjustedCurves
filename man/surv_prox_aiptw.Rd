@@ -138,6 +138,7 @@ set.seed(4356)
 # NOTE: increase N to get more stable estimates, kept low here to pass
 #       speed requirements set by CRAN
 data <- data_gen(N=50, para_set=para_set)
+data$A <- factor(data$A)
 
 adj <- adjustedsurv(data=data,
                     variable="A",
@@ -148,5 +149,5 @@ adj <- adjustedsurv(data=data,
                     treatment_proxy="Z",
                     outcome_proxy="W",
                     conf_int=TRUE)
-plot(adj)
+plot(adj, iso_reg=TRUE)
 }

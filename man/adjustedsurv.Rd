@@ -84,6 +84,8 @@ The primary purpose of the \code{adjustedsurv} function is to provide a convenie
   \item{"\link[=surv_strat_nieto]{strat_nieto}": A method based on stratification and weighting by Gregory (1988) and Nieto & Coresh (1996).}
   \item{"\link[=surv_strat_cupples]{strat_cupples}": A method based on stratification and weighting by Cupples et al. (1995).}
   \item{"\link[=surv_iv_2SRIF]{iv_2SRIF}": An instrumental variable method based on two stage residual inclusion with a frailty term.}
+  \item{"\link[=surv_prox_iptw]{prox_iptw}": Proximal causal inference based inverse probability of treatment weighting.}
+  \item{"\link[=surv_prox_aiptw]{prox_aiptw}": Proximal causal inference based augmented inverse probability of treatment weighting.}
   \item{"\link[=surv_km]{km}": A simple stratified Kaplan-Meier estimator without any form of adjustment.}
 }
 

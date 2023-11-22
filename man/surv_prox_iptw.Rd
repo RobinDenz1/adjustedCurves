@@ -135,6 +135,7 @@ data_gen <- function(N, para_set, a = NULL) {
 
 set.seed(4356)
 data <- data_gen(N=500, para_set=para_set)
+data$A <- factor(data$A)
 
 adj <- adjustedsurv(data=data,
                     variable="A",
@@ -145,5 +146,5 @@ adj <- adjustedsurv(data=data,
                     treatment_proxy="Z",
                     outcome_proxy="W",
                     conf_int=TRUE)
-plot(adj)
+plot(adj, iso_reg=TRUE)
 }
