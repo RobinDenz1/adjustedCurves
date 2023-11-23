@@ -2,10 +2,10 @@
 \alias{adjustedcif}
 
 \title{
-Calculate Cause-Specific Confounder-Adjusted Cumulative Incidence Functions
+Estimate Cause-Specific Confounder-Adjusted Cumulative Incidence Functions
 }
 \description{
-This is one of two main functions of this R-Package. It allows the user to calculate cause-specific confounder-adjusted cumulative incidence functions in the presence of competing events using a variety of different methods. Some of these methods require additional packages to be installed and, depending on the specified method, there might be additional required arguments in the function call. More information is available on the documentation page of the respective \code{cif_method}.
+This is one of two main functions of this R-Package. It allows the user to estimate cause-specific confounder-adjusted cumulative incidence functions in the presence of competing events using a variety of different methods. Some of these methods require additional packages to be installed and, depending on the specified method, there might be additional required arguments in the function call. More information is available on the documentation page of the respective \code{cif_method}.
 }
 \usage{
 adjustedcif(data, variable, ev_time, event, cause,
@@ -30,13 +30,13 @@ A character string specifying the variable indicating the time-to-event or time-
 A character string specifying the numeric event indicator. The censoring indicator should be coded as 0 and all other events of interest as 1, 2, etc. Must be a valid column name of \code{data}.
   }
   \item{cause}{
-The cause of interest for which the cumulative incidence functions should be calculated. Should be a number that appears in the \code{event} column of \code{data}.
+The cause of interest for which the cumulative incidence functions should be estimated. Should be a number that appears in the \code{event} column of \code{data}.
   }
   \item{method}{
 A character string specifying the adjustment method to use. Case sensitive. See details.
   }
   \item{conf_int}{
-A logical variable, indicating whether the asymptotic variances and confidence intervals of the cumulative incidence should be calculated. Not available for all methods. More information can be found in the documentation of each method. For an alternative way to get confidence intervals, see the \code{bootstrap} argument.
+A logical variable, indicating whether the asymptotic variances and confidence intervals of the cumulative incidence should be estimated. Not available for all methods. More information can be found in the documentation of each method. For an alternative way to get confidence intervals, see the \code{bootstrap} argument.
   }
   \item{conf_level}{
 A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
@@ -70,7 +70,7 @@ Further arguments passed to the respective \code{cif_method}. For example when u
   }
 }
 \details{
-The primary purpose of the \code{adjustedcif} function is to provide a convenient way to calculate confounder-adjusted cumulative incidence functions using any of the methods provided in the literature. A \code{\link[=plot.adjustedcif]{plot}} method is provided to graphically display the estimated cumulative incidence functions as well. Currently the following methods can be used:
+The primary purpose of the \code{adjustedcif} function is to provide a convenient way to estimate confounder-adjusted cumulative incidence functions using any of the methods provided in the literature. A \code{\link[=plot.adjustedcif]{plot}} method is provided to graphically display the estimated cumulative incidence functions as well. Currently the following methods can be used:
 
 \itemize{
   \item{"\link[=cif_direct]{direct}": Direct Standardization based on a model describing the outcome mechanism (\code{\link[riskRegression]{CSC}}, \code{\link[riskRegression]{FGR}}, ..).}
@@ -92,7 +92,7 @@ Every method requires the specification of the \code{data}, \code{variable}, \co
 
 \strong{\emph{Confidence Intervals}}
 
-For most methods approximations for the asymptotic variance of point estimates of the CIF have been proposed in the literature. Where available, those can be calculated and added to the output object using \code{conf_int=TRUE}. It is however recommended to use bootstrapping to estimate the variance instead, which can be done by setting \code{bootstrap=TRUE}. The \code{n_boot} argument is set to 500 by default. This number was chosen because it worked well in simulations but it does not guarantee convergence in practice. Users are recommended to inspect the bootstrapped estimates and adjust the number of replications accordingly. To allow faster bootstrapping the user can choose to run the function on multiple CPU cores in parallel using the \code{n_cores} argument.
+For most methods approximations for the asymptotic variance of point estimates of the CIF have been proposed in the literature. Where available, those can be estimated and added to the output object using \code{conf_int=TRUE}. It is however recommended to use bootstrapping to estimate the variance instead, which can be done by setting \code{bootstrap=TRUE}. The \code{n_boot} argument is set to 500 by default. This number was chosen because it worked well in simulations but it does not guarantee convergence in practice. Users are recommended to inspect the bootstrapped estimates and adjust the number of replications accordingly. To allow faster bootstrapping the user can choose to run the function on multiple CPU cores in parallel using the \code{n_cores} argument.
 
 \strong{\emph{Missing Data}}
 
@@ -102,7 +102,7 @@ Alternatively, this function also supports the use of multiple imputation via th
 
 \strong{\emph{Competing Risks}}
 
-This function is meant to be used for data containing multiple competing risks. If the data does not contain competing-events, it is recommended to use the \code{adjustedsurv} function instead. It does not calculate the CIF directly, but the CIF can be calculated from the survival using CIF = 1 - \eqn{S(t)}. This can be done automatically in the \code{plot.adjustedsurv} function using \code{cif=TRUE}.
+This function is meant to be used for data containing multiple competing risks. If the data does not contain competing-events, it is recommended to use the \code{adjustedsurv} function instead. It does not estimate the CIF directly, but the CIF can be calculated from the survival using CIF = 1 - \eqn{S(t)}. This can be done automatically in the \code{plot.adjustedsurv} function using \code{cif=TRUE}.
 
 \strong{\emph{Graphical Displays}}
 

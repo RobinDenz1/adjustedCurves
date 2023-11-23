@@ -63,6 +63,8 @@ Andrew Ying, Yifan Cui and Eric J. Tchetgen Tchetgen (2022). "Proximal Causal In
 Wang Miao, Zhi Geng and Eric J. Tchetgen Tchetgen (2018). "Identifying Causal Effects with Proxy Variables of an Unmeasured Confounder". In: Biometrika 105.4, pp. 987-993.
 
 Paul N. Zivich, Stephen R. Cole, Jessie K. Edwards, Grace E. Mulholland, Bonnie E. Shook-Sa and Eric J. Tchetgen Tchetgen (2023). "Introducing Proximal Causal Inference for Epidemiologists". In: American Journal of Epidemiology 192.7, pp. 1224-1227.
+
+Eric J. Tchetgen Tchetgen, Andrew Ying, Yifan Cui, Xu Shi and Wang Miao (2020). "An Introduction to Proximal Causal Learning". arXiv:2009.10982
 }
 \author{
 Andrew Ying wrote all of the low-level estimation functions used to actually obtain the relevant values. Robin Denz wrote some wrapper functions around those to include this method in this package.

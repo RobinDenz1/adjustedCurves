@@ -2,10 +2,10 @@
 \alias{adjustedsurv}
 
 \title{
-Calculate Confounder-Adjusted Survival Curves
+Estimate Confounder-Adjusted Survival Curves
 }
 \description{
-This is one of the two main functions of this R-Package. It allows the user to calculate confounder-adjusted survival curves using a variety of different methods. Some of these methods require additional packages to be installed and, depending on the specified method, there might be additional required arguments in the function call. More information is available on the documentation page of the respective \code{surv_method}.
+This is one of the two main functions of this R-Package. It allows the user to estimate confounder-adjusted survival curves using a variety of different methods. Some of these methods require additional packages to be installed and, depending on the specified method, there might be additional required arguments in the function call. More information is available on the documentation page of the respective \code{surv_method}.
 }
 \usage{
 adjustedsurv(data, variable, ev_time, event, method,
@@ -33,7 +33,7 @@ A character string specifying the binary event indicator. Must be a valid column
 A character string specifying the adjustment method to use. Case sensitive. See details.
   }
   \item{conf_int}{
-A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be calculated. Not available for all methods. More information can be found in the documentation of each method. For an alternative way to get confidence intervals, see the \code{bootstrap} argument.
+A logical variable, indicating whether the asymptotic variances and confidence intervals of the survival probabilities should be estimated. Not available for all methods. More information can be found in the documentation of each method. For an alternative way to get confidence intervals, see the \code{bootstrap} argument.
   }
   \item{conf_level}{
 A number specifying the confidence level of asymptotic and/or bootstrap confidence intervals.
@@ -67,7 +67,7 @@ Further arguments passed to the respective \code{surv_method}. For example when 
   }
 }
 \details{
-The primary purpose of the \code{adjustedsurv} function is to provide a convenient way to calculate confounder-adjusted survival curves using any of the methods provided in the literature. A \code{\link[=plot.adjustedsurv]{plot}} method is provided to graphically display the estimated survival curves as well. Currently the following methods can be used:
+The primary purpose of the \code{adjustedsurv} function is to provide a convenient way to estimate confounder-adjusted survival curves using any of the methods provided in the literature. A \code{\link[=plot.adjustedsurv]{plot}} method is provided to graphically display the estimated survival curves as well. Currently the following methods can be used:
 
 \itemize{
   \item{"\link[=surv_direct]{direct}": Direct Standardization based on a previously fit model (Cox-Regression, ...).}
@@ -97,7 +97,7 @@ Every method requires the specification of the \code{data}, \code{variable}, \co
 
 \strong{\emph{Confidence Intervals}}
 
-For most methods approximations for the asymptotic variance of point estimates of the survival function have been proposed in the literature. Where available, those can be calculated and added to the output object using \code{conf_int=TRUE}. It is however recommended to use bootstrapping to estimate the variance instead, which can be done by setting \code{bootstrap=TRUE}. The \code{n_boot} argument is set to 500 by default. This number was chosen because it worked well in simulations but it does not guarantee convergence in practice. Users are recommended to inspect the bootstrapped estimates and adjust the number of replications accordingly. To allow faster bootstrapping the user can choose to run the function on multiple CPU cores in parallel using the \code{n_cores} argument.
+For most methods approximations for the asymptotic variance of point estimates of the survival function have been proposed in the literature. Where available, those can be estimated and added to the output object using \code{conf_int=TRUE}. It is however recommended to use bootstrapping to estimate the variance instead, which can be done by setting \code{bootstrap=TRUE}. The \code{n_boot} argument is set to 500 by default. This number was chosen because it worked well in simulations but it does not guarantee convergence in practice. Users are recommended to inspect the bootstrapped estimates and adjust the number of replications accordingly. To allow faster bootstrapping the user can choose to run the function on multiple CPU cores in parallel using the \code{n_cores} argument.
 
 \strong{\emph{Missing Data}}
 
@@ -107,7 +107,7 @@ Alternatively, this function also supports the use of multiple imputation via th
 
 \strong{\emph{Competing Risks}}
 
-If the data contains competing-risks, this function cannot be used. It is however possible to calculate confounder-adjusted cause-specific cumulative incidence functions using the \code{adjustedcif} function.
+If the data contains competing-risks, this function cannot be used. It is however possible to estimate confounder-adjusted cause-specific cumulative incidence functions using the \code{adjustedcif} function.
 
 \strong{\emph{Graphical Displays}}
 

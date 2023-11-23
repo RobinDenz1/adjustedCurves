@@ -36,7 +36,8 @@ cif_aiptw <- function(data, variable, ev_time, event, cause, conf_int,
                                se=conf_int,
                                verbose=verbose,
                                estimator="AIPTW,AIPCW",
-                               cause=cause)
+                               cause=cause,
+                               ...)
   # calculate CIF estimates
   plotdata <- data.frame(time=curve$meanRisk$time,
                          cif=curve$meanRisk$estimate,
