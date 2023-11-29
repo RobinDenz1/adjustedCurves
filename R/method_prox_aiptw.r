@@ -72,7 +72,7 @@ surv_prox_aiptw <- function(data, variable, ev_time, event, conf_int,
   data[, variable] <- ifelse(data[, variable]==levs[1], 0, 1)
 
   # (sorted) times at which events occur
-  sorted_time <- sort(unique(data[, ev_time][data[, event]]))
+  sorted_time <- sort(unique(data[, ev_time]))
 
   # cumulative hazard of event
   noncens <- get_noncensor_cumhaz(data=data, ev_time=ev_time, event=event,
@@ -126,8 +126,8 @@ surv_prox_aiptw <- function(data, variable, ev_time, event, conf_int,
   # put it together
   plotdata <- data.frame(time=c(sorted_time, sorted_time),
                          surv=c(surv_0, surv_1),
-                         group=c(rep(0, length(sorted_time)),
-                                 rep(1, length(sorted_time))))
+                         group=c(rep(levs[1], length(sorted_time)),
+                                 rep(levs[2], length(sorted_time))))
 
   # turn variable back to factor
   plotdata$group <- factor(plotdata$group, levels=levs)

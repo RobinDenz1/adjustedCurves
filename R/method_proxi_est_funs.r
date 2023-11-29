@@ -18,27 +18,26 @@ censor_cumhaz_est <- function(censor_sorted_time, T0, Delta) {
   return(IF)
 }
 
-noncensor_cumhaz_compute <- function(sorted_time, censor_sorted_time,
-                                     cum_haz) {
+noncensor_cumhaz_compute <- function(sorted_time, censor_sorted_time, cum_haz) {
   noncensor_cumhaz <- c()
-  K <- length(sorted_time)
-  K_C <- length(censor_sorted_time)
+  K = length(sorted_time)
+  K_C = length(censor_sorted_time)
   censor_sorted_time <- c(0, censor_sorted_time)
   cum_haz <- c(0, cum_haz)
-  l <- 1
-  j <- 1
-  while (j <= K) {
-    if (l + 1 <= K_C) {
-      if (sorted_time[j] < censor_sorted_time[l + 1]) {
+  l = 1
+  j = 1
+  while(j <= K) {
+    if(l + 1 <= K_C) {
+      if(sorted_time[j] < censor_sorted_time[l + 1])
         noncensor_cumhaz <- c(noncensor_cumhaz, cum_haz[l])
-      } else {
-        l <- l + 1
+      else {
+        l = l + 1
         next
       }
     } else {
       noncensor_cumhaz <- c(noncensor_cumhaz, cum_haz[l])
     }
-    j <- j + 1
+    j = j + 1
   }
   return(noncensor_cumhaz)
 }
