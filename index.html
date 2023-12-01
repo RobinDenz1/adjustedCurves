@@ -107,7 +107,7 @@
 <div class="section level2">
 <h2 id="description">Description<a class="anchor" aria-label="anchor" href="#description"></a>
 </h2>
-<p><code>adjustedCurves</code> is an R-Package which can be used to calculate and plot confounder-adjusted survival curves + confidence intervals as well as cause-specific confounder-adjusted cumulative incidence functions + confidence intervals using a variety of methods. It provides a convenient wrapper around existing R-Packages on the topic and adds additional methods and functionality on top of it. Those additional features include the calculation of adjusted restricted mean survival times and testing whether two confounder-adjusted survival curves are different in a given interval.</p>
+<p><code>adjustedCurves</code> is an R-Package which can be used to estimate and plot confounder-adjusted survival curves + confidence intervals as well as cause-specific confounder-adjusted cumulative incidence functions + confidence intervals using a variety of methods. It provides a convenient wrapper around existing R-Packages on the topic and adds additional methods and functionality on top of it. Those additional features include the calculation of adjusted restricted mean survival times and testing whether two confounder-adjusted survival curves are different in a given interval.</p>
 <p>Detailed descriptions of each method can be found in the literature cited in the documentation.</p>
 </div>
 <div class="section level2">
@@ -130,7 +130,7 @@
 <div class="section level2">
 <h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
 </h2>
-<p>This minimal example shows how to calculate and plot adjusted survival curves using <em>Direct Adjustment</em> with this package:</p>
+<p>This minimal example shows how to estimate and plot adjusted survival curves using <em>Direct Adjustment</em> with this package:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RobinDenz1/adjustedCurves" class="external-link">adjustedCurves</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/therneau/survival" class="external-link">survival</a></span><span class="op">)</span></span>
@@ -144,7 +144,7 @@
 <span><span class="va">cox_mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/survival/man/coxph.html" class="external-link">coxph</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">event</span><span class="op">)</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x4</span> <span class="op">+</span> <span class="va">x5</span> <span class="op">+</span> <span class="va">group</span>,</span>
 <span>                 data<span class="op">=</span><span class="va">sim_dat</span>, x<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># use it to calculate adjusted survival curves</span></span>
+<span><span class="co"># use it to estimate adjusted survival curves</span></span>
 <span><span class="va">adjsurv</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/adjustedsurv.html">adjustedsurv</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">sim_dat</span>,</span>
 <span>                        variable<span class="op">=</span><span class="st">"group"</span>,</span>
 <span>                        ev_time<span class="op">=</span><span class="st">"time"</span>,</span>
@@ -156,13 +156,13 @@
 <span><span class="co"># plot with confidence intervals</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjsurv</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/example_direct.png"></p>
-<p>Here is an example of how to calculate and plot adjusted survival curves using <em>Inverse Probability of Treatment Weighting</em>:</p>
+<p>Here is an example of how to estimate and plot adjusted survival curves using <em>Inverse Probability of Treatment Weighting</em>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># estimate a treatment assignment model</span></span>
 <span><span class="va">glm_mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">group</span> <span class="op">~</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x3</span> <span class="op">+</span> <span class="va">x5</span> <span class="op">+</span> <span class="va">x6</span>, data<span class="op">=</span><span class="va">sim_dat</span>,</span>
 <span>               family<span class="op">=</span><span class="st">"binomial"</span><span class="op">(</span>link<span class="op">=</span><span class="st">"logit"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># use it to calculate adjusted survival curves</span></span>
+<span><span class="co"># use it to estimate adjusted survival curves</span></span>
 <span><span class="va">adjsurv</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/adjustedsurv.html">adjustedsurv</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">sim_dat</span>,</span>
 <span>                        variable<span class="op">=</span><span class="st">"group"</span>,</span>
 <span>                        ev_time<span class="op">=</span><span class="st">"time"</span>,</span>
