@@ -2,10 +2,10 @@
 \alias{adjusted_rmst}
 
 \title{
-Calculate Confounder-Adjusted Restricted Mean Survival Times
+Estimate Confounder-Adjusted Restricted Mean Survival Times
 }
 \description{
-This function can be utilized to calculate the confounder-adjusted restricted mean survival time, given previously estimated adjusted survival curves.
+This function can be utilized to estimate the confounder-adjusted restricted mean survival time, given previously estimated adjusted survival curves.
 }
 \usage{
 adjusted_rmst(adjsurv, to, from=0, conf_int=FALSE,
@@ -17,13 +17,13 @@ adjusted_rmst(adjsurv, to, from=0, conf_int=FALSE,
 An \code{adjustedsurv} object created using the \code{adjustedsurv} function.
   }
   \item{from}{
-A number specifying the left side of the time interval of interest. See details. Usually this should be kept at 0 (default) to calculate the standard RMST. Should only be changed if there are good reasons for it.
+A number specifying the left side of the time interval of interest. See details. Usually this should be kept at 0 (default) to estimate the standard RMST. Should only be changed if there are good reasons for it.
   }
   \item{to}{
 A number specifying the right side of the time interval of interest. See details.
   }
   \item{conf_int}{
-Whether bootstrap estimates should be used to calculate the standard errors and confidence intervals of the RMST estimates. Can only be used if \code{bootstrap=TRUE} was used in the \code{\link{adjustedsurv}} call.
+Whether bootstrap estimates should be used to estimate the standard errors and confidence intervals of the RMST estimates. Can only be used if \code{bootstrap=TRUE} was used in the \code{\link{adjustedsurv}} call.
   }
   \item{conf_level}{
 A number specifying the confidence level of the bootstrap confidence intervals.
@@ -32,7 +32,7 @@ A number specifying the confidence level of the bootstrap confidence intervals.
 Either \code{"steps"} (default) or \code{"linear"}. This parameter controls how interpolation is performed. If this argument is set to \code{"steps"}, the curves will be treated as step functions. If it is set to \code{"linear"}, the curves wil be treated as if there are straight lines between the point estimates instead. Points that lie between estimated points will be interpolated accordingly. Should usually be kept at \code{"steps"}. See Details.
   }
   \item{difference}{
-Whether to calculate the difference between two adjusted restricted mean survival times instead. When \code{conf_int=TRUE} is also specified, this function will also return the standard error of the difference, the associated confidence interval and a p-value. The p-value is the result of a one-sample t-test where the null-hypothesis is that the difference is equal to 0. To specify which difference should be calculated, the \code{group_1} and \code{group_1} arguments can be used. By default, the difference between the first and second level in \code{variable} is computed.
+Whether to estimate the difference between two adjusted restricted mean survival times instead. When \code{conf_int=TRUE} is also specified, this function will also return the standard error of the difference, the associated confidence interval and a p-value. The p-value is the result of a one-sample t-test where the null-hypothesis is that the difference is equal to 0. To specify which difference should be calculated, the \code{group_1} and \code{group_1} arguments can be used. By default, the difference between the first and second level in \code{variable} is computed.
   }
   \item{group_1}{
 Optional argument to get a specific difference. This argument takes a single character string specifying one of the levels of the \code{variable} used in the original \code{adjustedsurv} or \code{adjustedcif} function call. This group will be subtracted from. For example if \code{group_1="A"} and \code{group_2="B"} the difference \code{A - B} will be used. If \code{NULL}, the order of the factor levels in the original \code{data} determines the order. Ignored if \code{difference=FALSE}.
@@ -42,7 +42,7 @@ Also a single character string specifying one of the levels of \code{variable}. 
   }
 }
 \details{
-The adjusted restricted mean survival times (RMST) are calculated by integrating the estimated adjusted survival curves in a specified interval. Let \eqn{Z} be the grouping variable (corresponding to the \code{variable} argument in the \code{\link{adjustedsurv}} function) with possible levels \eqn{Z \in \{0, 1, 2, ..., k\}}. \eqn{T} is defined as the time and \eqn{\hat{S}_z(t)} denotes the estimated counterfactual survival function. The RMST is then defined as:
+The adjusted restricted mean survival times (RMST) are estimated by integrating the estimated adjusted survival curves in a specified interval. Let \eqn{Z} be the grouping variable (corresponding to the \code{variable} argument in the \code{\link{adjustedsurv}} function) with possible levels \eqn{Z \in \{0, 1, 2, ..., k\}}. \eqn{T} is defined as the time and \eqn{\hat{S}_z(t)} denotes the estimated counterfactual survival function. The RMST is then defined as:
 
 \deqn{RMST_{z}(to) = \int_{from=0}^{to} \hat{S}_z(t)dt}
 

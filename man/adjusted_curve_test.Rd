@@ -130,7 +130,7 @@ sim_dat$group <- as.factor(sim_dat$group)
 cox_mod <- coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
                  data=sim_dat, x=TRUE)
 
-# use it to calculate adjusted survival curves with bootstrapping
+# use it to estimate adjusted survival curves with bootstrapping
 adjsurv <- adjustedsurv(data=sim_dat,
                         variable="group",
                         ev_time="time",

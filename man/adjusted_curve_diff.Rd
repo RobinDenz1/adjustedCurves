@@ -2,7 +2,7 @@
 \alias{adjusted_curve_diff}
 
 \title{
-Calculate the difference between two Confounder-Adjusted Survival Curves or CIFs
+Estimate the difference between two Confounder-Adjusted Survival Curves or CIFs
 }
 \description{
 Given a previously created \code{adjustedsurv} or \code{adjustedcif} object, calculate the difference between two of the \code{variable} specific curves. Can either calculate the whole difference curve or the difference at specified points in time.
@@ -103,7 +103,7 @@ sim_dat$group <- as.factor(sim_dat$group)
 # propensity score model
 ps_mod <- glm(group ~ x1 + x2 + x4 + x5, data=sim_dat, family="binomial")
 
-# use it to calculate adjusted survival curves with bootstrapping
+# use it to estimate adjusted survival curves with bootstrapping
 adjsurv <- adjustedsurv(data=sim_dat,
                         variable="group",
                         ev_time="time",

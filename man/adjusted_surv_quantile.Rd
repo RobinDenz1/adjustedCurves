@@ -2,10 +2,10 @@
 \alias{adjusted_surv_quantile}
 
 \title{
-Calculate Confounder-Adjusted Survival Time Quantiles
+Estimate Confounder-Adjusted Survival Time Quantiles
 }
 \description{
-This function can be utilized to calculate confounder-adjusted survival time quantiles, including the median survival time, given previously estimated adjusted survival curves.
+This function can be utilized to estimate confounder-adjusted survival time quantiles, including the median survival time, given previously estimated adjusted survival curves.
 }
 \usage{
 adjusted_surv_quantile(adjsurv, p=0.5, conf_int=FALSE,

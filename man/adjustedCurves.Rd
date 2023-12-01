@@ -8,11 +8,11 @@ Confounder-Adjusted Survival Curves and Cumulative Incidence Functions
 
 \strong{\emph{What is this package about?}}
 
-This package aims to unite all available adjustments methods for calculating confounder-adjusted survival curves and cause-specific confounder-adjusted cumulative incidence functions under one consistent framework. We try to make the usage of these methods and the calculation of associated statistics as easy as possible for the user, while still providing substantial functionality.
+This package aims to unite all available adjustments methods for estimate confounder-adjusted survival curves and cause-specific confounder-adjusted cumulative incidence functions under one consistent framework. We try to make the usage of these methods and the calculation of associated statistics as easy as possible for the user, while still providing substantial functionality.
 
 \strong{\emph{What exactly are adjusted survival curves / adjusted cumulative incidence functions?}}
 
-It is well known that confounding is a serious problem when analyzing data from non-randomized studies. This is also true when calculating survival curves or cumulative incidence functions. The aim is to estimate the population averaged survival probability or cumulative incidence for some group \eqn{z}, which would have been observed if every individual would have been assigned to group \eqn{z}. For example, the formal definition for the causal survival curve is:
+It is well known that confounding is a serious problem when analyzing data from non-randomized studies. This is also true when estimating survival curves or cumulative incidence functions. The aim is to estimate the population averaged survival probability or cumulative incidence for some group \eqn{z}, which would have been observed if every individual would have been assigned to group \eqn{z}. For example, the formal definition for the causal survival curve is:
 
 \deqn{S_{z}(t) = E(I(T_z > t))}
 
@@ -51,9 +51,9 @@ The documentation pages contain a lot of information, relevant examples and lite
 Bug reports, suggestions and feature requests are highly welcome. Please file an issue on the official github page or contact the author directly using the supplied e-mail address.
 }
 \references{
-Robin Denz, Renate Klaaßen-Mielke, and Nina Timmesfeld (2023). "A Comparison of Different Methods to Adjust Survival Curves for Confounders". In: Statistics in Medicine 42.10, pp. 1461-1479
+Robin Denz, Renate Klaaßen-Mielke, and Nina Timmesfeld (2023). "A Comparison of Different Methods to Adjust Survival Curves for Confounders". In: Statistics in Medicine 42.10, pp. 1461-1479.
 
-Robin Denz, Nina Timmesfeld (2023). "Visualizing the (Causal) Effect of a Continuous Variable on a Time-To-Event Outcome". In: Epidemiology 34.5.
+Robin Denz, Nina Timmesfeld (2023). "Visualizing the (Causal) Effect of a Continuous Variable on a Time-To-Event Outcome". In: Epidemiology 34.5, pp. 652-660.
 
 Weixin Cai and Mark J. van der Laan (2020). "One-Step Targeted Maximum Likelihood Estimation for Time-To-Event Outcomes". In: Biometrics 76, pp. 722-733
 

@@ -12,7 +12,7 @@ Author: Robin Denz
 
 ## Description
 
-`adjustedCurves` is an R-Package which can be used to calculate and plot confounder-adjusted survival curves + confidence intervals as well as cause-specific confounder-adjusted cumulative incidence functions + confidence intervals using a variety of methods.
+`adjustedCurves` is an R-Package which can be used to estimate and plot confounder-adjusted survival curves + confidence intervals as well as cause-specific confounder-adjusted cumulative incidence functions + confidence intervals using a variety of methods.
 It provides a convenient wrapper around existing R-Packages on the topic and adds additional methods and functionality on top of it.
 Those additional features include the calculation of adjusted restricted mean survival times and testing whether two confounder-adjusted survival curves are different in a given interval.
 
@@ -40,7 +40,7 @@ If you encounter any bugs or have any specific feature requests, please file an 
 
 ## Examples
 
-This minimal example shows how to calculate and plot adjusted survival curves using *Direct Adjustment* with this package:
+This minimal example shows how to estimate and plot adjusted survival curves using *Direct Adjustment* with this package:
 
 ```R
 library(adjustedCurves)
@@ -55,7 +55,7 @@ sim_dat$group <- as.factor(sim_dat$group)
 cox_mod <- coxph(Surv(time, event) ~ x1 + x2 + x4 + x5 + group,
                  data=sim_dat, x=TRUE)
 
-# use it to calculate adjusted survival curves
+# use it to estimate adjusted survival curves
 adjsurv <- adjustedsurv(data=sim_dat,
                         variable="group",
                         ev_time="time",
@@ -69,13 +69,13 @@ plot(adjsurv, conf_int=TRUE)
 ```
 <img src="man/figures/example_direct.png" />
 
-Here is an example of how to calculate and plot adjusted survival curves using *Inverse Probability of Treatment Weighting*:
+Here is an example of how to estimate and plot adjusted survival curves using *Inverse Probability of Treatment Weighting*:
 ```R
 # estimate a treatment assignment model
 glm_mod <- glm(group ~ x2 + x3 + x5 + x6, data=sim_dat,
                family="binomial"(link="logit"))
 
-# use it to calculate adjusted survival curves
+# use it to estimate adjusted survival curves
 adjsurv <- adjustedsurv(data=sim_dat,
                         variable="group",
                         ev_time="time",
