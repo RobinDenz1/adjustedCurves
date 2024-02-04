@@ -64,7 +64,7 @@ Internally, this function simply calls multiple functions of the \pkg{concrete} 
 
 \strong{\emph{Speed Considerations:}}
 
-This method is very computationally expensive. For medium to large datasets and when considering many different points in time, it will usually take a very long time to execute. If speed is important, we recommend using other methods. Alternativels, user may adjust the \code{times} arguments to target fewer points in time.
+This method is very computationally expensive. For medium to large datasets and when considering many different points in time, it will usually take a very long time to execute. If speed is important, we recommend using other methods. Alternatively, user may adjust the \code{times} arguments to target fewer points in time.
 
 }
 \note{

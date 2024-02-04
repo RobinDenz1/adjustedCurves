@@ -1,0 +1,154 @@
+---
+title: "Overview of methods in adjustedCurves"
+output: rmarkdown::html_vignette
+author: "Robin Denz"
+vignette: >
+  %\VignetteIndexEntry{Overview of methods in adjustedCurves}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+The amount of methods implemented in this package can be overwhelming at first, making one wonder which method should be used. This small vignette exists to make this choice a little easier by providing a concise overview of the functionality of each method implemented in the `adjustedsurv()` and `adjustedcif()` functions. Note that this vignette does not contain a description of how these methods work or when. Information about that can be found in Denz et al. (2023) or the respective documentation pages and the cited literature therein.
+
+# Methods in `adjustedsurv()`
+
+The following table gives a general overview of all supported methods in `adjustedsurv()`:
+
+```{r echo=FALSE}
+tab <- data.frame(
+  method=c('"direct"', '"direct_pseudo"', '"iptw_km"', '"iptw_cox"',
+           '"iptw_pseudo"', '"matching"', '"emp_lik"', '"aiptw"',
+           '"aiptw_pseudo"', '"tmle"', '"strat_amato"', '"strat_nieto"',
+           '"strat_cupples"', '"iv_2SRIF"', '"prox_iptw"', '"prox_aiptw"',
+           '"km"'),
+  supp_unmeasured=c(rep("no", 13), rep("yes", 3), "no"),
+  supp_categorical=c(rep("yes", 5), rep("no", 3), "yes", "no", rep("yes", 3),
+                     "no", "no", "no", "yes"),
+  supp_approx_var=c("yes", "no", "yes", "no", "yes", "no", "no", "yes", "yes",
+                    "yes", "no", "no", "no", "no", "yes", "yes", "yes"),
+  bounds=c(rep("yes", 4), "no", "yes", "yes", "no", "no", "yes", "yes",
+           "yes", "yes", "yes", "no", "no", "yes"),
+  monotonic=c("yes", "no", "yes", "yes", "no", "yes", "yes", "no", "no", "yes",
+              "yes", "yes", "yes", "yes", "no", "no", "yes"),
+  doubly_robust=c(rep("no", 7), "yes", "yes", "yes", rep("no", 5), "yes", "no"),
+  dependent_censoring=c("no", "yes", "(no)", "(no)", "yes", "no", "no", "yes",
+                        "yes", "yes", "no", "no", "no", "no", "no", "no", "no"),
+  type=c("outcome", "outcome", "treatment", "treatment", "treatment",
+         "treatment", "treatment", "both", "both", "both", "-",
+         "-", "-", "-", "treatment", "both", "none"),
+  dependencies=c("riskRegression", "geepack, prodlim", "-", "-",
+                 "prodlim", "Matching", "MASS", "riskRegression",
+                 "geepack, prodlim", "concrete", "-", "-", "-", "-",
+                 "numDeriv", "numDeriv", "-")
+)
+
+cnames <- c("Method", "Supports Unmeasured Confounding",
+            "Supports Categorical Treatments",
+            "Approximate SE available", "Always in Bounds",
+            "Always non-increasing", "Doubly-Robust",
+            "Supports Dependent Censoring", "Type of Adjustment",
+            "Dependencies")
+
+knitr::kable(tab, col.names=cnames)
+```
+
+For methods `"iptw_km"` and `"iptw_cox"` we wrote "(no)" in whether they support dependent censoring, because there is no direct implementation to handle it in this package. By supplying inverse probability of censoring weights to the `treatment_model` argument it is, however, possible to use those estimators to adjust for dependent censoring as well. If both inverse probability of treatment (or more general covariate balancing weights) **and** inverse probability of censoring weights should be used, the user can simply multiply the subject-level weights and supply the results to the `treatment_model` argument.
+
+The following table gives an overview of the supported input to the `treatment_model` argument for methods that require it:
+
+```{r echo=FALSE}
+tab <- data.frame(
+  method=c('"iptw_km"', '"iptw_cox"', '"iptw_pseudo"', '"matching"',
+           '"aiptw"', '"aiptw_pseudo"', '"tmle"'),
+  allows=c("glm or multinom object, weights, formula for weightit()",
+           "glm or multinom object, weights, formula for weightit()",
+           "glm or multinom object, weights, formula for weightit()",
+           "glm object or propensity scores",
+           "glm object",
+           "glm or multinom object or propensity scores",
+           "vector of SuperLearner libraries")
+)
+
+knitr::kable(tab, col.names=c("Method", "Allowed Input to treatment_model argument"))
+```
+
+After having created an `adjustedsurv` object using the `adjustedsurv()` function, the following functions can be used to create plots, transform the output or calculate further statistics:
+
+* `plot()`: Plots the estimated adjusted survival curves
+* `adjusted_curve_diff()`: Calculates differences in survival probabilities
+* `plot_curve_diff()`: Plots differences in survival probabilities
+* `adjusted_surv_quantile()`: Calculates adjusted survival time quantiles
+* `adjusted_rmst()`: Calculates adjusted restricted mean survival times
+* `plot_rmst_curve()`: Plots adjusted restricted mean survival time curves
+* `adjusted_rmtl()`: Calculates adjusted restricted mean time lost
+* `plot_rmtl_curve()`: Plots adjusted restricted mean time lost curves
+* `adjusted_curve_test()`: Performs a test of adjusted survival curve equality in an interval
+* `as_ggsurvplot_df()`: Transforms the output to a concise `data.frame`
+
+# Methods in `adjustedcif()`
+
+The following table gives a general overview of all supported methods in `adjustedcif()`:
+
+```{r echo=FALSE}
+tab <- data.frame(
+  method=c('"direct"', '"direct_pseudo"', '"iptw"', '"iptw_pseudo"',
+           '"matching"', '"aiptw"', '"aiptw_pseudo"', '"tmle"',
+           '"aalen_johansen"'),
+  supp_unmeasured="no",
+  supp_categorical=c("yes", "yes", "yes", "yes", "no", "no", "yes", "no",
+                     "yes"),
+  supp_approx_var=c("yes", "no", "yes", "yes", "no", "yes", "yes", "yes",
+                    "yes"),
+  bounds=c("yes", "yes", "yes", "no", "yes", "no", "no", "yes", "yes"),
+  monotonic=c("yes", "no", "yes", "no", "yes", "no", "no", "yes", "yes"),
+  doubly_robust=c("no", "no", "no", "no", "no", "yes", "yes", "yes", "no"),
+  dependent_censoring=c("no", "yes", "yes", "yes", "no", "yes", "yes", "yes",
+                        "no"),
+  type=c("outcome", "outcome", "treatment", "treatment", "treatment", "both",
+         "both", "both", "none"),
+  dependencies=c("riskRegression", "geepack, prodlim", "riskRegression",
+                 "prodlim", "Matching", "riskRegression", "geepack, prodlim",
+                 "concrete", "cmprsk")
+)
+
+cnames <- c("Method", "Supports Unmeasured Confounding",
+            "Supports Categorical Treatments",
+            "Approximate SE available", "Always in Bounds",
+            "Always non-increasing", "Doubly-Robust",
+            "Supports Dependent Censoring", "Type of Adjustment",
+            "Dependencies")
+
+knitr::kable(tab, col.names=cnames)
+```
+
+The following table gives an overview of the supported input to the `treatment_model` argument for methods that require it:
+
+```{r echo=FALSE}
+tab <- data.frame(
+  method=c('"iptw"', '"iptw_pseudo"', '"matching"',
+           '"aiptw"', '"aiptw_pseudo"', '"tmle"'),
+  allows=c("glm or multinom object",
+           "glm or multinom object, weights, formula for weightit()",
+           "glm object or propensity scores",
+           "glm object",
+           "glm or multinom object or propensity scores",
+           "vector of SuperLearner libraries")
+)
+
+knitr::kable(tab, col.names=c("Method", "Allowed Input to treatment_model argument"))
+```
+
+Note that method `"iptw"` currently does not support directly supplying weights or propensity scores. This is due to it relying on the `ate` function of the `riskRegression` package, which only accepts glm or multinom objects. This may be changed in the future.
+
+After having created an `adjustedcif` object using the `adjustedcif()` function, the following functions can be used to create plots, transform the output or calculate further statistics:
+
+* `plot()`: Plots the estimated adjusted CIFs
+* `adjusted_curve_diff()`: Calculates differences in CIFs
+* `plot_curve_diff()`: Plots differences in CIFs over time
+* `adjusted_rmtl()`: Calculates adjusted restricted mean time lost
+* `plot_rmtl_curve()`: Plots adjusted restricted mean time lost curves
+* `adjusted_curve_test()`: Performs a test of adjusted CIF equality in an interval
+
+# References
+
+Robin Denz, Renate Klaaßen-Mielke, and Nina Timmesfeld (2023). "A Comparison of Different Methods to Adjust Survival Curves for Confounders". In: Statistics in Medicine 42.10, pp. 1461-1479

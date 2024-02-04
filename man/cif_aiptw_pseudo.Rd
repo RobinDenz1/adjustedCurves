@@ -91,7 +91,9 @@ adjcif <- adjustedcif(data=sim_dat,
                       method="aiptw_pseudo",
                       outcome_vars=c("x1", "x2", "x3", "x4", "x5", "x6"),
                       treatment_model=glm_mod,
-                      conf_int=FALSE)
+                      conf_int=FALSE,
+                      force_bounds=TRUE,
+                      iso_reg=TRUE)
 
 # plot the curves
 plot(adjcif)

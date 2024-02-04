@@ -91,7 +91,9 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         event="event",
                         method="direct_pseudo",
                         outcome_vars=c("x1", "x2", "x3", "x4", "x5", "x6"),
-                        type_time="factor")
+                        type_time="factor",
+                        force_bounds=TRUE,
+                        iso_reg=TRUE)
 
 # with time modelled as B-Spline using 5 degrees of freedom
 adjsurv <- adjustedsurv(data=sim_dat,
@@ -101,7 +103,9 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         method="direct_pseudo",
                         outcome_vars=c("x1", "x2", "x3", "x4", "x5", "x6"),
                         type_time="bs",
-                        spline_df=5)
+                        spline_df=5,
+                        force_bounds=TRUE,
+                        iso_reg=TRUE)
 
 # plot the curves
 plot(adjsurv)

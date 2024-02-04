@@ -89,7 +89,7 @@ The primary purpose of the \code{adjustedsurv} function is to provide a convenie
   \item{"\link[=surv_km]{km}": A simple stratified Kaplan-Meier estimator without any form of adjustment.}
 }
 
-A short description of each method is contained in the documentation of the respective \code{surv_method} function. For more detailed descriptions the cited literature in that same documentation can be used. The documentation for \code{method="direct"} for example can be accessed using \code{?surv_direct}.
+A short description of each method is contained in the documentation of the respective \code{surv_method} function. A concise overview of the supported functionality of each method can be found in the associated vignette (\code{vignette(topic="method_overview", package="adjustedCurves")}). For more detailed descriptions the cited literature in the respective documentation pages can be used. The documentation for \code{method="direct"} for example can be accessed using \code{?surv_direct}.
 
 \strong{\emph{Required & Optional Arguments}}
 

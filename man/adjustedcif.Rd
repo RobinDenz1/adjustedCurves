@@ -84,7 +84,7 @@ The primary purpose of the \code{adjustedcif} function is to provide a convenien
   \item{"\link[=cif_aalen_johansen]{aalen_johansen}": A simple stratified Aalen-Johansen estimator without any form of adjustment.}
 }
 
-A short description of each method is contained in the documentation of the respective \code{cif_method} function. For more detailed descriptions the cited literature in that same documentation can be used. The documentation for \code{method="direct"} for example can be accessed using \code{?cif_direct}.
+A short description of each method is contained in the documentation of the respective \code{cif_method} function. A concise overview of the supported functionality of each method can be found in the associated vignette (\code{vignette(topic="method_overview", package="adjustedCurves")}). For more detailed descriptions the cited literature in the respective documentation pages can be used. The documentation for \code{method="direct"} for example can be accessed using \code{?cif_direct}.
 
 \strong{\emph{Required & Optional Arguments}}
 
@@ -271,7 +271,7 @@ adj <- adjustedcif(data=mids,
                    cause=1,
                    treatment_model=group ~ x1 + x2 + x5 + x6,
                    weight_method="ps")
-plot(adj)
+plot(adj, force_bounds=TRUE, iso_reg=TRUE)
 
 # More specific examples can be found in the documentation of each
 # respective cif_method. See ?cif_ + "method" for more information.
