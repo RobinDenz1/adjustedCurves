@@ -29,6 +29,7 @@ This page explains the details of estimating augmented inverse probability of tr
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/introduction.html">An Introduction to the 'adjustedCurves' Package</a>
+    <a class="dropdown-item" href="../articles/method_overview.html">Overview of methods in adjustedCurves</a>
   </div>
 </li>
 <li class="nav-item">
@@ -143,7 +144,9 @@ This page explains the details of estimating augmented inverse probability of tr
 <span class="r-in"><span>                      method<span class="op">=</span><span class="st">"aiptw_pseudo"</span>,</span></span>
 <span class="r-in"><span>                      outcome_vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span>, <span class="st">"x4"</span>, <span class="st">"x5"</span>, <span class="st">"x6"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                      treatment_model<span class="op">=</span><span class="va">glm_mod</span>,</span></span>
-<span class="r-in"><span>                      conf_int<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                      conf_int<span class="op">=</span><span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>                      force_bounds<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>                      iso_reg<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: geepack</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plot the curves</span></span></span>

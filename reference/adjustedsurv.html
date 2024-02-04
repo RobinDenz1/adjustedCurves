@@ -25,6 +25,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/introduction.html">An Introduction to the 'adjustedCurves' Package</a>
+    <a class="dropdown-item" href="../articles/method_overview.html">Overview of methods in adjustedCurves</a>
   </div>
 </li>
 <li class="nav-item">
@@ -136,7 +137,7 @@
 <li><p>"<a href="surv_prox_iptw.html">prox_iptw</a>": Proximal causal inference based inverse probability of treatment weighting.</p></li>
 <li><p>"<a href="surv_prox_aiptw.html">prox_aiptw</a>": Proximal causal inference based augmented inverse probability of treatment weighting.</p></li>
 <li><p>"<a href="surv_km.html">km</a>": A simple stratified Kaplan-Meier estimator without any form of adjustment.</p></li>
-</ul><p>A short description of each method is contained in the documentation of the respective <code>surv_method</code> function. For more detailed descriptions the cited literature in that same documentation can be used. The documentation for <code>method="direct"</code> for example can be accessed using <code><a href="surv_direct.html">?surv_direct</a></code>.</p>
+</ul><p>A short description of each method is contained in the documentation of the respective <code>surv_method</code> function. A concise overview of the supported functionality of each method can be found in the associated vignette (<code><a href="../articles/method_overview.html">vignette(topic="method_overview", package="adjustedCurves")</a></code>). For more detailed descriptions the cited literature in the respective documentation pages can be used. The documentation for <code>method="direct"</code> for example can be accessed using <code><a href="surv_direct.html">?surv_direct</a></code>.</p>
 <p><strong><em>Required &amp; Optional Arguments</em></strong></p>
 <p>Every method requires the specification of the <code>data</code>, <code>variable</code>, <code>ev_time</code>, <code>event</code> and <code>method</code> arguments. All other arguments mentioned on this page are optional and work for all methods. Depending on the method used, other arguments are required as well. Those can be found on the top of the help page of the respective method. The help pages also list additional optional arguments.</p>
 <p><strong><em>Confidence Intervals</em></strong></p>

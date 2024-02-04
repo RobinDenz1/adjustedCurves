@@ -29,6 +29,7 @@ This page explains the details of estimating causal survival curves in a competi
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/introduction.html">An Introduction to the 'adjustedCurves' Package</a>
+    <a class="dropdown-item" href="../articles/method_overview.html">Overview of methods in adjustedCurves</a>
   </div>
 </li>
 <li class="nav-item">
@@ -110,7 +111,7 @@ This page explains the details of estimating causal survival curves in a competi
 <p><strong><em>The Implementation:</em></strong></p>
 <p>Internally, this function simply calls multiple functions of the <span class="pkg">concrete</span> package in correct order with appropriate arguments. This wrapper function is limited in the sense that it does not allow dynamic interventions or time-varying variables, which are supported by the <span class="pkg">concrete</span> package. It is recommended to use the <span class="pkg">concrete</span> package directly when the user wants to use these features or other specific settings are required.</p>
 <p><strong><em>Speed Considerations:</em></strong></p>
-<p>This method is very computationally expensive. For medium to large datasets and when considering many different points in time, it will usually take a very long time to execute. If speed is important, we recommend using other methods. Alternativels, user may adjust the <code>times</code> arguments to target fewer points in time.</p>
+<p>This method is very computationally expensive. For medium to large datasets and when considering many different points in time, it will usually take a very long time to execute. If speed is important, we recommend using other methods. Alternatively, user may adjust the <code>times</code> arguments to target fewer points in time.</p>
     </div>
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>

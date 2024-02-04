@@ -29,6 +29,7 @@ This page explains the details of estimating direct adjusted survival curves usi
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/introduction.html">An Introduction to the 'adjustedCurves' Package</a>
+    <a class="dropdown-item" href="../articles/method_overview.html">Overview of methods in adjustedCurves</a>
   </div>
 </li>
 <li class="nav-item">
@@ -142,7 +143,9 @@ This page explains the details of estimating direct adjusted survival curves usi
 <span class="r-in"><span>                        event<span class="op">=</span><span class="st">"event"</span>,</span></span>
 <span class="r-in"><span>                        method<span class="op">=</span><span class="st">"direct_pseudo"</span>,</span></span>
 <span class="r-in"><span>                        outcome_vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span>, <span class="st">"x4"</span>, <span class="st">"x5"</span>, <span class="st">"x6"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                        type_time<span class="op">=</span><span class="st">"factor"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                        type_time<span class="op">=</span><span class="st">"factor"</span>,</span></span>
+<span class="r-in"><span>                        force_bounds<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>                        iso_reg<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># with time modelled as B-Spline using 5 degrees of freedom</span></span></span>
 <span class="r-in"><span><span class="va">adjsurv</span> <span class="op">&lt;-</span> <span class="fu"><a href="adjustedsurv.html">adjustedsurv</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">sim_dat</span>,</span></span>
@@ -152,7 +155,9 @@ This page explains the details of estimating direct adjusted survival curves usi
 <span class="r-in"><span>                        method<span class="op">=</span><span class="st">"direct_pseudo"</span>,</span></span>
 <span class="r-in"><span>                        outcome_vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span>, <span class="st">"x4"</span>, <span class="st">"x5"</span>, <span class="st">"x6"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                        type_time<span class="op">=</span><span class="st">"bs"</span>,</span></span>
-<span class="r-in"><span>                        spline_df<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                        spline_df<span class="op">=</span><span class="fl">5</span>,</span></span>
+<span class="r-in"><span>                        force_bounds<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>                        iso_reg<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plot the curves</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjsurv</span><span class="op">)</span></span></span>
