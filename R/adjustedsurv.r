@@ -24,7 +24,8 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
                          bootstrap=FALSE, n_boot=500, n_cores=1,
                          na.action=options()$na.action,
                          clean_data=TRUE, iso_reg=FALSE,
-                         force_bounds=FALSE, ...) {
+                         force_bounds=FALSE, mi_extrapolation=FALSE,
+                         ...) {
 
   # use data.frame methods only, no tibbles etc.
   if (inherits(data, "data.frame")) {
@@ -49,16 +50,6 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
   ## using multiple imputation
   if (inherits(data, "mids")) {
 
-    # get event specific times
-    if (is.null(times)) {
-      times <- sort(unique(data$data[, ev_time][data$data[, event]==1]))
-
-      # add zero if not already in there
-      if (!0 %in% times & method!="tmle") {
-        times <- c(0, times)
-      }
-    }
-
     # levels of the group variable
     if (is.numeric(data$data[, variable])) {
       levs <- unique(data$data[, variable])
@@ -68,6 +59,16 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
 
     # transform to long format
     mids <- mice::complete(data, action="long", include=FALSE)
+
+    # get event specific times (pooled over all imputed datasets)
+    if (is.null(times)) {
+      times <- sort(unique(mids[, ev_time][mids[, event]==1]))
+
+      # add zero if not already in there
+      if (!0 %in% times & method!="tmle") {
+        times <- c(0, times)
+      }
+    }
 
     # get additional arguments
     args <- list(...)
@@ -145,8 +146,8 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
       # use Rubins Rule
       plotdata <- dats %>%
         dplyr::group_by(., time, group) %>%
-        dplyr::summarise(surv=mean(surv),
-                         se=mean(se),
+        dplyr::summarise(surv=mean(surv, na.rm=mi_extrapolation),
+                         se=mean(se, na.rm=mi_extrapolation),
                          .groups="drop_last")
       plotdata <- as.data.frame(plotdata)
 
@@ -160,9 +161,22 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
     } else {
       plotdata <- dats %>%
         dplyr::group_by(., time, group) %>%
-        dplyr::summarise(surv=mean(surv),
+        dplyr::summarise(surv=mean(surv, na.rm=mi_extrapolation),
                          .groups="drop_last")
       plotdata <- as.data.frame(plotdata)
+    }
+
+    # if estimated survival times beyond the maximum observed survival time
+    # exist, remove them if specified
+    if (!mi_extrapolation) {
+      max_t_group <- max_observed_time(mids=data, variable=variable,
+                                       ev_time=ev_time, event=event,
+                                       cause=1, levs=levs, method=method,
+                                       type="surv")
+      plotdata <- merge(plotdata, max_t_group, by="group", all.x=TRUE)
+      plotdata <- plotdata[plotdata$time <= plotdata$max_t,]
+      plotdata$max_t <- NULL
+      plotdata <- plotdata[order(plotdata$group, plotdata$time), ]
     }
 
     if (force_bounds) {
@@ -185,8 +199,8 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
 
       plotdata_boot <- boot_dats %>%
         dplyr::group_by(., time, group) %>%
-        dplyr::summarise(surv=mean(surv),
-                         se=mean(se),
+        dplyr::summarise(surv=mean(surv, na.rm=mi_extrapolation),
+                         se=mean(se, na.rm=mi_extrapolation),
                          .groups="drop_last")
       plotdata_boot <- as.data.frame(plotdata_boot)
 

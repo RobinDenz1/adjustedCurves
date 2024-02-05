@@ -27,3 +27,5 @@
 * Added new instrumental variable based method `surv_iv_2SRIF`
 * Added arguments `iso_reg` and `force_bounds` to `adjustedsurv` and `adjustedcif` functions
 * Added new methods `surv_prox_iptw`, `surv_prox_aiptw` based on code from Andrew Ying
+* Added a new vignette with an overview of implemented features of each method
+* Added better support for multiple imputation when `variable`, `ev_time` or `event` contain missings

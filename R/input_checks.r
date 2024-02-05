@@ -170,24 +170,6 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
       stop("When using multiple imputation, mira objects need to be supplied",
            " to 'censoring_model' instead of single models. See documentation.")
     }
-    # warn user when there are missing values in event variable
-    if (anyNA(as.data.frame(data$data)[, event])) {
-      warning("Using multiple imputation with missing values in 'event'",
-              " variable has not been tested yet. Use with caution.",
-              call.=FALSE)
-    }
-    # warn user when there are missing values in ev_time variable
-    if (anyNA(as.data.frame(data$data)[, ev_time])) {
-      warning("Using multiple imputation with missing values in 'ev_time'",
-              " variable has not been tested yet. Use with caution.",
-              call.=FALSE)
-    }
-    # warn user when there are missing values in group variable
-    if (anyNA(as.data.frame(data$data)[, variable])) {
-      warning("Using multiple imputation with missing values in 'variable'",
-              " has not been tested yet. Use with caution.",
-              call.=FALSE)
-    }
   }
 
   ## Direct Pseudo, AIPTW Pseudo
@@ -851,24 +833,6 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
         !inherits(obj$censoring_model, "mira")) {
       stop("When using multiple imputation, mira objects need to be supplied",
            " to 'censoring_model' instead of single models. See documentation.")
-    }
-    # warn user when there are missing values in event variable
-    if (anyNA(as.data.frame(data$data)[, event])) {
-      warning("Using multiple imputation with missing values in 'event'",
-              " variable has not been tested yet. Use with caution.",
-              call.=FALSE)
-    }
-    # warn user when there are missing values in ev_time variable
-    if (anyNA(as.data.frame(data$data)[, ev_time])) {
-      warning("Using multiple imputation with missing values in 'ev_time'",
-              " variable has not been tested yet. Use with caution.",
-              call.=FALSE)
-    }
-    # warn user when there are missing values in group variable
-    if (anyNA(as.data.frame(data$data)[, variable])) {
-      warning("Using multiple imputation with missing values in 'variable'",
-              " has not been tested yet. Use with caution.",
-              call.=FALSE)
     }
   }
 

@@ -24,6 +24,7 @@ tab <- data.frame(
   supp_unmeasured=c(rep("no", 13), rep("yes", 3), "no"),
   supp_categorical=c(rep("yes", 5), rep("no", 3), "yes", "no", rep("yes", 3),
                      "no", "no", "no", "yes"),
+  supp_continuous_conf=c(rep("yes", 10), rep("no", 3), rep("yes", 4)),
   supp_approx_var=c("yes", "no", "yes", "no", "yes", "no", "no", "yes", "yes",
                     "yes", "no", "no", "no", "no", "yes", "yes", "yes"),
   bounds=c(rep("yes", 4), "no", "yes", "yes", "no", "no", "yes", "yes",
@@ -36,6 +37,10 @@ tab <- data.frame(
   type=c("outcome", "outcome", "treatment", "treatment", "treatment",
          "treatment", "treatment", "both", "both", "both", "-",
          "-", "-", "-", "treatment", "both", "none"),
+  nonpara=c("no", "no", "depends", "depends", "depends", "depends", "yes",
+            "no", "no", "no", "yes", "yes", "yes", "no", "no", "no", "yes"),
+  speed=c("+", "- -", "++", "++", "-", "-", "+", "-", "- -", "- - -",
+          "+++", "+++", "+++", "+", "- -", "- -", "+++"),
   dependencies=c("riskRegression", "geepack, prodlim", "-", "-",
                  "prodlim", "Matching", "MASS", "riskRegression",
                  "geepack, prodlim", "concrete", "-", "-", "-", "-",
@@ -44,10 +49,12 @@ tab <- data.frame(
 
 cnames <- c("Method", "Supports Unmeasured Confounding",
             "Supports Categorical Treatments",
+            "Supports Continuous Confounders",
             "Approximate SE available", "Always in Bounds",
             "Always non-increasing", "Doubly-Robust",
             "Supports Dependent Censoring", "Type of Adjustment",
-            "Dependencies")
+            "Is Nonparametric",
+            "Computation Speed", "Dependencies")
 
 knitr::kable(tab, col.names=cnames)
 ```
@@ -97,6 +104,7 @@ tab <- data.frame(
   supp_unmeasured="no",
   supp_categorical=c("yes", "yes", "yes", "yes", "no", "no", "yes", "no",
                      "yes"),
+  supp_continuous_conf="yes",
   supp_approx_var=c("yes", "no", "yes", "yes", "no", "yes", "yes", "yes",
                     "yes"),
   bounds=c("yes", "yes", "yes", "no", "yes", "no", "no", "yes", "yes"),
@@ -106,6 +114,9 @@ tab <- data.frame(
                         "no"),
   type=c("outcome", "outcome", "treatment", "treatment", "treatment", "both",
          "both", "both", "none"),
+  non_parametric=c("no", "no", "no", "depends", "depends", "no", "no", "no",
+                   "yes"),
+  speed=c("+", "- -", "+", "+", "-", "-", "- -", "- - -", "++"),
   dependencies=c("riskRegression", "geepack, prodlim", "riskRegression",
                  "prodlim", "Matching", "riskRegression", "geepack, prodlim",
                  "concrete", "cmprsk")
@@ -113,10 +124,12 @@ tab <- data.frame(
 
 cnames <- c("Method", "Supports Unmeasured Confounding",
             "Supports Categorical Treatments",
+            "Supports Continuous Confounders",
             "Approximate SE available", "Always in Bounds",
             "Always non-increasing", "Doubly-Robust",
             "Supports Dependent Censoring", "Type of Adjustment",
-            "Dependencies")
+            "Is Nonparametric",
+            "Computation Speed", "Dependencies")
 
 knitr::kable(tab, col.names=cnames)
 ```

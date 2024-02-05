@@ -13,7 +13,8 @@ adjustedcif(data, variable, ev_time, event, cause,
             times=NULL, bootstrap=FALSE, n_boot=500,
             n_cores=1, na.action=options()$na.action,
             clean_data=TRUE, iso_reg=FALSE,
-            force_bounds=FALSE, ...)
+            force_bounds=FALSE, mi_extrapolation=FALSE,
+            ...)
 }
 
 \arguments{
@@ -65,6 +66,9 @@ Either \code{TRUE} or \code{FALSE} (default), controlling whether isotonic regre
   \item{force_bounds}{
 Either \code{TRUE} or \code{FALSE} (default), controlling whether the resulting failure probability estimates should be forced to lie between 0 and 1. If \code{TRUE} and there are values higher than 1, they are simply set to 1. Values lower than 0 are similarly set to 0. Since only a few methods may exhibit this problem, this argument is only relevant for some methods (see method specific documentation).
   }
+  \item{mi_extrapolation}{
+Whether to allow extrapolation due to imputed survival times or not. This argument is only relevant when using multiply imputed \code{data} with missing covariates in \code{variable}, \code{ev_time} or \code{event}. Depending on the algorithm used to obtain the imputed datasets, it may be possible that one or more imputed datasets contain survival times in a group that are larger than the maximum observed survival time in that group. This may lead to estimation problems. By keeping this argument at \code{FALSE}, these times are not considered in the ouput. If set to \code{TRUE}, all available estimates will be used.
+  }
   \item{...}{
 Further arguments passed to the respective \code{cif_method}. For example when using \code{method="direct"} all further arguments are passed to the \code{cif_direct} function. See details.
   }
@@ -98,7 +102,7 @@ For most methods approximations for the asymptotic variance of point estimates o
 
 There are two ways to deal with missing data using this function. The first is using the \code{na.action} argument. It simply calls the respective \code{na.action} function on the data before doing any further processing. By using \code{na.action="na.omit"} for example, only rows with complete data are kept for the analysis.
 
-Alternatively, this function also supports the use of multiple imputation via the \pkg{mice} package. Instead of supplying a single data.frame, the user should create a \code{mids} object using the \code{mice} function and directly pass this to the \code{data} argument. When methods are used which rely on previously estimated treatment or outcome models such as \code{"direct"} or \code{"aiptw"}, the user is required to supply a \code{mira} object instead of a single model. In other words: the models have to be fit on every imputed dataset before supplying them to this function. See \code{?mice} and the associated documentation for more information on how to use multiple imputation. When using \code{bootstrap=TRUE} and multiple imputation, the bootstrapping is performed on every imputed dataset separately. Cumulative Incidences are simply averaged across the imputed datasets according to Rubins Rule. Confidence intervals are calculated by first averaging the standard errors over all imputed datasets and afterwards using this pooled value to obtain a new confidence interval with the normal approximation. This method has only been tested with missing values in covariates. It is not clear how good this works with missing values in \code{ev_time} or \code{event} so users should be cautious in those cases.
+Alternatively, this function also supports the use of multiple imputation via the \pkg{mice} package. Instead of supplying a single data.frame, the user should create a \code{mids} object using the \code{mice} function and directly pass this to the \code{data} argument. When methods are used which rely on previously estimated treatment or outcome models such as \code{"direct"} or \code{"aiptw"}, the user is required to supply a \code{mira} object instead of a single model. In other words: the models have to be fit on every imputed dataset before supplying them to this function. See \code{?mice} and the associated documentation for more information on how to use multiple imputation. When using \code{bootstrap=TRUE} and multiple imputation, the bootstrapping is performed on every imputed dataset separately. Cumulative Incidences are simply averaged across the imputed datasets according to Rubins Rule. Confidence intervals are calculated by first averaging the standard errors over all imputed datasets and afterwards using this pooled value to obtain a new confidence interval with the normal approximation.
 
 \strong{\emph{Competing Risks}}
 

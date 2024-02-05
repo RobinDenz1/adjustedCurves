@@ -543,3 +543,42 @@ force_bounds_cif <- function(plotdata) {
 
   return(plotdata)
 }
+
+## Given a mids object and our column names of interest, calculate the
+## maximum observed (cause-specific) event time
+max_observed_time <- function(mids, variable, ev_time, event, levs, cause,
+                              method, type) {
+
+  if (type=="surv") {
+    group_specific_methods <- c("km", "iptw_km", "iptw_cox",
+                                "strat_amato", "strat_nieto")
+  } else {
+    group_specific_methods <- c("aalen_johansen")
+  }
+
+  # keep only events
+  event_dat <- mids$data[mids$data[, event]==cause,]
+
+  if (method %in% group_specific_methods) {
+    # calculate maximal observed time in each group
+    out <- vector(mode="numeric", length=length(levs))
+
+    for (i in seq_len(length(levs))) {
+      dat_i <- event_dat[event_dat[, variable]==levs[i],]
+
+      if (nrow(dat_i)==0) {
+        max_t <- 0
+      } else {
+        max_t <- max(dat_i[, ev_time], na.rm=TRUE)
+      }
+
+      out[[i]] <- max_t
+    }
+  } else {
+    out <- max(event_dat[, ev_time], na.rm=TRUE)
+  }
+
+  max_t_group <- data.frame(group=levs, max_t=out)
+
+  return(max_t_group)
+}
