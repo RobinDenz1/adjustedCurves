@@ -30,6 +30,11 @@ test_that("rmtl surv, no boot, diff", {
   expect_equal(round(adj_rmtl$diff, 4), 0.151)
 })
 
+test_that("rmtl surv, no boot, ratio", {
+  adj_rmtl <- adjusted_rmtl(adj, to=1.1, ratio=TRUE)
+  expect_equal(round(adj_rmtl$ratio, 4), 1.3529)
+})
+
 test_that("rmtl surv, no boot, linear", {
   adj_rmtl <- adjusted_rmtl(adj, to=1.1, interpolation="linear")
   expect_equal(round(adj_rmtl$rmtl, 4), c(0.5957, 0.4401))
@@ -54,6 +59,14 @@ test_that("rmtl surv, with boot, diff", {
   expect_equal(round(adj_rmtl$se, 4), 0.0778)
   expect_equal(round(adj_rmtl$ci_lower, 4), -0.0015)
   expect_equal(round(adj_rmtl$ci_upper, 4), 0.3035)
+  expect_equal(round(adj_rmtl$p_value, 4), 0.0523)
+})
+
+test_that("rmtl surv, with boot, ratio", {
+  adj_rmtl <- adjusted_rmtl(adj, to=1.1, conf_int=TRUE, ratio=TRUE)
+  expect_equal(round(adj_rmtl$ratio, 4), 1.3529)
+  expect_equal(round(adj_rmtl$ci_lower, 4), 0.997)
+  expect_equal(round(adj_rmtl$ci_upper, 4), 1.9195)
   expect_equal(round(adj_rmtl$p_value, 4), 0.0523)
 })
 

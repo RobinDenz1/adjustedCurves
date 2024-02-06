@@ -10,7 +10,8 @@ This function can be utilized to estimate the confounder-adjusted restricted mea
 \usage{
 adjusted_rmst(adjsurv, to, from=0, conf_int=FALSE,
               conf_level=0.95, interpolation="steps",
-              difference=FALSE, group_1=NULL, group_2=NULL)
+              difference=FALSE, ratio=FALSE,
+              group_1=NULL, group_2=NULL)
 }
 \arguments{
   \item{adjsurv}{
@@ -32,13 +33,16 @@ A number specifying the confidence level of the bootstrap confidence intervals.
 Either \code{"steps"} (default) or \code{"linear"}. This parameter controls how interpolation is performed. If this argument is set to \code{"steps"}, the curves will be treated as step functions. If it is set to \code{"linear"}, the curves wil be treated as if there are straight lines between the point estimates instead. Points that lie between estimated points will be interpolated accordingly. Should usually be kept at \code{"steps"}. See Details.
   }
   \item{difference}{
-Whether to estimate the difference between two adjusted restricted mean survival times instead. When \code{conf_int=TRUE} is also specified, this function will also return the standard error of the difference, the associated confidence interval and a p-value. The p-value is the result of a one-sample t-test where the null-hypothesis is that the difference is equal to 0. To specify which difference should be calculated, the \code{group_1} and \code{group_1} arguments can be used. By default, the difference between the first and second level in \code{variable} is computed.
+Whether to estimate the difference between two adjusted restricted mean survival times instead. When \code{conf_int=TRUE} is also specified, this function will also return the standard error of the difference, the associated confidence interval and a p-value. The p-value is the result of a one-sample t-test where the null-hypothesis is that the difference is equal to 0. To specify which difference should be calculated, the \code{group_1} and \code{group_2} arguments can be used. By default, the difference between the first and second level in \code{variable} is computed.
+  }
+  \item{ratio}{
+Whether to estimate the ratio between two adjusted restricted mean survival times instead. When \code{conf_int=TRUE} is also specified, this function will also return the associated confidence interval and a p-value. The p-value is the result of a one-sample t-test where the null-hypothesis is that the ratio is equal to 1. To specify which ratio should be calculated, the \code{group_1} and \code{group_2} arguments can be used. By default, the ratio between the first and second level in \code{variable} is computed. The confidence interval and test-statistic is estimated using the Fieller method.
   }
   \item{group_1}{
-Optional argument to get a specific difference. This argument takes a single character string specifying one of the levels of the \code{variable} used in the original \code{adjustedsurv} or \code{adjustedcif} function call. This group will be subtracted from. For example if \code{group_1="A"} and \code{group_2="B"} the difference \code{A - B} will be used. If \code{NULL}, the order of the factor levels in the original \code{data} determines the order. Ignored if \code{difference=FALSE}.
+Optional argument to get a specific difference or ratio. This argument takes a single character string specifying one of the levels of the \code{variable} used in the original \code{adjustedsurv} or \code{adjustedcif} function call. This group will be subtracted from. For example if \code{group_1="A"} and \code{group_2="B"} and \code{difference=TRUE} the difference \code{A - B} will be used. If \code{NULL}, the order of the factor levels in the original \code{data} determines the order. Ignored if \code{difference=FALSE} and \code{ratio=FALSE}.
   }
   \item{group_2}{
-Also a single character string specifying one of the levels of \code{variable}. This corresponds to the right side of the difference equation. See argument \code{group_2}. Ignored if \code{difference=FALSE}.
+Also a single character string specifying one of the levels of \code{variable}. This corresponds to the right side of the difference/ratio equation. See argument \code{group_2}. Ignored if \code{difference=FALSE} and \code{ratio=FALSE}.
   }
 }
 \details{
@@ -50,7 +54,7 @@ It can be interpreted as the mean survival time of individuals in group \eqn{Z =
 
 \strong{\emph{Confidence Intervals}}
 
-If the \code{adjsurv} object was created with \code{bootstrap=TRUE} in the \code{\link{adjustedsurv}} function, bootstrap confidence intervals and standard errors for the RMSTs can be approximated by setting \code{conf_int} to \code{TRUE}. If bootstrap samples occur where the survival function is not estimated up to \code{to}, the bootstrap sample is discarded and not used in further calculations. Approximate variance calculations not relying on the bootstrap estimates are currently not implemented.
+If the \code{adjsurv} object was created with \code{bootstrap=TRUE} in the \code{\link{adjustedsurv}} function, bootstrap confidence intervals and standard errors for the RMSTs can be approximated by setting \code{conf_int} to \code{TRUE}. If bootstrap samples occur where the survival function is not estimated up to \code{to}, the bootstrap sample is discarded and not used in further calculations. Approximate variance calculations not relying on the bootstrap estimates are currently not implemented. When using \code{difference=TRUE} the standard error of the difference between the two RMST values is approximated by \eqn{SE_{group_1 - group_2} = \sqrt{SE_{group_1}^2 + SE_{group_2}^2}}. When using \code{ratio=TRUE} the confidence intervals are calculated using the approximate formula given by Fieller (1954), assuming that the values are independent.
 
 \strong{\emph{Multiple Imputation}}
 
@@ -73,11 +77,15 @@ Instead of relying on numerical integration, this function uses exact calculatio
 Returns a \code{data.frame} containing the columns \code{group} (groups in \code{variable}) and \code{rmst} (the estimated restricted mean survival time).
 
 If \code{conf_int=TRUE} was used it additionally contains the columns \code{se} (the standard error of the restricted mean survival time), \code{ci_lower} (lower limit of the confidence interval), \code{ci_upper} (upper limit of the confidence interval) and \code{n_boot} (the actual number of bootstrap estimates used).
+
+If \code{difference=TRUE} was used, it instead returns a \code{data.frame} that contains the columns \code{diff} (the difference between the RMST values), \code{se} (the standard error of the difference), \code{ci_lower} (lower limit of the confidence interval), \code{ci_upper} (upper limit of the confidence interval) and \code{p_value} (the p-value of the one-sample t-test). The same results are presented when using \code{ratio=TRUE}, except that the \code{diff} column is named \code{ratio} and that there is no \code{se} column.
 }
 \references{
 Sarah C. Conner, Lisa M. Sullivan, Emelia J. Benjamin, Michael P. LaValley, Sandro Galea, and Ludovic Trinquart (2019). "Adjusted Restricted Mean Survival Times in Observational Studies". In: Statistics in Medicine 38, pp. 3832-3860
 
 Patrick Royston and Mahesh K. B. Parmar (2013). "Restricted Mean Survival Time: An Alternative to the Hazard Ratio for the Design and Analysis of Randomized Trials with a Time-To-Event Outcome". In: BMC Medical Research Methodology 13.152
+
+Edgar C. Fieller (1954). "Some Problems in Interval Estimation". In: Journal of the Royal Statistical Society, Series B 16.2, pp. 175-185
 }
 \author{
 Robin Denz
@@ -118,4 +126,14 @@ adjrmst <- adjusted_rmst(adjsurv, from=0, to=0.5, conf_int=FALSE)
 # including standard errors and confidence intervals
 adjrmst <- adjusted_rmst(adjsurv, from=0, to=0.5, conf_int=TRUE,
                          conf_level=0.95)
+
+# calculate difference between adjusted restricted mean survival times
+# from 0 to 1 in the two groups
+adjrmst <- adjusted_rmst(adjsurv, from=0, to=0.5, conf_int=FALSE,
+                         difference=TRUE)
+
+# calculate ratio between adjusted restricted mean survival times
+# from 0 to 1 in the two groups
+adjrmst <- adjusted_rmst(adjsurv, from=0, to=0.5, conf_int=FALSE,
+                         ratio=TRUE)
 }

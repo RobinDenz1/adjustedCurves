@@ -53,6 +53,14 @@ test_that("rmst 2 treatments, with boot", {
 })
 
 test_that("rmst 2 treatments, with boot, diff", {
+  adj_rmst <- adjusted_rmst(adj, to=1.1, conf_int=TRUE, ratio=TRUE)
+  expect_equal(round(adj_rmst$ratio, 4), 0.7753)
+  expect_equal(round(adj_rmst$ci_lower, 4), 0.5948)
+  expect_equal(round(adj_rmst$ci_upper, 4), 1.0026)
+  expect_equal(round(adj_rmst$p_value, 4), 0.0523)
+})
+
+test_that("rmst 2 treatments, with boot, ratio", {
   adj_rmst <- adjusted_rmst(adj, to=1.1, conf_int=TRUE, difference=TRUE)
   expect_equal(round(adj_rmst$diff, 4), -0.1510)
   expect_equal(round(adj_rmst$se, 4), 0.0778)
@@ -104,6 +112,11 @@ test_that("rmst 3 treatments, no boot", {
 test_that("rmst 3 treatments, no boot, diff", {
   adj_rmst <- adjusted_rmst(adj, to=1, difference=TRUE)
   expect_equal(round(adj_rmst$diff, 4), -0.1906)
+})
+
+test_that("rmst 3 treatments, no boot, ratio", {
+  adj_rmst <- adjusted_rmst(adj, to=1, ratio=TRUE)
+  expect_equal(round(adj_rmst$ratio, 4), 0.7286)
 })
 
 test_that("rmst 3 treatments, no boot", {

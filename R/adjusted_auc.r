@@ -173,14 +173,43 @@ auc_difference <- function(data, group_1, group_2, conf_int, conf_level) {
   return(out)
 }
 
+## get ratio of AUC values + confidence intervals and p_value
+auc_ratio <- function(data, group_1, group_2, conf_int, conf_level) {
+
+  if (is.null(group_1) | is.null(group_2)) {
+    group_1 <- levels(data$group)[1]
+    group_2 <- levels(data$group)[2]
+  }
+
+  dat_1 <- data[data$group==group_1, ]
+  dat_2 <- data[data$group==group_2, ]
+
+  if (conf_int) {
+    ratio_ci <- fieller_ratio_ci(a=dat_1$auc, b=dat_2$auc,
+                                 a_se=dat_1$se, b_se=dat_2$se,
+                                 conf_level=conf_level)
+
+    out <- data.frame(ratio=ratio_ci$ratio,
+                      ci_lower=ratio_ci$ci_lower,
+                      ci_upper=ratio_ci$ci_upper)
+    out$p_value <- fieller_p_val(a=dat_1$auc, b=dat_2$auc,
+                                 a_se=dat_1$se, b_se=dat_2$se)
+  } else {
+    out <- data.frame(ratio=dat_1$auc / dat_2$auc)
+  }
+  return(out)
+}
+
 ## function to calculate the restricted mean survival time of each
 ## adjusted survival curve previously estimated using the adjustedsurv function
 #' @export
 adjusted_rmst <- function(adjsurv, to, from=0, conf_int=FALSE,
                           conf_level=0.95, interpolation="steps",
-                          difference=FALSE, group_1=NULL, group_2=NULL) {
+                          difference=FALSE, ratio=FALSE,
+                          group_1=NULL, group_2=NULL) {
 
-  check_inputs_adj_rmst(adjsurv=adjsurv, from=from, to=to, conf_int=conf_int)
+  check_inputs_adj_rmst(adjsurv=adjsurv, from=from, to=to, conf_int=conf_int,
+                        difference=difference, ratio=ratio)
 
   # set to FALSE if it can't be done
   if (conf_int & is.null(adjsurv$boot_adjsurv)) {
@@ -193,6 +222,9 @@ adjusted_rmst <- function(adjsurv, to, from=0, conf_int=FALSE,
   if (difference) {
     out <- auc_difference(data=out, group_1=group_1, group_2=group_2,
                           conf_int=conf_int, conf_level=conf_level)
+  } else if (ratio) {
+    out <- auc_ratio(data=out, group_1=group_1, group_2=group_2,
+                     conf_int=conf_int, conf_level=conf_level)
   } else if (conf_int) {
     colnames(out) <- c("group", "rmst", "se", "ci_lower", "ci_upper", "n_boot")
   } else {
@@ -207,9 +239,11 @@ adjusted_rmst <- function(adjsurv, to, from=0, conf_int=FALSE,
 #' @export
 adjusted_rmtl <- function(adj, to, from=0, conf_int=FALSE,
                           conf_level=0.95, interpolation="steps",
-                          difference=FALSE, group_1=NULL, group_2=NULL) {
+                          difference=FALSE, ratio=FALSE,
+                          group_1=NULL, group_2=NULL) {
 
-  check_inputs_adj_rmtl(adj=adj, from=from, to=to, conf_int=conf_int)
+  check_inputs_adj_rmtl(adj=adj, from=from, to=to, conf_int=conf_int,
+                        difference=difference, ratio=ratio)
 
   # set to FALSE if it can't be done
   if (conf_int & is.null(adj$boot_adjsurv) & is.null(adj$boot_adjcif)) {
@@ -241,6 +275,9 @@ adjusted_rmtl <- function(adj, to, from=0, conf_int=FALSE,
   if (difference) {
     out <- auc_difference(data=out, group_1=group_1, group_2=group_2,
                           conf_int=conf_int, conf_level=conf_level)
+  } else if (ratio) {
+    out <- auc_ratio(data=out, group_1=group_1, group_2=group_2,
+                     conf_int=conf_int, conf_level=conf_level)
   } else if (conf_int) {
     colnames(out) <- c("group", "rmtl", "se", "ci_lower", "ci_upper", "n_boot")
   } else {

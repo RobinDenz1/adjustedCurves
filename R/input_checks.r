@@ -559,7 +559,8 @@ check_inputs_sim_fun <- function(n, lcovars, outcome_betas, surv_dist,
 }
 
 ## for adjusted_rmst function
-check_inputs_adj_rmst <- function(adjsurv, from, to, conf_int) {
+check_inputs_adj_rmst <- function(adjsurv, from, to, conf_int, difference,
+                                  ratio) {
 
   if ((!is.numeric(from) | !is.numeric(to)) &
       length(from)==1 & length(to)==1) {
@@ -589,10 +590,16 @@ check_inputs_adj_rmst <- function(adjsurv, from, to, conf_int) {
             " estimates. Consider using a finer times grid in",
             " 'adjustedsurv'.", call.=FALSE)
   }
+
+  if (difference & ratio) {
+    warning("Cannot calculate the difference and the ratio simultaneously.",
+            " Only the difference will be displayed. To obtain the ratio",
+            " instead, set difference=FALSE.")
+  }
 }
 
 ## for adjusted_rmtl function
-check_inputs_adj_rmtl <- function(adj, from, to, conf_int) {
+check_inputs_adj_rmtl <- function(adj, from, to, conf_int, difference, ratio) {
 
   if ((!is.numeric(from) | !is.numeric(to)) &
       length(from)==1 & length(to)==1) {
@@ -630,6 +637,12 @@ check_inputs_adj_rmtl <- function(adj, from, to, conf_int) {
     warning("Using only a few points in time might lead to biased",
             " estimates. Consider using a finer times grid in",
             " 'adjustedsurv'/'adjustedcif'.", call.=FALSE)
+  }
+
+  if (difference & ratio) {
+    warning("Cannot calculate the difference and the ratio simultaneously.",
+            " Only the difference will be displayed. To obtain the ratio",
+            " instead, set difference=FALSE.")
   }
 }
 
