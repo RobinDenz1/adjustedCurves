@@ -148,8 +148,10 @@ specific_times <- function(plotdata, times, est="surv", interpolation="steps") {
       new_dat <- data.frame(time=times, cif=new_est, group=levs[i])
     } else if (est=="surv") {
       new_dat <- data.frame(time=times, surv=new_est, group=levs[i])
-    } else {
+    } else if (est=="diff") {
       new_dat <- data.frame(time=times, diff=new_est, group=levs[i])
+    } else if (est=="ratio") {
+      new_dat <- data.frame(time=times, ratio=new_est, group=levs[i])
     }
 
     if ("se" %in% colnames(plotdata)) {
@@ -171,8 +173,16 @@ specific_times <- function(plotdata, times, est="surv", interpolation="steps") {
       new_dat$se <- new_se
       new_dat$ci_lower <- new_ci_lower
       new_dat$ci_upper <- new_ci_upper
-
     }
+
+    # same as standard error, stays the same
+    if ("p_value" %in% colnames(plotdata)) {
+      new_p <- vapply(times, read_from_step_function, est="p_value",
+                      data=plotdata[which(plotdata$group==levs[i]), ],
+                      FUN.VALUE=numeric(1))
+      new_dat$p_value <- new_p
+    }
+
     new_plotdata[[i]] <- new_dat
   }
   new_plotdata <- as.data.frame(dplyr::bind_rows(new_plotdata))

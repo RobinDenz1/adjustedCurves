@@ -145,14 +145,16 @@ exact_integral <- function(data, from, to, est, interpolation) {
 ## calculate difference between two functions at arbitrary time values
 ## using either linear or step-function interpolation
 difference_function <- function(adj, times, est="surv", interpolation="steps",
-                                conf_int=FALSE, conf_level=0.95) {
+                                conf_int=FALSE, conf_level=0.95,
+                                type="diff", p_value=FALSE) {
 
   levs <- levels(adj$group)
   adjsurv_0 <- adj[which(adj$group==levs[1]), ]
   adjsurv_1 <- adj[which(adj$group==levs[2]), ]
 
   if (nrow(adjsurv_0)==nrow(adjsurv_1) && all(adjsurv_0$time==adjsurv_1$time) &&
-      interpolation=="steps") {
+      interpolation=="steps" && length(times)==nrow(adjsurv_0) &&
+      all(times==adjsurv_0$time)) {
     surv_0 <- adjsurv_0[, est]
     surv_1 <- adjsurv_1[, est]
 
@@ -176,20 +178,47 @@ difference_function <- function(adj, times, est="surv", interpolation="steps",
     }
   }
 
-  surv_diff <- surv_0 - surv_1
+  if (type=="diff") {
+    surv_diff <- surv_0 - surv_1
 
-  diff_dat <- data.frame(time=times)
-  diff_dat[, est] <- surv_diff
+    diff_dat <- data.frame(time=times)
+    diff_dat[, est] <- surv_diff
 
-  if (conf_int) {
-    # calculate confidence interval from pooled SE
-    diff_se <- sqrt(se_0^2 + se_1^2)
-    diff_ci <- confint_surv(surv=surv_diff, se=diff_se, conf_level=conf_level,
-                            conf_type="plain")
-    # put together
-    diff_dat$se <- diff_se
-    diff_dat$ci_lower <- diff_ci$left
-    diff_dat$ci_upper <- diff_ci$right
+    if (conf_int) {
+      # calculate confidence interval from pooled SE
+      diff_se <- sqrt(se_0^2 + se_1^2)
+      diff_ci <- confint_surv(surv=surv_diff, se=diff_se, conf_level=conf_level,
+                              conf_type="plain")
+      # put together
+      diff_dat$se <- diff_se
+      diff_dat$ci_lower <- diff_ci$left
+      diff_dat$ci_upper <- diff_ci$right
+    }
+
+    if (conf_int & p_value) {
+      t_stat <- (diff_dat[, est] - 0) / diff_dat$se
+      diff_dat$p_value <- 2 * stats::pnorm(abs(t_stat), lower.tail=FALSE)
+    }
+
+  } else if (type=="ratio") {
+
+    surv_diff <- surv_0 / surv_1
+
+    diff_dat <- data.frame(time=times)
+    diff_dat[, est] <- surv_diff
+
+    if (conf_int) {
+      ci_ratio <- fieller_ratio_ci(a=surv_0, b=surv_1, a_se=se_0,
+                                   b_se=se_1, conf_level=conf_level)
+      diff_dat$ci_lower <- ci_ratio$ci_lower
+      diff_dat$ci_upper <- ci_ratio$ci_upper
+    }
+
+    if (conf_int & p_value) {
+      diff_dat$p_value <- fieller_p_val(a=surv_0, b=surv_1, a_se=se_0,
+                                        b_se=se_1)
+    }
   }
+
   return(diff_dat)
 }

@@ -24,9 +24,9 @@ tab <- data.frame(
   supp_unmeasured=c(rep("no", 13), rep("yes", 3), "no"),
   supp_categorical=c(rep("yes", 5), rep("no", 3), "yes", "no", rep("yes", 3),
                      "no", "no", "no", "yes"),
-  supp_continuous_conf=c(rep("yes", 10), rep("no", 3), rep("yes", 4)),
+  supp_continuous_conf=c(rep("yes", 10), rep("no", 3), rep("yes", 3), "no"),
   supp_approx_var=c("yes", "no", "yes", "no", "yes", "no", "no", "yes", "yes",
-                    "yes", "no", "no", "no", "no", "yes", "yes", "yes"),
+                    "yes", "no", "yes", "no", "no", "yes", "yes", "yes"),
   bounds=c(rep("yes", 4), "no", "yes", "yes", "no", "no", "yes", "yes",
            "yes", "yes", "yes", "no", "no", "yes"),
   monotonic=c("yes", "no", "yes", "yes", "no", "yes", "yes", "no", "no", "yes",
@@ -83,6 +83,7 @@ After having created an `adjustedsurv` object using the `adjustedsurv()` functio
 
 * `plot()`: Plots the estimated adjusted survival curves
 * `adjusted_curve_diff()`: Calculates differences in survival probabilities
+* `adjusted_curve_ratio()`: Calculates ratios of survival probabilities
 * `plot_curve_diff()`: Plots differences in survival probabilities
 * `adjusted_surv_quantile()`: Calculates adjusted survival time quantiles
 * `adjusted_rmst()`: Calculates adjusted restricted mean survival times
@@ -104,7 +105,7 @@ tab <- data.frame(
   supp_unmeasured="no",
   supp_categorical=c("yes", "yes", "yes", "yes", "no", "no", "yes", "no",
                      "yes"),
-  supp_continuous_conf="yes",
+  supp_continuous_conf=c(rep("yes", 8), "no"),
   supp_approx_var=c("yes", "no", "yes", "yes", "no", "yes", "yes", "yes",
                     "yes"),
   bounds=c("yes", "yes", "yes", "no", "yes", "no", "no", "yes", "yes"),
@@ -157,6 +158,7 @@ After having created an `adjustedcif` object using the `adjustedcif()` function,
 
 * `plot()`: Plots the estimated adjusted CIFs
 * `adjusted_curve_diff()`: Calculates differences in CIFs
+* `adjusted_curve_ratio()`: Calculates ratios of CIFs
 * `plot_curve_diff()`: Plots differences in CIFs over time
 * `adjusted_rmtl()`: Calculates adjusted restricted mean time lost
 * `plot_rmtl_curve()`: Plots adjusted restricted mean time lost curves

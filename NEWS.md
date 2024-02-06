@@ -29,3 +29,5 @@
 * Added new methods `surv_prox_iptw`, `surv_prox_aiptw` based on code from Andrew Ying
 * Added a new vignette with an overview of implemented features of each method
 * Added better support for multiple imputation when `variable`, `ev_time` or `event` contain missings
+* Added the `ratio` argument to `adjusted_rmst()` and `adjusted_rmtl()` functions
+* Added the `adjusted_curve_ratio()` function
