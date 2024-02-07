@@ -31,3 +31,4 @@
 * Added better support for multiple imputation when `variable`, `ev_time` or `event` contain missings
 * Added the `ratio` argument to `adjusted_rmst()` and `adjusted_rmtl()` functions
 * Added the `adjusted_curve_ratio()` function
+* Added the `plot_curve_ratio()` function

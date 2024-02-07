@@ -22,18 +22,13 @@ fieller_ratio_ci <- function(a, b, a_se, b_se, conf_level=0.95) {
   return(out)
 }
 
-## calculates the t-distributed test statistic for a ratio test
-fieller_t_stat <- function(a, b, a_se, b_se, ratio=1) {
+## calculates a p-value for a one-sample ratio test
+fieller_p_val <- function(a, b, a_se, b_se, ratio=1) {
   a_var_se <- a_se^2
   b_var_se <- b_se^2
 
   t_stat <- (a - ratio * b) / sqrt(a_var_se + ratio^2 * b_var_se)
-  return(t_stat)
-}
-
-## calculates a p-value for a one-sample ratio test
-fieller_p_val <- function(a, b, a_se, b_se, ratio=1) {
-  t_stat <- fieller_t_stat(a=a, b=b, a_se=a_se, b_se=b_se)
   p_val <- 2 * stats::pnorm(abs(t_stat), lower.tail=FALSE)
+
   return(p_val)
 }

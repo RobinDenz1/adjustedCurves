@@ -1,11 +1,12 @@
 \name{plot_curve_diff}
 \alias{plot_curve_diff}
+\alias{plot_curve_ratio}
 
 \title{
-Plot the Difference of Two Adjusted Survival Curves or CIFs
+Plot the Difference Between or the Ratio of Two Adjusted Survival Curves or CIFs
 }
 \description{
-A function to graphically display the difference between two confounder-adjusted survival curves which where previously estimated using the \code{\link[adjustedCurves]{adjustedsurv}} function or between two confounder-adjusted CIFs which where previously estimated using the \code{\link[adjustedCurves]{adjustedcif}} function. The user can customize the plot using a variety of options. Internally it uses the \pkg{ggplot2} package, so additional not implemented features can be added using the standard \code{ggplot2} syntax.
+A function to graphically display the difference or ratio between two confounder-adjusted survival curves which where previously estimated using the \code{\link[adjustedCurves]{adjustedsurv}} function or between two confounder-adjusted CIFs which where previously estimated using the \code{\link[adjustedCurves]{adjustedcif}} function. The user can customize the plot using a variety of options. Internally it uses the \pkg{ggplot2} package, so additional not implemented features can be added using the standard \code{ggplot2} syntax.
 }
 \usage{
 plot_curve_diff(x, group_1=NULL, group_2=NULL,
@@ -16,9 +17,9 @@ plot_curve_diff(x, group_1=NULL, group_2=NULL,
                 points_ci_size=NULL, points_ci_width=NULL,
                 xlab="Time", ylab=NULL, title=NULL,
                 subtitle=NULL, gg_theme=ggplot2::theme_classic(),
-                line_at_0=TRUE, line_at_0_size=0.7,
-                line_at_0_color="grey", line_at_0_linetype="dashed",
-                line_at_0_alpha=1,
+                line_at_ref=TRUE, line_at_ref_size=0.7,
+                line_at_ref_color="grey", line_at_ref_linetype="dashed",
+                line_at_ref_alpha=1,
                 loess_smoother=FALSE, loess_span=0.75,
                 loess_color=color, loess_size=size,
                 loess_linetype="dashed", loess_alpha=alpha,
@@ -32,6 +33,18 @@ plot_curve_diff(x, group_1=NULL, group_2=NULL,
                 fill_area=FALSE, area_color="blue", area_alpha=0.4,
                 fill_only_interval=TRUE,
                 ...)
+
+plot_curve_ratio(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
+                 conf_level=0.95, type="steps", times=NULL,
+                 max_t=Inf, use_boot=FALSE, size=0.7, color="black",
+                 linetype="solid", alpha=1,
+                 conf_int_alpha=0.4, xlab="Time", ylab=NULL,
+                 title=NULL, subtitle=NULL,
+                 gg_theme=ggplot2::theme_classic(),
+                 line_at_ref=TRUE, line_at_ref_size=0.7,
+                 line_at_ref_color="grey",
+                 line_at_ref_linetype="dashed",
+                 line_at_ref_alpha=1, ...)
 }
 
 \arguments{
@@ -39,7 +52,7 @@ plot_curve_diff(x, group_1=NULL, group_2=NULL,
 An \code{adjustedsurv} object created using the \code{\link[adjustedCurves]{adjustedsurv}} function or an \code{adjustedcif} object created using the \code{\link[adjustedCurves]{adjustedcif}} function.
   }
   \item{group_1}{
-A single character string specifying one of the levels of the \code{variable} used in the original \code{adjustedsurv} or \code{adjustedcif} function call. This group will be subtracted from. For example if \code{group_1="A"} and \code{group_2="B"} the plotted curve will correspond to the survival probability (or CIF) of \code{A} minus the survival probability (or CIF) of \code{B} over time. If \code{NULL}, this will default to the first level of \code{variable}.
+A single character string specifying one of the levels of the \code{variable} used in the original \code{adjustedsurv} or \code{adjustedcif} function call. This group will be subtracted from. For example if \code{group_1="A"} and \code{group_2="B"} the plotted curve will correspond to the survival probability (or CIF) of \code{A} minus the survival probability (or CIF) of \code{B} over time. If \code{NULL}, this will default to the first level of \code{variable}. Similarly if one plots ratios instead, the ratio would be calculated as \code{A / B}.
   }
   \item{group_2}{
 Also a single character string specifying one of the levels of \code{variable}. This corresponds to the right side of the difference equation. See argument \code{group_2}. If \code{NULL}, this will default to the second level of \code{variable}.
@@ -51,10 +64,10 @@ A logical variable indicating whether the confidence intervals should be drawn. 
 The confidence level that should be used when calculating the confidence intervals. Ignored if \code{conf_int=FALSE}.
   }
   \item{type}{
-Must be one of \code{"steps"} (drawing the difference as a step function), \code{"lines"} (drawing the difference using linear interpolation), \code{"points"} (drawing points only) or \code{"none"} (drawing nothing, useful when only the smoothed difference is of interest). It defaults to \code{"steps"}.
+Must be one of \code{"steps"} (drawing the difference/ratio as a step function), \code{"lines"} (drawing the difference/ratio using linear interpolation), \code{"points"} (drawing points only) or \code{"none"} (drawing nothing, useful when only the smoothed difference is of interest). It defaults to \code{"steps"}. For ratios, only the \code{"steps"} and \code{"lines"} options are available.
   }
   \item{times}{
-An optional numeric vector of points in time at which the difference should be estimated. If \code{NULL} (default) the differences are estimated for the whole curve. This only affects the plot and has no effect on the \code{integral} or \code{p_value} if those are also specified.
+An optional numeric vector of points in time at which the difference or ratio should be estimated. If \code{NULL} (default) the differences / ratios are estimated for the whole curve. This only affects the plot and has no effect on the \code{integral} or \code{p_value} if those are also specified.
   }
   \item{max_t}{
 A number indicating the latest time to which the curve should be extended to.
@@ -63,16 +76,16 @@ A number indicating the latest time to which the curve should be extended to.
 Whether to use the bootstrapped estimates to calculate the confidence intervals or not. Can only be used if \code{bootstrap=TRUE} was used in the original \code{adjustedsurv} or \code{adjustedcif} function call. Ignored if \code{conf_int=FALSE}.
   }
   \item{size}{
-A number controlling the thickness of the difference curve.
+A number controlling the thickness of the curve.
   }
   \item{color}{
-A string specifying the color of the difference curve.
+A string specifying the color of the curve.
   }
   \item{linetype}{
-A string specifying the linetype of the difference curve.
+A string specifying the linetype of the curve.
   }
   \item{alpha}{
-A number controlling the transparency level of the difference curves.
+A number controlling the transparency level of the curves.
   }
   \item{conf_int_alpha}{
 A number indicating the level of transparency that should be used when drawing the confidence regions.
@@ -87,7 +100,7 @@ Only used when \code{type="points"}. Controls the width of the error bars.
 A character string to be used as the X-Axis label of the plot. Defaults to "Time".
   }
   \item{ylab}{
-A character string to be used as the Y-Axis label of the plot. By default (\code{NULL}) uses the equation used to calculate the differences, based on the names supplied in \code{group_1} and \code{group_2}.
+A character string to be used as the Y-Axis label of the plot. By default (\code{NULL}) uses the equation used to calculate the differences / ratios, based on the names supplied in \code{group_1} and \code{group_2}.
   }
   \item{title}{
 A character string to be used as the title of the plot. Set to \code{NULL} if no title should be used.
@@ -98,20 +111,20 @@ A character string to be used as the subtitle of the plot. Set to \code{NULL} if
   \item{gg_theme}{
 A \code{ggplot2} theme object which will be used for the plot.
   }
-  \item{line_at_0}{
-Whether to draw a horizontal line at y = 0 or not.
+  \item{line_at_ref}{
+Whether to draw a horizontal line at y = 0 for differences or at y = 1 for ratios or not.
   }
-  \item{line_at_0_size}{
-The size of the line drawn at y = 0. Ignored if \code{line_at_0=FALSE}.
+  \item{line_at_ref_size}{
+The size of the line drawn at the reference value. Ignored if \code{line_at_ref=FALSE}.
   }
-  \item{line_at_0_color}{
-The color of the line drawn at y = 0. Ignored if \code{line_at_0=FALSE}.
+  \item{line_at_ref_color}{
+The color of the line drawn at the reference value. Ignored if \code{line_at_ref=FALSE}.
   }
-  \item{line_at_0_linetype}{
-The linetype of the line drawn at y = 0. Ignored if \code{line_at_0=FALSE}.
+  \item{line_at_ref_linetype}{
+The linetype of the line drawn at the reference value. Ignored if \code{line_at_ref=FALSE}.
   }
-  \item{line_at_0_alpha}{
-The transparency level of the line drawn at y = 0. Ignored if \code{line_at_0=FALSE}.
+  \item{line_at_ref_alpha}{
+The transparency level of the line drawn at the reference value. Ignored if \code{line_at_ref=FALSE}.
   }
   \item{loess_smoother}{
 Whether to draw a LOESS smoother through the difference curves.
@@ -193,11 +206,11 @@ Currently not used.
   }
 }
 \details{
-This function allows the easy creation of difference curves. The syntax is exactly the same for both adjusted survival curves and adjusted CIFs. By default it calculates the difference up to the last point where estimates for both the \code{group_1} curve and the \code{group_2} curve are available.
+This function allows the easy creation of difference / ratio curves. The syntax is exactly the same for both adjusted survival curves and adjusted CIFs. Similarly, the syntax is the same for ratios and for difference curves, although not all options of the difference curve function are available for the ratio curve function. By default it calculates the estimates up to the last point where estimates for both the \code{group_1} curve and the \code{group_2} curve are available.
 
-It currently does not support plotting multiple difference curves at once, which could be useful when there are more than two treatment groups in \code{variable}. If the user is interested in this, we recommend calling this function multiple times with the desired comparisons and concatenating the individual plots into one plot afterwards using a suitable function such as \code{par} or \code{ggarrange}.
+It currently does not support plotting multiple curves at once, which could be useful when there are more than two treatment groups in \code{variable}. If the user is interested in this, we recommend calling this function multiple times with the desired comparisons and concatenating the individual plots into one plot afterwards using a suitable function such as \code{par} or \code{ggarrange}.
 
-More information on how the differences and their confidence intervals are calculated can be found in the documentation of the \code{\link{adjusted_curve_diff}} function. More information on how the overall p-value and the integral are calculated can be found in the \code{\link{adjusted_curve_test}} function.
+More information on how the differences or ratios and their confidence intervals are calculated can be found in the documentation of the \code{\link{adjusted_curve_diff}} function. More information on how the overall p-value and the integral are calculated for differences can be found in the \code{\link{adjusted_curve_test}} function.
 }
 \value{
 Returns a \code{ggplot2} object.
@@ -244,11 +257,15 @@ adjsurv <- adjustedsurv(data=sim_dat,
 # plot the difference with default values
 plot_curve_diff(adjsurv)
 
+# plot the ratio with default values
+plot_curve_ratio(adjsurv)
+
 # plot with reversed differences
 plot_curve_diff(adjsurv, group_1="1", group_2="0")
 
 # plot with confidence intervals
 plot_curve_diff(adjsurv, conf_int=TRUE)
+plot_curve_ratio(adjsurv, conf_int=TRUE)
 
 # plot using lines instead
 plot_curve_diff(adjsurv, conf_int=TRUE, type="lines")
@@ -259,12 +276,13 @@ plot_curve_diff(adjsurv, conf_int=TRUE, type="points")
 # plot using an additional loess smoother
 plot_curve_diff(adjsurv, loess_smoother=TRUE)
 
-# plot without the line at 0
-plot_curve_diff(adjsurv, line_at_0=FALSE)
+# plot without the line at reference
+plot_curve_diff(adjsurv, line_at_ref=FALSE)
+plot_curve_ratio(adjsurv, line_at_ref=FALSE)
 
 # plot with some custom parameters
 plot_curve_diff(adjsurv, conf_int=TRUE, color="blue", linetype="dotted",
-                alpha=0.8, line_at_0_size=1.1, line_at_0_color="red",
+                alpha=0.8, line_at_ref_size=1.1, line_at_ref_color="red",
                 loess_smoother=TRUE, loess_span=0.55)
 
 # adding a p-value for a difference test in the interval [0, 0.75]

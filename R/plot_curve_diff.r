@@ -24,9 +24,10 @@ plot_curve_diff <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
                             points_ci_width=NULL, xlab="Time", ylab=NULL,
                             title=NULL, subtitle=NULL,
                             gg_theme=ggplot2::theme_classic(),
-                            line_at_0=TRUE, line_at_0_size=0.7,
-                            line_at_0_color="grey", line_at_0_linetype="dashed",
-                            line_at_0_alpha=1,
+                            line_at_ref=TRUE, line_at_ref_size=0.7,
+                            line_at_ref_color="grey",
+                            line_at_ref_linetype="dashed",
+                            line_at_ref_alpha=1,
                             loess_smoother=FALSE, loess_span=0.75,
                             loess_color=color, loess_size=size,
                             loess_linetype="dashed", loess_alpha=alpha,
@@ -78,11 +79,12 @@ plot_curve_diff <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
   p <- ggplot2::ggplot(plotdata, ggplot2::aes(x=.data$time, y=.data$diff))
 
   # add line at 0 if specified
-  if (line_at_0) {
-    p <- p + ggplot2::geom_hline(yintercept=0, linewidth=line_at_0_size,
-                                 color=line_at_0_color,
-                                 linetype=line_at_0_linetype,
-                                 alpha=line_at_0_alpha)
+  if (line_at_ref) {
+    p <- p + ggplot2::geom_hline(yintercept=0,
+                                 linewidth=line_at_ref_size,
+                                 color=line_at_ref_color,
+                                 linetype=line_at_ref_linetype,
+                                 alpha=line_at_ref_alpha)
   }
 
   # plot difference as step function
@@ -256,6 +258,114 @@ plot_curve_diff <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
     warning("'fill_area' can only be used with type='lines' and",
             " type='steps'.")
   }
+
+  return(p)
+}
+
+## plot the ratio of two adjusted survival curves
+#' @importFrom rlang .data
+#' @export
+plot_curve_ratio <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
+                             conf_level=0.95, type="steps", times=NULL,
+                             max_t=Inf, use_boot=FALSE, size=0.7, color="black",
+                             linetype="solid", alpha=1,
+                             conf_int_alpha=0.4, xlab="Time", ylab=NULL,
+                             title=NULL, subtitle=NULL,
+                             gg_theme=ggplot2::theme_classic(),
+                             line_at_ref=TRUE, line_at_ref_size=0.7,
+                             line_at_ref_color="grey",
+                             line_at_ref_linetype="dashed",
+                             line_at_ref_alpha=1, ...) {
+  requireNamespace("ggplot2")
+
+  check_inputs_plot_difference(x=x, group_1=group_1, group_2=group_2,
+                               conf_int=conf_int, type=type, max_t=max_t,
+                               test=NULL, integral_from=0,
+                               integral_to=NULL, p_value=FALSE,
+                               integral=FALSE, use_boot=use_boot)
+
+  # object specific stuff
+  if (inherits(x, "adjustedsurv")) {
+    mode <- "surv"
+    adj_data <- x$adjsurv
+  } else {
+    mode <- "cif"
+    adj_data <- x$adjcif
+  }
+
+  # what kind of interpolation to use
+  if (type=="lines") {
+    interpolation <- "linear"
+    read_fun <- read_from_linear_function
+  } else {
+    interpolation <- "steps"
+    read_fun <- read_from_step_function
+  }
+
+  # get relevant data
+  plotdata <- adjusted_curve_ratio(adj=x, group_1=group_1, group_2=group_2,
+                                   conf_int=conf_int, conf_level=conf_level,
+                                   interpolation=interpolation, times=times,
+                                   use_boot=use_boot)
+  plotdata <- plotdata[which(!is.na(plotdata$ratio)), ]
+  plotdata <- plotdata[which(plotdata$time <= max_t), ]
+
+  # initialize plot
+  p <- ggplot2::ggplot(plotdata, ggplot2::aes(x=.data$time, y=.data$ratio))
+
+  # add line at 0 if specified
+  if (line_at_ref) {
+    p <- p + ggplot2::geom_hline(yintercept=1,
+                                 linewidth=line_at_ref_size,
+                                 color=line_at_ref_color,
+                                 linetype=line_at_ref_linetype,
+                                 alpha=line_at_ref_alpha)
+  }
+
+  # plot difference as step function
+  if (type=="steps") {
+    if (conf_int) {
+      requireNamespace("pammtools")
+
+      p <- p + pammtools::geom_stepribbon(ggplot2::aes(ymin=.data$ci_lower,
+                                                       ymax=.data$ci_upper,
+                                                       x=.data$time,
+                                                       y=.data$ratio),
+                                          alpha=conf_int_alpha,
+                                          fill=color,
+                                          inherit.aes=FALSE)
+    }
+    p <- p + ggplot2::geom_step(linewidth=size, color=color, linetype=linetype,
+                                alpha=alpha)
+    # plot difference using linear interpolation
+  } else if (type=="lines") {
+    p <- p + ggplot2::geom_line(linewidth=size, color=color, linetype=linetype,
+                                alpha=alpha)
+    if (conf_int) {
+      p <- p + ggplot2::geom_ribbon(ggplot2::aes(ymin=.data$ci_lower,
+                                                 ymax=.data$ci_upper,
+                                                 x=.data$time,
+                                                 y=.data$ratio),
+                                    alpha=conf_int_alpha,
+                                    fill=color,
+                                    inherit.aes=FALSE)
+    }
+  }
+
+  # generate default label
+  if (is.null(group_1) | is.null(group_2)) {
+    group_1 <- levels(adj_data$group)[1]
+    group_2 <- levels(adj_data$group)[2]
+  }
+
+  if (is.null(ylab) & mode=="surv") {
+    ylab <- bquote(hat(S)[.(group_1)](t) / hat(S)[.(group_2)](t))
+  } else if (is.null(ylab) & mode=="cif") {
+    ylab <- bquote(hat(F)[.(group_1)](t) / hat(F)[.(group_2)](t))
+  }
+
+  p <- p + gg_theme
+  p <- p + ggplot2::labs(x=xlab, y=ylab, title=title, subtitle=subtitle)
 
   return(p)
 }

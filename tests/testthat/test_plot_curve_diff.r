@@ -76,7 +76,7 @@ test_that("plot, with loess", {
 })
 
 test_that("plot, without line at 0", {
-  plt <- plot_curve_diff(adj, line_at_0=FALSE)
+  plt <- plot_curve_diff(adj, line_at_ref=FALSE)
   expect_s3_class(plt, "ggplot")
   vdiffr::expect_doppelganger("plot, without line at 0", fig=plt)
 })
@@ -145,7 +145,8 @@ test_that("plot, with integral test", {
 
 test_that("plot, with much stuff", {
   plt <- plot_curve_diff(adj, conf_int=TRUE, color="blue", linetype="dotted",
-                         alpha=0.8, line_at_0_size=1.1, line_at_0_color="red",
+                         alpha=0.8, line_at_ref_size=1.1,
+                         line_at_ref_color="red",
                          loess_smoother=TRUE, loess_span=0.55)
   expect_s3_class(plt, "ggplot")
   vdiffr::expect_doppelganger("plot, with much stuff", fig=plt)
