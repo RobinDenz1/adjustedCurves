@@ -19,10 +19,10 @@ adjusted_rmtl(adj, to, from=0, conf_int=FALSE,
 An \code{adjustedsurv} object created using the \code{adjustedsurv} function or a \code{adjustedcif} object created using the \code{adjustedcif} function.
   }
   \item{from}{
-A number specifying the left side of the time interval of interest. See details. Usually this should be kept at 0 (default) to estimate the standard RMTL. Should only be changed if there are good reasons for it.
+A single number specifying the left side of the time interval of interest. See details. Usually this should be kept at 0 (default) to estimate the standard RMTL. Should only be changed if there are good reasons for it.
   }
   \item{to}{
-A number specifying the right side of the time interval of interest. See details.
+One or more numbers specifying the right side of the time interval of interest. If a vector of numbers is supplied, the adjusted RMTL will be estimated for each value of \code{to}. See details.
   }
   \item{conf_int}{
 Whether bootstrap estimates should be used to estimate the standard errors and confidence intervals of the RMST estimates. Can only be used if \code{bootstrap=TRUE} was used in the \code{\link{adjustedsurv}} or \code{\link{adjustedcif}} call.
@@ -76,9 +76,9 @@ Instead of relying on numerical integration, this function uses exact calculatio
 \value{
 Returns a \code{data.frame} containing the columns \code{group} (groups in \code{variable}) and \code{rmtl} (the estimated restricted mean time lost).
 
-If \code{conf_int=TRUE} was used it additionally contains the columns \code{se} (the standard error of the restricted mean time lost), \code{ci_lower} (lower limit of the confidence interval), \code{ci_upper} (upper limit of the confidence interval) and \code{n_boot} (the actual number of bootstrap estimates used).
+If \code{conf_int=TRUE} was used it additionally contains the columns \code{to} (the supplied \code{to} values), \code{se} (the standard error of the restricted mean time lost), \code{ci_lower} (lower limit of the confidence interval), \code{ci_upper} (upper limit of the confidence interval) and \code{n_boot} (the actual number of bootstrap estimates used).
 
-If \code{difference=TRUE} was used, it instead returns a \code{data.frame} that contains the columns \code{diff} (the difference between the RMTL values), \code{se} (the standard error of the difference), \code{ci_lower} (lower limit of the confidence interval), \code{ci_upper} (upper limit of the confidence interval) and \code{p_value} (the p-value of the one-sample t-test). The same results are presented when using \code{ratio=TRUE}, except that the \code{diff} column is named \code{ratio} and that there is no \code{se} column.
+If \code{difference=TRUE} was used, it instead returns a \code{data.frame} that contains the columns \code{to}, \code{diff} (the difference between the RMTL values), \code{se} (the standard error of the difference), \code{ci_lower} (lower limit of the confidence interval), \code{ci_upper} (upper limit of the confidence interval) and \code{p_value} (the p-value of the one-sample t-test). The same results are presented when using \code{ratio=TRUE}, except that the \code{diff} column is named \code{ratio} and that there is no \code{se} column.
 }
 \references{
 Sarah C. Conner and Ludovic Trunquart (2021). "Estimation and Modeling of the Restricted Mean Time Lost in the Presence of Competing Risks". In: Statistics in Medicine
@@ -119,6 +119,10 @@ adjsurv <- adjustedsurv(data=sim_dat,
 
 # calculate adjusted restricted mean survival times from 0 to 1
 adjrmst <- adjusted_rmst(adjsurv, from=0, to=1, conf_int=FALSE)
+
+# calculate adjusted restricted mean survival times from 0 to 0.5
+# and from 0 to 1 simulatenously
+adjrmst <- adjusted_rmst(adjsurv, from=0, to=c(0.5, 1), conf_int=FALSE)
 
 # calculate adjusted restricted mean time lost estimates from 0 to 1,
 # including standard errors and confidence intervals

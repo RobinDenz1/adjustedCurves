@@ -52,3 +52,17 @@ test_that("cif, t = 0.64, no extrapolation", {
   out <- read_from_step_function(0.64, data=test_dat, est="cif")
   expect_true(is.na(out))
 })
+
+test_dat <- data.frame(time=c(0, 0.1, 0.2, 0.3, 0.6, 0.63),
+                       surv=c(1, 0.99, 0.8, 0.76, 0.5, 0),
+                       cif=1-c(1, 0.99, 0.8, 0.76, 0.5, 0))
+
+test_that("surv, t = 0.64, valid extrapolation", {
+  out <- read_from_step_function(1.64, data=test_dat, est="surv")
+  expect_equal(out, 0)
+})
+
+test_that("cif, t = 0.64, valid extrapolation", {
+  out <- read_from_step_function(1.64, data=test_dat, est="cif")
+  expect_equal(out, 1)
+})

@@ -9,11 +9,11 @@ A function to graphically display the Restricted Mean Time Lost (RMTL) over time
 }
 \usage{
 plot_rmtl_curve(adj, times=NULL, conf_int=FALSE,
-                interpolation="steps", max_t=Inf,
-                color=TRUE, linetype=FALSE, facet=FALSE,
-                size=1, alpha=1, xlab="Time", ylab="RMTL",
-                title=NULL, subtitle=NULL, legend.title="Group",
-                legend.position="right",
+                conf_level=0.95, interpolation="steps",
+                max_t=Inf, color=TRUE, linetype=FALSE,
+                facet=FALSE, size=1, alpha=1, xlab="Time",
+                ylab="RMTL", title=NULL, subtitle=NULL,
+                legend.title="Group", legend.position="right",
                 gg_theme=ggplot2::theme_classic(),
                 custom_colors=NULL, custom_linetypes=NULL,
                 conf_int_alpha=0.4, ...)
@@ -28,6 +28,9 @@ A vector of points in time, passed to the \code{to} argument of the \code{\link{
   }
   \item{conf_int}{
 A logical variable indicating whether the bootstrap confidence intervals should be drawn.
+  }
+  \item{conf_level}{
+Corresponds to the argument of the same name in the \code{\link{adjusted_rmtl}} function.
   }
   \item{interpolation}{
 Corresponds to the argument of the same name in the \code{\link{adjusted_rmtl}} function.

@@ -445,26 +445,26 @@ test_that("adjusted_rmst, 2 treatments, no boot", {
 test_that("adjusted_rmst, 2 treatments, boot", {
   adj_rmst <- adjusted_rmst(adjsurv, from=0, to=1, conf_int=TRUE)
   expect_equal(round(adj_rmst$rmst, 4), c(0.5115, 0.6566))
-  expect_equal(round(adj_rmst$se, 4), c(0.0406, 0.0390))
-  expect_equal(adj_rmst$n_boot, c(2, 2))
+  expect_equal(round(adj_rmst$se, 4), c(0.0405, 0.0391))
+  expect_equal(adj_rmst$n_boot, c(3, 3))
 })
 
 ### adjusted_curve_test
 test_that("adjusted_curve_test, 2 treatments", {
   adj_test <- adjusted_curve_test(adjsurv, from=0, to=1)
   expect_equal(round(adj_test$observed_diff_integral, 4), -0.1451)
-  expect_equal(round(adj_test$integral_se, 4), 0.0521)
+  expect_equal(round(adj_test$integral_se, 4), 0.0585)
   expect_equal(round(adj_test$p_value, 4), 0)
-  expect_equal(adj_test$n_boot, 2)
+  expect_equal(adj_test$n_boot, 3)
 })
 
 ### adjusted_curve_test
 test_that("adjusted_curve_test, 2 treatments, linear", {
   adj_test <- adjusted_curve_test(adjsurv, from=0, to=1, interpolation="linear")
   expect_equal(round(adj_test$observed_diff_integral, 4), -0.1504)
-  expect_equal(round(adj_test$integral_se, 4), 0.0558)
+  expect_equal(round(adj_test$integral_se, 4), 0.0651)
   expect_equal(round(adj_test$p_value, 4), 0)
-  expect_equal(adj_test$n_boot, 2)
+  expect_equal(adj_test$n_boot, 3)
 })
 
 set.seed(4)

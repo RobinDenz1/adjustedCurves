@@ -2,7 +2,7 @@
 ## calculates the confidence interval of the ratio of two survival
 ## probabilities given the probabilities and their standard errors
 # NOTE: This is a simplified version of the usual equation because we
-#       can assume that a and b are independent(cov(a, b) = 0)
+#       can assume that a and b are independent (cov(a, b) = 0)
 fieller_ratio_ci <- function(a, b, a_se, b_se, conf_level=0.95) {
 
   ratio <- a/b

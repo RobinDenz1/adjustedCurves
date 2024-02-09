@@ -46,12 +46,12 @@ area_under_curve <- function(adj, from, to, conf_int, conf_level,
     # pool results
     if (!conf_int) {
       out <- mids_out %>%
-        dplyr::group_by(., group) %>%
+        dplyr::group_by(., to, group) %>%
         dplyr::summarise(auc=mean(auc))
       out <- as.data.frame(out)
     } else {
       out <- mids_out %>%
-        dplyr::group_by(., group) %>%
+        dplyr::group_by(., to, group) %>%
         dplyr::summarise(auc=mean(auc),
                          se=mean(se),
                          n_boot=min(n_boot))
@@ -60,7 +60,8 @@ area_under_curve <- function(adj, from, to, conf_int, conf_level,
                              se=out$se,
                              conf_level=conf_level,
                              conf_type="plain")
-      out <- data.frame(group=factor(out$group, levels=levs),
+      out <- data.frame(to=out$to,
+                        group=factor(out$group, levels=levs),
                         auc=out$auc,
                         se=out$se,
                         ci_lower=auc_ci$left,
@@ -102,7 +103,8 @@ area_under_curve <- function(adj, from, to, conf_int, conf_level,
       booted_aucs <- as.data.frame(dplyr::bind_rows(booted_aucs))
     }
 
-    auc_vec <- vector(mode="numeric", length=length(levs))
+    ## core of the function
+    out <- vector(mode="list", length=length(levs))
     for (i in seq_len(length(levs))) {
 
       if (mode=="surv") {
@@ -118,16 +120,16 @@ area_under_curve <- function(adj, from, to, conf_int, conf_level,
 
       auc <- exact_integral(data=surv_dat, from=from, to=to, est=mode,
                             interpolation=interpolation)
-
-      auc_vec[i] <- auc
+      out[[i]] <- data.frame(to=to, group=levs[i], auc=auc)
     }
-
-    out <- data.frame(group=factor(levs, levels=levs), auc=auc_vec)
+    out <- dplyr::bind_rows(out)
+    out$group <- factor(out$group, levels=levs)
+    out <- out[order(out$to, out$group),]
 
     if (conf_int & !is.null(adj[boot_str])) {
 
       out_boot <- booted_aucs %>%
-        dplyr::group_by(., group) %>%
+        dplyr::group_by(., to, group) %>%
         dplyr::summarise(se=stats::sd(auc, na.rm=TRUE),
                          n_boot=sum(!is.na(auc)))
       out_boot$group <- NULL
@@ -136,7 +138,8 @@ area_under_curve <- function(adj, from, to, conf_int, conf_level,
                              se=out_boot$se,
                              conf_level=conf_level,
                              conf_type="plain")
-      out <- data.frame(group=factor(out$group, levels=levs),
+      out <- data.frame(to=out$to,
+                        group=factor(out$group, levels=levs),
                         auc=out$auc,
                         se=out_boot$se,
                         ci_lower=auc_ci$left,
@@ -159,7 +162,7 @@ auc_difference <- function(data, group_1, group_2, conf_int, conf_level) {
   dat_1 <- data[data$group==group_1, ]
   dat_2 <- data[data$group==group_2, ]
 
-  out <- data.frame(diff=dat_1$auc - dat_2$auc)
+  out <- data.frame(to=dat_1$to, diff=dat_1$auc - dat_2$auc)
 
   if (conf_int) {
     out$se <- sqrt(dat_1$se^2 + dat_2$se^2)
@@ -189,13 +192,14 @@ auc_ratio <- function(data, group_1, group_2, conf_int, conf_level) {
                                  a_se=dat_1$se, b_se=dat_2$se,
                                  conf_level=conf_level)
 
-    out <- data.frame(ratio=ratio_ci$ratio,
+    out <- data.frame(to=dat_1$to,
+                      ratio=ratio_ci$ratio,
                       ci_lower=ratio_ci$ci_lower,
                       ci_upper=ratio_ci$ci_upper)
     out$p_value <- fieller_p_val(a=dat_1$auc, b=dat_2$auc,
                                  a_se=dat_1$se, b_se=dat_2$se)
   } else {
-    out <- data.frame(ratio=dat_1$auc / dat_2$auc)
+    out <- data.frame(to=dat_1$to, ratio=dat_1$auc / dat_2$auc)
   }
   return(out)
 }
@@ -226,9 +230,10 @@ adjusted_rmst <- function(adjsurv, to, from=0, conf_int=FALSE,
     out <- auc_ratio(data=out, group_1=group_1, group_2=group_2,
                      conf_int=conf_int, conf_level=conf_level)
   } else if (conf_int) {
-    colnames(out) <- c("group", "rmst", "se", "ci_lower", "ci_upper", "n_boot")
+    colnames(out) <- c("to", "group", "rmst", "se", "ci_lower", "ci_upper",
+                       "n_boot")
   } else {
-    colnames(out) <- c("group", "rmst")
+    colnames(out) <- c("to", "group", "rmst")
   }
 
   return(out)
@@ -259,7 +264,7 @@ adjusted_rmtl <- function(adj, to, from=0, conf_int=FALSE,
   if (inherits(adj, "adjustedsurv")) {
 
     full_area <- (to - from) * 1
-    out$auc <- full_area - out$auc
+    out$auc <- rep(full_area, each=length(unique(out$group))) - out$auc
 
     # recalculate bootstrap CI
     if (conf_int) {
@@ -279,9 +284,10 @@ adjusted_rmtl <- function(adj, to, from=0, conf_int=FALSE,
     out <- auc_ratio(data=out, group_1=group_1, group_2=group_2,
                      conf_int=conf_int, conf_level=conf_level)
   } else if (conf_int) {
-    colnames(out) <- c("group", "rmtl", "se", "ci_lower", "ci_upper", "n_boot")
+    colnames(out) <- c("to", "group", "rmtl", "se", "ci_lower",
+                       "ci_upper", "n_boot")
   } else {
-    colnames(out) <- c("group", "rmtl")
+    colnames(out) <- c("to", "group", "rmtl")
   }
 
   return(out)

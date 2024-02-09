@@ -64,25 +64,25 @@ adj <- adjustedsurv(data=sim_dat,
 test_that("survival, > 2 treatments, no from", {
   adj_test <- adjusted_curve_test(adj, to=1.3)
   expect_equal(round(adj_test$`0 vs. 1`$observed_diff_integral, 4), -0.1465)
-  expect_equal(round(adj_test$`0 vs. 1`$integral_se, 4), 0.1090)
-  expect_equal(round(adj_test$`0 vs. 1`$p_value, 4), 0.1250)
-  expect_equal(adj_test$`0 vs. 1`$n_boot, 8)
+  expect_equal(round(adj_test$`0 vs. 1`$integral_se, 4), 0.0982)
+  expect_equal(round(adj_test$`0 vs. 1`$p_value, 4), 0.1)
+  expect_equal(adj_test$`0 vs. 1`$n_boot, 10)
 })
 
 test_that("survival, > 2 treatments, no from, linear", {
   adj_test <- adjusted_curve_test(adj, to=1.3, interpolation="linear")
   expect_equal(round(adj_test$`0 vs. 1`$observed_diff_integral, 4), -0.1467)
-  expect_equal(round(adj_test$`0 vs. 1`$integral_se, 4), 0.1089)
-  expect_equal(round(adj_test$`0 vs. 1`$p_value, 4), 0.1250)
-  expect_equal(adj_test$`0 vs. 1`$n_boot, 8)
+  expect_equal(round(adj_test$`0 vs. 1`$integral_se, 4), 0.0981)
+  expect_equal(round(adj_test$`0 vs. 1`$p_value, 4), 0.1)
+  expect_equal(adj_test$`0 vs. 1`$n_boot, 10)
 })
 
 test_that("survival, > 2 treatments, with from", {
   adj_test <- adjusted_curve_test(adj, to=1.3, from=0.5)
   expect_equal(round(adj_test$`0 vs. 1`$observed_diff_integral, 4), -0.1126)
-  expect_equal(round(adj_test$`0 vs. 1`$integral_se, 4), 0.0864)
-  expect_equal(round(adj_test$`0 vs. 1`$p_value, 4), 0.1250)
-  expect_equal(adj_test$`0 vs. 1`$n_boot, 8)
+  expect_equal(round(adj_test$`0 vs. 1`$integral_se, 4), 0.0764)
+  expect_equal(round(adj_test$`0 vs. 1`$p_value, 4), 0.10)
+  expect_equal(adj_test$`0 vs. 1`$n_boot, 10)
 })
 
 test_that("survival, > 2 treatments, S3 method", {

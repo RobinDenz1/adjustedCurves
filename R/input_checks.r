@@ -563,14 +563,14 @@ check_inputs_adj_rmst <- function(adjsurv, from, to, conf_int, difference,
                                   ratio) {
 
   if ((!is.numeric(from) | !is.numeric(to)) &
-      length(from)==1 & length(to)==1) {
+      length(from)==1 & length(to)>=1) {
     stop("'from' and 'to' must be numbers (one for each argument).")
-  } else if (!(from >= 0 & to >= 0)) {
+  } else if (!(from >= 0 & all(to >= 0))) {
     stop("'from' and 'to' must be >= 0.")
   } else if (!inherits(adjsurv, "adjustedsurv")) {
     stop("'adjsurv' must be an 'adjustedsurv' object created using ",
          "the 'adjustedsurv()' function.")
-  } else if (from >= to) {
+  } else if (any(from >= to)) {
     stop("'from' must be smaller than 'to'.")
   } else if (!(is.logical(conf_int) & length(conf_int)==1)) {
     stop("'conf_int' must be either TRUE or FALSE.")
@@ -581,7 +581,7 @@ check_inputs_adj_rmst <- function(adjsurv, from, to, conf_int, difference,
             call.=FALSE)
   }
 
-  if (to > max(adjsurv$adjsurv$time, na.rm=TRUE)) {
+  if (any(to > max(adjsurv$adjsurv$time, na.rm=TRUE))) {
     stop("'to' cannot be greater than the latest observed time.")
   }
 
@@ -602,15 +602,15 @@ check_inputs_adj_rmst <- function(adjsurv, from, to, conf_int, difference,
 check_inputs_adj_rmtl <- function(adj, from, to, conf_int, difference, ratio) {
 
   if ((!is.numeric(from) | !is.numeric(to)) &
-      length(from)==1 & length(to)==1) {
+       length(from)==1 & length(to)>=1) {
     stop("'from' and 'to' must be numbers (one for each argument).")
-  } else if (!(from >= 0 & to >= 0)) {
+  } else if (!(from >= 0 & all(to >= 0))) {
     stop("'from' and 'to' must be >= 0.")
   } else if (!inherits(adj, c("adjustedsurv", "adjustedcif"))) {
     stop("'adj' must be an 'adjustedsurv' object created using",
          " the 'adjustedsurv()' function or an 'adjustedcif' object",
          " created using the 'adjustedcif()' function.")
-  } else if (from >= to) {
+  } else if (any(from >= to)) {
     stop("'from' must be smaller than 'to'.")
   } else if (!(is.logical(conf_int) & length(conf_int)==1)) {
     stop("'conf_int' must be either TRUE or FALSE.")
@@ -629,7 +629,7 @@ check_inputs_adj_rmtl <- function(adj, from, to, conf_int, difference, ratio) {
     n_t <- length(unique((adj$adjcif$time)))
   }
 
-  if (to > max_t) {
+  if (any(to > max_t)) {
     stop("'to' cannot be greater than the latest observed time.")
   }
 

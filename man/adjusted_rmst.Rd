@@ -18,10 +18,10 @@ adjusted_rmst(adjsurv, to, from=0, conf_int=FALSE,
 An \code{adjustedsurv} object created using the \code{adjustedsurv} function.
   }
   \item{from}{
-A number specifying the left side of the time interval of interest. See details. Usually this should be kept at 0 (default) to estimate the standard RMST. Should only be changed if there are good reasons for it.
+A single number specifying the left side of the time interval of interest. See details. Usually this should be kept at 0 (default) to estimate the standard RMST. Should only be changed if there are good reasons for it.
   }
   \item{to}{
-A number specifying the right side of the time interval of interest. See details.
+One or multiple numbers specifying the right side of the time interval of interest. If a vector of numbers is supplied, the adjusted RMST will be estimated for each value of \code{to}. See details.
   }
   \item{conf_int}{
 Whether bootstrap estimates should be used to estimate the standard errors and confidence intervals of the RMST estimates. Can only be used if \code{bootstrap=TRUE} was used in the \code{\link{adjustedsurv}} call.
@@ -74,11 +74,11 @@ Instead of relying on numerical integration, this function uses exact calculatio
 
 }
 \value{
-Returns a \code{data.frame} containing the columns \code{group} (groups in \code{variable}) and \code{rmst} (the estimated restricted mean survival time).
+Returns a \code{data.frame} containing the columns \code{to} (the supplied \code{to} values), \code{group} (groups in \code{variable}) and \code{rmst} (the estimated restricted mean survival time).
 
 If \code{conf_int=TRUE} was used it additionally contains the columns \code{se} (the standard error of the restricted mean survival time), \code{ci_lower} (lower limit of the confidence interval), \code{ci_upper} (upper limit of the confidence interval) and \code{n_boot} (the actual number of bootstrap estimates used).
 
-If \code{difference=TRUE} was used, it instead returns a \code{data.frame} that contains the columns \code{diff} (the difference between the RMST values), \code{se} (the standard error of the difference), \code{ci_lower} (lower limit of the confidence interval), \code{ci_upper} (upper limit of the confidence interval) and \code{p_value} (the p-value of the one-sample t-test). The same results are presented when using \code{ratio=TRUE}, except that the \code{diff} column is named \code{ratio} and that there is no \code{se} column.
+If \code{difference=TRUE} was used, it instead returns a \code{data.frame} that contains the columns \code{to}, \code{diff} (the difference between the RMST values), \code{se} (the standard error of the difference), \code{ci_lower} (lower limit of the confidence interval), \code{ci_upper} (upper limit of the confidence interval) and \code{p_value} (the p-value of the one-sample t-test). The same results are presented when using \code{ratio=TRUE}, except that the \code{diff} column is named \code{ratio} and that there is no \code{se} column.
 }
 \references{
 Sarah C. Conner, Lisa M. Sullivan, Emelia J. Benjamin, Michael P. LaValley, Sandro Galea, and Ludovic Trinquart (2019). "Adjusted Restricted Mean Survival Times in Observational Studies". In: Statistics in Medicine 38, pp. 3832-3860
@@ -119,21 +119,25 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         bootstrap=TRUE,
                         n_boot=10) # n_boot should be much higher in reality
 
-# calculate adjusted restricted mean survival times from 0 to 1
+# calculate adjusted restricted mean survival times from 0 to 0.5
 adjrmst <- adjusted_rmst(adjsurv, from=0, to=0.5, conf_int=FALSE)
 
-# calculate adjusted restricted mean survival times from 0 to 1,
+# calculate adjusted restricted mean survival times from 0 to 0.5
+# and from 0 to 0.7 simultaneously
+adjrmst <- adjusted_rmst(adjsurv, from=0, to=c(0.5, 0.7), conf_int=FALSE)
+
+# calculate adjusted restricted mean survival times from 0 to 0.5,
 # including standard errors and confidence intervals
 adjrmst <- adjusted_rmst(adjsurv, from=0, to=0.5, conf_int=TRUE,
                          conf_level=0.95)
 
 # calculate difference between adjusted restricted mean survival times
-# from 0 to 1 in the two groups
+# from 0 to 0.5 in the two groups
 adjrmst <- adjusted_rmst(adjsurv, from=0, to=0.5, conf_int=FALSE,
                          difference=TRUE)
 
 # calculate ratio between adjusted restricted mean survival times
-# from 0 to 1 in the two groups
+# from 0 to 0.5 in the two groups
 adjrmst <- adjusted_rmst(adjsurv, from=0, to=0.5, conf_int=FALSE,
                          ratio=TRUE)
 }

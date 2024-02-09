@@ -20,9 +20,19 @@ read_from_step_function <- function(x, data, est="surv", time="time") {
   # keep only data with non-missing est
   data <- data[which(!is.na(data[, est])), ]
 
-  # no extrapolation
-  if (x > max(data[, time])) {
-    return(NA)
+  # no extrapolation, unless end reached
+  max_time <- max(data[, time])
+  last_est <- data[, est][nrow(data)]
+
+  if (x > max_time) {
+    if (est=="surv" & last_est==0) {
+      out <- 0
+    } else if (est=="cif" & last_est==1) {
+      out <- 1
+    } else {
+      out <- NA
+    }
+    return(out)
   }
 
   # otherwise get value
@@ -51,13 +61,25 @@ read_from_linear_function <- function(x, data, est="surv", time="time") {
   time_vec <- data[, time]
   est_vec <- data[, est]
 
-  # add zero to beginning if necessary
+  # no extrapolation, unless end reached
+  max_time <- max(time_vec)
+  last_est <- est_vec[nrow(data)]
+
+  if (est=="surv" & last_est==0) {
+    yright <- 0
+  } else if (est=="cif" & last_est==1) {
+    yright <- 1
+  } else {
+    yright <- NA
+  }
+
+  # add 0 or 1 to beginning if necessary
   if (est=="surv") {
     val <- suppressWarnings(stats::approx(x=time_vec, y=est_vec, xout=x,
-                                          yleft=1)$y)
+                                          yleft=1, yright=yright)$y)
   } else if (est=="cif") {
     val <- suppressWarnings(stats::approx(x=time_vec, y=est_vec, xout=x,
-                                          yleft=0)$y)
+                                          yleft=0, yright=yright)$y)
   } else {
     val <- suppressWarnings(stats::approx(x=time_vec, y=est_vec, xout=x)$y)
   }
@@ -76,8 +98,9 @@ read_from_fun <- function(x, data, interpolation, est="surv", time="time") {
 }
 
 ## calculate integral of a linear function using the trapezoid rule
-trapezoid_integral <- function(x, y) {
+trapezoid_integral <- function(x, y, return_all=FALSE) {
   area <- 0
+  area_vec <- numeric(length=length(x))
   for (i in seq_len((length(x)-1))) {
     a <- x[i]
     b <- x[i+1]
@@ -87,20 +110,41 @@ trapezoid_integral <- function(x, y) {
     h <- b - a
 
     area <- area + ((h / 2) * (f_a + f_b))
+
+    if (return_all) {
+      area_vec[i] <- area
+    }
   }
-  return(area)
+
+  if (return_all) {
+    return(area_vec)
+  } else {
+    return(area)
+  }
 }
 
 ## calculate exact integral of a step function
-stepfun_integral <- function(x, y) {
+# NOTE: if y_(i+1) is missing, this will still count the square up to it
+#       since the equation does not refer to y_(i+1)
+stepfun_integral <- function(x, y, return_all=FALSE) {
   area <- 0
+  area_vec <- numeric(length=length(x))
   for (i in seq_len((length(x)-1))) {
     x1 <- x[i]
     x2 <- x[i+1]
     rect_area <- (x2 - x1) * y[i]
     area <- area + rect_area
+
+    if (return_all) {
+      area_vec[i] <- area
+    }
   }
-  return(area)
+
+  if (return_all) {
+    return(area_vec)
+  } else {
+    return(area)
+  }
 }
 
 ## calculate exact integral of either step or linear functions
@@ -109,36 +153,43 @@ stepfun_integral <- function(x, y) {
 # sorted by time with no duplicates in time
 exact_integral <- function(data, from, to, est, interpolation) {
 
-  # constrain function end
-  latest <- read_from_fun(to, data=data, est=est, interpolation=interpolation)
-  data <- data[data$time <= to, ]
+  # vector of time-points to consider
+  times <- sort(unique(c(from, to, data$time)))
+  times <- times[times <= max(to) & times >= from]
 
-  if (!to %in% data$time) {
-    temp <- data.frame(time=to)
-    temp[, est] <- latest
-    data <- rbind(data, temp)
-  }
+  # read from data
+  data_new <- data.frame(time=times)
+  data_new[, est] <- vapply(times, FUN=read_from_fun, FUN.VALUE=numeric(1),
+                            data=data, est=est, interpolation=interpolation)
+  data <- data_new
 
-  # constrain function beginning
-  earliest <- read_from_fun(from, data=data, est=est,
-                            interpolation=interpolation)
-  data <- data[data$time >= from, ]
-
-  if (!from %in% data$time) {
-    temp <- data.frame(time=from)
-    temp[, est] <- earliest
-    data <- rbind(temp, data)
-  }
-
-  if (anyNA(data)) {
+  if (anyNA(data) & length(to)==1) {
     return(NA)
   }
 
+  return_all <- length(to) > 1
+
   if (interpolation=="steps") {
-    area <- stepfun_integral(x=data$time, y=data[, est])
+    area <- stepfun_integral(x=data$time, y=data[, est],
+                             return_all=return_all)
+
+    # if there is an NA value, the one before should also be NA
+    if (length(to) > 1 & anyNA(data[, est])) {
+      area[which.min(!is.na(as.vector(data[, est])))-1] <- NA
+    }
+
   } else {
-    area <- trapezoid_integral(x=data$time, y=data[, est])
+    area <- trapezoid_integral(x=data$time, y=data[, est],
+                               return_all=return_all)
   }
+
+  # return only for "to" points
+  if (return_all) {
+    times <- times[seq(2, length(times))]
+    area <- area[seq(1, length(area)-1)]
+    area <- area[times %in% to]
+  }
+
   return(area)
 }
 

@@ -85,6 +85,7 @@ After having created an `adjustedsurv` object using the `adjustedsurv()` functio
 * `adjusted_curve_diff()`: Calculates differences in survival probabilities
 * `adjusted_curve_ratio()`: Calculates ratios of survival probabilities
 * `plot_curve_diff()`: Plots differences in survival probabilities
+* `plot_curve_ratio()`: Plots ratios of survival probabilities
 * `adjusted_surv_quantile()`: Calculates adjusted survival time quantiles
 * `adjusted_rmst()`: Calculates adjusted restricted mean survival times
 * `plot_rmst_curve()`: Plots adjusted restricted mean survival time curves
@@ -160,6 +161,7 @@ After having created an `adjustedcif` object using the `adjustedcif()` function,
 * `adjusted_curve_diff()`: Calculates differences in CIFs
 * `adjusted_curve_ratio()`: Calculates ratios of CIFs
 * `plot_curve_diff()`: Plots differences in CIFs over time
+* `plot_curve_ratio()`: Plots ratios of survival probabilities
 * `adjusted_rmtl()`: Calculates adjusted restricted mean time lost
 * `plot_rmtl_curve()`: Plots adjusted restricted mean time lost curves
 * `adjusted_curve_test()`: Performs a test of adjusted CIF equality in an interval

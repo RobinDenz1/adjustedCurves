@@ -32,3 +32,7 @@
 * Added the `ratio` argument to `adjusted_rmst()` and `adjusted_rmtl()` functions
 * Added the `adjusted_curve_ratio()` function
 * Added the `plot_curve_ratio()` function
+* Fixed: There was a small bug in internal functions used to calculate integrals, which lead to incorrect
+*		 whenever a survival curve reached 0 (or a CIF reached 1) and the "to" value was greater than the last
+*		 observed time point. This may have impacted standard error estimates in adjusted_rmst(), adjusted_rmtl()
+*		 and output of adjusted_curve_test(). Fixed now.

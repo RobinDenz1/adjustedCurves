@@ -49,32 +49,32 @@ test_that("rmtl surv, no boot but conf_int=TRUE", {
 test_that("rmtl surv, with boot", {
   adj_rmtl <- adjusted_rmtl(adj, to=1.1, conf_int=TRUE)
   expect_equal(round(adj_rmtl$rmtl, 4), c(0.5789, 0.4279))
-  expect_equal(round(adj_rmtl$se, 4), c(0.0511, 0.0587))
-  expect_equal(adj_rmtl$n_boot, c(7, 5))
+  expect_equal(round(adj_rmtl$se, 3), c(0.078, 0.068))
+  expect_equal(adj_rmtl$n_boot, c(10, 7))
 })
 
 test_that("rmtl surv, with boot, diff", {
   adj_rmtl <- adjusted_rmtl(adj, to=1.1, conf_int=TRUE, difference=TRUE)
   expect_equal(round(adj_rmtl$diff, 4), 0.151)
-  expect_equal(round(adj_rmtl$se, 4), 0.0778)
-  expect_equal(round(adj_rmtl$ci_lower, 4), -0.0015)
-  expect_equal(round(adj_rmtl$ci_upper, 4), 0.3035)
-  expect_equal(round(adj_rmtl$p_value, 4), 0.0523)
+  expect_equal(round(adj_rmtl$se, 4), 0.1036)
+  expect_equal(round(adj_rmtl$ci_lower, 4), -0.0521)
+  expect_equal(round(adj_rmtl$ci_upper, 4), 0.3541)
+  expect_equal(round(adj_rmtl$p_value, 4), 0.145)
 })
 
 test_that("rmtl surv, with boot, ratio", {
   adj_rmtl <- adjusted_rmtl(adj, to=1.1, conf_int=TRUE, ratio=TRUE)
   expect_equal(round(adj_rmtl$ratio, 4), 1.3529)
-  expect_equal(round(adj_rmtl$ci_lower, 4), 0.997)
-  expect_equal(round(adj_rmtl$ci_upper, 4), 1.9195)
-  expect_equal(round(adj_rmtl$p_value, 4), 0.0523)
+  expect_equal(round(adj_rmtl$ci_lower, 4), 0.8984)
+  expect_equal(round(adj_rmtl$ci_upper, 4), 2.0969)
+  expect_equal(round(adj_rmtl$p_value, 4), 0.145)
 })
 
 test_that("rmtl surv, with boot, linear", {
   adj_rmtl <- adjusted_rmtl(adj, to=1.1, conf_int=TRUE, interpolation="linear")
   expect_equal(round(adj_rmtl$rmtl, 4), c(0.5957, 0.4401))
-  expect_equal(round(adj_rmtl$se, 4), c(0.0501, 0.0586))
-  expect_equal(adj_rmtl$n_boot, c(7, 5))
+  expect_equal(round(adj_rmtl$se, 4), c(0.0774, 0.0683))
+  expect_equal(adj_rmtl$n_boot, c(10, 7))
 })
 
 test_that("rmtl surv, no boot, using from", {
@@ -85,8 +85,8 @@ test_that("rmtl surv, no boot, using from", {
 test_that("rmtl surv, with boot, using from", {
   adj_rmtl <- adjusted_rmtl(adj, to=1.1, from=0.3, conf_int=TRUE)
   expect_equal(round(adj_rmtl$rmtl, 4), c(0.5435, 0.4191))
-  expect_equal(round(adj_rmtl$se, 4), c(0.0420, 0.0525))
-  expect_equal(adj_rmtl$n_boot, c(7, 5))
+  expect_equal(round(adj_rmtl$se, 4), c(0.0663, 0.0580))
+  expect_equal(adj_rmtl$n_boot, c(10, 7))
 })
 
 ### using competing risks data

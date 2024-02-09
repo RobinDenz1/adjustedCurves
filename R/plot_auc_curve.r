@@ -13,20 +13,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-## used to call the function many times
-helper_auc_fun <- function(x, ..., estimate="rmst") {
-  if (estimate=="rmst") {
-    auc_dat <- adjusted_rmst(to=x, ...)
-  } else if (estimate=="rmtl") {
-    auc_dat <- adjusted_rmtl(to=x, ...)
-  }
-  auc_dat$time <- x
-  return(auc_dat)
-}
-
 ## generalized plot function for both rmst and rmtl, called internally
 plot_auc_curve <- function(adj, estimate, times=NULL, conf_int=FALSE,
-                           interpolation="steps", max_t=Inf,
+                           conf_level=0.95, interpolation="steps", max_t=Inf,
                            color=TRUE, linetype=FALSE, facet=FALSE,
                            size=1, alpha=1, xlab="Time", ylab,
                            title=NULL, subtitle=NULL, legend.title="Group",
@@ -54,29 +43,30 @@ plot_auc_curve <- function(adj, estimate, times=NULL, conf_int=FALSE,
 
   # calculate rmst curve
   if (estimate=="rmst") {
-    plotdata <- lapply(X=times, FUN=helper_auc_fun, estimate="rmst",
-                       adjsurv=adj, from=0, conf_int=conf_int,
-                       interpolation=interpolation)
+    plotdata <- adjusted_rmst(adjsurv=adj, from=0, to=times, conf_int=conf_int,
+                              conf_level=conf_level,
+                              interpolation=interpolation)
   } else if (estimate=="rmtl") {
-    plotdata <- lapply(X=times, FUN=helper_auc_fun, estimate="rmtl",
-                       adj=adj, from=0, conf_int=conf_int,
-                       interpolation=interpolation)
+    plotdata <- adjusted_rmtl(adj=adj, from=0, to=times, conf_int=conf_int,
+                              conf_level=conf_level,
+                              interpolation=interpolation)
   }
   plotdata <- dplyr::bind_rows(plotdata)
+  plotdata$se <- NULL
 
   # get one consistent name
   if (conf_int) {
-    colnames(plotdata) <- c("group", "auc", "se", "ci_lower", "ci_upper",
-                            "n_boot", "time")
+    colnames(plotdata) <- c("to", "group", "auc", "ci_lower", "ci_upper",
+                            "n_boot")
   } else {
-    colnames(plotdata) <- c("group", "auc", "time")
+    colnames(plotdata) <- c("to", "group", "auc")
   }
 
   # remove NAs
   plotdata <- plotdata[!is.na(plotdata$auc), ]
 
   # start plotting
-  mapping <- ggplot2::aes(x=.data$time, y=.data$auc, color=.data$group,
+  mapping <- ggplot2::aes(x=.data$to, y=.data$auc, color=.data$group,
                           linetype=.data$group, group=.data$group)
   if (!linetype) {
     mapping$linetype <- NULL
@@ -108,7 +98,7 @@ plot_auc_curve <- function(adj, estimate, times=NULL, conf_int=FALSE,
                            ymax=.data$ci_upper,
                            group=.data$group,
                            fill=.data$group,
-                           x=.data$time,
+                           x=.data$to,
                            y=.data$auc)
     if (!color) {
       ci_map$fill <- NULL
@@ -122,7 +112,7 @@ plot_auc_curve <- function(adj, estimate, times=NULL, conf_int=FALSE,
 ## plot adjusted restricted mean survival time curve
 #' @export
 plot_rmst_curve <- function(adjsurv, times=NULL, conf_int=FALSE,
-                            interpolation="steps", max_t=Inf,
+                            conf_level=0.95, interpolation="steps", max_t=Inf,
                             color=TRUE, linetype=FALSE, facet=FALSE,
                             size=1, alpha=1, xlab="Time", ylab="RMST",
                             title=NULL, subtitle=NULL, legend.title="Group",
@@ -143,13 +133,13 @@ plot_rmst_curve <- function(adjsurv, times=NULL, conf_int=FALSE,
                  subtitle=subtitle, legend.title=legend.title,
                  legend.position=legend.position, gg_theme=gg_theme,
                  custom_colors=custom_colors, custom_linetypes=custom_linetypes,
-                 conf_int_alpha=conf_int_alpha, ...)
+                 conf_int_alpha=conf_int_alpha, conf_level=conf_level, ...)
 }
 
 ## plot adjusted restricted mean time lost curve
 #' @export
 plot_rmtl_curve <- function(adj, times=NULL, conf_int=FALSE,
-                            interpolation="steps", max_t=Inf,
+                            conf_level=0.95, interpolation="steps", max_t=Inf,
                             color=TRUE, linetype=FALSE, facet=FALSE,
                             size=1, alpha=1, xlab="Time", ylab="RMTL",
                             title=NULL, subtitle=NULL, legend.title="Group",
@@ -171,5 +161,5 @@ plot_rmtl_curve <- function(adj, times=NULL, conf_int=FALSE,
                  subtitle=subtitle, legend.title=legend.title,
                  legend.position=legend.position, gg_theme=gg_theme,
                  custom_colors=custom_colors, custom_linetypes=custom_linetypes,
-                 conf_int_alpha=conf_int_alpha, ...)
+                 conf_int_alpha=conf_int_alpha, conf_level=conf_level, ...)
 }
