@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   introduction: introduction.html
   method_overview: method_overview.html
-last_built: 2024-02-07T12:08Z
+last_built: 2024-02-09T11:54Z
 urls:
   reference: https://robindenz1.github.io/adjustedCurves/reference
   article: https://robindenz1.github.io/adjustedCurves/articles

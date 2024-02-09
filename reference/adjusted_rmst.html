@@ -70,10 +70,10 @@
 <dd><p>An <code>adjustedsurv</code> object created using the <code>adjustedsurv</code> function.</p></dd>
 
   <dt>from</dt>
-<dd><p>A number specifying the left side of the time interval of interest. See details. Usually this should be kept at 0 (default) to estimate the standard RMST. Should only be changed if there are good reasons for it.</p></dd>
+<dd><p>A single number specifying the left side of the time interval of interest. See details. Usually this should be kept at 0 (default) to estimate the standard RMST. Should only be changed if there are good reasons for it.</p></dd>
 
   <dt>to</dt>
-<dd><p>A number specifying the right side of the time interval of interest. See details.</p></dd>
+<dd><p>One or multiple numbers specifying the right side of the time interval of interest. If a vector of numbers is supplied, the adjusted RMST will be estimated for each value of <code>to</code>. See details.</p></dd>
 
   <dt>conf_int</dt>
 <dd><p>Whether bootstrap estimates should be used to estimate the standard errors and confidence intervals of the RMST estimates. Can only be used if <code>bootstrap=TRUE</code> was used in the <code><a href="adjustedsurv.html">adjustedsurv</a></code> call.</p></dd>
@@ -117,13 +117,13 @@
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>Returns a <code>data.frame</code> containing the columns <code>group</code> (groups in <code>variable</code>) and <code>rmst</code> (the estimated restricted mean survival time).</p>
+<p>Returns a <code>data.frame</code> containing the columns <code>to</code> (the supplied <code>to</code> values), <code>group</code> (groups in <code>variable</code>) and <code>rmst</code> (the estimated restricted mean survival time).</p>
 
 
 <p>If <code>conf_int=TRUE</code> was used it additionally contains the columns <code>se</code> (the standard error of the restricted mean survival time), <code>ci_lower</code> (lower limit of the confidence interval), <code>ci_upper</code> (upper limit of the confidence interval) and <code>n_boot</code> (the actual number of bootstrap estimates used).</p>
 
 
-<p>If <code>difference=TRUE</code> was used, it instead returns a <code>data.frame</code> that contains the columns <code>diff</code> (the difference between the RMST values), <code>se</code> (the standard error of the difference), <code>ci_lower</code> (lower limit of the confidence interval), <code>ci_upper</code> (upper limit of the confidence interval) and <code>p_value</code> (the p-value of the one-sample t-test). The same results are presented when using <code>ratio=TRUE</code>, except that the <code>diff</code> column is named <code>ratio</code> and that there is no <code>se</code> column.</p>
+<p>If <code>difference=TRUE</code> was used, it instead returns a <code>data.frame</code> that contains the columns <code>to</code>, <code>diff</code> (the difference between the RMST values), <code>se</code> (the standard error of the difference), <code>ci_lower</code> (lower limit of the confidence interval), <code>ci_upper</code> (upper limit of the confidence interval) and <code>p_value</code> (the p-value of the one-sample t-test). The same results are presented when using <code>ratio=TRUE</code>, except that the <code>diff</code> column is named <code>ratio</code> and that there is no <code>se</code> column.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -166,21 +166,25 @@
 <span class="r-in"><span>                        bootstrap<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>                        n_boot<span class="op">=</span><span class="fl">10</span><span class="op">)</span> <span class="co"># n_boot should be much higher in reality</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># calculate adjusted restricted mean survival times from 0 to 1</span></span></span>
+<span class="r-in"><span><span class="co"># calculate adjusted restricted mean survival times from 0 to 0.5</span></span></span>
 <span class="r-in"><span><span class="va">adjrmst</span> <span class="op">&lt;-</span> <span class="fu">adjusted_rmst</span><span class="op">(</span><span class="va">adjsurv</span>, from<span class="op">=</span><span class="fl">0</span>, to<span class="op">=</span><span class="fl">0.5</span>, conf_int<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># calculate adjusted restricted mean survival times from 0 to 1,</span></span></span>
+<span class="r-in"><span><span class="co"># calculate adjusted restricted mean survival times from 0 to 0.5</span></span></span>
+<span class="r-in"><span><span class="co"># and from 0 to 0.7 simultaneously</span></span></span>
+<span class="r-in"><span><span class="va">adjrmst</span> <span class="op">&lt;-</span> <span class="fu">adjusted_rmst</span><span class="op">(</span><span class="va">adjsurv</span>, from<span class="op">=</span><span class="fl">0</span>, to<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.7</span><span class="op">)</span>, conf_int<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># calculate adjusted restricted mean survival times from 0 to 0.5,</span></span></span>
 <span class="r-in"><span><span class="co"># including standard errors and confidence intervals</span></span></span>
 <span class="r-in"><span><span class="va">adjrmst</span> <span class="op">&lt;-</span> <span class="fu">adjusted_rmst</span><span class="op">(</span><span class="va">adjsurv</span>, from<span class="op">=</span><span class="fl">0</span>, to<span class="op">=</span><span class="fl">0.5</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>                         conf_level<span class="op">=</span><span class="fl">0.95</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># calculate difference between adjusted restricted mean survival times</span></span></span>
-<span class="r-in"><span><span class="co"># from 0 to 1 in the two groups</span></span></span>
+<span class="r-in"><span><span class="co"># from 0 to 0.5 in the two groups</span></span></span>
 <span class="r-in"><span><span class="va">adjrmst</span> <span class="op">&lt;-</span> <span class="fu">adjusted_rmst</span><span class="op">(</span><span class="va">adjsurv</span>, from<span class="op">=</span><span class="fl">0</span>, to<span class="op">=</span><span class="fl">0.5</span>, conf_int<span class="op">=</span><span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>                         difference<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># calculate ratio between adjusted restricted mean survival times</span></span></span>
-<span class="r-in"><span><span class="co"># from 0 to 1 in the two groups</span></span></span>
+<span class="r-in"><span><span class="co"># from 0 to 0.5 in the two groups</span></span></span>
 <span class="r-in"><span><span class="va">adjrmst</span> <span class="op">&lt;-</span> <span class="fu">adjusted_rmst</span><span class="op">(</span><span class="va">adjsurv</span>, from<span class="op">=</span><span class="fl">0</span>, to<span class="op">=</span><span class="fl">0.5</span>, conf_int<span class="op">=</span><span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>                         ratio<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 </code></pre></div>

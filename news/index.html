@@ -86,6 +86,10 @@
 <li>Added the <code>ratio</code> argument to <code><a href="../reference/adjusted_rmst.html">adjusted_rmst()</a></code> and <code><a href="../reference/adjusted_rmtl.html">adjusted_rmtl()</a></code> functions</li>
 <li>Added the <code><a href="../reference/adjusted_curve_diff.html">adjusted_curve_ratio()</a></code> function</li>
 <li>Added the <code><a href="../reference/plot_curve_diff.html">plot_curve_ratio()</a></code> function</li>
+<li>Fixed: There was a small bug in internal functions used to calculate integrals, which lead to incorrect</li>
+<li><div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>   whenever a survival curve reached <span class="dv">0</span> (or a CIF reached <span class="dv">1</span>) and the <span class="st">"to"</span> value was greater than the last</span></code></pre></div></li>
+<li><div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>   observed time point. This may have impacted standard error estimates <span class="cf">in</span> <span class="fu">adjusted_rmst</span>(), <span class="fu">adjusted_rmtl</span>()</span></code></pre></div></li>
+<li><div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>   and output of <span class="fu">adjusted_curve_test</span>(). Fixed now.</span></code></pre></div></li>
 </ul></div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>

@@ -512,10 +512,10 @@ do this by simply calling the <code>adjusted_rmst</code> function on a
 previously created <code>adjustedsurv</code> object:</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/adjusted_rmst.html">adjusted_rmst</a></span><span class="op">(</span><span class="va">adjsurv</span>, to<span class="op">=</span><span class="fl">0.4</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##   group      rmst</span></span>
-<span><span class="co">## 1     0 0.3485056</span></span>
-<span><span class="co">## 2     1 0.3415740</span></span>
-<span><span class="co">## 3     2 0.3547187</span></span></code></pre>
+<pre><code><span><span class="co">##    to group      rmst</span></span>
+<span><span class="co">## 1 0.4     0 0.3485056</span></span>
+<span><span class="co">## 2 0.4     1 0.3415740</span></span>
+<span><span class="co">## 3 0.4     2 0.3547187</span></span></code></pre>
 <p>The function returns adjusted RMST for every level of the
 <code>"group"</code> variable. When bootstrapping was performed when
 calling the <code>adjustedsurv</code> function, standard errors and
@@ -523,17 +523,17 @@ confidence intervals can be also calculated using this function as well
 by setting the <code>conf_int</code> argument to <code>TRUE</code>:</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/adjusted_rmst.html">adjusted_rmst</a></span><span class="op">(</span><span class="va">adjsurv</span>, to<span class="op">=</span><span class="fl">0.4</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##   group      rmst          se  ci_lower  ci_upper n_boot</span></span>
-<span><span class="co">## 1     0 0.3485056 0.009156084 0.3305600 0.3664512     50</span></span>
-<span><span class="co">## 2     1 0.3415740 0.019812278 0.3027427 0.3804054     50</span></span>
-<span><span class="co">## 3     2 0.3547187 0.009117535 0.3368487 0.3725888     50</span></span></code></pre>
+<pre><code><span><span class="co">##    to group      rmst          se  ci_lower  ci_upper n_boot</span></span>
+<span><span class="co">## 1 0.4     0 0.3485056 0.009156084 0.3305600 0.3664512     50</span></span>
+<span><span class="co">## 2 0.4     1 0.3415740 0.019812278 0.3027427 0.3804054     50</span></span>
+<span><span class="co">## 3 0.4     2 0.3547187 0.009117535 0.3368487 0.3725888     50</span></span></code></pre>
 <p>Similar to the <code>adjusted_curve_diff</code> function, we can
 perform a test of the difference between two RMST values:</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/adjusted_rmst.html">adjusted_rmst</a></span><span class="op">(</span><span class="va">adjsurv</span>, to<span class="op">=</span><span class="fl">0.4</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>, difference<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>              group_1<span class="op">=</span><span class="st">"0"</span>, group_2<span class="op">=</span><span class="st">"1"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##          diff         se    ci_lower   ci_upper   p_value</span></span>
-<span><span class="co">## 1 0.006931522 0.02182568 -0.03584602 0.04970907 0.7507993</span></span></code></pre>
+<pre><code><span><span class="co">##    to        diff         se    ci_lower   ci_upper   p_value</span></span>
+<span><span class="co">## 1 0.4 0.006931522 0.02182568 -0.03584602 0.04970907 0.7507993</span></span></code></pre>
 <p>There seems to be no statistically significant difference between the
 two RMSTs. However, due to the very low number of bootstrap replications
 used here these results should not be trusted. In practice one should
@@ -556,9 +556,9 @@ confounder adjusted CIF. It can be calculated in the same way as the
 RMST, but using the <code>adjusted_rmtl</code> function:</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/adjusted_rmtl.html">adjusted_rmtl</a></span><span class="op">(</span><span class="va">adjcif</span>, to<span class="op">=</span><span class="fl">0.4</span>, conf_int<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##   group       rmtl</span></span>
-<span><span class="co">## 1     0 0.05621035</span></span>
-<span><span class="co">## 2     1 0.04968113</span></span></code></pre>
+<pre><code><span><span class="co">##    to group       rmtl</span></span>
+<span><span class="co">## 1 0.4     0 0.05621035</span></span>
+<span><span class="co">## 2 0.4     1 0.04968113</span></span></code></pre>
 <p>In contrast to the <code>adjusted_rmst</code> function, this works
 for both <code>adjustedsurv</code> and <code>adjustedcif</code> objects
 because the survival curve can easily be transformed to a CIF. It also
