@@ -20,19 +20,29 @@
 * Fixed small issues in unit tests caused by changes in the `WeightIt` package
 * Made some small documentation updates
 
-# adjustedCurves 0.10.2
+# adjustedCurves 0.11.0
 
-* Changed examples for the usage of `WeightIt` as suggested by Noah Greifer
+Enhancements
+
+* Added arguments `iso_reg` and `force_bounds` to `adjustedsurv()` and `adjustedcif()` functions to allow applying correction techniques outside plotting as well
+* Added better support for multiple imputation when `variable`, `ev_time` or `event` contain missings, includes the new `mi_extrapolation` argument in `adjustedsurv()` and `adjustedcif()`
+* Added the `ratio` argument to `adjusted_rmst()` and `adjusted_rmtl()` functions
+* Added support for multiple `to` values in `adjusted_rmst()` and `adjusted_rmtl()`, which speeds up `plot_rmst_curve()` and `plot_rmtl_curve()` considerably
+
+Bug Fixes
+
+* There was a small bug in internal functions used to calculate integrals, which lead to slightly incorrect results whenever a survival curve reached 0 (or a CIF reached 1) and the "to" value was greater than the last observed time point. This may have impacted standard error estimates in `adjusted_rmst()`, `adjusted_rmtl()` and output of `adjusted_curve_test()` and functions that rely on those functions. This is fixed now, but may lead to slightly different estimates than in previous versions.
+
+New Features
+
 * Added the new methods `surv_tmle` and `cif_tmle`, based on the `concrete` package
 * Added new instrumental variable based method `surv_iv_2SRIF`
-* Added arguments `iso_reg` and `force_bounds` to `adjustedsurv` and `adjustedcif` functions
 * Added new methods `surv_prox_iptw`, `surv_prox_aiptw` based on code from Andrew Ying
-* Added a new vignette with an overview of implemented features of each method
-* Added better support for multiple imputation when `variable`, `ev_time` or `event` contain missings
-* Added the `ratio` argument to `adjusted_rmst()` and `adjusted_rmtl()` functions
 * Added the `adjusted_curve_ratio()` function
 * Added the `plot_curve_ratio()` function
-* Fixed: There was a small bug in internal functions used to calculate integrals, which lead to incorrect
-*		 whenever a survival curve reached 0 (or a CIF reached 1) and the "to" value was greater than the last
-*		 observed time point. This may have impacted standard error estimates in adjusted_rmst(), adjusted_rmtl()
-*		 and output of adjusted_curve_test(). Fixed now.
+
+Documentation
+
+* Changed examples for the usage of `WeightIt` as suggested by Noah Greifer
+* Added a new vignette with an overview of implemented features of each method
+* Small changes to formulations

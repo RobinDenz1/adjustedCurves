@@ -2,13 +2,13 @@
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
   "identifier": "adjustedCurves",
-  "description": "Estimate and plot confounder-adjusted survival curves using either 'Direct Adjustment', 'Direct Adjustment with Pseudo-Values', various forms of 'Inverse Probability of Treatment Weighting', two forms of 'Augmented Inverse Probability of Treatment Weighting' and 'Empirical Likelihood Estimation'. Also includes a significance test for the difference between two adjusted survival curves and the calculation of adjusted restricted mean survival times. Additionally enables the user to estimate and plot cause-specific confounder-adjusted cumulative incidence functions in the competing risks setting using the same methods (with some exceptions). For details, see Denz et. al (2023) <doi:10.1002/sim.9681>.",
+  "description": "Estimate and plot confounder-adjusted survival curves using either 'Direct Adjustment', 'Direct Adjustment with Pseudo-Values', various forms of 'Inverse Probability of Treatment Weighting', two forms of 'Augmented Inverse Probability of Treatment Weighting', 'Empirical Likelihood Estimation' or 'Targeted Maximum Likelihood Estimation'. Also includes a significance test for the difference between two adjusted survival curves and the calculation of adjusted restricted mean survival times. Additionally enables the user to estimate and plot cause-specific confounder-adjusted cumulative incidence functions in the competing risks setting using the same methods (with some exceptions). For details, see Denz et. al (2023) <doi:10.1002/sim.9681>.",
   "name": "adjustedCurves: Confounder-Adjusted Survival Curves and Cumulative Incidence\n    Functions",
   "relatedLink": "https://robindenz1.github.io/adjustedCurves/",
   "codeRepository": "https://github.com/RobinDenz1/adjustedCurves",
   "issueTracker": "https://github.com/RobinDenz1/adjustedCurves/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "0.10.1",
+  "version": "0.11.0",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -304,6 +304,43 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=covr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "data.table",
+      "name": "data.table",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=data.table"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "concrete",
+      "name": "concrete",
+      "version": ">= 1.0.5",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=concrete"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "numDeriv",
+      "name": "numDeriv",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=numDeriv"
     }
   ],
   "softwareRequirements": {
@@ -382,7 +419,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "2448.647KB",
+  "fileSize": "2694.877KB",
   "citation": [
     {
       "@type": "ScholarlyArticle",
@@ -406,12 +443,14 @@
       ],
       "name": "A comparison of different methods to adjust survival curves for confounders",
       "url": "https://doi.org/10.1002/sim.9681",
-      "description": "R package version 0.10.1",
+      "pagination": "1461-1479",
       "isPartOf": {
         "@type": "PublicationIssue",
+        "issueNumber": "10",
         "datePublished": "2023",
         "isPartOf": {
           "@type": ["PublicationVolume", "Periodical"],
+          "volumeNumber": "42",
           "name": "Statistics in Medicine"
         }
       }
