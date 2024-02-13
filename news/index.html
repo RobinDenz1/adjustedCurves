@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">adjustedCurves</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,22 +74,26 @@
 <li>Made some small documentation updates</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.10.2" id="adjustedcurves-0102">adjustedCurves 0.10.2<a class="anchor" aria-label="anchor" href="#adjustedcurves-0102"></a></h2>
-<ul><li>Changed examples for the usage of <code>WeightIt</code> as suggested by Noah Greifer</li>
-<li>Added the new methods <code>surv_tmle</code> and <code>cif_tmle</code>, based on the <code>concrete</code> package</li>
+<h2 class="pkg-version" data-toc-text="0.11.0" id="adjustedcurves-0110">adjustedCurves 0.11.0<a class="anchor" aria-label="anchor" href="#adjustedcurves-0110"></a></h2>
+<p>Enhancements</p>
+<ul><li>Added arguments <code>iso_reg</code> and <code>force_bounds</code> to <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code> and <code><a href="../reference/adjustedcif.html">adjustedcif()</a></code> functions to allow applying correction techniques outside plotting as well</li>
+<li>Added better support for multiple imputation when <code>variable</code>, <code>ev_time</code> or <code>event</code> contain missings, includes the new <code>mi_extrapolation</code> argument in <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code> and <code><a href="../reference/adjustedcif.html">adjustedcif()</a></code>
+</li>
+<li>Added the <code>ratio</code> argument to <code><a href="../reference/adjusted_rmst.html">adjusted_rmst()</a></code> and <code><a href="../reference/adjusted_rmtl.html">adjusted_rmtl()</a></code> functions</li>
+<li>Added support for multiple <code>to</code> values in <code><a href="../reference/adjusted_rmst.html">adjusted_rmst()</a></code> and <code><a href="../reference/adjusted_rmtl.html">adjusted_rmtl()</a></code>, which speeds up <code><a href="../reference/plot_rmst_curve.html">plot_rmst_curve()</a></code> and <code><a href="../reference/plot_rmtl_curve.html">plot_rmtl_curve()</a></code> considerably</li>
+</ul><p>Bug Fixes</p>
+<ul><li>There was a small bug in internal functions used to calculate integrals, which lead to slightly incorrect results whenever a survival curve reached 0 (or a CIF reached 1) and the “to” value was greater than the last observed time point. This may have impacted standard error estimates in <code><a href="../reference/adjusted_rmst.html">adjusted_rmst()</a></code>, <code><a href="../reference/adjusted_rmtl.html">adjusted_rmtl()</a></code> and output of <code><a href="../reference/adjusted_curve_test.html">adjusted_curve_test()</a></code> and functions that rely on those functions. This is fixed now, but may lead to slightly different estimates than in previous versions.</li>
+</ul><p>New Features</p>
+<ul><li>Added the new methods <code>surv_tmle</code> and <code>cif_tmle</code>, based on the <code>concrete</code> package</li>
 <li>Added new instrumental variable based method <code>surv_iv_2SRIF</code>
 </li>
-<li>Added arguments <code>iso_reg</code> and <code>force_bounds</code> to <code>adjustedsurv</code> and <code>adjustedcif</code> functions</li>
 <li>Added new methods <code>surv_prox_iptw</code>, <code>surv_prox_aiptw</code> based on code from Andrew Ying</li>
-<li>Added a new vignette with an overview of implemented features of each method</li>
-<li>Added better support for multiple imputation when <code>variable</code>, <code>ev_time</code> or <code>event</code> contain missings</li>
-<li>Added the <code>ratio</code> argument to <code><a href="../reference/adjusted_rmst.html">adjusted_rmst()</a></code> and <code><a href="../reference/adjusted_rmtl.html">adjusted_rmtl()</a></code> functions</li>
 <li>Added the <code><a href="../reference/adjusted_curve_diff.html">adjusted_curve_ratio()</a></code> function</li>
 <li>Added the <code><a href="../reference/plot_curve_diff.html">plot_curve_ratio()</a></code> function</li>
-<li>Fixed: There was a small bug in internal functions used to calculate integrals, which lead to incorrect</li>
-<li><div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>   whenever a survival curve reached <span class="dv">0</span> (or a CIF reached <span class="dv">1</span>) and the <span class="st">"to"</span> value was greater than the last</span></code></pre></div></li>
-<li><div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>   observed time point. This may have impacted standard error estimates <span class="cf">in</span> <span class="fu">adjusted_rmst</span>(), <span class="fu">adjusted_rmtl</span>()</span></code></pre></div></li>
-<li><div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>   and output of <span class="fu">adjusted_curve_test</span>(). Fixed now.</span></code></pre></div></li>
+</ul><p>Documentation</p>
+<ul><li>Changed examples for the usage of <code>WeightIt</code> as suggested by Noah Greifer</li>
+<li>Added a new vignette with an overview of implemented features of each method</li>
+<li>Small changes to formulations</li>
 </ul></div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
