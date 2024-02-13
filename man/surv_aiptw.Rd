@@ -49,7 +49,7 @@ This function is basically just a wrapper around the \code{\link[riskRegression]
 Adds the following additional objects to the output of the \code{adjustedsurv} function:
 
 \itemize{
-\item{\code{ate_object}: }{The object returned by the \code{ate} function.}
+\item \code{ate_object}: The object returned by the \code{ate} function.
 }
 }
 \references{

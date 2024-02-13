@@ -52,9 +52,9 @@ Ying et al. (2022) proposed two methods to utilize this kind of structure for th
 Adds the following additional objects to the output of the \code{adjustedsurv} function:
 
 \itemize{
-\item{\code{noncensor_cumhaz}: }{The estimated cumulative hazard function.}
-\item{\code{noncensor_cumhaz_IF}: }{The influence function based on the estimated cumulative hazard function.}
-\item{\code{q_bridge}: }{A \code{list} containing results from fitting the q-confounding bridge function.}
+\item \code{noncensor_cumhaz}: The estimated cumulative hazard function.
+\item \code{noncensor_cumhaz_IF}: The influence function based on the estimated cumulative hazard function.
+\item \code{q_bridge}: A \code{list} containing results from fitting the q-confounding bridge function.
 }
 }
 \references{
@@ -136,7 +136,7 @@ data_gen <- function(N, para_set, a = NULL) {
 #### Simple example ####
 
 set.seed(4356)
-data <- data_gen(N=500, para_set=para_set)
+data <- data_gen(N=300, para_set=para_set)
 data$A <- factor(data$A)
 
 adj <- adjustedsurv(data=data,

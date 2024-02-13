@@ -48,8 +48,8 @@ Asymptotic variances are calculated using the equations given in Xie and Liu (20
 Adds the following additional objects to the output of the \code{adjustedsurv} function:
 
 \itemize{
-\item{\code{weights}: }{The final weights used in the analysis.}
-\item{\code{n_at_risk}: }{A \code{data.frame} containing the weighted number at risk and weighted number of events used in the calculations at each point in time for both groups.}
+\item \code{weights}: The final weights used in the analysis.
+\item \code{n_at_risk}: A \code{data.frame} containing the weighted number at risk and weighted number of events used in the calculations at each point in time for both groups.
 }
 }
 \references{

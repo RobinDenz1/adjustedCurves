@@ -43,8 +43,8 @@ Simulation results showed that this specific implementation of this method is th
 Adds the following additional objects to the output of the \code{adjustedcif} function:
 
 \itemize{
-\item{\code{match_object}: }{The object creates using the \code{Match} function.}
-\item{\code{cuminc_object}: }{The \code{cuminc} object fit on the matched data.}
+\item \code{match_object}: The object creates using the \code{Match} function.
+\item \code{cuminc_object}: The \code{cuminc} object fit on the matched data.
 }
 }
 \references{

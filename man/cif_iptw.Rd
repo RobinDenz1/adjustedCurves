@@ -46,7 +46,7 @@ Internally, this function simply calls the \code{\link[riskRegression]{ate}} fun
 Adds the following additional objects to the output of the \code{adjustedcif} function:
 
 \itemize{
-\item{\code{ate_object}: }{The object returned by the \code{ate} function.}
+\item \code{ate_object}: The object returned by the \code{ate} function.
 }
 }
 \references{

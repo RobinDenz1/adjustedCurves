@@ -45,8 +45,8 @@ Simulation studies have shown that this particular method as implemented here is
 Adds the following additional objects to the output of the \code{adjustedsurv} function:
 
 \itemize{
-\item{\code{match_object}: }{The object creates using the \code{Match} function.}
-\item{\code{survfit_object}: }{The \code{survfit} object fit on the matched data.}
+\item \code{match_object}: The object creates using the \code{Match} function.
+\item \code{survfit_object}: The \code{survfit} object fit on the matched data.
 }
 }
 \references{

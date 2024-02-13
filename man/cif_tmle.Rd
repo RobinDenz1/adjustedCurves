@@ -74,7 +74,7 @@ A previous version of this package (<= 0.9.1) included a function with the same 
 Adds the following additional objects to the output of the \code{adjustedcif} function:
 
 \itemize{
-\item{\code{concrete_object}: }{The object returned by the \code{doConcrete} function.}
+\item \code{concrete_object}: The object returned by the \code{doConcrete} function.
 }
 }
 \references{

@@ -52,10 +52,10 @@ Ying et al. (2022) proposed two methods to utilize this kind of structure for th
 Adds the following additional objects to the output of the \code{adjustedsurv} function:
 
 \itemize{
-\item{\code{noncensor_cumhaz}: }{The estimated cumulative hazard function.}
-\item{\code{noncensor_cumhaz_IF}: }{The influence function based on the estimated cumulative hazard function.}
-\item{\code{q_bridge}: }{A \code{list} containing results from fitting the q-confounding bridge function.}
-\item{\code{h_bridge}: }{A \code{list} containing results from fitting the h-confounding bridge function.}
+\item \code{noncensor_cumhaz}: The estimated cumulative hazard function.
+\item \code{noncensor_cumhaz_IF}: The influence function based on the estimated cumulative hazard function.
+\item \code{q_bridge}: A \code{list} containing results from fitting the q-confounding bridge function.
+\item \code{h_bridge}: A \code{list} containing results from fitting the h-confounding bridge function.
 }
 }
 \references{

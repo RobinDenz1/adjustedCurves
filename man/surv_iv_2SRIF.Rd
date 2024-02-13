@@ -48,8 +48,8 @@ Note that this method does not target the average treatment effect (ATE), but in
 If \code{return_models} is set to \code{TRUE}, it adds the following objects to the \code{adjustedsurv} function:
 
 \itemize{
-\item{\code{lm_mod}: }{The linear regression model used to obtain the residuals in the first stage of the estimation process.}
-\item{\code{cox_mod}: }{The Cox model used in the second stage of the estimation process.}
+\item \code{lm_mod}: The linear regression model used to obtain the residuals in the first stage of the estimation process.
+\item \code{cox_mod}: The Cox model used in the second stage of the estimation process.
 }
 
 }

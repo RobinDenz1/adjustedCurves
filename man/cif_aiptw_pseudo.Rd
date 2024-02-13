@@ -46,8 +46,8 @@ When estimating the \code{geese} model the \code{ev_time} variable is used as a 
 Adds the following additional objects to the output of the \code{adjustedcif} function:
 
 \itemize{
-\item{\code{pseudo_values}: }{The matrix of estimated pseudo-values.}
-\item{\code{geese_model}: }{The geese model used to make the predictions.}
+\item \code{pseudo_values}: The matrix of estimated pseudo-values.
+\item \code{geese_model}: The geese model used to make the predictions.
 }
 }
 \references{

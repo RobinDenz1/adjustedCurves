@@ -36,7 +36,7 @@ This function is just a convenient wrapper around the \code{\link[cmprsk]{cuminc
 Adds the following additional objects to the output of the \code{adjustedsurv} function:
 
 \itemize{
-\item{\code{cuminc_object}: }{The object returned by the \code{cuminc} function.}
+\item \code{cuminc_object}: The object returned by the \code{cuminc} function.
 }
 }
 \references{

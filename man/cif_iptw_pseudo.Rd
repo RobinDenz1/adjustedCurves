@@ -51,8 +51,8 @@ The standard error of this estimator can be approximated by calculation a weight
 Adds the following additional objects to the output of the \code{adjustedcif} function:
 
 \itemize{
-\item{\code{pseudo_values}: }{The matrix of estimated pseudo-values.}
-\item{\code{weights}: }{The final weights used in the analysis.}
+\item \code{pseudo_values}: The matrix of estimated pseudo-values.
+\item \code{weights}: The final weights used in the analysis.
 }
 
 }

@@ -36,7 +36,7 @@ The type of confidence interval that should be calculated. Has to be a character
 Adds the following additional objects to the output of the \code{adjustedsurv} function:
 
 \itemize{
-\item{\code{survfit_object}: }{The \code{survfit} object used to calculate the Kaplan-Meier curves.}
+\item \code{survfit_object}: The \code{survfit} object used to calculate the Kaplan-Meier curves.
 }
 }
 \references{

@@ -60,8 +60,8 @@ Additionally, covariate-dependent censoring can be accounted for by using invers
 Adds the following additional objects to the output of the \code{adjustedsurv} function:
 
 \itemize{
-\item{\code{pseudo_values}: }{The matrix of estimated pseudo-values.}
-\item{\code{weights}: }{The final weights used in the analysis.}
+\item \code{pseudo_values}: The matrix of estimated pseudo-values.
+\item \code{weights}: The final weights used in the analysis.
 }
 }
 \references{

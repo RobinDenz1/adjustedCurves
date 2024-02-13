@@ -40,7 +40,7 @@ If a character vector is supplied in the \code{adjust_vars} argument, every poss
 Adds the following additional objects to the output of the \code{adjustedsurv} function:
 
 \itemize{
-\item{\code{Pjs}: }{The weights used for each stratum.}
+\item \code{Pjs}: The weights used for each stratum.
 }
 }
 \references{

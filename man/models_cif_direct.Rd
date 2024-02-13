@@ -17,25 +17,25 @@ Supported models for the \code{outcome_model} argument when using \code{method="
 The following models are directly supported in the \code{outcome_model} in the \code{\link[adjustedCurves]{cif_direct}} function. The first letter in parentheses after the object name is a group indicator. Below the list there are more information for each group.
 
 \itemize{
-  \item{}{\code{\link[riskRegression]{CSC}} [\strong{A}, Required Packages: \pkg{riskRegression}]}
+  \item \code{\link[riskRegression]{CSC}} [\strong{A}, Required Packages: \pkg{riskRegression}]
 
-  \item{}{\code{\link[riskRegression]{FGR}} [\strong{B}, Required Packages: \pkg{riskRegression}]}
+  \item \code{\link[riskRegression]{FGR}} [\strong{B}, Required Packages: \pkg{riskRegression}]
 
-  \item{}{\code{\link[riskRegression]{riskRegression}} [\strong{B}, Required Packages: \pkg{riskRegression}]}
+  \item \code{\link[riskRegression]{riskRegression}} [\strong{B}, Required Packages: \pkg{riskRegression}]
 
-  \item{}{\code{\link[prodlim]{prodlim}} [\strong{B}, Required Packages: \pkg{prodlim}, \pkg{riskRegression}]}
+  \item \code{\link[prodlim]{prodlim}} [\strong{B}, Required Packages: \pkg{prodlim}, \pkg{riskRegression}]
 
-  \item{}{\code{rfsrc} [\strong{B}, Required Packages: \pkg{randomForestSRC}, \pkg{riskRegression}]}
+  \item \code{rfsrc} [\strong{B}, Required Packages: \pkg{randomForestSRC}, \pkg{riskRegression}]
 
-  \item{}{\code{ARR} [\strong{B}, Required Packages: \pkg{riskRegression}]}
+  \item \code{ARR} [\strong{B}, Required Packages: \pkg{riskRegression}]
 
-  \item{}{\code{fit_hal} [\strong{B}, Required Packages: \pkg{hal9001}, \pkg{riskRegression}]}
+  \item \code{fit_hal} [\strong{B}, Required Packages: \pkg{hal9001}, \pkg{riskRegression}]
 
-  \item{}{\code{fastCrr} [\strong{C}, Required Packages: \pkg{fastcmprsk}]}
+  \item \code{fastCrr} [\strong{C}, Required Packages: \pkg{fastcmprsk}]
 
-  \item{}{\code{\link[timereg]{comp.risk}} [\strong{C}, Required Packages: \pkg{timereg}]}
+  \item \code{\link[timereg]{comp.risk}} [\strong{C}, Required Packages: \pkg{timereg}]
 
-  \item{}{Any model with a fitting S3 prediction method or a valid \code{predict_fun} can be used as well. See below.}
+  \item Any model with a fitting S3 prediction method or a valid \code{predict_fun} can be used as well. See below.
 }
 
 \strong{Group A:} The direct adjusted cumulative incidences are estimated directly using the \code{\link[riskRegression]{ate}} function. Additional arguments supplied using the \code{...} syntax are passed to the \code{\link[riskRegression]{ate}} function. \cr
