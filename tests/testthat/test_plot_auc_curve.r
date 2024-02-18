@@ -28,6 +28,30 @@ test_that("plot, rmst conf_int", {
   vdiffr::expect_doppelganger("plot, rmst conf_int", fig=plt)
 })
 
+test_that("plot difference, rmst", {
+  plt <- plot_rmst_curve(adj, difference=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot difference, rmst", fig=plt)
+})
+
+test_that("plot difference, rmst conf_int", {
+  plt <- plot_rmst_curve(adj, difference=TRUE, conf_int=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot difference, rmst conf_int", fig=plt)
+})
+
+test_that("plot ratio, rmst", {
+  plt <- plot_rmst_curve(adj, ratio=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot ratio, rmst", fig=plt)
+})
+
+test_that("plot ratio, rmst conf_int", {
+  plt <- plot_rmst_curve(adj, ratio=TRUE, conf_int=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot ratio, rmst conf_int", fig=plt)
+})
+
 # technically still only RMST, but general stuff
 test_that("plot, max_t", {
   plt <- plot_rmst_curve(adj, max_t=0.4)
@@ -101,4 +125,3 @@ test_that("wrong adjsurv rmst", {
                       "using the adjustedsurv function."),
                fixed=TRUE)
 })
-

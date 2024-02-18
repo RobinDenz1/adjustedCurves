@@ -1179,8 +1179,8 @@ check_inputs_surv_q <- function(adjsurv, p, conf_int, use_boot,
 }
 
 ## check inputs for plot_rmst_curve and plot_rmtl_curve
-check_inputs_auc_curve <- function(times=times, max_t=max_t, color=color,
-                                   linetype=linetype, facet=facet) {
+check_inputs_auc_curve <- function(times, max_t, color,
+                                   linetype, facet) {
 
   if (!(length(times)>0 && is.numeric(times) && all(times > 0) |
         is.null(times))) {
@@ -1196,5 +1196,35 @@ check_inputs_auc_curve <- function(times=times, max_t=max_t, color=color,
          " the 'custom_linetypes' argument should be used.")
   } else if (!(is.logical(facet) && length(facet)==1)) {
     stop("'facet' must be either TRUE or FALSE.")
+  }
+}
+
+## check inputs for plot_rmst_curve and plot_rmtl_curve
+check_inputs_auc_diff <- function(times, max_t, color, difference, ratio,
+                                  linetype, line_at_ref) {
+
+  if (!(length(times)>0 && is.numeric(times) && all(times > 0) |
+        is.null(times))) {
+    stop("'times' must be a numeric vector containing only values > 0 or NULL.")
+  } else if (!(length(max_t)==1 && (is.infinite(max_t) | is.numeric(max_t)) &&
+               max_t > 0)) {
+    stop("'max_t' must be a single number > 0.")
+  } else if (!(is.character(color) && length(color)==1)) {
+    stop("'color' must be a single character string when using",
+         " difference=TRUE or ratio=TRUE")
+  } else if (!(is.character(linetype) && length(linetype)==1)) {
+    stop("'linetype' must be a single character string when using",
+         " difference=TRUE or ratio=TRUE")
+  } else if (!(is.logical(line_at_ref) && length(line_at_ref)==1)) {
+    stop("'line_at_ref' must be either TRUE or FALSE.")
+  } else if (!(is.logical(difference) && length(difference)==1)) {
+    stop("'difference' must be either TRUE or FALSE.")
+  } else if (!(is.logical(ratio) && length(ratio)==1)) {
+    stop("'ratio' must be either TRUE or FALSE.")
+  }
+
+  if (difference & ratio) {
+    stop("Cannot use both 'ratio=TRUE' and 'difference=TRUE' at the",
+         " same time. Set one to FALSE.")
   }
 }
