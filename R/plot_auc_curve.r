@@ -184,7 +184,8 @@ plot_auc_diff <- function(adj, estimate, times=NULL, conf_int=FALSE,
   }
 
   p <- p +
-    ggplot2::geom_line(linewidth=size, alpha=alpha) +
+    ggplot2::geom_line(linewidth=size, alpha=alpha, color=color,
+                       linetype=linetype) +
     ggplot2::labs(x=xlab, y=ylab, title=title, subtitle=subtitle) +
     gg_theme
 
@@ -274,14 +275,20 @@ plot_rmst_curve <- function(adjsurv, times=NULL, conf_int=FALSE,
 ## plot adjusted restricted mean time lost curve
 #' @export
 plot_rmtl_curve <- function(adj, times=NULL, conf_int=FALSE,
-                            conf_level=0.95, interpolation="steps", max_t=Inf,
+                            conf_level=0.95, interpolation="steps",
+                            difference=FALSE, ratio=FALSE,
+                            group_1=NULL, group_2=NULL, max_t=Inf,
                             color=TRUE, linetype=FALSE, facet=FALSE,
                             size=1, alpha=1, xlab="Time", ylab="RMTL",
                             title=NULL, subtitle=NULL, legend.title="Group",
                             legend.position="right",
                             gg_theme=ggplot2::theme_classic(),
                             custom_colors=NULL, custom_linetypes=NULL,
-                            conf_int_alpha=0.4, ...) {
+                            conf_int_alpha=0.4,
+                            line_at_ref=TRUE, line_at_ref_size=0.7,
+                            line_at_ref_color="grey",
+                            line_at_ref_linetype="dashed",
+                            line_at_ref_alpha=1, ...) {
 
   if (!inherits(adj, c("adjustedsurv", "adjustedcif"))) {
     stop("'adj' must be either an adjustedsurv object created using the",
@@ -289,12 +296,51 @@ plot_rmtl_curve <- function(adj, times=NULL, conf_int=FALSE,
          " the adjustedcif function.")
   }
 
-  plot_auc_curve(estimate="rmtl", adj=adj, times=times, conf_int=conf_int,
-                 interpolation=interpolation, max_t=max_t, color=color,
-                 linetype=linetype, facet=facet, size=size, alpha=alpha,
-                 xlab=xlab, ylab=ylab, title=title,
-                 subtitle=subtitle, legend.title=legend.title,
-                 legend.position=legend.position, gg_theme=gg_theme,
-                 custom_colors=custom_colors, custom_linetypes=custom_linetypes,
-                 conf_int_alpha=conf_int_alpha, conf_level=conf_level, ...)
+  if (!difference && !ratio) {
+    p <- plot_auc_curve(estimate="rmtl", adj=adj, times=times,
+                        conf_int=conf_int, interpolation=interpolation,
+                        max_t=max_t, color=color, linetype=linetype,
+                        facet=facet, size=size, alpha=alpha,
+                        xlab=xlab, ylab=ylab, title=title,
+                        subtitle=subtitle, legend.title=legend.title,
+                        legend.position=legend.position, gg_theme=gg_theme,
+                        custom_colors=custom_colors,
+                        custom_linetypes=custom_linetypes,
+                        conf_int_alpha=conf_int_alpha,
+                        conf_level=conf_level, ...)
+  } else {
+
+    if (difference) {
+      type <- "diff"
+    } else if (ratio) {
+      type <- "ratio"
+    }
+
+    if (!is.character(color)) {
+      color <- "black"
+    }
+    if (!is.character(linetype)) {
+      linetype <- "solid"
+    }
+
+    check_inputs_auc_diff(times=times, max_t=max_t, color=color,
+                          difference=difference, ratio=ratio,
+                          linetype=linetype, line_at_ref=line_at_ref)
+
+    p <- plot_auc_diff(adj=adj, estimate="rmtl", times=times,
+                       conf_int=conf_int, conf_level=conf_level,
+                       interpolation=interpolation, max_t=max_t,
+                       type=type, group_1=group_1, group_2=group_2,
+                       color=color, linetype=linetype,
+                       size=size, alpha=alpha, xlab=xlab, ylab=ylab,
+                       title=title, subtitle=subtitle,
+                       gg_theme=gg_theme, conf_int_alpha=conf_int_alpha,
+                       line_at_ref=line_at_ref,
+                       line_at_ref_size=line_at_ref_size,
+                       line_at_ref_color=line_at_ref_color,
+                       line_at_ref_linetype=line_at_ref_linetype,
+                       line_at_ref_alpha=line_at_ref_alpha, ...)
+  }
+
+  return(p)
 }

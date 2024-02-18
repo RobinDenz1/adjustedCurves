@@ -97,6 +97,30 @@ test_that("plot, linetype", {
   vdiffr::expect_doppelganger("plot, linetype", fig=plt)
 })
 
+test_that("plot difference, max_t", {
+  plt <- plot_rmst_curve(adj, max_t=0.4, difference=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot difference, max_t", fig=plt)
+})
+
+test_that("plot difference, times", {
+  plt <- plot_rmst_curve(adj, times=seq(0.1, 0.8, 0.05), difference=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot difference, times", fig=plt)
+})
+
+test_that("plot ratio, color", {
+  plt <- plot_rmst_curve(adj, ratio=TRUE, color="blue")
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot ratio, color", fig=plt)
+})
+
+test_that("plot ratio, linetype", {
+  plt <- plot_rmst_curve(adj, ratio=TRUE, linetype="dashed")
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot ratio, linetype", fig=plt)
+})
+
 ## RMTL
 test_that("plot, rmtl no arguments", {
   plt <- plot_rmtl_curve(adj)
@@ -108,6 +132,18 @@ test_that("plot, rmtl conf_int", {
   plt <- plot_rmtl_curve(adj, conf_int=TRUE, color=FALSE)
   expect_s3_class(plt, "ggplot")
   vdiffr::expect_doppelganger("plot, rmtl conf_int", fig=plt)
+})
+
+test_that("plot difference, rmtl no arguments", {
+  plt <- plot_rmtl_curve(adj, difference=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot difference, rmtl no arguments", fig=plt)
+})
+
+test_that("plot difference, rmtl conf_int", {
+  plt <- plot_rmtl_curve(adj, conf_int=TRUE, difference=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("plot difference, rmtl conf_int", fig=plt)
 })
 
 ## error messages
