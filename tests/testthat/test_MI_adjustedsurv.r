@@ -436,6 +436,29 @@ test_that("adjusted_surv_quantile, 2 treatments, no boot", {
   expect_equal(round(adj_med$q_surv, 4), c(0.4785, 0.6252))
 })
 
+test_that("adjusted_surv_quantile, 2 treatments, no boot, difference", {
+  adj_med <- adjusted_surv_quantile(adjsurv, difference=TRUE)
+  expect_equal(round(adj_med$diff, 4), -0.1468)
+})
+
+test_that("adjusted_surv_quantile, 2 treatments, no boot, difference, p", {
+  adj_med <- adjusted_surv_quantile(adjsurv, difference=TRUE, p=c(0.4, 0.5))
+  expect_equal(round(adj_med$diff, 4), c(-0.1350, -0.1468))
+})
+
+test_that("adjusted_surv_quantile, 2 treatments, conf_int, difference", {
+  adj_med <- adjusted_surv_quantile(adjsurv, difference=TRUE, conf_int=TRUE)
+  expect_equal(round(adj_med$diff, 4), -0.1468)
+  expect_equal(round(adj_med$se, 4), 0.1271)
+  expect_equal(round(adj_med$ci_lower, 4), -0.3958)
+  expect_equal(round(adj_med$p_value, 4), 0.2482)
+})
+
+test_that("adjusted_surv_quantile, 2 treatments, no boot, ratio", {
+  adj_med <- adjusted_surv_quantile(adjsurv, ratio=TRUE)
+  expect_equal(round(adj_med$ratio, 4), 0.7653)
+})
+
 ### adjusted_rmst
 test_that("adjusted_rmst, 2 treatments, no boot", {
   adj_rmst <- adjusted_rmst(adjsurv, from=0, to=1, conf_int=FALSE)

@@ -1155,7 +1155,8 @@ check_inputs_adj_diff <- function(adj, group_1, group_2, conf_int, use_boot) {
 
 ## check inputs for adjusted_surv_quantile function
 check_inputs_surv_q <- function(adjsurv, p, conf_int, use_boot,
-                                interpolation) {
+                                interpolation, difference, ratio,
+                                conf_level, group_1, group_2) {
   if (!inherits(adjsurv, "adjustedsurv")) {
     stop("'adjsurv' must be an adjustedsurv object created using the",
          " adjustedsurv function.")
@@ -1163,7 +1164,8 @@ check_inputs_surv_q <- function(adjsurv, p, conf_int, use_boot,
     stop("'p' must be a vector or single number containing only",
          " numbers <= 1 & >= 0.")
   } else if (conf_int && !use_boot &&
-             !"ci_lower" %in% colnames(adjsurv$adjsurv)) {
+             !"ci_lower" %in% colnames(adjsurv$adjsurv) &&
+             !(difference | ratio)) {
     stop("There are no approximate confidence intervals to use.",
          " Either set 'use_boot=TRUE' or rerun the adjustedsurv function",
          " with 'conf_int=TRUE' if possible.")
@@ -1175,6 +1177,38 @@ check_inputs_surv_q <- function(adjsurv, p, conf_int, use_boot,
                interpolation=="steps" | interpolation=="linear")) {
     stop("'interpolation' must be single character string in",
          " c('steps', 'linear').")
+  } else if (!(length(conf_level)==1 && is.numeric(conf_level) &&
+               conf_level < 1 && conf_level > 0)) {
+    stop("'conf_level' must be a single number < 1 and > 0.")
+  } else if (!(is.logical(difference) && length(difference)==1)) {
+    stop("'difference' must be either TRUE or FALSE.")
+  } else if (!(is.logical(ratio) && length(ratio)==1)) {
+    stop("'ratio' must be either TRUE or FALSE.")
+  } else if (!(is.null(group_1) || (length(group_1)==1 &&
+               is.character(group_1) &&
+               group_1 %in% levels(adjsurv$adjsurv$group)))) {
+    stop("'group_1' must be a single character string specifying a level",
+         " of the 'variable' column.")
+  } else if (!(is.null(group_2) || (length(group_2)==1 &&
+               is.character(group_2) &&
+               group_2 %in% levels(adjsurv$adjsurv$group)))) {
+    stop("'group_2' must be a single character string specifying a level",
+         " of the 'variable' column.")
+  }
+
+  if (difference & ratio) {
+    stop("Cannot use both 'ratio=TRUE' and 'difference=TRUE' at the",
+         " same time. Set one to FALSE.")
+  }
+
+  if ((difference | ratio) && conf_int &&
+      ((is.null(adjsurv$mids_analyses) && is.null(adjsurv$boot_data)) ||
+       (!is.null(adjsurv$mids_analyses) &&
+        is.null(adjsurv$mids_analyses[[1]]$boot_data)))) {
+    stop("Cannot calculate confidence intervals for differences if",
+         " bootstrapping was not performed in the original adjustedsurv()",
+         " function call. Run adjustedsurv() again with bootstrap=TRUE",
+         " to continue.")
   }
 }
 

@@ -56,6 +56,10 @@ It can be interpreted as the mean survival time of individuals in group \eqn{Z =
 
 If the \code{adjsurv} object was created with \code{bootstrap=TRUE} in the \code{\link{adjustedsurv}} function, bootstrap confidence intervals and standard errors for the RMSTs can be approximated by setting \code{conf_int} to \code{TRUE}. If bootstrap samples occur where the survival function is not estimated up to \code{to}, the bootstrap sample is discarded and not used in further calculations. Approximate variance calculations not relying on the bootstrap estimates are currently not implemented. When using \code{difference=TRUE} the standard error of the difference between the two RMST values is approximated by \eqn{SE_{group_1 - group_2} = \sqrt{SE_{group_1}^2 + SE_{group_2}^2}}. When using \code{ratio=TRUE} the confidence intervals are calculated using the approximate formula given by Fieller (1954), assuming that the values are independent.
 
+\strong{\emph{More than Two Groups}}
+
+If more than two groups are present in \code{variable}, all other comparisons except for \code{group_1 vs. group_2} are ignored. If multiple comparisons are desired, the user needs to call this function multiple times and adjust the \code{group_1} and \code{group_2} arguments accordingly.
+
 \strong{\emph{Multiple Imputation}}
 
 If multiple imputation was used when creating the \code{adjsurv} object, the analysis is carried out on all multiply imputed datasets and pooled using Rubins Rule. When bootstrapping was carried out as well, the pooled standard error over all imputed datasets is used in combination with the normal approximation to re-calculate the bootstrap confidence intervals.

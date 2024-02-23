@@ -46,3 +46,8 @@ Documentation
 * Changed examples for the usage of `WeightIt` as suggested by Noah Greifer
 * Added a new vignette with an overview of implemented features of each method
 * Small changes to formulations
+
+# adjustedCurves 0.11.1
+
+* Added the `difference` and `ratio` arguments to `plot_rmst_curve()` and `plot_rmtl_curve()`
+* Added the `difference` and `ratio` functionality to the `adjusted_surv_quantile()` function
