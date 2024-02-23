@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">adjustedCurves</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -104,6 +104,8 @@
 <p>It can be interpreted as the mean survival time of individuals in group \(Z = z\) in the interval [<code>from</code>, <code>to</code>]. Note however that simply subtracting the estimates from each other does not give a correct estimate of the area between the survival curves if the respective curves cross at some point. The <code><a href="adjusted_curve_test.html">adjusted_curve_test</a></code> function can be used to calculate the actual area between the curves instead. See <code><a href="adjusted_curve_test.html">?adjusted_curve_test</a></code> for more information.</p>
 <p><strong><em>Confidence Intervals</em></strong></p>
 <p>If the <code>adjsurv</code> object was created with <code>bootstrap=TRUE</code> in the <code><a href="adjustedsurv.html">adjustedsurv</a></code> function, bootstrap confidence intervals and standard errors for the RMSTs can be approximated by setting <code>conf_int</code> to <code>TRUE</code>. If bootstrap samples occur where the survival function is not estimated up to <code>to</code>, the bootstrap sample is discarded and not used in further calculations. Approximate variance calculations not relying on the bootstrap estimates are currently not implemented. When using <code>difference=TRUE</code> the standard error of the difference between the two RMST values is approximated by \(SE_{group_1 - group_2} = \sqrt{SE_{group_1}^2 + SE_{group_2}^2}\). When using <code>ratio=TRUE</code> the confidence intervals are calculated using the approximate formula given by Fieller (1954), assuming that the values are independent.</p>
+<p><strong><em>More than Two Groups</em></strong></p>
+<p>If more than two groups are present in <code>variable</code>, all other comparisons except for <code>group_1 vs. group_2</code> are ignored. If multiple comparisons are desired, the user needs to call this function multiple times and adjust the <code>group_1</code> and <code>group_2</code> arguments accordingly.</p>
 <p><strong><em>Multiple Imputation</em></strong></p>
 <p>If multiple imputation was used when creating the <code>adjsurv</code> object, the analysis is carried out on all multiply imputed datasets and pooled using Rubins Rule. When bootstrapping was carried out as well, the pooled standard error over all imputed datasets is used in combination with the normal approximation to re-calculate the bootstrap confidence intervals.</p>
 <p><strong><em>Competing Risks</em></strong></p>
