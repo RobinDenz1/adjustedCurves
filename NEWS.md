@@ -51,3 +51,4 @@ Documentation
 
 * Added the `difference` and `ratio` arguments to `plot_rmst_curve()` and `plot_rmtl_curve()`
 * Added the `difference` and `ratio` functionality to the `adjusted_surv_quantile()` function
+* Re-factored internal code to vastly increase speed of bootstrapping related computations

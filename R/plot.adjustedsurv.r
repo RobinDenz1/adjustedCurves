@@ -186,13 +186,13 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
                                  !is.na(plotdata$surv), ]
 
       if (steps) {
-        read_fun <- read_from_step_function
+        interpolation <- "steps"
       } else {
-        read_fun <- read_from_linear_function
+        interpolation <- "linear"
       }
 
-      cens_surv <- vapply(cens_times, read_fun,
-                          data=adjsurv_temp, FUN.VALUE=numeric(1))
+      cens_surv <- read_from_fun(x=cens_times, data=adjsurv_temp,
+                                 interpolation=interpolation)
       if (length(cens_times)!=0) {
         cens_dat[[i]] <- data.frame(time=cens_times, surv=cens_surv,
                                     group=levs[i])

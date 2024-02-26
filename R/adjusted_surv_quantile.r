@@ -135,20 +135,20 @@ get_surv_quantiles <- function(plotdata, p, conf_int, conf_level,
     temp_dat <- plotdata[plotdata$group==levs[i],]
     temp_dat$group <- NULL
 
-    val <- vapply(X=p, FUN=read_from_fun, FUN.VALUE=numeric(1), data=temp_dat,
-                  est="time", time="surv", interpolation=interpolation)
+    val <- read_from_fun(x=p, data=temp_dat, est="time", time="surv",
+                         interpolation=interpolation)
     out_i <- data.frame(p=p, group=levs[i], q_surv=val)
 
     if (conf_int) {
       temp_dat <- temp_dat[!is.na(temp_dat$ci_lower) &
                              !is.na(temp_dat$ci_upper) ,]
 
-      out_i$ci_lower <- vapply(X=p, FUN=read_from_fun, FUN.VALUE=numeric(1),
-                               data=temp_dat, est="time", time="ci_lower",
-                               interpolation=interpolation)
-      out_i$ci_upper <- vapply(X=p, FUN=read_from_fun, FUN.VALUE=numeric(1),
-                               data=temp_dat, est="time", time="ci_upper",
-                               interpolation=interpolation)
+      out_i$ci_lower <- read_from_fun(x=p, data=temp_dat,
+                                      est="time", time="ci_lower",
+                                      interpolation=interpolation)
+      out_i$ci_upper <- read_from_fun(x=p, data=temp_dat,
+                                      est="time", time="ci_upper",
+                                      interpolation=interpolation)
     }
     out[[i]] <- out_i
   }

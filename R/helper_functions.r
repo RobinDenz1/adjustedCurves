@@ -130,19 +130,13 @@ confint_surv <- function(surv, se, conf_level, conf_type="plain") {
 ## custom points in time are supplied
 specific_times <- function(plotdata, times, est="surv", interpolation="steps") {
 
-  if (interpolation=="steps") {
-    read_fun <- read_from_step_function
-  } else if (interpolation=="linear") {
-    read_fun <- read_from_linear_function
-  }
-
   levs <- unique(plotdata$group)
   new_plotdata <- vector(mode="list", length=length(levs))
   for (i in seq_len(length(levs))) {
 
-    new_est <- vapply(times, read_fun, est=est,
-                      data=plotdata[which(plotdata$group==levs[i]), ],
-                      FUN.VALUE=numeric(1))
+    new_est <- read_from_fun(x=times, est=est,
+                             data=plotdata[which(plotdata$group==levs[i]), ],
+                             interpolation=interpolation)
 
     if (est=="cif") {
       new_dat <- data.frame(time=times, cif=new_est, group=levs[i])
@@ -160,15 +154,14 @@ specific_times <- function(plotdata, times, est="surv", interpolation="steps") {
       #       to the respective specification, the standard error stays
       #       the same over the interpolation period and therefore always
       #       needs to be interpolated using the step function method
-      new_se <- vapply(times, read_from_step_function, est="se",
-                       data=plotdata[which(plotdata$group==levs[i]), ],
-                       FUN.VALUE=numeric(1))
-      new_ci_lower <- vapply(times, read_fun, est="ci_lower",
-                          data=plotdata[which(plotdata$group==levs[i]), ],
-                          FUN.VALUE=numeric(1))
-      new_ci_upper <- vapply(times, read_fun, est="ci_upper",
-                          data=plotdata[which(plotdata$group==levs[i]), ],
-                          FUN.VALUE=numeric(1))
+      new_se <- read_from_fun(x=times, interpolation="steps", est="se",
+                       data=plotdata[which(plotdata$group==levs[i]), ])
+      new_ci_lower <- read_from_fun(x=times, interpolation=interpolation,
+                                    est="ci_lower",
+                              data=plotdata[which(plotdata$group==levs[i]), ])
+      new_ci_upper <- read_from_fun(x=times, interpolation=interpolation,
+                                    est="ci_upper",
+                              data=plotdata[which(plotdata$group==levs[i]), ])
       # add to output in same order
       new_dat$se <- new_se
       new_dat$ci_lower <- new_ci_lower
@@ -177,9 +170,8 @@ specific_times <- function(plotdata, times, est="surv", interpolation="steps") {
 
     # same as standard error, stays the same
     if ("p_value" %in% colnames(plotdata)) {
-      new_p <- vapply(times, read_from_step_function, est="p_value",
-                      data=plotdata[which(plotdata$group==levs[i]), ],
-                      FUN.VALUE=numeric(1))
+      new_p <- read_from_fun(x=times, interpolation="steps", est="p_value",
+                      data=plotdata[which(plotdata$group==levs[i]), ])
       new_dat$p_value <- new_p
     }
 

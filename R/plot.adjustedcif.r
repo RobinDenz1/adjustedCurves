@@ -164,14 +164,13 @@ plot.adjustedcif <- function(x, conf_int=FALSE, max_t=Inf,
       adjcif_temp <- plotdata[plotdata$group==levs[i], ]
 
       if (steps) {
-        read_fun <- read_from_step_function
+        interpolation <- "steps"
       } else {
-        read_fun <- read_from_linear_function
+        interpolation <- "linear"
       }
 
-      cens_cif <- vapply(X=cens_times, FUN=read_fun,
-                         FUN.VALUE=numeric(1), data=adjcif_temp,
-                         est="cif")
+      cens_cif <- read_from_fun(x=cens_times, interpolation=interpolation,
+                                data=adjcif_temp, est="cif")
       cens_dat[[i]] <- data.frame(time=cens_times, cif=cens_cif,
                                   group=levs[i])
 

@@ -293,7 +293,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
         cl <- parallel::makeCluster(n_cores, outfile="")
         doParallel::registerDoParallel(cl)
         pkgs <- (.packages())
-        export_objs <- c("get_iptw_weights", "read_from_step_function",
+        export_objs <- c("get_iptw_weights", "read_from_fun",
                          "adjustedsurv_boot", "trim_weights",
                          "calc_pseudo_surv", "geese_predictions",
                          "load_needed_packages", "specific_times",

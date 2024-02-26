@@ -13,47 +13,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-## takes a value x at which to read from the step function
-## and step function data from which to read it
-read_from_step_function <- function(x, data, est="surv", time="time") {
-
-  # keep only data with non-missing est
-  data <- data[which(!is.na(data[, est])), ]
-
-  # no extrapolation, unless end reached
-  max_time <- max(data[, time])
-  last_est <- data[, est][nrow(data)]
-
-  if (x > max_time) {
-    if (est=="surv" & last_est==0) {
-      out <- 0
-    } else if (est=="cif" & last_est==1) {
-      out <- 1
-    } else {
-      out <- NA
-    }
-    return(out)
-  }
-
-  # otherwise get value
-  check <- data[which(data[, time] <= x), ]
-  if (nrow(check)==0) {
-    if (est=="surv") {
-      val <- 1
-    } else if (est=="cif") {
-      val <- 0
-    } else {
-      val <- NA
-    }
-  } else {
-    val <- check[, est][which(check[, time]==max(check[, time]))][1]
-  }
-  return(val)
-}
-
-## takes a value x at which to read from the linear function
-## and step function data from which to read it
-read_from_linear_function <- function(x, data, est="surv", time="time") {
+## takes a value x at which to read from the step / linear function
+## and function data from which to read it
+read_from_fun <- function(x, data, interpolation, est="surv", time="time") {
 
   # keep only data with non-missing est
   data <- data[which(!is.na(data[, est])), ]
@@ -73,78 +35,66 @@ read_from_linear_function <- function(x, data, est="surv", time="time") {
     yright <- NA
   }
 
-  # add 0 or 1 to beginning if necessary
+  # call approx() function with appropriate arguments, performing
+  # correct inter- and extrapolation according to circumstances
+  if (interpolation=="steps") {
+    method <- "constant"
+    ties <- min
+  } else if (interpolation=="linear") {
+    method <- "linear"
+    ties <- mean
+  }
+
   if (est=="surv") {
     val <- suppressWarnings(stats::approx(x=time_vec, y=est_vec, xout=x,
-                                          yleft=1, yright=yright)$y)
+                                          yleft=1, yright=yright,
+                                          method=method, f=0)$y)
   } else if (est=="cif") {
     val <- suppressWarnings(stats::approx(x=time_vec, y=est_vec, xout=x,
-                                          yleft=0, yright=yright)$y)
+                                          yleft=0, yright=yright,
+                                          method=method, f=0)$y)
   } else {
-    val <- suppressWarnings(stats::approx(x=time_vec, y=est_vec, xout=x)$y)
+    val <- suppressWarnings(stats::approx(x=time_vec, y=est_vec, xout=x,
+                                          method=method, f=0, ties=ties)$y)
   }
-  return(val)
-}
 
-## shortcut to one of the two functions above
-read_from_fun <- function(x, data, interpolation, est="surv", time="time") {
-
-  if (interpolation=="steps") {
-    val <- read_from_step_function(x=x, data=data, est=est, time=time)
-  } else if (interpolation=="linear") {
-    val <- read_from_linear_function(x=x, data=data, est=est, time=time)
-  }
   return(val)
 }
 
 ## calculate integral of a linear function using the trapezoid rule
 trapezoid_integral <- function(x, y, return_all=FALSE) {
-  area <- 0
-  area_vec <- numeric(length=length(x))
-  for (i in seq_len((length(x)-1))) {
-    a <- x[i]
-    b <- x[i+1]
-    f_a <- y[i]
-    f_b <- y[i+1]
+  d <- data.frame(x=x, y=y)
 
-    h <- b - a
+  d$x_lead <- dplyr::lead(d$x)
+  d$y_lead <- dplyr::lead(d$y)
 
-    area <- area + ((h / 2) * (f_a + f_b))
-
-    if (return_all) {
-      area_vec[i] <- area
-    }
-  }
+  d$area <- (((d$x_lead - d$x) / 2) * (d$y + d$y_lead))
 
   if (return_all) {
-    return(area_vec)
+    out <- cumsum(d$area)
   } else {
-    return(area)
+    out <- sum(d$area[1:(nrow(d)-1)])
   }
+
+  return(out)
 }
 
 ## calculate exact integral of a step function
 # NOTE: if y_(i+1) is missing, this will still count the square up to it
 #       since the equation does not refer to y_(i+1)
 stepfun_integral <- function(x, y, return_all=FALSE) {
-  area <- 0
-  area_vec <- numeric(length=length(x))
-  for (i in seq_len((length(x)-1))) {
-    x1 <- x[i]
-    x2 <- x[i+1]
-    rect_area <- (x2 - x1) * y[i]
-    area <- area + rect_area
+  d <- data.frame(x=x, y=y)
 
-    if (return_all) {
-      area_vec[i] <- area
-    }
-  }
+  d$x_lead <- dplyr::lead(d$x)
+  d$area <- (d$x_lead - d$x) * d$y
 
   if (return_all) {
-    return(area_vec)
+    out <- cumsum(d$area)
   } else {
-    return(area)
+    out <- sum(d$area[1:(nrow(d)-1)])
   }
+
+  return(out)
 }
 
 ## calculate exact integral of either step or linear functions
@@ -159,8 +109,8 @@ exact_integral <- function(data, from, to, est, interpolation) {
 
   # read from data
   data_new <- data.frame(time=times)
-  data_new[, est] <- vapply(times, FUN=read_from_fun, FUN.VALUE=numeric(1),
-                            data=data, est=est, interpolation=interpolation)
+  data_new[, est] <- read_from_fun(x=times, data=data, est=est,
+                                   interpolation=interpolation)
   data <- data_new
 
   if (anyNA(data) & length(to)==1) {
@@ -214,18 +164,16 @@ difference_function <- function(adj, times, est="surv", interpolation="steps",
       se_1 <- adjsurv_1$se
     }
   } else {
-    surv_0 <- vapply(times, read_from_fun, data=adjsurv_0,
-                     est=est, interpolation=interpolation,
-                     FUN.VALUE=numeric(1))
-    surv_1 <- vapply(times, read_from_fun, data=adjsurv_1,
-                     est=est, interpolation=interpolation,
-                     FUN.VALUE=numeric(1))
+    surv_0 <- read_from_fun(x=times, data=adjsurv_0,
+                            est=est, interpolation=interpolation)
+    surv_1 <- read_from_fun(x=times, data=adjsurv_1,
+                            est=est, interpolation=interpolation)
 
     if (conf_int) {
-      se_0 <- vapply(times, read_from_step_function, data=adjsurv_0,
-                     est="se", FUN.VALUE=numeric(1))
-      se_1 <- vapply(times, read_from_step_function, data=adjsurv_1,
-                     est="se", FUN.VALUE=numeric(1))
+      se_0 <- read_from_fun(x=times, interpolation="steps", data=adjsurv_0,
+                            est="se")
+      se_1 <- read_from_fun(x=times, interpolation="steps", data=adjsurv_1,
+                            est="se")
     }
   }
 
