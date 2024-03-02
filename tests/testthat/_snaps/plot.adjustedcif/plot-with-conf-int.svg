@@ -61,8 +61,10 @@
 <text transform='translate(13.05,275.30) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='105.18px' lengthAdjust='spacingAndGlyphs'>Cumulative Incidence</text>
 <rect x='672.98' y='244.87' width='41.54' height='60.85' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <text x='678.46' y='259.06' style='font-size: 11.00px; font-family: sans;' textLength='30.58px' lengthAdjust='spacingAndGlyphs'>Group</text>
+<rect x='678.46' y='265.68' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <line x1='680.19' y1='274.32' x2='694.02' y2='274.32' style='stroke-width: 2.13; stroke: #F8766D; stroke-linecap: butt;' />
 <rect x='679.17' y='266.39' width='15.86' height='15.86' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #F8766D; fill-opacity: 0.40;' />
+<rect x='678.46' y='282.96' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <line x1='680.19' y1='291.60' x2='694.02' y2='291.60' style='stroke-width: 2.13; stroke: #00BFC4; stroke-linecap: butt;' />
 <rect x='679.17' y='283.67' width='15.86' height='15.86' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #00BFC4; fill-opacity: 0.40;' />
 <text x='701.22' y='277.35' style='font-size: 8.80px; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>0</text>

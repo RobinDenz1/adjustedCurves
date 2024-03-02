@@ -51,7 +51,9 @@
 <text transform='translate(13.05,291.61) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='7.34px' lengthAdjust='spacingAndGlyphs'>Y</text>
 <rect x='666.85' y='261.19' width='47.67' height='60.85' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <text x='672.33' y='275.38' style='font-size: 11.00px; font-family: sans;' textLength='36.71px' lengthAdjust='spacingAndGlyphs'>Legend</text>
+<rect x='672.33' y='282.00' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <line x1='674.06' y1='290.64' x2='687.88' y2='290.64' style='stroke-width: 2.13; stroke: #F8766D; stroke-linecap: butt;' />
+<rect x='672.33' y='299.28' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <line x1='674.06' y1='307.92' x2='687.88' y2='307.92' style='stroke-width: 2.13; stroke: #00BFC4; stroke-linecap: butt;' />
 <text x='695.09' y='293.67' style='font-size: 8.80px; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>0</text>
 <text x='695.09' y='310.95' style='font-size: 8.80px; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>1</text>

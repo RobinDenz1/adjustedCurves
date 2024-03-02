@@ -18,17 +18,15 @@ Luckily, a lot of different methods to adjust survival curves and CIFs for confo
 
 ## Installation
 
-The R-Package is currently not available on CRAN, but can be installed easily using the `devtools` package:
+A stable version of this package can be installed directly from CRAN:
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
-library(devtools)
-devtools::install_github("RobinDenz1/adjustedCurves")
+install.packages("adjustedCurves")
 ```
 
-or the `remotes` package:
+Alternatively, the developmental version can be installed from github using the `remotes` package:
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
-library(remotes)
 remotes::install_github("RobinDenz1/adjustedCurves")
 ```
 

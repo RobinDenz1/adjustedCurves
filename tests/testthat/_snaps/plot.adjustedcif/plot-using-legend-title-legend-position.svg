@@ -53,7 +53,9 @@
 <text transform='translate(13.05,255.70) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='105.18px' lengthAdjust='spacingAndGlyphs'>Cumulative Incidence</text>
 <rect x='332.60' y='542.28' width='84.57' height='28.24' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <text x='338.08' y='560.19' style='font-size: 11.00px; font-family: sans;' textLength='7.34px' lengthAdjust='spacingAndGlyphs'>A</text>
+<rect x='350.89' y='547.76' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <line x1='352.62' y1='556.40' x2='366.45' y2='556.40' style='stroke-width: 2.13; stroke: #F8766D; stroke-linecap: butt;' />
+<rect x='384.03' y='547.76' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <line x1='385.76' y1='556.40' x2='399.58' y2='556.40' style='stroke-width: 2.13; stroke: #00BFC4; stroke-linecap: butt;' />
 <text x='373.65' y='559.43' style='font-size: 8.80px; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>0</text>
 <text x='406.79' y='559.43' style='font-size: 8.80px; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>1</text>

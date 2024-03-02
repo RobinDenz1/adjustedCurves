@@ -94,7 +94,9 @@
 <text transform='translate(13.05,283.62) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='105.18px' lengthAdjust='spacingAndGlyphs'>Cumulative Incidence</text>
 <rect x='672.98' y='253.19' width='41.54' height='60.85' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <text x='678.46' y='267.39' style='font-size: 11.00px; font-family: sans;' textLength='30.58px' lengthAdjust='spacingAndGlyphs'>Group</text>
+<rect x='678.46' y='274.01' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <line x1='680.19' y1='282.65' x2='694.02' y2='282.65' style='stroke-width: 2.13; stroke: #F8766D; stroke-linecap: butt;' />
+<rect x='678.46' y='291.29' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <line x1='680.19' y1='299.93' x2='694.02' y2='299.93' style='stroke-width: 2.13; stroke: #00BFC4; stroke-dasharray: 5.69,5.69; stroke-linecap: butt;' />
 <text x='701.22' y='285.68' style='font-size: 8.80px; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>0</text>
 <text x='701.22' y='302.96' style='font-size: 8.80px; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>1</text>
