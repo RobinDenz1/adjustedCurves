@@ -72,18 +72,28 @@
 <span>     custom_linetypes<span class="op">=</span><span class="cn">NULL</span>,</span>
 <span>     single_color<span class="op">=</span><span class="cn">NULL</span>, single_linetype<span class="op">=</span><span class="cn">NULL</span>,</span>
 <span>     conf_int_alpha<span class="op">=</span><span class="fl">0.4</span>, steps<span class="op">=</span><span class="cn">TRUE</span>,</span>
-<span>     median_surv_lines<span class="op">=</span><span class="cn">FALSE</span>,</span>
-<span>     median_surv_size<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span>     x_breaks<span class="op">=</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>, x_n_breaks<span class="op">=</span><span class="cn">NULL</span>,</span>
+<span>     y_breaks<span class="op">=</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>, y_n_breaks<span class="op">=</span><span class="cn">NULL</span>,</span>
+<span>     median_surv_lines<span class="op">=</span><span class="cn">FALSE</span>, median_surv_size<span class="op">=</span><span class="fl">0.5</span>,</span>
 <span>     median_surv_linetype<span class="op">=</span><span class="st">"dashed"</span>,</span>
-<span>     median_surv_color<span class="op">=</span><span class="st">"black"</span>,</span>
-<span>     median_surv_alpha<span class="op">=</span><span class="fl">1</span>,</span>
+<span>     median_surv_color<span class="op">=</span><span class="st">"black"</span>, median_surv_alpha<span class="op">=</span><span class="fl">1</span>,</span>
 <span>     median_surv_quantile<span class="op">=</span><span class="fl">0.5</span>,</span>
-<span>     censoring_ind<span class="op">=</span><span class="st">"none"</span>,</span>
-<span>     censoring_ind_size<span class="op">=</span><span class="fl">0.5</span>,</span>
-<span>     censoring_ind_alpha<span class="op">=</span><span class="fl">1</span>,</span>
-<span>     censoring_ind_shape<span class="op">=</span><span class="fl">17</span>,</span>
+<span>     censoring_ind<span class="op">=</span><span class="st">"none"</span>, censoring_ind_size<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span>     censoring_ind_alpha<span class="op">=</span><span class="fl">1</span>, censoring_ind_shape<span class="op">=</span><span class="fl">17</span>,</span>
 <span>     censoring_ind_width<span class="op">=</span><span class="cn">NULL</span>,</span>
-<span>     <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span>     risk_table<span class="op">=</span><span class="cn">FALSE</span>, risk_table_type<span class="op">=</span><span class="st">"n_at_risk"</span>,</span>
+<span>     risk_table_stratify<span class="op">=</span><span class="cn">FALSE</span>, risk_table_height<span class="op">=</span><span class="fl">0.25</span>,</span>
+<span>     risk_table_xlab<span class="op">=</span><span class="va">xlab</span>, risk_table_ylab<span class="op">=</span><span class="st">"default"</span>,</span>
+<span>     risk_table_title<span class="op">=</span><span class="st">"default"</span>, risk_table_title_size<span class="op">=</span><span class="fl">14</span>,</span>
+<span>     risk_table_title_position<span class="op">=</span><span class="st">"middle"</span>,</span>
+<span>     risk_table_y_vjust<span class="op">=</span><span class="fl">5</span>, risk_table_theme<span class="op">=</span><span class="va">gg_theme</span>,</span>
+<span>     risk_table_size<span class="op">=</span><span class="fl">4.2</span>, risk_table_alpha<span class="op">=</span><span class="fl">1</span>,</span>
+<span>     risk_table_color<span class="op">=</span><span class="st">"black"</span>, risk_table_family<span class="op">=</span><span class="st">"sans"</span>,</span>
+<span>     risk_table_fontface<span class="op">=</span><span class="st">"plain"</span>, risk_table_reverse<span class="op">=</span><span class="cn">TRUE</span>,</span>
+<span>     risk_table_stratify_color<span class="op">=</span><span class="cn">TRUE</span>,</span>
+<span>     risk_table_custom_colors<span class="op">=</span><span class="va">custom_colors</span>,</span>
+<span>     risk_table_use_weights<span class="op">=</span><span class="cn">TRUE</span>, risk_table_digits<span class="op">=</span><span class="fl">1</span>,</span>
+<span>     risk_table_warn<span class="op">=</span><span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -166,6 +176,18 @@
   <dt>steps</dt>
 <dd><p>A logical variable indicating whether the survival curves should be plotted as a step function or using straight lines. Straight lines should not be used with a simple Kaplan-Meier estimator. It is recommended to only use straight lines when a sufficiently fine grid of time points was used in the estimation step.</p></dd>
 
+  <dt>x_breaks</dt>
+<dd><p>An optional numeric vector specifying the breaks on the x-axis. These will also be used in the risk table if <code>risk_table=TRUE</code>. Internally, this is passed to the <code>breaks</code> argument of the <code>scale_x_continuous</code> function.</p></dd>
+
+  <dt>x_n_breaks</dt>
+<dd><p>An optional positive number specifying the number of breaks on the x-axis. Internally, this is passed to the <code>n.breaks</code> argument of the <code>scale_x_continuous</code> function.</p></dd>
+
+  <dt>y_breaks</dt>
+<dd><p>An optional numeric vector specifying the breaks on the y-axis. Internally, this is passed to the <code>breaks</code> argument of the <code>scale_y_continuous</code> function.</p></dd>
+
+  <dt>y_n_breaks</dt>
+<dd><p>An optional positive number specifying the number of breaks on the y-axis. Internally, this is passed to the <code>n.breaks</code> argument of the <code>scale_y_continuous</code> function.</p></dd>
+
   <dt>median_surv_lines</dt>
 <dd><p>Whether to draw indicator lines for the median survival times, which makes it easier to read those off the curves. Survival curves with undefined median survival times receive no lines.</p></dd>
 
@@ -199,15 +221,92 @@
   <dt>censoring_ind_width</dt>
 <dd><p>A numeric value specifying the width of the censoring indicators. Ignored unless <code>censoring_ind="lines"</code>. By default (<code>censoring_ind_width=NULL</code>) the width of the censoring indicators is equal to 5 percent of the plot height.</p></dd>
 
+  <dt>risk_table</dt>
+<dd><p>Either <code>TRUE</code> or <code>FALSE</code>, indicating whether a risk table should be added below the plot or not. Please see details before using this option, since there is still no agreed upon way to include them for adjusted survival curves. Internally, a separate plot is created for the table and added to the survival curve plot using the <code>plot_grid</code> function of the <span class="pkg">cowplot</span> package. The output is still a <code>ggplot</code> object, but it may not be possible to change some aspects of that object anymore. Note also that all arguments starting with <code>risk_table_</code> indicate arguments used to customize risk tables. These will be ignored if <code>risk_table=FALSE</code>.</p></dd>
+
+  <dt>risk_table_type</dt>
+<dd><p>A single character string specifying what kind of risk table should be created. Has to be one of <code>"n_at_risk"</code> (number at risk, the default), <code>"n_cens"</code> (cumulative number of censored people up to time \(t\)) or <code>"n_events"</code> (cumulative number of events up to time \(t\)). Note that these numbers will be weighted if and only if <code>risk_table_use_weights</code> is set to <code>TRUE</code> and the method used to adjust the survival curves was one of <code>c("iptw_km", "iptw_cox", "iptw_pseudo")</code>. Otherwise, unadjusted numbers are returned. See details.</p></dd>
+
+  <dt>risk_table_stratify</dt>
+<dd><p>Either <code>TRUE</code> or <code>FALSE</code>, indicating whether the risk table should be stratified by <code>variable</code>.</p></dd>
+
+  <dt>risk_table_height</dt>
+<dd><p>A single number between 0 and 1, indicating the proportion of the resulting plot that should be used for the risk table. By making this number larger, the "height" of the risk table is increased. Defaults to 0.25, e.g. about a quarter of the plot is reserved for the risk table.</p></dd>
+
+  <dt>risk_table_xlab</dt>
+<dd><p>A single character string specifying the x-axis label for the risk table. By default, the same name is used as was used for the survival curve plot.</p></dd>
+
+  <dt>risk_table_ylab</dt>
+<dd><p>A single character string specifying the y-axis label of the risk table. By default this is set to <code>"default"</code>, which is replaced internally depending on the supplied <code>risk_table_type</code>, <code>risk_table_use_weights</code> and <code>risk_table_stratify</code> arguments. Set to <code>NULL</code> to use no y-axis label.</p></dd>
+
+  <dt>risk_table_title</dt>
+<dd><p>A single character string specifying the title of the risk table. By default this is set to <code>"default"</code>, which is replaced internally depending on the supplied <code>risk_table_type</code>, <code>risk_table_use_weights</code> and <code>risk_table_stratify</code> arguments. Set to <code>NULL</code> to use no title.</p></dd>
+
+  <dt>risk_table_title_size</dt>
+<dd><p>A single positive number specifying the size of the title of the risk table.</p></dd>
+
+  <dt>risk_table_title_position</dt>
+<dd><p>One of <code>c("left", "middle", "right")</code>, specifying where the title of the risk table should be put. Defaults to <code>"middle"</code>.</p></dd>
+
+  <dt>risk_table_y_vjust</dt>
+<dd><p>A single positive number specifying the distance between the y-axis and the y-axis label. Is only used when <code>risk_table_stratify=FALSE</code>. Set to 5 by default to make the y-axis label allign with the y-axis label of the survival curve plot.</p></dd>
+
+  <dt>risk_table_theme</dt>
+<dd><p>A <code>ggplot2</code> theme object which will be used for the risk table. Defaults to the same theme used for the survival curve plot, but may also be different.</p></dd>
+
+  <dt>risk_table_size</dt>
+<dd><p>A single positive number specifying the size of the numbers used in the risk table.</p></dd>
+
+  <dt>risk_table_alpha</dt>
+<dd><p>A single number between 0 and 1 specifying the alpha level of the numbers in the risk table.</p></dd>
+
+  <dt>risk_table_color</dt>
+<dd><p>A single character string specifying the color of the numbers in the risk table. Only used when <code>risk_table_stratify=FALSE</code>. To change the colors when using <code>risk_table_stratify=TRUE</code>, use the <code>risk_table_custom_colors</code> argument.</p></dd>
+
+  <dt>risk_table_family</dt>
+<dd><p>A single character string specifying the text family that should be used for the numbers in the risk table.</p></dd>
+
+  <dt>risk_table_fontface</dt>
+<dd><p>A single character string specifying the fontface of the text used to write the numbers in the risk table. Must be one of <code>c("plain", "bold", "italic", "bold.italic")</code>. Defaults to <code>"plain"</code>.</p></dd>
+
+  <dt>risk_table_reverse</dt>
+<dd><p>Whether to reverse the order of groups in the risk table when using <code>risk_table_stratify=TRUE</code>.</p></dd>
+
+  <dt>risk_table_stratify_color</dt>
+<dd><p>Either <code>TRUE</code> or <code>FALSE</code>, indicating whether the risk table should have different colors for different groups. Only used when <code>risk_table_stratify=TRUE</code>.</p></dd>
+
+  <dt>risk_table_custom_colors</dt>
+<dd><p>A vector of custom colors used when both <code>risk_table_stratify</code> and <code>risk_table_stratify_color</code> are set to <code>TRUE</code>. By default this uses the same colors as the survival curve plot, but it doesn't have to.</p></dd>
+
+  <dt>risk_table_use_weights</dt>
+<dd><p>Whether to use weights in the calculation of the values shown in the risk table or not. By default weights are used when they were used in the calculation of the adjusted survival curves as well. Otherwise, unadjusted risk tables are returned. Note that since the sum of all weights is not neccessarily equal to the number of individuals in the dataset (unless <code>stabilize=TRUE</code> was used in the original <code>adjustedsurv</code> call), these numbers may seem odd. If weights are used it is also highly likely that the results will not be integers. See <code>risk_table_digits</code>.</p></dd>
+
+  <dt>risk_table_digits</dt>
+<dd><p>A single number specifying how many digits should be used when rounding the numbers presented in the risk table. Since unadjusted calculations always result in integer values, this argument is only relevant when weights or multiple imputation were used. See <code><a href="https://rdrr.io/r/base/Round.html" class="external-link">?round</a></code>.</p></dd>
+
+  <dt>risk_table_warn</dt>
+<dd><p>Either <code>TRUE</code> or <code>FALSE</code>, indicating whether the user should be warned about some subtleties when using risk tables. We strongly urge the user to read the details before ignoring the warnings. Set to <code>FALSE</code> to ignore all warnings.</p></dd>
+
   <dt>...</dt>
 <dd><p>Currently not used.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>When using certain methods there is no guarantee that the resulting estimated survival curves are monotonically decreasing. This is unfortunate since we know that it has to be the case. Isotonic regression can be used to fix this problem by ensuring that the survival curves are actually monotonically decreasing everywhere, while also being as close to the observations as possible. Westling et al. (2020) showed mathematically that this does not add any systematic bias to the estimates. More information on the method can be found in Robertson et al. (1988). This adjustment can be done using this function by setting <code>iso_reg</code> to <code>TRUE</code>.</p>
+    
+
+<p><strong><em>On the use of Risk Tables</em></strong></p>
+<p>Due to popular demand, this function now also supports adding risk tables below the survival curves as of version 0.12.0. In previous versions of this package, this was not implemented due to the unclear interpretation of the risk tables depending on the method. When using the standard Kaplan-Meier method, the number of people at risk (<code>risk_table_type="n_at_risk"</code>) is used directly to obtain the survival curve estimates. Showing the number at risk or some related numbers (such as number of events etc.) makes sense and is a nice way to communicate uncertainty of the results. However, most methods in this package <strong>DO NOT</strong> use number of people at risk to arrive at the survival curve estimates. The only methods that do so are <code>"km"</code> (the classic unadjusted Kaplan-Meier method) as well as <code>"iptw_km"</code> and <code>"iptw_cox"</code>. The latter two actually use <em>weighted</em> numbers at risk.</p>
+<p>For the two methods relying on weighted numbers at risk, it may be reasonable to add weighted risk tables. This is done by default (<code>risk_table_use_weights=TRUE</code>) if <code>risk_table=TRUE</code>. However, since these numbers are weighted they no longer correspond to actually observed numbers, which may lead to two confusing things happening: (1) the numbers are not integers (for example 120.45 people at risk at \(t\)) and / or (2) the sum of the numbers far exceeds the number of actual observations. (1) may be "solved" by rounding (setting <code>risk_table_digits=0</code>) and (2) may be solved by enforcing the sum of the weights to be equal to the number of observations by setting <code>stabilize=TRUE</code> in the original <code><a href="adjustedsurv.html">adjustedsurv()</a></code> call.</p>
+<p>For all other methods it is unclear if the use of risk tables makes sense. Since no weights were used in their estimation, there is no way to get "adjusted" risk tables in that case. The therefore unadjusted numbers may not correspond to the shown adjusted survival curves. For example, the adjusted survival curves may extend to regions where there are actually 0 number of people at risk left. We recommend using only unstratified risk tables in this case (keeping <code>risk_table_stratify=FALSE</code>).</p>
+<p><strong><em>Isotonic Regression &amp; Forcing Bounds</em></strong></p>
+<p>When using certain methods there is no guarantee that the resulting estimated survival curves are non-increasing. This is unfortunate since we know that it has to be the case. Isotonic regression can be used to fix this problem by ensuring that the survival curves are actually non-increasing everywhere, while also being as close to the observations as possible. Westling et al. (2020) showed mathematically that this does not add any systematic bias to the estimates. More information on the method can be found in Robertson et al. (1988). This adjustment can be done using this function by setting <code>iso_reg</code> to <code>TRUE</code>.</p>
 <p>Similarly, some methods can produce estimates that lie outside the theoretical 0 and 1 bounds of probability. By setting <code>force_bounds</code> to <code>TRUE</code> these estimates are manually set to either 0 or 1 (whichever is closer).</p>
-<p>There is currently no option to add risk tables to the plot, because there is no way to meaningfully adjust those for confounders.</p>
+<p><strong><em>Multiple Imputation</em></strong></p>
+<p>When multiple imputation was used to create the adjusted survival curves, the adjusted survival curves pooled over all imputations is displayed as described in the documentation page of the <code>adjustedsurv</code> function. When adding censoring indicators (<code>censoring_ind=TRUE</code>), only the censoring times actually observed in the original data will be displayed. Possible imputed censoring times are ignored. When using <code>risk_table=TRUE</code> on multiply imputed data, the numbers making up the risk table are calculated for each imputed dataset and are pooled using Rubins Rule afterwards.</p>
+<p><strong><em>Plot Customization</em></strong></p>
+<p>Although this function offers a lot of arguments to customize the resulting plot, there is always need for more customization options. Since the function returns a standard <code>ggplot2</code> object, users can usually use standard <code>ggplot2</code> syntax to add more geoms or change certain aspects of the plot. This, however, is not guaranteed to work when using <code>risk_table=TRUE</code>. We are working on a solution to this currently. A special package vignette concerned with plot customization will also be added in future versions.</p>
+<p><strong><em>Other Plotting Options</em></strong></p>
 <p>If you prefer using the <code>ggsurvplot</code> syntax, you can also use the <code><a href="as_ggsurvplot_df.html">as_ggsurvplot_df</a></code> function to extract a <code>data.frame</code> from the <code>adjustedsurv</code> object, which can be used directly to call the <code>ggsurvplot_df</code> function from the <span class="pkg">survminer</span> package.</p>
     </div>
     <div class="section level2">
@@ -291,24 +390,36 @@
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjsurv</span>, median_surv_lines<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot.adjustedsurv-8.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># plot with crude risk table (recommended)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjsurv</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>, risk_table<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Adding risk tables may produce confusing output when using methods other then 'km', 'iptw_km' or 'iptw_cox', because all other methods do not use risk tables to estimate the survival curves. See details. Set risk_table_warn=FALSE to silence this warning.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: cowplot</span>
+<span class="r-plt img"><img src="plot.adjustedsurv-9.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># plot with stratified risk table</span></span></span>
+<span class="r-in"><span><span class="co"># (only recommended for methods that use weights)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjsurv</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>, risk_table<span class="op">=</span><span class="cn">TRUE</span>, risk_table_stratify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Adding risk tables may produce confusing output when using methods other then 'km', 'iptw_km' or 'iptw_cox', because all other methods do not use risk tables to estimate the survival curves. See details. Set risk_table_warn=FALSE to silence this warning.</span>
+<span class="r-plt img"><img src="plot.adjustedsurv-10.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plot with small lines indicating where observations were censored</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjsurv</span>, censoring_ind<span class="op">=</span><span class="st">"lines"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="plot.adjustedsurv-9.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="plot.adjustedsurv-11.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plot with points indicating where observations were censored</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjsurv</span>, censoring_ind<span class="op">=</span><span class="st">"points"</span>, censoring_ind_size<span class="op">=</span><span class="fl">4</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="plot.adjustedsurv-10.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="plot.adjustedsurv-12.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plot with some custom characteristics</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjsurv</span>, legend.position<span class="op">=</span><span class="st">"bottom"</span>, linetype<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>     custom_colors<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"green"</span>, <span class="st">"blue"</span><span class="op">)</span>, legend.title<span class="op">=</span><span class="st">"Custom"</span>,</span></span>
 <span class="r-in"><span>     title<span class="op">=</span><span class="st">"Custom Plot"</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>, linesize<span class="op">=</span><span class="fl">0.5</span>,</span></span>
 <span class="r-in"><span>     median_surv_lines<span class="op">=</span><span class="cn">TRUE</span>, censoring_ind<span class="op">=</span><span class="st">"lines"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="plot.adjustedsurv-11.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="plot.adjustedsurv-13.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># adding further ggplot2 elements</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjsurv</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="plot.adjustedsurv-12.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="plot.adjustedsurv-14.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
