@@ -77,6 +77,9 @@ This page explains the details of estimating inverse probability of treatment we
   <dt>trim</dt>
 <dd><p>Can be either <code>FALSE</code> (default) or a numeric value at which to trim the weights. If <code>FALSE</code>, weights are used as calculated or supplied. If a numeric value is supplied, all weights that are bigger than <code>trim</code> are set to <code>trim</code> before the analysis is carried out. Useful when some weights are extremely large.</p></dd>
 
+  <dt>trim_quantiles</dt>
+<dd><p>Alternative argument to trim weights based on quantiles. Can be either <code>FALSE</code> (default) to use no trimming, or a numeric vector containing exactly two values between 0 and 1. These values specify the quantiles that the weights should be trimmed at. For example, if <code>c(0.01, 0.99)</code> is supplied to this argument, all weights that are lower than the 0.01 quantile of the weight distribution will be set to that quantile and all weights that are higher than the 0.99 quantile of the weight distributions will be set to the 0.99 quantile.</p></dd>
+
   <dt>se_method</dt>
 <dd><p>One of <code>"miller"</code>, <code>"galloway"</code>, <code>"cochrane"</code> and <code>"Hmisc"</code>. Specifies which kind of standard error to calculate. Defaults to <code>"cochrane"</code>. See details.</p></dd>
 
