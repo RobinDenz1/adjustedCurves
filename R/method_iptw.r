@@ -18,7 +18,7 @@
 surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
                          conf_level=0.95, times=NULL, treatment_model,
                          weight_method="ps", stabilize=FALSE,
-                         trim=FALSE, ...) {
+                         trim=FALSE, trim_quantiles=FALSE, ...) {
 
   levs <- levels(data[, variable])
 
@@ -26,6 +26,7 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
   if (is.numeric(treatment_model)) {
     weights <- treatment_model
     weights <- trim_weights(weights=weights, trim=trim)
+    weights <- trim_weights_quantiles(weights=weights, trim_q=trim_quantiles)
     if (stabilize) {
       weights <- stabilize_weights(weights, data, variable, levs)
     }
@@ -33,7 +34,7 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
     weights <- get_iptw_weights(data=data, treatment_model=treatment_model,
                                 weight_method=weight_method,
                                 variable=variable, stabilize=stabilize,
-                                trim=trim, ...)
+                                trim=trim, trim_q=trim_quantiles, ...)
   }
 
   plotdata <- vector(mode="list", length=length(levs))
@@ -112,7 +113,7 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
 surv_iptw_cox <- function(data, variable, ev_time, event, conf_int=FALSE,
                           conf_level=0.95, times=NULL, treatment_model,
                           weight_method="ps", stabilize=FALSE,
-                          trim=FALSE, ...) {
+                          trim=FALSE, trim_quantiles=FALSE, ...) {
 
   levs <- levels(data[, variable])
 
@@ -120,6 +121,7 @@ surv_iptw_cox <- function(data, variable, ev_time, event, conf_int=FALSE,
   if (is.numeric(treatment_model)) {
     weights <- treatment_model
     weights <- trim_weights(weights=weights, trim=trim)
+    weights <- trim_weights_quantiles(weights=weights, trim_q=trim_quantiles)
     if (stabilize) {
       weights <- stabilize_weights(weights, data, variable, levs)
     }
@@ -127,7 +129,7 @@ surv_iptw_cox <- function(data, variable, ev_time, event, conf_int=FALSE,
     weights <- get_iptw_weights(data=data, treatment_model=treatment_model,
                                 weight_method=weight_method,
                                 variable=variable, stabilize=stabilize,
-                                trim=trim, ...)
+                                trim=trim, trim_q=trim_quantiles, ...)
   }
 
   # univariate, weighted cox model

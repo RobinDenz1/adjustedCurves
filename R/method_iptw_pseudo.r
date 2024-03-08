@@ -16,15 +16,17 @@
 ## generalized function that does both
 method_iptw_pseudo <- function(data, variable, ev_time, event, cause, conf_int,
                                conf_level, times, treatment_model,
-                               weight_method, stabilize, trim, se_method,
-                               censoring_vars, ipcw_method, mode, ...) {
+                               weight_method, stabilize, trim, trim_quantiles,
+                               se_method, censoring_vars, ipcw_method, mode,
+                               ...) {
 
   levs <- levels(data[, variable])
 
   # get weights
   if (is.numeric(treatment_model)) {
     weights <- treatment_model
-    weights <- trim_weights(weights, trim)
+    weights <- trim_weights(weights=weights, trim=trim)
+    weights <- trim_weights_quantiles(weights=weights, trim_q=trim_quantiles)
     if (stabilize) {
       weights <- stabilize_weights(weights, data, variable, levs)
     }
@@ -32,7 +34,7 @@ method_iptw_pseudo <- function(data, variable, ev_time, event, cause, conf_int,
     weights <- get_iptw_weights(data=data, treatment_model=treatment_model,
                                 weight_method=weight_method,
                                 variable=variable, stabilize=stabilize,
-                                trim=trim, ...)
+                                trim=trim, trim_q=trim_quantiles, ...)
   }
 
   # estimate pseudo observations
@@ -98,8 +100,9 @@ method_iptw_pseudo <- function(data, variable, ev_time, event, cause, conf_int,
 surv_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
                              conf_level=0.95, times, treatment_model,
                              weight_method="ps", stabilize=FALSE,
-                             trim=FALSE, se_method="cochrane",
-                             censoring_vars=NULL, ipcw_method="binder", ...) {
+                             trim=FALSE, trim_quantiles=FALSE,
+                             se_method="cochrane", censoring_vars=NULL,
+                             ipcw_method="binder", ...) {
 
   out <- method_iptw_pseudo(data=data, variable=variable, ev_time=ev_time,
                             event=event, conf_int=conf_int,
@@ -109,7 +112,7 @@ surv_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
                             trim=trim, se_method=se_method,
                             censoring_vars=censoring_vars,
                             ipcw_method=ipcw_method, cause=1,
-                            mode="surv", ...)
+                            mode="surv", trim_quantiles=trim_quantiles, ...)
   return(out)
 }
 
@@ -118,7 +121,7 @@ surv_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
 cif_iptw_pseudo <- function(data, variable, ev_time, event, cause,
                             conf_int, conf_level=0.95, times,
                             treatment_model, weight_method="ps",
-                            stabilize=FALSE, trim=FALSE,
+                            stabilize=FALSE, trim=FALSE, trim_quantiles=FALSE,
                             se_method="cochrane", ...) {
 
   out <- method_iptw_pseudo(data=data, variable=variable, ev_time=ev_time,
@@ -128,7 +131,7 @@ cif_iptw_pseudo <- function(data, variable, ev_time, event, cause,
                             weight_method=weight_method, stabilize=stabilize,
                             trim=trim, se_method=se_method,
                             censoring_vars=NULL, ipcw_method="binder",
-                            mode="cif", ...)
+                            mode="cif", trim_quantiles=trim_quantiles, ...)
   return(out)
 }
 

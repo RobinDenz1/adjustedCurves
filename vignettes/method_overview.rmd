@@ -112,7 +112,7 @@ tab <- data.frame(
   bounds=c("yes", "yes", "yes", "no", "yes", "no", "no", "yes", "yes"),
   monotonic=c("yes", "no", "yes", "no", "yes", "no", "no", "yes", "yes"),
   doubly_robust=c("no", "no", "no", "no", "no", "yes", "yes", "yes", "no"),
-  dependent_censoring=c("no", "yes", "yes", "yes", "no", "yes", "yes", "yes",
+  dependent_censoring=c("no", "no", "yes", "no", "no", "yes", "no", "yes",
                         "no"),
   type=c("outcome", "outcome", "treatment", "treatment", "treatment", "both",
          "both", "both", "none"),

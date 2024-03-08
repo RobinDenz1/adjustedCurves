@@ -15,7 +15,7 @@
 
 ## estimate iptw weights
 get_iptw_weights <- function(data, treatment_model, weight_method,
-                             variable, stabilize=TRUE, trim, ...) {
+                             variable, stabilize=TRUE, trim, trim_q, ...) {
   levs <- levels(data[, variable])
 
   # using WeightIt
@@ -49,6 +49,7 @@ get_iptw_weights <- function(data, treatment_model, weight_method,
   }
 
   weights <- trim_weights(weights=weights, trim=trim)
+  weights <- trim_weights_quantiles(weights=weights, trim_q=trim_q)
 
   if (stabilize) {
     weights <- stabilize_weights(weights, data, variable, levs)
@@ -64,6 +65,29 @@ trim_weights <- function(weights, trim) {
     return(weights)
   } else {
     weights[weights > trim] <- trim
+    return(weights)
+  }
+}
+
+## trim weights based on defined quantiles
+trim_weights_quantiles <- function(weights, trim_q) {
+
+  # check inputs
+  if (!((length(trim_q)==1 && is.logical(trim_q) &&
+         !trim_q) | (length(trim_q)==2 &&
+         is.numeric(trim_q) && all(trim_q < 1)
+         && all(trim_q > 0)))) {
+    stop("'trim_quantile' must be either FALSE or a numeric vector of length 2",
+         " containing the lower and upper quantile to be trimmed.")
+  }
+
+  if (length(trim_q)==1) {
+    return(weights)
+  } else {
+    q_low <- stats::quantile(weights, probs=min(trim_q))
+    q_high <- stats::quantile(weights, probs=max(trim_q))
+    weights[weights < q_low] <- q_low
+    weights[weights > q_high] <- q_high
     return(weights)
   }
 }

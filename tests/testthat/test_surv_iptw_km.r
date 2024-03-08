@@ -161,6 +161,20 @@ test_that("3 ways of iptw calculation are equal", {
 
 })
 
+test_that("use trim_quantiles", {
+  adjtrim <- adjustedsurv(data=sim_dat,
+                          variable="group",
+                          ev_time="time",
+                          event="event",
+                          method="iptw_km",
+                          conf_int=TRUE,
+                          bootstrap=TRUE,
+                          n_boot=2,
+                          treatment_model=mod,
+                          trim_quantiles=c(0.4, 0.6))
+  expect_true(all(adjtrim$weights > 1.46 & adjtrim$weights < 1.74))
+})
+
 sim_dat <- readRDS(system.file("testdata",
                                "d_sim_surv_n_50.Rds",
                                package="adjustedCurves"))

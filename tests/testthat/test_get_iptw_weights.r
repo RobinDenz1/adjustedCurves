@@ -22,7 +22,8 @@ test_that("2 treatments, using glm", {
                               weight_method="ps",
                               variable="group",
                               stabilize=TRUE,
-                              trim=FALSE)
+                              trim=FALSE,
+                              trim_q=FALSE)
   expect_true(is.numeric(weights))
   expect_true(all(weights > 0))
   expect_true(length(weights)==nrow(sim_dat))
@@ -34,7 +35,8 @@ test_that("2 treatments, using weightit", {
                               weight_method="ps",
                               variable="group",
                               stabilize=TRUE,
-                              trim=FALSE)
+                              trim=FALSE,
+                              trim_q=FALSE)
   expect_true(is.numeric(weights))
   expect_true(all(weights > 0))
   expect_true(length(weights)==nrow(sim_dat))
@@ -46,7 +48,8 @@ test_that("2 treatments, using glm + trim", {
                               weight_method="ps",
                               variable="group",
                               stabilize=TRUE,
-                              trim=3)
+                              trim=3,
+                              trim_q=FALSE)
   expect_true(is.numeric(weights))
   expect_true(all(weights > 0))
   expect_true(length(weights)==nrow(sim_dat))
@@ -58,7 +61,8 @@ test_that("2 treatments, using weightit + trim", {
                               weight_method="ps",
                               variable="group",
                               stabilize=TRUE,
-                              trim=3)
+                              trim=3,
+                              trim_q=FALSE)
   expect_true(is.numeric(weights))
   expect_true(all(weights > 0))
   expect_true(length(weights)==nrow(sim_dat))
@@ -70,7 +74,8 @@ test_that("2 treatments, not using stabilize", {
                               weight_method="ps",
                               variable="group",
                               stabilize=TRUE,
-                              trim=3)
+                              trim=3,
+                              trim_q=FALSE)
   expect_true(is.numeric(weights))
   expect_true(all(weights > 0))
   expect_true(length(weights)==nrow(sim_dat))
@@ -81,11 +86,12 @@ class(mira_mod) <- "mira"
 
 test_that("error with mira", {
   expect_error(get_iptw_weights(data=sim_dat,
-                                  treatment_model=mira_mod,
-                                  weight_method="ps",
-                                  variable="group",
-                                  stabilize=TRUE,
-                                  trim=3),
+                                treatment_model=mira_mod,
+                                weight_method="ps",
+                                variable="group",
+                                stabilize=TRUE,
+                                trim=3,
+                                trim_q=FALSE),
                 paste0("If a 'mira' object is used in the 'treatment_model' ",
                        "argument the 'data' argument must be a 'mids' ",
                        "object, not a data.frame."))
@@ -99,7 +105,8 @@ test_that("error unsupported input", {
                                 weight_method="ps",
                                 variable="group",
                                 stabilize=TRUE,
-                                trim=3),
+                                trim=3,
+                                trim_q=FALSE),
                "Unsuported input: 'unsupported'. See documentation.")
 })
 
@@ -120,7 +127,8 @@ test_that("3 treatments, using multinom", {
                               weight_method="ps",
                               variable="group2",
                               stabilize=TRUE,
-                              trim=FALSE)
+                              trim=FALSE,
+                              trim_q=FALSE)
   expect_true(is.numeric(weights))
   expect_true(all(weights > 0))
   expect_true(length(weights)==nrow(sim_dat))
@@ -132,7 +140,8 @@ test_that("3 treatments, using weightit", {
                               weight_method="ps",
                               variable="group2",
                               stabilize=TRUE,
-                              trim=FALSE)
+                              trim=FALSE,
+                              trim_q=FALSE)
   expect_true(is.numeric(weights))
   expect_true(all(weights > 0))
   expect_true(length(weights)==nrow(sim_dat))
@@ -144,7 +153,8 @@ test_that("3 treatments, using multinom + trim", {
                               weight_method="ps",
                               variable="group2",
                               stabilize=TRUE,
-                              trim=3)
+                              trim=3,
+                              trim_q=FALSE)
   expect_true(is.numeric(weights))
   expect_true(all(weights > 0))
   expect_true(length(weights)==nrow(sim_dat))
@@ -156,7 +166,8 @@ test_that("3 treatments, using weightit + trim", {
                               weight_method="ps",
                               variable="group2",
                               stabilize=TRUE,
-                              trim=3)
+                              trim=3,
+                              trim_q=FALSE)
   expect_true(is.numeric(weights))
   expect_true(all(weights > 0))
   expect_true(length(weights)==nrow(sim_dat))
@@ -168,7 +179,8 @@ test_that("3 treatments, not using stabilize", {
                               weight_method="ps",
                               variable="group2",
                               stabilize=TRUE,
-                              trim=3)
+                              trim=3,
+                              trim_q=FALSE)
   expect_true(is.numeric(weights))
   expect_true(all(weights > 0))
   expect_true(length(weights)==nrow(sim_dat))
