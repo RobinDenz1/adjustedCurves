@@ -191,6 +191,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
     out_obj <- list(mids_analyses=out,
                     adjsurv=plotdata,
                     data=data$data,
+                    mids=data, # TODO: change after rework to plot()
                     method=method,
                     categorical=ifelse(length(levs)>2, TRUE, FALSE),
                     conf_level=conf_level,

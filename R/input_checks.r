@@ -1262,3 +1262,29 @@ check_inputs_auc_diff <- function(times, max_t, color, difference, ratio,
          " same time. Set one to FALSE.")
   }
 }
+
+## input checks when using risk tavles in plot.adjustedsurv()
+check_inputs_risk_table <- function(method, type, use_weights, warn) {
+
+  # errors
+  if (!type %in% c("n_at_risk", "n_cens", "n_events")) {
+    stop("'risk_table_type' must be either 'n_at_risk', 'n_cens' or",
+         " 'n_events'.")
+  }
+
+  # (optional) warnings
+  if (!method %in% c("km", "iptw_km", "iptw_cox") && warn) {
+    warning("Adding risk tables may produce confusing output when",
+            " using methods other then 'km', 'iptw_km' or 'iptw_cox',",
+            " because all other methods do not use risk tables to estimate",
+            " the survival curves. See details. Set risk_table_warn=FALSE",
+            " to silence this warning.")
+  }
+  if (method %in% c("iptw_km", "iptw_cox", "iptw_pseudo") &&
+      !use_weights && warn) {
+    warning("Unweighted risk tables were added to plots created with",
+            " weighted data. This may lead to confusing output. See",
+            " details. Set risk_table_warn=FALSE to silence this warning.")
+  }
+}
+

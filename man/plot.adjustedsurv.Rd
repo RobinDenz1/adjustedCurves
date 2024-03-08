@@ -21,18 +21,28 @@ A function to graphically display confounder-adjusted survival curves which wher
      custom_linetypes=NULL,
      single_color=NULL, single_linetype=NULL,
      conf_int_alpha=0.4, steps=TRUE,
-     median_surv_lines=FALSE,
-     median_surv_size=0.5,
+     x_breaks=ggplot2::waiver(), x_n_breaks=NULL,
+     y_breaks=ggplot2::waiver(), y_n_breaks=NULL,
+     median_surv_lines=FALSE, median_surv_size=0.5,
      median_surv_linetype="dashed",
-     median_surv_color="black",
-     median_surv_alpha=1,
+     median_surv_color="black", median_surv_alpha=1,
      median_surv_quantile=0.5,
-     censoring_ind="none",
-     censoring_ind_size=0.5,
-     censoring_ind_alpha=1,
-     censoring_ind_shape=17,
+     censoring_ind="none", censoring_ind_size=0.5,
+     censoring_ind_alpha=1, censoring_ind_shape=17,
      censoring_ind_width=NULL,
-     ...)
+     risk_table=FALSE, risk_table_type="n_at_risk",
+     risk_table_stratify=FALSE, risk_table_height=0.25,
+     risk_table_xlab=xlab, risk_table_ylab="default",
+     risk_table_title="default", risk_table_title_size=14,
+     risk_table_title_position="middle",
+     risk_table_y_vjust=5, risk_table_theme=gg_theme,
+     risk_table_size=4.2, risk_table_alpha=1,
+     risk_table_color="black", risk_table_family="sans",
+     risk_table_fontface="plain", risk_table_reverse=TRUE,
+     risk_table_stratify_color=TRUE,
+     risk_table_custom_colors=custom_colors,
+     risk_table_use_weights=TRUE, risk_table_digits=1,
+     risk_table_warn=TRUE, ...)
 }
 
 \arguments{
@@ -114,6 +124,18 @@ A number indicating the level of transparency that should be used when drawing t
   \item{steps}{
 A logical variable indicating whether the survival curves should be plotted as a step function or using straight lines. Straight lines should not be used with a simple Kaplan-Meier estimator. It is recommended to only use straight lines when a sufficiently fine grid of time points was used in the estimation step.
   }
+  \item{x_breaks}{
+An optional numeric vector specifying the breaks on the x-axis. These will also be used in the risk table if \code{risk_table=TRUE}. Internally, this is passed to the \code{breaks} argument of the \code{scale_x_continuous} function.
+  }
+  \item{x_n_breaks}{
+An optional positive number specifying the number of breaks on the x-axis. Internally, this is passed to the \code{n.breaks} argument of the \code{scale_x_continuous} function.
+  }
+  \item{y_breaks}{
+An optional numeric vector specifying the breaks on the y-axis. Internally, this is passed to the \code{breaks} argument of the \code{scale_y_continuous} function.
+  }
+  \item{y_n_breaks}{
+An optional positive number specifying the number of breaks on the y-axis. Internally, this is passed to the \code{n.breaks} argument of the \code{scale_y_continuous} function.
+  }
   \item{median_surv_lines}{
 Whether to draw indicator lines for the median survival times, which makes it easier to read those off the curves. Survival curves with undefined median survival times receive no lines.
   }
@@ -147,18 +169,104 @@ A numeric value specifying the shape of the censoring indicators when using \cod
   \item{censoring_ind_width}{
 A numeric value specifying the width of the censoring indicators. Ignored unless \code{censoring_ind="lines"}. By default (\code{censoring_ind_width=NULL}) the width of the censoring indicators is equal to 5 percent of the plot height.
   }
+  \item{risk_table}{
+Either \code{TRUE} or \code{FALSE}, indicating whether a risk table should be added below the plot or not. Please see details before using this option, since there is still no agreed upon way to include them for adjusted survival curves. Internally, a separate plot is created for the table and added to the survival curve plot using the \code{plot_grid} function of the \pkg{cowplot} package. The output is still a \code{ggplot} object, but it may not be possible to change some aspects of that object anymore. Note also that all arguments starting with \code{risk_table_} indicate arguments used to customize risk tables. These will be ignored if \code{risk_table=FALSE}.
+  }
+  \item{risk_table_type}{
+A single character string specifying what kind of risk table should be created. Has to be one of \code{"n_at_risk"} (number at risk, the default), \code{"n_cens"} (cumulative number of censored people up to time \eqn{t}) or \code{"n_events"} (cumulative number of events up to time \eqn{t}). Note that these numbers will be weighted if and only if \code{risk_table_use_weights} is set to \code{TRUE} and the method used to adjust the survival curves was one of \code{c("iptw_km", "iptw_cox", "iptw_pseudo")}. Otherwise, unadjusted numbers are returned. See details.
+  }
+  \item{risk_table_stratify}{
+Either \code{TRUE} or \code{FALSE}, indicating whether the risk table should be stratified by \code{variable}.
+  }
+  \item{risk_table_height}{
+A single number between 0 and 1, indicating the proportion of the resulting plot that should be used for the risk table. By making this number larger, the "height" of the risk table is increased. Defaults to 0.25, e.g. about a quarter of the plot is reserved for the risk table.
+  }
+  \item{risk_table_xlab}{
+A single character string specifying the x-axis label for the risk table. By default, the same name is used as was used for the survival curve plot.
+  }
+  \item{risk_table_ylab}{
+A single character string specifying the y-axis label of the risk table. By default this is set to \code{"default"}, which is replaced internally depending on the supplied \code{risk_table_type}, \code{risk_table_use_weights} and \code{risk_table_stratify} arguments. Set to \code{NULL} to use no y-axis label.
+  }
+  \item{risk_table_title}{
+A single character string specifying the title of the risk table. By default this is set to \code{"default"}, which is replaced internally depending on the supplied \code{risk_table_type}, \code{risk_table_use_weights} and \code{risk_table_stratify} arguments. Set to \code{NULL} to use no title.
+  }
+  \item{risk_table_title_size}{
+A single positive number specifying the size of the title of the risk table.
+  }
+  \item{risk_table_title_position}{
+One of \code{c("left", "middle", "right")}, specifying where the title of the risk table should be put. Defaults to \code{"middle"}.
+  }
+  \item{risk_table_y_vjust}{
+A single positive number specifying the distance between the y-axis and the y-axis label. Is only used when \code{risk_table_stratify=FALSE}. Set to 5 by default to make the y-axis label allign with the y-axis label of the survival curve plot.
+  }
+  \item{risk_table_theme}{
+A \code{ggplot2} theme object which will be used for the risk table. Defaults to the same theme used for the survival curve plot, but may also be different.
+  }
+  \item{risk_table_size}{
+A single positive number specifying the size of the numbers used in the risk table.
+  }
+  \item{risk_table_alpha}{
+A single number between 0 and 1 specifying the alpha level of the numbers in the risk table.
+  }
+  \item{risk_table_color}{
+A single character string specifying the color of the numbers in the risk table. Only used when \code{risk_table_stratify=FALSE}. To change the colors when using \code{risk_table_stratify=TRUE}, use the \code{risk_table_custom_colors} argument.
+  }
+  \item{risk_table_family}{
+A single character string specifying the text family that should be used for the numbers in the risk table.
+  }
+  \item{risk_table_fontface}{
+A single character string specifying the fontface of the text used to write the numbers in the risk table. Must be one of \code{c("plain", "bold", "italic", "bold.italic")}. Defaults to \code{"plain"}.
+  }
+  \item{risk_table_reverse}{
+Whether to reverse the order of groups in the risk table when using \code{risk_table_stratify=TRUE}.
+  }
+  \item{risk_table_stratify_color}{
+Either \code{TRUE} or \code{FALSE}, indicating whether the risk table should have different colors for different groups. Only used when \code{risk_table_stratify=TRUE}.
+  }
+  \item{risk_table_custom_colors}{
+A vector of custom colors used when both \code{risk_table_stratify} and \code{risk_table_stratify_color} are set to \code{TRUE}. By default this uses the same colors as the survival curve plot, but it doesn't have to.
+  }
+  \item{risk_table_use_weights}{
+Whether to use weights in the calculation of the values shown in the risk table or not. By default weights are used when they were used in the calculation of the adjusted survival curves as well. Otherwise, unadjusted risk tables are returned. Note that since the sum of all weights is not neccessarily equal to the number of individuals in the dataset (unless \code{stabilize=TRUE} was used in the original \code{adjustedsurv} call), these numbers may seem odd. If weights are used it is also highly likely that the results will not be integers. See \code{risk_table_digits}.
+  }
+  \item{risk_table_digits}{
+A single number specifying how many digits should be used when rounding the numbers presented in the risk table. Since unadjusted calculations always result in integer values, this argument is only relevant when weights or multiple imputation were used. See \code{?round}.
+  }
+  \item{risk_table_warn}{
+Either \code{TRUE} or \code{FALSE}, indicating whether the user should be warned about some subtleties when using risk tables. We strongly urge the user to read the details before ignoring the warnings. Set to \code{FALSE} to ignore all warnings.
+  }
   \item{...}{
 Currently not used.
   }
 }
 \details{
-When using certain methods there is no guarantee that the resulting estimated survival curves are monotonically decreasing. This is unfortunate since we know that it has to be the case. Isotonic regression can be used to fix this problem by ensuring that the survival curves are actually monotonically decreasing everywhere, while also being as close to the observations as possible. Westling et al. (2020) showed mathematically that this does not add any systematic bias to the estimates. More information on the method can be found in Robertson et al. (1988). This adjustment can be done using this function by setting \code{iso_reg} to \code{TRUE}.
+
+\strong{\emph{On the use of Risk Tables}}
+
+Due to popular demand, this function now also supports adding risk tables below the survival curves as of version 0.12.0. In previous versions of this package, this was not implemented due to the unclear interpretation of the risk tables depending on the method. When using the standard Kaplan-Meier method, the number of people at risk (\code{risk_table_type="n_at_risk"}) is used directly to obtain the survival curve estimates. Showing the number at risk or some related numbers (such as number of events etc.) makes sense and is a nice way to communicate uncertainty of the results. However, most methods in this package \strong{DO NOT} use number of people at risk to arrive at the survival curve estimates. The only methods that do so are \code{"km"} (the classic unadjusted Kaplan-Meier method) as well as \code{"iptw_km"} and \code{"iptw_cox"}. The latter two actually use \emph{weighted} numbers at risk.
+
+For the two methods relying on weighted numbers at risk, it may be reasonable to add weighted risk tables. This is done by default (\code{risk_table_use_weights=TRUE}) if \code{risk_table=TRUE}. However, since these numbers are weighted they no longer correspond to actually observed numbers, which may lead to two confusing things happening: (1) the numbers are not integers (for example 120.45 people at risk at \eqn{t}) and / or (2) the sum of the numbers far exceeds the number of actual observations. (1) may be "solved" by rounding (setting \code{risk_table_digits=0}) and (2) may be solved by enforcing the sum of the weights to be equal to the number of observations by setting \code{stabilize=TRUE} in the original \code{adjustedsurv()} call.
+
+For all other methods it is unclear if the use of risk tables makes sense. Since no weights were used in their estimation, there is no way to get "adjusted" risk tables in that case. The therefore unadjusted numbers may not correspond to the shown adjusted survival curves. For example, the adjusted survival curves may extend to regions where there are actually 0 number of people at risk left. We recommend using only unstratified risk tables in this case (keeping \code{risk_table_stratify=FALSE}).
+
+\strong{\emph{Isotonic Regression & Forcing Bounds}}
+
+When using certain methods there is no guarantee that the resulting estimated survival curves are non-increasing. This is unfortunate since we know that it has to be the case. Isotonic regression can be used to fix this problem by ensuring that the survival curves are actually non-increasing everywhere, while also being as close to the observations as possible. Westling et al. (2020) showed mathematically that this does not add any systematic bias to the estimates. More information on the method can be found in Robertson et al. (1988). This adjustment can be done using this function by setting \code{iso_reg} to \code{TRUE}.
 
 Similarly, some methods can produce estimates that lie outside the theoretical 0 and 1 bounds of probability. By setting \code{force_bounds} to \code{TRUE} these estimates are manually set to either 0 or 1 (whichever is closer).
 
-There is currently no option to add risk tables to the plot, because there is no way to meaningfully adjust those for confounders.
+\strong{\emph{Multiple Imputation}}
+
+When multiple imputation was used to create the adjusted survival curves, the adjusted survival curves pooled over all imputations is displayed as described in the documentation page of the \code{adjustedsurv} function. When adding censoring indicators (\code{censoring_ind=TRUE}), only the censoring times actually observed in the original data will be displayed. Possible imputed censoring times are ignored. When using \code{risk_table=TRUE} on multiply imputed data, the numbers making up the risk table are calculated for each imputed dataset and are pooled using Rubins Rule afterwards.
+
+\strong{\emph{Plot Customization}}
+
+Although this function offers a lot of arguments to customize the resulting plot, there is always need for more customization options. Since the function returns a standard \code{ggplot2} object, users can usually use standard \code{ggplot2} syntax to add more geoms or change certain aspects of the plot. This, however, is not guaranteed to work when using \code{risk_table=TRUE}. We are working on a solution to this currently. A special package vignette concerned with plot customization will also be added in future versions.
+
+\strong{\emph{Other Plotting Options}}
 
 If you prefer using the \code{ggsurvplot} syntax, you can also use the \code{\link[adjustedCurves]{as_ggsurvplot_df}} function to extract a \code{data.frame} from the \code{adjustedsurv} object, which can be used directly to call the \code{ggsurvplot_df} function from the \pkg{survminer} package.
+
 }
 \value{
 Returns a \code{ggplot2} object.
@@ -227,6 +335,13 @@ plot(adjsurv, linetype=TRUE, color=TRUE, facet=FALSE)
 
 # plot with median survival indicator lines
 plot(adjsurv, median_surv_lines=TRUE)
+
+# plot with crude risk table (recommended)
+plot(adjsurv, conf_int=TRUE, risk_table=TRUE)
+
+# plot with stratified risk table
+# (only recommended for methods that use weights)
+plot(adjsurv, conf_int=TRUE, risk_table=TRUE, risk_table_stratify=TRUE)
 
 # plot with small lines indicating where observations were censored
 plot(adjsurv, censoring_ind="lines")

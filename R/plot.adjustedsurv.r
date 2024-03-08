@@ -29,6 +29,8 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
                               custom_linetypes=NULL,
                               single_color=NULL, single_linetype=NULL,
                               conf_int_alpha=0.4, steps=TRUE,
+                              x_breaks=ggplot2::waiver(), x_n_breaks=NULL,
+                              y_breaks=ggplot2::waiver(), y_n_breaks=NULL,
                               median_surv_lines=FALSE, median_surv_size=0.5,
                               median_surv_linetype="dashed",
                               median_surv_color="black", median_surv_alpha=1,
@@ -36,6 +38,22 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
                               censoring_ind="none",
                               censoring_ind_size=0.5, censoring_ind_alpha=1,
                               censoring_ind_shape=17, censoring_ind_width=NULL,
+                              risk_table=FALSE, risk_table_type="n_at_risk",
+                              risk_table_stratify=FALSE, risk_table_height=0.25,
+                              risk_table_xlab=xlab, risk_table_ylab="default",
+                              risk_table_title="default",
+                              risk_table_title_size=14,
+                              risk_table_title_position="middle",
+                              risk_table_y_vjust=5, risk_table_theme=gg_theme,
+                              risk_table_size=4.2,
+                              risk_table_alpha=1, risk_table_color="black",
+                              risk_table_family="sans",
+                              risk_table_fontface="plain",
+                              risk_table_reverse=TRUE,
+                              risk_table_stratify_color=TRUE,
+                              risk_table_custom_colors=custom_colors,
+                              risk_table_use_weights=TRUE,
+                              risk_table_digits=1, risk_table_warn=TRUE,
                               ...) {
   requireNamespace("ggplot2")
 
@@ -140,19 +158,19 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
     ggplot2::labs(x=xlab, y=ylab, color=legend.title,
                   linetype=legend.title, fill=legend.title,
                   title=title, subtitle=subtitle) +
-    ggplot2::theme(legend.position=legend.position)
+    ggplot2::theme(legend.position=legend.position) +
+    ggplot2::scale_x_continuous(breaks=x_breaks, n.breaks=x_n_breaks) +
+    ggplot2::scale_y_continuous(breaks=y_breaks, n.breaks=y_n_breaks,
+                                limits=ylim)
 
   if (facet) {
     p <- p + ggplot2::facet_wrap(~group)
   }
-  if (!is.null(ylim)) {
-    p <- p + ggplot2::ylim(ylim)
+  if (!is.null(custom_linetypes)) {
+    p <- p + ggplot2::scale_linetype_manual(values=custom_linetypes)
   }
   if (!is.null(custom_colors)) {
     p <- p + ggplot2::scale_colour_manual(values=custom_colors)
-  }
-  if (!is.null(custom_linetypes)) {
-    p <- p + ggplot2::scale_linetype_manual(values=custom_linetypes)
   }
   if (!is.null(custom_colors)) {
     p <- p + ggplot2::scale_fill_manual(values=custom_colors)
@@ -357,5 +375,64 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
                                      data=median_surv)
     }
   }
+
+  ## adding risk tables
+  if (risk_table) {
+
+    check_inputs_risk_table(method=x$method, type=risk_table_type,
+                            use_weights=risk_table_use_weights,
+                            warn=risk_table_warn)
+
+    # set correct weights if specified
+    if (risk_table_use_weights && !is.null(x$weights) &&
+        is.null(x$mids_analyses)) {
+      weights <- x$weights
+    } else if (risk_table_use_weights && !is.null(x$mids_analyses) &&
+               !is.null(x$mids_analyses[[1]]$weights)) {
+      weights <- lapply(x$mids_analyses, FUN=function(d){d$weights})
+    } else {
+      weights <- NULL
+    }
+
+    # set correct variable if risk table should be stratified
+    if (risk_table_stratify) {
+      variable <- x$call$variable
+    } else {
+      variable <- NULL
+    }
+
+    # set correct data
+    if (!is.null(x$mids_analyses)) {
+      data <- x$mids
+    } else {
+      data <- x$data
+    }
+
+    p <- add_risk_table(p_surv=p,
+                        data=data,
+                        event=x$call$event,
+                        ev_time=x$call$ev_time,
+                        variable=variable,
+                        height=risk_table_height,
+                        type=risk_table_type,
+                        weights=weights,
+                        xlab=risk_table_xlab,
+                        ylab=risk_table_ylab,
+                        title=risk_table_title,
+                        title_size=risk_table_title_size,
+                        title_position=risk_table_title_position,
+                        vjust=risk_table_y_vjust,
+                        gg_theme=risk_table_theme,
+                        text_size=risk_table_size,
+                        text_alpha=risk_table_alpha,
+                        text_color=risk_table_color,
+                        text_family=risk_table_family,
+                        text_fontface=risk_table_fontface,
+                        reverse_order=risk_table_reverse,
+                        color_groups=risk_table_stratify_color,
+                        custom_colors=risk_table_custom_colors,
+                        digits=risk_table_digits)
+  }
+
   return(p)
 }

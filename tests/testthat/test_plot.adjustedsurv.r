@@ -239,7 +239,198 @@ test_that("plot, using many many things", {
   vdiffr::expect_doppelganger("plot, using many many things", fig=plt)
 })
 
-## warnings and errors
+##### risk tables
+
+## default overall
+test_that("risk table n_at_risk", {
+  plt <- plot(adj, risk_table=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("risk table n_at_risk", fig=plt)
+})
+
+test_that("risk table n_cens", {
+  plt <- plot(adj, risk_table=TRUE, risk_table_type="n_cens")
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("risk table n_cens", fig=plt)
+})
+
+test_that("risk table n_events", {
+  plt <- plot(adj, risk_table=TRUE, risk_table_type="n_events")
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("risk table n_events", fig=plt)
+})
+
+## default stratified
+test_that("risk table n_at_risk strat", {
+  plt <- plot(adj, risk_table=TRUE, risk_table_stratify=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("risk table n_at_risk strat", fig=plt)
+})
+
+test_that("risk table n_cens strat", {
+  plt <- plot(adj, risk_table=TRUE, risk_table_type="n_cens",
+              risk_table_stratify=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("risk table n_cens strat", fig=plt)
+})
+
+test_that("risk table n_events strat", {
+  plt <- plot(adj, risk_table=TRUE, risk_table_type="n_events",
+              risk_table_stratify=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("risk table n_events strat", fig=plt)
+})
+
+test_that("risk table with more breaks", {
+  plt <- plot(adj, risk_table=TRUE, x_n_breaks=10)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("risk table with more breaks", fig=plt)
+})
+
+test_that("risk table height", {
+  plt <- plot(adj, risk_table=TRUE, risk_table_height=0.5)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("risk table height", fig=plt)
+})
+
+test_that("risk table labs all", {
+  plt <- plot(adj, risk_table=TRUE, risk_table_xlab="X",
+              risk_table_ylab="Y", risk_table_title="Title",
+              risk_table_title_size=5, risk_table_title_position="right")
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("risk table labs all", fig=plt)
+})
+
+test_that("risk table labs stratify", {
+  plt <- plot(adj, risk_table=TRUE, risk_table_xlab="X",
+              risk_table_ylab="Y", risk_table_title="Title",
+              risk_table_title_size=5, risk_table_title_position="right",
+              risk_table_stratify=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("risk table labs stratify", fig=plt)
+})
+
+test_that("risk table y_vjust all", {
+  plt <- plot(adj, risk_table=TRUE, risk_table_y_vjust=0)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("risk table y_vjust all", fig=plt)
+})
+
+test_that("risk table y_vjust stratify", {
+  plt <- plot(adj, risk_table=TRUE, risk_table_y_vjust=10,
+              risk_table_stratify=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("risk table y_vjust stratify", fig=plt)
+})
+
+test_that("risk table theme", {
+  plt <- plot(adj, risk_table=TRUE, risk_table_theme=ggplot2::theme_dark())
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("risk table theme", fig=plt)
+})
+
+test_that("risk table all, customized text", {
+  plt <- plot(adj, risk_table=TRUE, risk_table_size=15,
+              risk_table_alpha=0.7, risk_table_color="green",
+              risk_table_family="serif", risk_table_fontface="italic")
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("risk table all, customized text", fig=plt)
+})
+
+test_that("risk table stratify, customized text", {
+  plt <- plot(adj, risk_table=TRUE, risk_table_size=4,
+              risk_table_alpha=0.7, risk_table_color="green",
+              risk_table_family="serif", risk_table_fontface="italic",
+              risk_table_stratify=TRUE, risk_table_stratify_color=FALSE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("risk table stratify, customized text", fig=plt)
+})
+
+test_that("risk table colors stratify", {
+  plt <- plot(adj, risk_table=TRUE, risk_table_stratify=TRUE,
+              risk_table_custom_colors=c("green", "pink"))
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("risk table colors stratify", fig=plt)
+})
+
+test_that("risk table reverse", {
+  plt <- plot(adj, risk_table=TRUE, risk_table_stratify=TRUE,
+              risk_table_reverse=FALSE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("risk table reverse", fig=plt)
+})
+
+## weighted risk tables
+set.seed(2345435)
+adj$weights <- runif(n=nrow(sim_dat), min=0, max=4)
+
+test_that("risk table use weights all", {
+  plt <- plot(adj, risk_table=TRUE, risk_table_digits=2)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("risk table use weights all", fig=plt)
+})
+
+test_that("risk table use weights stratify", {
+  plt <- plot(adj, risk_table=TRUE, risk_table_digits=2,
+              risk_table_stratify=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("risk table use weights stratify", fig=plt)
+})
+
+test_that("risk table weights present but not used", {
+  plt <- plot(adj, risk_table=TRUE, risk_table_use_weights=FALSE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("risk table weights present but not used",
+                              fig=plt)
+})
+
+## risk tables with multiple imputation
+set.seed(42)
+
+sim_dat <- readRDS(system.file("testdata",
+                               "d_sim_surv_n_50.Rds",
+                               package="adjustedCurves"))
+sim_dat$group <- as.factor(sim_dat$group)
+sim_dat$x1 <- ifelse(runif(n=nrow(sim_dat)) <= 0.7, sim_dat$x1, NA)
+sim_dat$time <- ifelse(runif(n=nrow(sim_dat)) <= 0.7, sim_dat$time, NA)
+
+# impute dataset
+imp <- suppressWarnings(mice::mice(sim_dat, m=3, method="pmm", printFlag=FALSE))
+
+adj_mi <- adjustedsurv(data=imp,
+                       variable="group",
+                       ev_time="time",
+                       event="event",
+                       method="iptw_km",
+                       treatment_model=group ~ x1 + x2 + x5)
+
+test_that("MI, no weights all", {
+  plt <- plot(adj_mi, risk_table=TRUE, risk_table_use_weights=FALSE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("MI, no weights all", fig=plt)
+})
+
+test_that("MI, with weights all", {
+  plt <- plot(adj_mi, risk_table=TRUE, risk_table_use_weights=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("MI, with weights all", fig=plt)
+})
+
+test_that("MI, no weights stratify", {
+  plt <- plot(adj_mi, risk_table=TRUE, risk_table_use_weights=FALSE,
+              risk_table_stratify=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("MI, no weights stratify", fig=plt)
+})
+
+test_that("MI, with weights stratify", {
+  plt <- plot(adj_mi, risk_table=TRUE, risk_table_use_weights=TRUE,
+              risk_table_stratify=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("MI, with weights stratify", fig=plt)
+})
+
+#### warnings and errors
 
 test_that("Isotonic Regression with missing values", {
   adj_err <- adj
