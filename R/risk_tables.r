@@ -201,7 +201,8 @@ plot_risk_table.groups <- function(plotdata, breaks,
 plot_risk_table <- function(data, ev_time, event=NULL, variable=NULL,
                             type, times, xlab="Time", ylab="default",
                             title="default", title_position="middle",
-                            title_size=14, weights=NULL, digits=1, ...) {
+                            title_size=14, weights=NULL, digits=1,
+                            additional_layers=list(), ...) {
 
   plotdata <- get_risk_table(data=data, times=times, ev_time=ev_time,
                              event=event, variable=variable, type=type,
@@ -231,6 +232,14 @@ plot_risk_table <- function(data, ev_time, event=NULL, variable=NULL,
   }
   p <- p + ggplot2::theme(plot.title=ggplot2::element_text(hjust=hjust,
                                                            size=title_size))
+
+  # potentially add more stuff to the plot
+  if (length(additional_layers) > 0) {
+    for (i in seq_len(length(additional_layers))) {
+      p <- p + additional_layers[[i]]
+    }
+  }
+
   return(p)
 }
 

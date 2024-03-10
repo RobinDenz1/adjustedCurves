@@ -23,6 +23,7 @@ A function to graphically display confounder-adjusted survival curves which wher
      conf_int_alpha=0.4, steps=TRUE,
      x_breaks=ggplot2::waiver(), x_n_breaks=NULL,
      y_breaks=ggplot2::waiver(), y_n_breaks=NULL,
+     additional_layers=list(),
      median_surv_lines=FALSE, median_surv_size=0.5,
      median_surv_linetype="dashed",
      median_surv_color="black", median_surv_alpha=1,
@@ -42,7 +43,9 @@ A function to graphically display confounder-adjusted survival curves which wher
      risk_table_stratify_color=TRUE,
      risk_table_custom_colors=custom_colors,
      risk_table_use_weights=TRUE, risk_table_digits=1,
-     risk_table_warn=TRUE, ...)
+     risk_table_warn=TRUE,
+     risk_table_additional_layers=list(),
+     ...)
 }
 
 \arguments{
@@ -135,6 +138,9 @@ An optional numeric vector specifying the breaks on the y-axis. Internally, this
   }
   \item{y_n_breaks}{
 An optional positive number specifying the number of breaks on the y-axis. Internally, this is passed to the \code{n.breaks} argument of the \code{scale_y_continuous} function.
+  }
+  \item{additional_layers}{
+An optional list of objects that should be added to the survival curve plot. Can be useful to customize the plot further when also using \code{risk_table=TRUE}.
   }
   \item{median_surv_lines}{
 Whether to draw indicator lines for the median survival times, which makes it easier to read those off the curves. Survival curves with undefined median survival times receive no lines.
@@ -235,6 +241,9 @@ A single number specifying how many digits should be used when rounding the numb
   \item{risk_table_warn}{
 Either \code{TRUE} or \code{FALSE}, indicating whether the user should be warned about some subtleties when using risk tables. We strongly urge the user to read the details before ignoring the warnings. Set to \code{FALSE} to ignore all warnings.
   }
+  \item{risk_table_additional_layers}{
+An optional list of objects that should be added to the risk table plot. Can be used to further customize the risk table using standard \code{ggplot2} syntax. Explained in more detail in the vignette on plot customization.
+  }
   \item{...}{
 Currently not used.
   }
@@ -261,7 +270,7 @@ When multiple imputation was used to create the adjusted survival curves, the ad
 
 \strong{\emph{Plot Customization}}
 
-Although this function offers a lot of arguments to customize the resulting plot, there is always need for more customization options. Since the function returns a standard \code{ggplot2} object, users can usually use standard \code{ggplot2} syntax to add more geoms or change certain aspects of the plot. This, however, is not guaranteed to work when using \code{risk_table=TRUE}. We are working on a solution to this currently. A special package vignette concerned with plot customization will also be added in future versions.
+Although this function offers a lot of arguments to customize the resulting plot, there is always need for more customization options. Since the function returns a standard \code{ggplot2} object, users can usually use standard \code{ggplot2} syntax to add more geoms or change certain aspects of the plot. This, however, is not guaranteed to work when using \code{risk_table=TRUE}. The \code{additional_layers} and \code{risk_table_additional_layers} arguments can be used to sidestep this issue. This and more details on plot customization are given in the associated package vignette (\code{vignette(topic="plot_customization", package="adjustedCurves")}).
 
 \strong{\emph{Other Plotting Options}}
 

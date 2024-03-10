@@ -31,6 +31,7 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
                               conf_int_alpha=0.4, steps=TRUE,
                               x_breaks=ggplot2::waiver(), x_n_breaks=NULL,
                               y_breaks=ggplot2::waiver(), y_n_breaks=NULL,
+                              additional_layers=list(),
                               median_surv_lines=FALSE, median_surv_size=0.5,
                               median_surv_linetype="dashed",
                               median_surv_color="black", median_surv_alpha=1,
@@ -54,6 +55,7 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
                               risk_table_custom_colors=custom_colors,
                               risk_table_use_weights=TRUE,
                               risk_table_digits=1, risk_table_warn=TRUE,
+                              risk_table_additional_layers=list(),
                               ...) {
   requireNamespace("ggplot2")
 
@@ -376,6 +378,13 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
     }
   }
 
+  # potentially add more stuff to the plot
+  if (length(additional_layers) > 0) {
+    for (i in seq_len(length(additional_layers))) {
+      p <- p + additional_layers[[i]]
+    }
+  }
+
   ## adding risk tables
   if (risk_table) {
 
@@ -431,7 +440,8 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
                         reverse_order=risk_table_reverse,
                         color_groups=risk_table_stratify_color,
                         custom_colors=risk_table_custom_colors,
-                        digits=risk_table_digits)
+                        digits=risk_table_digits,
+                        additional_layers=risk_table_additional_layers)
   }
 
   return(p)
