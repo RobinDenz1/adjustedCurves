@@ -26,6 +26,7 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/introduction.html">An Introduction to the 'adjustedCurves' Package</a>
     <a class="dropdown-item" href="../articles/method_overview.html">Overview of methods in adjustedCurves</a>
+    <a class="dropdown-item" href="../articles/plot_customization.html">Customizing Adjusted Survival Curve Plots</a>
   </div>
 </li>
 <li class="nav-item">
@@ -74,6 +75,7 @@
 <span>     conf_int_alpha<span class="op">=</span><span class="fl">0.4</span>, steps<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>     x_breaks<span class="op">=</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>, x_n_breaks<span class="op">=</span><span class="cn">NULL</span>,</span>
 <span>     y_breaks<span class="op">=</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/waiver.html" class="external-link">waiver</a></span><span class="op">(</span><span class="op">)</span>, y_n_breaks<span class="op">=</span><span class="cn">NULL</span>,</span>
+<span>     additional_layers<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>     median_surv_lines<span class="op">=</span><span class="cn">FALSE</span>, median_surv_size<span class="op">=</span><span class="fl">0.5</span>,</span>
 <span>     median_surv_linetype<span class="op">=</span><span class="st">"dashed"</span>,</span>
 <span>     median_surv_color<span class="op">=</span><span class="st">"black"</span>, median_surv_alpha<span class="op">=</span><span class="fl">1</span>,</span>
@@ -93,7 +95,9 @@
 <span>     risk_table_stratify_color<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>     risk_table_custom_colors<span class="op">=</span><span class="va">custom_colors</span>,</span>
 <span>     risk_table_use_weights<span class="op">=</span><span class="cn">TRUE</span>, risk_table_digits<span class="op">=</span><span class="fl">1</span>,</span>
-<span>     risk_table_warn<span class="op">=</span><span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span>     risk_table_warn<span class="op">=</span><span class="cn">TRUE</span>,</span>
+<span>     risk_table_additional_layers<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>     <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -187,6 +191,9 @@
 
   <dt>y_n_breaks</dt>
 <dd><p>An optional positive number specifying the number of breaks on the y-axis. Internally, this is passed to the <code>n.breaks</code> argument of the <code>scale_y_continuous</code> function.</p></dd>
+
+  <dt>additional_layers</dt>
+<dd><p>An optional list of objects that should be added to the survival curve plot. Can be useful to customize the plot further when also using <code>risk_table=TRUE</code>.</p></dd>
 
   <dt>median_surv_lines</dt>
 <dd><p>Whether to draw indicator lines for the median survival times, which makes it easier to read those off the curves. Survival curves with undefined median survival times receive no lines.</p></dd>
@@ -287,6 +294,9 @@
   <dt>risk_table_warn</dt>
 <dd><p>Either <code>TRUE</code> or <code>FALSE</code>, indicating whether the user should be warned about some subtleties when using risk tables. We strongly urge the user to read the details before ignoring the warnings. Set to <code>FALSE</code> to ignore all warnings.</p></dd>
 
+  <dt>risk_table_additional_layers</dt>
+<dd><p>An optional list of objects that should be added to the risk table plot. Can be used to further customize the risk table using standard <code>ggplot2</code> syntax. Explained in more detail in the vignette on plot customization.</p></dd>
+
   <dt>...</dt>
 <dd><p>Currently not used.</p></dd>
 
@@ -305,7 +315,7 @@
 <p><strong><em>Multiple Imputation</em></strong></p>
 <p>When multiple imputation was used to create the adjusted survival curves, the adjusted survival curves pooled over all imputations is displayed as described in the documentation page of the <code>adjustedsurv</code> function. When adding censoring indicators (<code>censoring_ind=TRUE</code>), only the censoring times actually observed in the original data will be displayed. Possible imputed censoring times are ignored. When using <code>risk_table=TRUE</code> on multiply imputed data, the numbers making up the risk table are calculated for each imputed dataset and are pooled using Rubins Rule afterwards.</p>
 <p><strong><em>Plot Customization</em></strong></p>
-<p>Although this function offers a lot of arguments to customize the resulting plot, there is always need for more customization options. Since the function returns a standard <code>ggplot2</code> object, users can usually use standard <code>ggplot2</code> syntax to add more geoms or change certain aspects of the plot. This, however, is not guaranteed to work when using <code>risk_table=TRUE</code>. We are working on a solution to this currently. A special package vignette concerned with plot customization will also be added in future versions.</p>
+<p>Although this function offers a lot of arguments to customize the resulting plot, there is always need for more customization options. Since the function returns a standard <code>ggplot2</code> object, users can usually use standard <code>ggplot2</code> syntax to add more geoms or change certain aspects of the plot. This, however, is not guaranteed to work when using <code>risk_table=TRUE</code>. The <code>additional_layers</code> and <code>risk_table_additional_layers</code> arguments can be used to sidestep this issue. This and more details on plot customization are given in the associated package vignette (<code><a href="../articles/plot_customization.html">vignette(topic="plot_customization", package="adjustedCurves")</a></code>).</p>
 <p><strong><em>Other Plotting Options</em></strong></p>
 <p>If you prefer using the <code>ggsurvplot</code> syntax, you can also use the <code><a href="as_ggsurvplot_df.html">as_ggsurvplot_df</a></code> function to extract a <code>data.frame</code> from the <code>adjustedsurv</code> object, which can be used directly to call the <code>ggsurvplot_df</code> function from the <span class="pkg">survminer</span> package.</p>
     </div>
