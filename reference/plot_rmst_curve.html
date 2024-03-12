@@ -176,7 +176,7 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>This function simply calls the <code><a href="adjusted_rmst.html">adjusted_rmst</a></code> for a range of <code>to</code> values, getting adjusted RMST estimates over the whole range of the survival curves. Those estimates are then plotted as a curve with the adjusted RMST replacing the survival probability on the Y-Axis. For a brief description on the RMST and how it is calculated in this package, see the documentation of the <code><a href="adjusted_rmst.html">adjusted_rmst</a></code> function. Literature describing the RMST Curve Plots in more detail is given in the references section.</p>
 <p>The RMST curve can only be created for adjusted survival curves. A similar graphic for the adjusted CIFs can be created by utilizing the adjusted Restricted Mean Time Lost (RMTL). The calculation of that statistic is implemented in the <code><a href="adjusted_rmtl.html">adjusted_rmtl</a></code> function and the associated curve can be created using the <code><a href="plot_rmtl_curve.html">plot_rmtl_curve</a></code> function.</p>
-<p>If confidence intervals are specified and there are many points in time in <code>times</code>, this function might get very slow. It will be even slower if multiple imputation was also used when creating the <code>adjustedsurv</code> object.</p>
+<p>If confidence intervals are specified and there are many points in time in <code>times</code>, this function might get somewhat slow. It will be even slower if multiple imputation was also used when creating the <code>adjustedsurv</code> object.</p>
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
