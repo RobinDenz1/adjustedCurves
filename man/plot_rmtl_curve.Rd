@@ -123,7 +123,7 @@ Currently not used.
 \details{
 This function simply calls the \code{\link{adjusted_rmtl}} for a range of \code{to} values, getting adjusted RMTL estimates over the whole range of the survival curves or CIFs. Those estimates are then plotted as a curve with the adjusted RMTL replacing the survival probability or the failure probability on the Y-Axis. For a brief description on the RMTL and how it is calculated in this package, see the documentation of the \code{\link{adjusted_rmtl}} function. Literature describing the RMTL Curve Plots in more detail is given in the references section.
 
-If confidence intervals are specified and there are many points in time in \code{times}, this function might get very slow. It will be even slower if multiple imputation was also used when creating the \code{adjustedsurv} or \code{adjustedcif} object.
+If confidence intervals are specified and there are many points in time in \code{times}, this function might get somewhat slow. It will be even slower if multiple imputation was also used when creating the \code{adjustedsurv} or \code{adjustedcif} object.
 }
 \value{
 Returns a \code{ggplot2} object.

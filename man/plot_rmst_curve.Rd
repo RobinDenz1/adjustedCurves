@@ -125,7 +125,7 @@ This function simply calls the \code{\link{adjusted_rmst}} for a range of \code{
 
 The RMST curve can only be created for adjusted survival curves. A similar graphic for the adjusted CIFs can be created by utilizing the adjusted Restricted Mean Time Lost (RMTL). The calculation of that statistic is implemented in the \code{\link{adjusted_rmtl}} function and the associated curve can be created using the \code{\link{plot_rmtl_curve}} function.
 
-If confidence intervals are specified and there are many points in time in \code{times}, this function might get very slow. It will be even slower if multiple imputation was also used when creating the \code{adjustedsurv} object.
+If confidence intervals are specified and there are many points in time in \code{times}, this function might get somewhat slow. It will be even slower if multiple imputation was also used when creating the \code{adjustedsurv} object.
 }
 \value{
 Returns a \code{ggplot2} object.
