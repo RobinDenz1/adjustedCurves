@@ -53,13 +53,17 @@
 <polyline points='37.92,23.43 40.65,23.43 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
 <polyline points='40.65,400.42 662.03,400.42 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
 <polyline points='68.90,403.16 68.90,400.42 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<polyline points='249.66,403.16 249.66,400.42 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<polyline points='430.43,403.16 430.43,400.42 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<polyline points='611.19,403.16 611.19,400.42 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<text x='68.90' y='411.40' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='12.23px' lengthAdjust='spacingAndGlyphs'>0.0</text>
-<text x='249.66' y='411.40' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='12.23px' lengthAdjust='spacingAndGlyphs'>0.4</text>
-<text x='430.43' y='411.40' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='12.23px' lengthAdjust='spacingAndGlyphs'>0.8</text>
-<text x='611.19' y='411.40' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='12.23px' lengthAdjust='spacingAndGlyphs'>1.2</text>
+<polyline points='181.88,403.16 181.88,400.42 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='294.86,403.16 294.86,400.42 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='407.83,403.16 407.83,400.42 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='520.81,403.16 520.81,400.42 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='633.79,403.16 633.79,400.42 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<text x='68.90' y='411.40' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>0.00</text>
+<text x='181.88' y='411.40' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>0.25</text>
+<text x='294.86' y='411.40' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>0.50</text>
+<text x='407.83' y='411.40' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>0.75</text>
+<text x='520.81' y='411.40' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>1.00</text>
+<text x='633.79' y='411.40' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>1.25</text>
 <text x='351.34' y='424.10' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='24.45px' lengthAdjust='spacingAndGlyphs'>Time</text>
 <text transform='translate(13.05,202.95) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='139.42px' lengthAdjust='spacingAndGlyphs'>Adjusted Survival Probability</text>
 <rect x='672.99' y='172.29' width='41.53' height='61.32' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
@@ -88,18 +92,18 @@
 </defs>
 <g clip-path='url(#cpNDAuNjV8NjYyLjAzfDQ1NS42N3w1NDQuNDI=)'>
 <rect x='40.65' y='455.67' width='621.38' height='88.74' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<text x='68.90' y='483.99' text-anchor='middle' style='font-size: 11.95px; fill: #F8766D; font-family: sans;' textLength='13.29px' lengthAdjust='spacingAndGlyphs'>29</text>
-<text x='181.88' y='483.99' text-anchor='middle' style='font-size: 11.95px; fill: #F8766D; font-family: sans;' textLength='13.29px' lengthAdjust='spacingAndGlyphs'>17</text>
+<text x='68.90' y='483.99' text-anchor='middle' style='font-size: 11.95px; fill: #F8766D; font-family: sans;' textLength='23.26px' lengthAdjust='spacingAndGlyphs'>29.0</text>
+<text x='181.88' y='483.99' text-anchor='middle' style='font-size: 11.95px; fill: #F8766D; font-family: sans;' textLength='23.26px' lengthAdjust='spacingAndGlyphs'>17.0</text>
 <text x='294.86' y='483.99' text-anchor='middle' style='font-size: 11.95px; fill: #F8766D; font-family: sans;' textLength='23.26px' lengthAdjust='spacingAndGlyphs'>11.3</text>
 <text x='407.83' y='483.99' text-anchor='middle' style='font-size: 11.95px; fill: #F8766D; font-family: sans;' textLength='16.61px' lengthAdjust='spacingAndGlyphs'>3.3</text>
 <text x='520.81' y='483.99' text-anchor='middle' style='font-size: 11.95px; fill: #F8766D; font-family: sans;' textLength='16.61px' lengthAdjust='spacingAndGlyphs'>2.3</text>
-<text x='633.79' y='483.99' text-anchor='middle' style='font-size: 11.95px; fill: #F8766D; font-family: sans;' textLength='6.65px' lengthAdjust='spacingAndGlyphs'>0</text>
-<text x='68.90' y='524.33' text-anchor='middle' style='font-size: 11.95px; fill: #00BFC4; font-family: sans;' textLength='13.29px' lengthAdjust='spacingAndGlyphs'>21</text>
-<text x='181.88' y='524.33' text-anchor='middle' style='font-size: 11.95px; fill: #00BFC4; font-family: sans;' textLength='13.29px' lengthAdjust='spacingAndGlyphs'>18</text>
+<text x='633.79' y='483.99' text-anchor='middle' style='font-size: 11.95px; fill: #F8766D; font-family: sans;' textLength='16.61px' lengthAdjust='spacingAndGlyphs'>0.0</text>
+<text x='68.90' y='524.33' text-anchor='middle' style='font-size: 11.95px; fill: #00BFC4; font-family: sans;' textLength='23.26px' lengthAdjust='spacingAndGlyphs'>21.0</text>
+<text x='181.88' y='524.33' text-anchor='middle' style='font-size: 11.95px; fill: #00BFC4; font-family: sans;' textLength='23.26px' lengthAdjust='spacingAndGlyphs'>18.0</text>
 <text x='294.86' y='524.33' text-anchor='middle' style='font-size: 11.95px; fill: #00BFC4; font-family: sans;' textLength='23.26px' lengthAdjust='spacingAndGlyphs'>13.3</text>
 <text x='407.83' y='524.33' text-anchor='middle' style='font-size: 11.95px; fill: #00BFC4; font-family: sans;' textLength='16.61px' lengthAdjust='spacingAndGlyphs'>3.7</text>
 <text x='520.81' y='524.33' text-anchor='middle' style='font-size: 11.95px; fill: #00BFC4; font-family: sans;' textLength='16.61px' lengthAdjust='spacingAndGlyphs'>3.7</text>
-<text x='633.79' y='524.33' text-anchor='middle' style='font-size: 11.95px; fill: #00BFC4; font-family: sans;' textLength='6.65px' lengthAdjust='spacingAndGlyphs'>0</text>
+<text x='633.79' y='524.33' text-anchor='middle' style='font-size: 11.95px; fill: #00BFC4; font-family: sans;' textLength='16.61px' lengthAdjust='spacingAndGlyphs'>0.0</text>
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
 <polyline points='40.65,544.42 40.65,455.67 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
@@ -122,6 +126,6 @@
 <text x='633.79' y='555.40' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='17.13px' lengthAdjust='spacingAndGlyphs'>1.25</text>
 <text x='351.34' y='568.10' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='24.45px' lengthAdjust='spacingAndGlyphs'>Time</text>
 <text transform='translate(25.56,500.05) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='30.58px' lengthAdjust='spacingAndGlyphs'>Group</text>
-<text x='351.34' y='447.11' text-anchor='middle' style='font-size: 14.00px; font-family: sans;' textLength='96.49px' lengthAdjust='spacingAndGlyphs'>Number at Risk</text>
+<text x='40.65' y='447.11' style='font-size: 14.00px; font-family: sans;' textLength='96.49px' lengthAdjust='spacingAndGlyphs'>Number at Risk</text>
 </g>
 </svg>

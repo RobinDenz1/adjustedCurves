@@ -44,7 +44,7 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
                               risk_table_xlab=xlab, risk_table_ylab="default",
                               risk_table_title="default",
                               risk_table_title_size=14,
-                              risk_table_title_position="middle",
+                              risk_table_title_position="left",
                               risk_table_y_vjust=5, risk_table_theme=gg_theme,
                               risk_table_size=4.2,
                               risk_table_alpha=1, risk_table_color="black",
@@ -54,7 +54,8 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
                               risk_table_stratify_color=TRUE,
                               risk_table_custom_colors=custom_colors,
                               risk_table_use_weights=TRUE,
-                              risk_table_digits=1, risk_table_warn=TRUE,
+                              risk_table_digits=1, risk_table_format=TRUE,
+                              risk_table_warn=TRUE,
                               risk_table_additional_layers=list(),
                               ...) {
   requireNamespace("ggplot2")
@@ -281,6 +282,7 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
                         color_groups=risk_table_stratify_color,
                         custom_colors=risk_table_custom_colors,
                         digits=risk_table_digits,
+                        text_format=risk_table_format,
                         additional_layers=risk_table_additional_layers)
   }
 

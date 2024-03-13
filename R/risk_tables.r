@@ -202,11 +202,14 @@ plot_risk_table <- function(data, ev_time, event=NULL, variable=NULL,
                             type, times, xlab="Time", ylab="default",
                             title="default", title_position="middle",
                             title_size=14, weights=NULL, digits=1,
-                            additional_layers=list(), ...) {
+                            text_format=TRUE, additional_layers=list(), ...) {
 
   plotdata <- get_risk_table(data=data, times=times, ev_time=ev_time,
                              event=event, variable=variable, type=type,
                              weights=weights, digits=digits)
+  if (text_format) {
+    plotdata$est <- format(plotdata$est, trim=TRUE)
+  }
 
   if (!is.null(variable)) {
     p <- plot_risk_table.groups(plotdata=plotdata, breaks=times, ...)
@@ -309,8 +312,10 @@ add_risk_table <- function(p_surv, ..., height=0.25) {
   # re-scale plots to have the same limits
   if (limits_rt[2] > limits_surv[2]) {
     p_surv$scales$scales[[1]]$limits <- limits_rt
+    p_surv$scales$scales[[1]]$breaks <- breaks_p_surv
   } else if (limits_rt[2] < limits_surv[2]) {
     p_risk_table$scales$scales[[1]]$limits <- limits_surv
+    p_risk_table$scales$scales[[1]]$breaks <- breaks_p_surv
   }
 
   # put plots together

@@ -384,6 +384,12 @@ test_that("risk table weights present but not used", {
                               fig=plt)
 })
 
+test_that("risk table enlarges x-axis for correct alignment", {
+  plt <- plot(adj, max_t=0.97, risk_table=TRUE)
+  expect_s3_class(plt, "ggplot")
+  vdiffr::expect_doppelganger("risk table enlarges x-axis", fig=plt)
+})
+
 ## risk tables with multiple imputation
 set.seed(42)
 

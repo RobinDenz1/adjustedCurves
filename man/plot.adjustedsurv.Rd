@@ -35,7 +35,7 @@ A function to graphically display confounder-adjusted survival curves which wher
      risk_table_stratify=FALSE, risk_table_height=0.25,
      risk_table_xlab=xlab, risk_table_ylab="default",
      risk_table_title="default", risk_table_title_size=14,
-     risk_table_title_position="middle",
+     risk_table_title_position="left",
      risk_table_y_vjust=5, risk_table_theme=gg_theme,
      risk_table_size=4.2, risk_table_alpha=1,
      risk_table_color="black", risk_table_family="sans",
@@ -43,7 +43,7 @@ A function to graphically display confounder-adjusted survival curves which wher
      risk_table_stratify_color=TRUE,
      risk_table_custom_colors=custom_colors,
      risk_table_use_weights=TRUE, risk_table_digits=1,
-     risk_table_warn=TRUE,
+     risk_table_format=TRUE, risk_table_warn=TRUE,
      risk_table_additional_layers=list(),
      ...)
 }
@@ -200,7 +200,7 @@ A single character string specifying the title of the risk table. By default thi
 A single positive number specifying the size of the title of the risk table.
   }
   \item{risk_table_title_position}{
-One of \code{c("left", "middle", "right")}, specifying where the title of the risk table should be put. Defaults to \code{"middle"}.
+One of \code{c("left", "middle", "right")}, specifying where the title of the risk table should be put. Defaults to \code{"left"}.
   }
   \item{risk_table_y_vjust}{
 A single positive number specifying the distance between the y-axis and the y-axis label. Is only used when \code{risk_table_stratify=FALSE}. Set to 5 by default to make the y-axis label allign with the y-axis label of the survival curve plot.
@@ -237,6 +237,9 @@ Whether to use weights in the calculation of the values shown in the risk table 
   }
   \item{risk_table_digits}{
 A single number specifying how many digits should be used when rounding the numbers presented in the risk table. Since unadjusted calculations always result in integer values, this argument is only relevant when weights or multiple imputation were used. See \code{?round}.
+  }
+  \item{risk_table_format}{
+Either \code{TRUE} or \code{FALSE}, indicating whether the \code{format()} function should be called on the numbers included in the risk table. This defaults to \code{TRUE}, so that all numbers have an equal number of digits after the decimal point. This is only important when using either multiply imputed data or weighted risk tables, because otherwise the numbers will only be integers anyways.
   }
   \item{risk_table_warn}{
 Either \code{TRUE} or \code{FALSE}, indicating whether the user should be warned about some subtleties when using risk tables. We strongly urge the user to read the details before ignoring the warnings. Set to \code{FALSE} to ignore all warnings.

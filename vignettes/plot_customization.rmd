@@ -9,7 +9,7 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo=TRUE, fig.width=6.5, fig.height=5)
+knitr::opts_chunk$set(echo=TRUE, fig.width=6.7, fig.height=5.2)
 ```
 
 # Introduction
@@ -202,7 +202,7 @@ The title and axis labels may of course also be changed or removed:
 plot(s_iptw, risk_table=TRUE, risk_table_stratify=TRUE,
      risk_table_digits=0, x_n_breaks=10,
      risk_table_title="Weighted Number of people at risk",
-     risk_table_title_size=10, risk_table_title_position="left",
+     risk_table_title_size=10, risk_table_title_position="middle",
      risk_table_ylab=NULL)
 ```
 
@@ -269,7 +269,7 @@ plot(s_iptw, conf_int=TRUE, censoring_ind="lines", risk_table=TRUE,
      risk_table_title_size=11, median_surv_lines=TRUE,
      gg_theme=theme_bw(), risk_table_theme=theme_classic(),
      legend.position="top", custom_colors=c("blue", "red"),
-     xlab="Time in Years", risk_table_title_position="left")
+     xlab="Time in Years")
 ```
 
 Of course this is just one of many possibilities.
