@@ -87,7 +87,7 @@
 <span>     risk_table_stratify<span class="op">=</span><span class="cn">FALSE</span>, risk_table_height<span class="op">=</span><span class="fl">0.25</span>,</span>
 <span>     risk_table_xlab<span class="op">=</span><span class="va">xlab</span>, risk_table_ylab<span class="op">=</span><span class="st">"default"</span>,</span>
 <span>     risk_table_title<span class="op">=</span><span class="st">"default"</span>, risk_table_title_size<span class="op">=</span><span class="fl">14</span>,</span>
-<span>     risk_table_title_position<span class="op">=</span><span class="st">"middle"</span>,</span>
+<span>     risk_table_title_position<span class="op">=</span><span class="st">"left"</span>,</span>
 <span>     risk_table_y_vjust<span class="op">=</span><span class="fl">5</span>, risk_table_theme<span class="op">=</span><span class="va">gg_theme</span>,</span>
 <span>     risk_table_size<span class="op">=</span><span class="fl">4.2</span>, risk_table_alpha<span class="op">=</span><span class="fl">1</span>,</span>
 <span>     risk_table_color<span class="op">=</span><span class="st">"black"</span>, risk_table_family<span class="op">=</span><span class="st">"sans"</span>,</span>
@@ -95,7 +95,7 @@
 <span>     risk_table_stratify_color<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>     risk_table_custom_colors<span class="op">=</span><span class="va">custom_colors</span>,</span>
 <span>     risk_table_use_weights<span class="op">=</span><span class="cn">TRUE</span>, risk_table_digits<span class="op">=</span><span class="fl">1</span>,</span>
-<span>     risk_table_warn<span class="op">=</span><span class="cn">TRUE</span>,</span>
+<span>     risk_table_format<span class="op">=</span><span class="cn">TRUE</span>, risk_table_warn<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>     risk_table_additional_layers<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>     <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -253,7 +253,7 @@
 <dd><p>A single positive number specifying the size of the title of the risk table.</p></dd>
 
   <dt>risk_table_title_position</dt>
-<dd><p>One of <code>c("left", "middle", "right")</code>, specifying where the title of the risk table should be put. Defaults to <code>"middle"</code>.</p></dd>
+<dd><p>One of <code>c("left", "middle", "right")</code>, specifying where the title of the risk table should be put. Defaults to <code>"left"</code>.</p></dd>
 
   <dt>risk_table_y_vjust</dt>
 <dd><p>A single positive number specifying the distance between the y-axis and the y-axis label. Is only used when <code>risk_table_stratify=FALSE</code>. Set to 5 by default to make the y-axis label allign with the y-axis label of the survival curve plot.</p></dd>
@@ -290,6 +290,9 @@
 
   <dt>risk_table_digits</dt>
 <dd><p>A single number specifying how many digits should be used when rounding the numbers presented in the risk table. Since unadjusted calculations always result in integer values, this argument is only relevant when weights or multiple imputation were used. See <code><a href="https://rdrr.io/r/base/Round.html" class="external-link">?round</a></code>.</p></dd>
+
+  <dt>risk_table_format</dt>
+<dd><p>Either <code>TRUE</code> or <code>FALSE</code>, indicating whether the <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code> function should be called on the numbers included in the risk table. This defaults to <code>TRUE</code>, so that all numbers have an equal number of digits after the decimal point. This is only important when using either multiply imputed data or weighted risk tables, because otherwise the numbers will only be integers anyways.</p></dd>
 
   <dt>risk_table_warn</dt>
 <dd><p>Either <code>TRUE</code> or <code>FALSE</code>, indicating whether the user should be warned about some subtleties when using risk tables. We strongly urge the user to read the details before ignoring the warnings. Set to <code>FALSE</code> to ignore all warnings.</p></dd>
