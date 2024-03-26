@@ -13,9 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-## perform a cause-specific cox regression with multiply imputed data
-#' @export
-CSC_MI <- function(mids, formula, ...) {
+ce_model_mi <- function(mids, formula, cause=1, model, ...) {
 
   args <- list(...)
   if (!is.null(args$data)) {
@@ -26,9 +24,16 @@ CSC_MI <- function(mids, formula, ...) {
   imp_long <- mice::complete(mids, action="long", include=FALSE)
   outc_mod <- list()
   for (i in seq_len(max(imp_long$.imp))) {
-    mod <- riskRegression::CSC(formula,
-                               data=imp_long[imp_long$.imp==i, ],
-                               ...)
+    if (model=="CSC") {
+      mod <- riskRegression::CSC(formula,
+                                 data=imp_long[imp_long$.imp==i, ],
+                                 ...)
+    } else if (model=="FGR") {
+      mod <- riskRegression::FGR(formula,
+                                 data=imp_long[imp_long$.imp==i, ],
+                                 cause=cause,
+                                 ...)
+    }
     mod$call$formula <- formula
     outc_mod[[i]] <- mod
   }
@@ -40,4 +45,17 @@ CSC_MI <- function(mids, formula, ...) {
   class(mira_obj) <- c("mira", "matrix")
   return(mira_obj)
 
+}
+
+## fit a Fine & Gray regression with multiply imputed data
+#' @export
+FGR_MI <- function(mids, formula, cause=1, ...) {
+  return(ce_model_mi(mids=mids, formula=formula, cause=cause,
+                     model="FGR", ...))
+}
+
+## fit a cause-specific cox regression with multiply imputed data
+#' @export
+CSC_MI <- function(mids, formula, ...) {
+  return(ce_model_mi(mids=mids, formula=formula, model="CSC", ...))
 }
