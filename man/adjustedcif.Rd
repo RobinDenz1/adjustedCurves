@@ -116,7 +116,7 @@ A general plot of the estimated adjusted CIFs can be obtained using the associat
 \value{
 Returns an \code{adjustedcif} object containing the following objects:
 
-\item{adjcif}{A \code{data.frame} of estimated cumulative incidences for \code{cause} at some points in time for each level of \code{variable}. Depending on the arguments used also includes standard errors and confidence intervals.
+\item{adj}{A \code{data.frame} of estimated cumulative incidences for \code{cause} at some points in time for each level of \code{variable}. Depending on the arguments used also includes standard errors and confidence intervals.
 }
 \item{method}{
 The method used to adjust the CIFs.
@@ -131,7 +131,7 @@ When the argument \code{bootstrap} is set to \code{TRUE} it additionally contain
 
 \item{boot_data}{The adjusted CIFs estimated in each bootstrap sample.
 }
-\item{boot_adjcif}{The mean CIFs of all bootstrap samples and corresponding standard errors and percentile confidence intervals.
+\item{boot_adj}{The mean CIFs of all bootstrap samples and corresponding standard errors and percentile confidence intervals.
 }
 
 When multiple imputation was used, the function additionally contains a \code{mids_analyses} object, containing the \code{adjustedcif} objects for each imputed dataset.

@@ -10,14 +10,14 @@ as_ggsurvplot_df <- function(adjsurv) {
          " created using the 'adjustedsurv' function.")
   }
 
-  df <- data.frame(time=adjsurv$adjsurv$time,
-                   surv=adjsurv$adjsurv$surv,
-                   strata=adjsurv$adjsurv$group)
+  df <- data.frame(time=adjsurv$adj$time,
+                   surv=adjsurv$adj$surv,
+                   strata=adjsurv$adj$group)
 
-  if ("se" %in% colnames(adjsurv)) {
-    df$std.err <- adjsurv$adjsurv$se
-    df$upper <- adjsurv$adjsurv$ci_upper
-    df$lower <- adjsurv$adjsurv$ci_lower
+  if ("se" %in% colnames(adjsurv$adj)) {
+    df$std.err <- adjsurv$adj$se
+    df$upper <- adjsurv$adj$ci_upper
+    df$lower <- adjsurv$adj$ci_lower
   }
 
   if (adjsurv$method=="iptw_km") {

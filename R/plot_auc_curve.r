@@ -29,11 +29,7 @@ plot_auc_curve <- function(adj, estimate, times=NULL, conf_int=FALSE,
 
   # default times
   if (is.null(times)) {
-    if (inherits(adj, "adjustedcif")) {
-      times <- sort(unique(adj$adjcif$time))
-    } else if (inherits(adj, "adjustedsurv")) {
-      times <- sort(unique(adj$adjsurv$time))
-    }
+    times <- sort(unique(adj$adj$time))
     times <- times[times > 0]
   }
   if (is.finite(max_t)) {
@@ -125,11 +121,7 @@ plot_auc_diff <- function(adj, estimate, times=NULL, conf_int=FALSE,
                           line_at_ref_alpha=1, ...) {
   # default times
   if (is.null(times)) {
-    if (inherits(adj, "adjustedcif")) {
-      times <- sort(unique(adj$adjcif$time))
-    } else if (inherits(adj, "adjustedsurv")) {
-      times <- sort(unique(adj$adjsurv$time))
-    }
+    times <- sort(unique(adj$adj$time))
     times <- times[times > 0]
   }
   if (is.finite(max_t)) {

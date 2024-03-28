@@ -32,8 +32,8 @@ test_that("CSC, 2 treatments, no conf_int, no boot", {
                      outcome_model=mod_CSC,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("CSC, 2 treatments, with conf_int, no boot", {
@@ -46,8 +46,8 @@ test_that("CSC, 2 treatments, with conf_int, no boot", {
                      outcome_model=mod_CSC,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("CSC, 2 treatments, no conf_int, with boot", {
@@ -62,8 +62,8 @@ test_that("CSC, 2 treatments, no conf_int, with boot", {
                      outcome_model=mod_CSC,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("CSC, 2 treatments, with conf_int, with boot", {
@@ -78,8 +78,8 @@ test_that("CSC, 2 treatments, with conf_int, with boot", {
                      outcome_model=mod_CSC,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("CSC, 2 treatments, no conf_int, no boot, with times", {
@@ -95,8 +95,8 @@ test_that("CSC, 2 treatments, no conf_int, no boot, with times", {
                      times=c(0.5, 1, 1.2),
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("FGR, 2 treatments, no boot", {
@@ -109,8 +109,8 @@ test_that("FGR, 2 treatments, no boot", {
                      outcome_model=mod_FGR,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("FGR, 2 treatments, with boot", {
@@ -125,8 +125,8 @@ test_that("FGR, 2 treatments, with boot", {
                      outcome_model=mod_FGR,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("FGR, 2 treatments, no boot, with times", {
@@ -142,8 +142,8 @@ test_that("FGR, 2 treatments, no boot, with times", {
                      times=c(0.5, 1, 1.2),
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("FGR, 2 treatments, with boot, with times", {
@@ -159,8 +159,8 @@ test_that("FGR, 2 treatments, with boot, with times", {
                      times=c(0.5, 1, 1.2),
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("riskRegression, 2 treatments, no boot", {
@@ -173,8 +173,8 @@ test_that("riskRegression, 2 treatments, no boot", {
                      outcome_model=mod_riskRegression,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("riskRegression, 2 treatments, with boot", {
@@ -188,8 +188,8 @@ test_that("riskRegression, 2 treatments, with boot", {
                      outcome_model=mod_riskRegression,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("ARR, 2 treatments, no boot", {
@@ -202,8 +202,8 @@ test_that("ARR, 2 treatments, no boot", {
                      outcome_model=mod_ARR,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("ARR, 2 treatments, with boot", {
@@ -217,8 +217,8 @@ test_that("ARR, 2 treatments, with boot", {
                      outcome_model=mod_ARR,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("prodlim, 2 treatments, no boot", {
@@ -231,8 +231,8 @@ test_that("prodlim, 2 treatments, no boot", {
                      outcome_model=mod_prodlim,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 mod_fastcmprsk <- readRDS(system.file("testdata",
@@ -249,8 +249,8 @@ test_that("fastcmprsk, 2 treatments, no boot", {
                      outcome_model=mod_fastcmprsk,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 set.seed(37)
@@ -286,8 +286,8 @@ test_that("CSC, > 2 treatments, no conf_int, no boot", {
                      outcome_model=mod_CSC,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("CSC, > 2 treatments, with conf_int, no boot", {
@@ -300,8 +300,8 @@ test_that("CSC, > 2 treatments, with conf_int, no boot", {
                      outcome_model=mod_CSC,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("CSC, > 2 treatments, no conf_int, with boot", {
@@ -316,8 +316,8 @@ test_that("CSC, > 2 treatments, no conf_int, with boot", {
                      outcome_model=mod_CSC,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("CSC, > 2 treatments, with conf_int, with boot", {
@@ -332,8 +332,8 @@ test_that("CSC, > 2 treatments, with conf_int, with boot", {
                                       outcome_model=mod_CSC,
                                       cause=1))
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("CSC, > 2 treatments, no conf_int, no boot, with times", {
@@ -349,8 +349,8 @@ test_that("CSC, > 2 treatments, no conf_int, no boot, with times", {
                      times=c(0.5, 1, 1.2),
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("CSC, > 2 treatments, no conf_int, with boot, with times", {
@@ -366,8 +366,8 @@ test_that("CSC, > 2 treatments, no conf_int, with boot, with times", {
                           times=c(0.5, 1, 1.2),
                           cause=1))
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("FGR, > 2 treatments, no boot", {
@@ -380,8 +380,8 @@ test_that("FGR, > 2 treatments, no boot", {
                      outcome_model=mod_FGR,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("FGR, > 2 treatments, with boot", {
@@ -396,8 +396,8 @@ test_that("FGR, > 2 treatments, with boot", {
                      outcome_model=mod_FGR,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("FGR, > 2 treatments, no boot, with times", {
@@ -413,8 +413,8 @@ test_that("FGR, > 2 treatments, no boot, with times", {
                      times=c(0.5, 1, 1.2),
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("FGR, > 2 treatments, with boot, with times", {
@@ -430,8 +430,8 @@ test_that("FGR, > 2 treatments, with boot, with times", {
                      times=c(0.5, 1, 1.2),
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("riskRegression, > 2 treatments, no boot", {
@@ -444,8 +444,8 @@ test_that("riskRegression, > 2 treatments, no boot", {
                      outcome_model=mod_riskRegression,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("riskRegression, > 2 treatments, with boot", {
@@ -458,8 +458,8 @@ test_that("riskRegression, > 2 treatments, with boot", {
                      outcome_model=mod_riskRegression,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("ARR, > 2 treatments, no boot", {
@@ -472,8 +472,8 @@ test_that("ARR, > 2 treatments, no boot", {
                      outcome_model=mod_ARR,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("ARR, > 2 treatments, with boot", {
@@ -486,8 +486,8 @@ test_that("ARR, > 2 treatments, with boot", {
                      outcome_model=mod_ARR,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("prodlim, > 2 treatments, no boot", {
@@ -500,8 +500,8 @@ test_that("prodlim, > 2 treatments, no boot", {
                      outcome_model=mod_prodlim,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("prodlim, > 2 treatments, with boot", {
@@ -514,8 +514,8 @@ test_that("prodlim, > 2 treatments, with boot", {
                      outcome_model=mod_prodlim,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 # NOTE: These models are supported, but would require all kinds of package

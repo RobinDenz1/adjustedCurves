@@ -26,11 +26,7 @@ adjusted_curve_test <- function(adj, to, from=0, conf_level=0.95,
   est <- ifelse(inherits(adj, "adjustedsurv"), "surv", "cif")
   adj_method <- adj$method
 
-  if (est=="surv") {
-    treat_labs <- levels(adj$adjsurv$group)
-  } else {
-    treat_labs <- levels(adj$adjcif$group)
-  }
+  treat_labs <- levels(adj$adj$group)
 
   ## using multiply imputed results
   if (!is.null(adj$mids_analyses)) {
@@ -51,15 +47,8 @@ adjusted_curve_test <- function(adj, to, from=0, conf_level=0.95,
 
       # keep only the two groups, change their level order and call
       # usual adjusted_curve_test function
-      if (est=="surv") {
-        adj$adjsurv <- adj$adjsurv[adj$adjsurv$group %in% c(group_1, group_2), ]
-        adj$adjsurv$group <- factor(adj$adjsurv$group,
-                                    levels=c(group_1, group_2))
-      } else {
-        adj$adjcif <- adj$adjcif[adj$adjcif$group %in% c(group_1, group_2), ]
-        adj$adjcif$group <- factor(adj$adjcif$group,
-                                   levels=c(group_1, group_2))
-      }
+      adj$adj <- adj$adj[adj$adj$group %in% c(group_1, group_2), ]
+      adj$adj$group <- factor(adj$adj$group, levels=c(group_1, group_2))
 
       adj$boot_data <- adj$boot_data[adj$boot_data$group %in%
                                      c(group_1, group_2), ]
@@ -108,11 +97,7 @@ adjusted_curve_test <- function(adj, to, from=0, conf_level=0.95,
       ## comparing it to the actually observed value
 
       # actually observed values
-      if (est=="surv") {
-        adj_observed <- adj$adjsurv
-      } else {
-        adj_observed <- adj$adjcif
-      }
+      adj_observed <- adj$adj
 
       observed_diff_curve <- difference_function(adj=adj_observed, times=times,
                                                  est=est,
@@ -175,42 +160,21 @@ adjusted_curve_test <- function(adj, to, from=0, conf_level=0.95,
         group_1 <- strsplit(combs[i], "\t")[[1]][2]
 
         # create pseudo adjustedsurv, adjustedcif object
-        if (inherits(adj, "adjustedsurv")) {
+        observed_dat <- adj$adj[which(adj$adj$group %in%
+                                        c(group_0, group_1)), ]
+        observed_dat$group <- factor(observed_dat$group,
+                                     levels=c(group_0, group_1))
 
-          observed_dat <- adj$adjsurv[which(adj$adjsurv$group %in%
-                                            c(group_0, group_1)), ]
-          observed_dat$group <- factor(observed_dat$group,
-                                       levels=c(group_0, group_1))
-
-          boot_dat <- adj$boot_data[which(adj$boot_data$group %in%
+        boot_dat <- adj$boot_data[which(adj$boot_data$group %in%
                                           c(group_0, group_1)), ]
-          boot_dat$group <- factor(boot_dat$group,
-                                   levels=c(group_0, group_1))
+        boot_dat$group <- factor(boot_dat$group,
+                                 levels=c(group_0, group_1))
 
-          fake_adjsurv <- list(adjsurv=observed_dat,
-                               boot_data=boot_dat,
-                               categorical=FALSE,
-                               method=adj_method)
-          class(fake_adjsurv) <- "adjustedsurv"
-
-        } else {
-
-          observed_dat <- adj$adjcif[which(adj$adjcif$group %in%
-                                           c(group_0, group_1)), ]
-          observed_dat$group <- factor(observed_dat$group,
-                                       levels=c(group_0, group_1))
-
-          boot_dat <- adj$boot_data[which(adj$boot_data$group %in%
-                                          c(group_0, group_1)), ]
-          boot_dat$group <- factor(boot_dat$group,
-                                   levels=c(group_0, group_1))
-
-          fake_adjsurv <- list(adjcif=observed_dat,
-                               boot_data=boot_dat,
-                               categorical=FALSE,
-                               method=adj_method)
-          class(fake_adjsurv) <- "adjustedcif"
-        }
+        fake_adjsurv <- list(adj=observed_dat,
+                             boot_data=boot_dat,
+                             categorical=FALSE,
+                             method=adj_method)
+        class(fake_adjsurv) <- class(adj)
 
         # recursion call
         pair <- adjusted_curve_test(adj=fake_adjsurv,

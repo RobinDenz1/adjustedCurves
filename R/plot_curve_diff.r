@@ -50,12 +50,11 @@ plot_curve_diff <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
                                integral=integral, use_boot=use_boot)
 
   # object specific stuff
+  adj_data <- x$adj
   if (inherits(x, "adjustedsurv")) {
     mode <- "surv"
-    adj_data <- x$adjsurv
   } else {
     mode <- "cif"
-    adj_data <- x$adjcif
   }
 
   # what kind of interpolation to use
@@ -283,12 +282,11 @@ plot_curve_ratio <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
                                integral=FALSE, use_boot=use_boot)
 
   # object specific stuff
+  adj_data <- x$adj
   if (inherits(x, "adjustedsurv")) {
     mode <- "surv"
-    adj_data <- x$adjsurv
   } else {
     mode <- "cif"
-    adj_data <- x$adjcif
   }
 
   # what kind of interpolation to use

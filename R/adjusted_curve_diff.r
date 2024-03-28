@@ -26,20 +26,16 @@ adjusted_curve_diff.fit <- function(adj, group_1, group_2, times,
   . <- time <- est <- NULL
 
   # get plotdata out of adj
+  if (use_boot) {
+    plotdata <- adj$boot_adj
+  } else {
+    plotdata <- adj$adj
+  }
+
   if (inherits(adj, "adjustedsurv")) {
     est_type <- "surv"
-    if (use_boot) {
-      plotdata <- adj$boot_adjsurv
-    } else {
-      plotdata <- adj$adjsurv
-    }
   } else if (inherits(adj, "adjustedcif")) {
     est_type <- "cif"
-    if (use_boot) {
-      plotdata <- adj$boot_adjcif
-    } else {
-      plotdata <- adj$adjcif
-    }
   }
 
   # set groups

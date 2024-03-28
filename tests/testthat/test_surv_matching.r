@@ -21,8 +21,8 @@ test_that("2 treatments, no conf_int, no boot", {
                       conf_int=FALSE,
                       treatment_model=mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, no conf_int, no boot, with ps_score", {
@@ -36,6 +36,6 @@ test_that("2 treatments, no conf_int, no boot, with ps_score", {
                       n_boot=2,
                       treatment_model=ps_score)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })

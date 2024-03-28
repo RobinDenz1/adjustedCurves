@@ -16,7 +16,7 @@ adj <- adjustedsurv(data=sim_dat,
 
 adj_no_boot <- adj
 adj_no_boot$boot_data <- NULL
-adj_no_boot$boot_adjsurv <- NULL
+adj_no_boot$boot_adj <- NULL
 
 test_that("rmst 2 treatments, no boot", {
   adj_rmst <- adjusted_rmst(adj, to=1.1)

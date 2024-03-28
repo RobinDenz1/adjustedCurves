@@ -20,8 +20,8 @@ test_that("2 treatments, no conf_int, no boot", {
                       outcome_vars=outcome_vars,
                       type_time="bs")
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, no conf_int, with boot", {
@@ -37,8 +37,8 @@ test_that("2 treatments, no conf_int, with boot", {
                       outcome_vars=outcome_vars,
                       type_time="bs")
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, no conf_int, no boot, with times", {
@@ -55,8 +55,8 @@ test_that("2 treatments, no conf_int, no boot, with times", {
                       times=c(0.3, 0.8),
                       type_time="factor")
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that(
@@ -74,8 +74,8 @@ test_that(
                       times=c(0.3, 0.8),
                       type_time="factor")
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that(
@@ -94,8 +94,8 @@ test_that(
                         type_time="ns",
                         spline_df=2)
     expect_s3_class(adj, "adjustedsurv")
-    expect_true(is.numeric(adj$adjsurv$surv))
-    expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+    expect_true(is.numeric(adj$adj$surv))
+    expect_equal(levels(adj$adj$group), levels(sim_dat$group))
   })
 
 test_that("> 2 treatments, no conf_int, no boot", {
@@ -109,8 +109,8 @@ test_that("> 2 treatments, no conf_int, no boot", {
                       outcome_vars=outcome_vars,
                       type_time="bs")
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("> 2 treatments, no conf_int, with boot", {
@@ -126,8 +126,8 @@ test_that("> 2 treatments, no conf_int, with boot", {
                       outcome_vars=outcome_vars,
                       type_time="bs")
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("> 2 treatments, no conf_int, no boot, with times", {
@@ -144,8 +144,8 @@ test_that("> 2 treatments, no conf_int, no boot, with times", {
                       times=c(0.3, 0.8, 1),
                       type_time="factor")
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("> 2 treatments, no conf_int, no boot, with times, type_time='factor'"
@@ -163,6 +163,6 @@ test_that("> 2 treatments, no conf_int, no boot, with times, type_time='factor'"
                       times=c(0.3, 0.8, 1),
                       type_time="factor")
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })

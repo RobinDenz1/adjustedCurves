@@ -440,7 +440,7 @@ test_that("MI, with weights stratify", {
 
 test_that("Isotonic Regression with missing values", {
   adj_err <- adj
-  adj_err$adjsurv$surv[1] <- NA
+  adj_err$adj$surv[1] <- NA
   expect_error(plot(adj_err, iso_reg=TRUE),
                paste0("Isotonic Regression cannot be used when there are ",
                       "missing values in the final survival estimates."))
@@ -466,7 +466,7 @@ test_that("undefined censoring_ind argument", {
 
 test_that("use_boot with no boot no ci", {
   adj_err <- adj
-  adj_err$boot_adjsurv <- NULL
+  adj_err$boot_adj <- NULL
   expect_warning(plot(adj_err, use_boot=TRUE, conf_int=TRUE),
                  paste0("Cannot use bootstrapped estimates as they were not ",
                         "estimated. Need bootstrap=TRUE in ",
@@ -476,7 +476,7 @@ test_that("use_boot with no boot no ci", {
 
 test_that("use_boot would work, conf_int not", {
   adj_err <- adj
-  adj_err$adjsurv$ci_lower <- NULL
+  adj_err$adj$ci_lower <- NULL
   expect_warning(plot(adj_err, use_boot=FALSE, conf_int=TRUE),
                  paste0("Cannot draw confidence intervals. Either set ",
                         "'conf_int=TRUE' in adjustedsurv() call or ",

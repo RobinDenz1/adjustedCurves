@@ -36,8 +36,8 @@ test_that("adjustedsurv, using predict_fun", {
                                        outcome_model=mod,
                                        clean_data=FALSE))
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 
   # using standard code
   class(mod) <- c("glm", "lm")
@@ -48,8 +48,8 @@ test_that("adjustedsurv, using predict_fun", {
                           method="direct",
                           outcome_model=mod)
   expect_s3_class(adj_glm, "adjustedsurv")
-  expect_true(is.numeric(adj_glm$adjsurv$surv))
-  expect_equal(levels(adj_glm$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj_glm$adj$surv))
+  expect_equal(levels(adj_glm$adj$group), levels(sim_dat$group))
 
   # should be equal, apart from the data and call parts
   adj_glm$data <- NULL

@@ -18,8 +18,8 @@ test_that("one model each", {
                       outcome_model=list(Surv(time, status) ~ .),
                       times=c(0.8, 1))
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("multiple models each", {
@@ -34,8 +34,8 @@ test_that("multiple models each", {
                                          Surv(time, status) ~ x3 + x5),
                       times=c(0.8, 1))
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("no conf_int", {
@@ -49,9 +49,9 @@ test_that("no conf_int", {
                       outcome_model=list(Surv(time, status) ~ .),
                       times=c(0.8, 1))
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
-  expect_true(length(colnames(adj$adjsurv)) == 3)
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
+  expect_true(length(colnames(adj$adj)) == 3)
 })
 
 test_that("changing some arguments", {
@@ -70,6 +70,6 @@ test_that("changing some arguments", {
                       min_nuisance=0.1,
                       return_models=FALSE)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })

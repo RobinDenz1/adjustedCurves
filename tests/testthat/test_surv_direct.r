@@ -21,8 +21,8 @@ test_that("2 treatments, no conf_int, no boot", {
                       conf_int=FALSE,
                       outcome_model=mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, with conf_int, no boot", {
@@ -34,8 +34,8 @@ test_that("2 treatments, with conf_int, no boot", {
                       conf_int=TRUE,
                       outcome_model=mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, no conf_int, with boot", {
@@ -49,8 +49,8 @@ test_that("2 treatments, no conf_int, with boot", {
                       n_boot=2,
                       outcome_model=mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, with conf_int, with boot", {
@@ -64,8 +64,8 @@ test_that("2 treatments, with conf_int, with boot", {
                       n_boot=2,
                       outcome_model=mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, no conf_int, no boot, with times", {
@@ -80,8 +80,8 @@ test_that("2 treatments, no conf_int, no boot, with times", {
                       outcome_model=mod,
                       times=c(0.8, 0.9))
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 sim_dat <- readRDS(system.file("testdata",
@@ -106,8 +106,8 @@ test_that("> 2 treatments, no conf_int, no boot", {
                       conf_int=FALSE,
                       outcome_model=mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("> 2 treatments, with conf_int, no boot", {
@@ -119,8 +119,8 @@ test_that("> 2 treatments, with conf_int, no boot", {
                       conf_int=TRUE,
                       outcome_model=mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("> 2 treatments, no conf_int, with boot", {
@@ -134,8 +134,8 @@ test_that("> 2 treatments, no conf_int, with boot", {
                       n_boot=2,
                       outcome_model=mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("> 2 treatments, with conf_int, with boot", {
@@ -149,8 +149,8 @@ test_that("> 2 treatments, with conf_int, with boot", {
                       n_boot=2,
                       outcome_model=mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("> 2 treatments, no conf_int, no boot, with times", {
@@ -165,8 +165,8 @@ test_that("> 2 treatments, no conf_int, no boot, with times", {
                       outcome_model=mod,
                       times=c(0.8, 0.9))
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 ####################### Models other than coxph ################################
@@ -209,8 +209,8 @@ test_that("riskRegression, 2 treatments, no boot", {
                       conf_int=FALSE,
                       outcome_model=mod_riskRegression)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("riskRegression, 2 treatments, with boot", {
@@ -224,8 +224,8 @@ test_that("riskRegression, 2 treatments, with boot", {
                       bootstrap=TRUE,
                       n_boot=2)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("ARR, 2 treatments, no boot", {
@@ -237,8 +237,8 @@ test_that("ARR, 2 treatments, no boot", {
                       conf_int=FALSE,
                       outcome_model=mod_ARR)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("ARR, 2 treatments, with boot", {
@@ -252,8 +252,8 @@ test_that("ARR, 2 treatments, with boot", {
                       bootstrap=TRUE,
                       n_boot=2)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("selectCox, 2 treatments, no boot", {
@@ -265,8 +265,8 @@ test_that("selectCox, 2 treatments, no boot", {
                       conf_int=FALSE,
                       outcome_model=mod_selectCox)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("selectCox, 2 treatments, with boot", {
@@ -280,8 +280,8 @@ test_that("selectCox, 2 treatments, with boot", {
                       bootstrap=TRUE,
                       n_boot=2)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("pecRpart, 2 treatments, no boot", {
@@ -293,8 +293,8 @@ test_that("pecRpart, 2 treatments, no boot", {
                       conf_int=FALSE,
                       outcome_model=mod_pecRpart)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("prodlim, 2 treatments, no boot", {
@@ -306,8 +306,8 @@ test_that("prodlim, 2 treatments, no boot", {
                       conf_int=FALSE,
                       outcome_model=mod_prodlim)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("prodlim, 2 treatments, with boot", {
@@ -321,8 +321,8 @@ test_that("prodlim, 2 treatments, with boot", {
                       bootstrap=TRUE,
                       n_boot=2)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 sim_dat$event <- 1
@@ -336,8 +336,8 @@ test_that("glm, 2 treatments, no boot", {
                       conf_int=FALSE,
                       outcome_model=mod_glm)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("glm, 2 treatments, with boot", {
@@ -351,8 +351,8 @@ test_that("glm, 2 treatments, with boot", {
                       bootstrap=TRUE,
                       n_boot=2)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 ### using > 2 treatments
@@ -395,8 +395,8 @@ test_that("riskRegression, > 2 treatments, no boot", {
                       conf_int=FALSE,
                       outcome_model=mod_riskRegression)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("riskRegression, > 2 treatments, with boot", {
@@ -410,8 +410,8 @@ test_that("riskRegression, > 2 treatments, with boot", {
                       bootstrap=TRUE,
                       n_boot=2)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("ARR, 2 treatments, no boot", {
@@ -423,8 +423,8 @@ test_that("ARR, 2 treatments, no boot", {
                       conf_int=FALSE,
                       outcome_model=mod_ARR)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("ARR, 2 treatments, with boot", {
@@ -438,8 +438,8 @@ test_that("ARR, 2 treatments, with boot", {
                       bootstrap=TRUE,
                       n_boot=2)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("selectCox, > 2 treatments, no boot", {
@@ -451,8 +451,8 @@ test_that("selectCox, > 2 treatments, no boot", {
                       conf_int=FALSE,
                       outcome_model=mod_selectCox)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("selectCox, > 2 treatments, with boot", {
@@ -466,8 +466,8 @@ test_that("selectCox, > 2 treatments, with boot", {
                       bootstrap=TRUE,
                       n_boot=2)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("pecRpart, > 2 treatments, no boot", {
@@ -479,8 +479,8 @@ test_that("pecRpart, > 2 treatments, no boot", {
                       conf_int=FALSE,
                       outcome_model=mod_pecRpart)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("prodlim, > 2 treatments, no boot", {
@@ -492,8 +492,8 @@ test_that("prodlim, > 2 treatments, no boot", {
                       conf_int=FALSE,
                       outcome_model=mod_prodlim)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("prodlim, > 2 treatments, with boot", {
@@ -507,8 +507,8 @@ test_that("prodlim, > 2 treatments, with boot", {
                       bootstrap=TRUE,
                       n_boot=2)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 sim_dat$event <- 1
@@ -522,8 +522,8 @@ test_that("glm, > 2 treatments, no boot", {
                       conf_int=FALSE,
                       outcome_model=mod_glm)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("glm, > 2 treatments, with boot", {
@@ -537,8 +537,8 @@ test_that("glm, > 2 treatments, with boot", {
                       bootstrap=TRUE,
                       n_boot=2)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 ################################################################################

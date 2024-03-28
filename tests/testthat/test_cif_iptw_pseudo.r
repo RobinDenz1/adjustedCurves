@@ -21,8 +21,8 @@ test_that("2 treatments, no conf_int, no boot", {
                      treatment_model=mod,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, with conf_int, no boot", {
@@ -35,8 +35,8 @@ test_that("2 treatments, with conf_int, no boot", {
                      treatment_model=mod,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, no conf_int, with boot", {
@@ -51,8 +51,8 @@ test_that("2 treatments, no conf_int, with boot", {
                      treatment_model=mod,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, with conf_int, with boot", {
@@ -67,8 +67,8 @@ test_that("2 treatments, with conf_int, with boot", {
                      treatment_model=mod,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, no conf_int, with WeightIt", {
@@ -83,8 +83,8 @@ test_that("2 treatments, no conf_int, with WeightIt", {
                      weight_method="ps",
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, no conf_int, with user-weights", {
@@ -98,8 +98,8 @@ test_that("2 treatments, no conf_int, with user-weights", {
                      treatment_model=runif(n=50, min=1, max=2),
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("3 ways of iptw calculation are equal", {
@@ -117,7 +117,7 @@ test_that("3 ways of iptw calculation are equal", {
                        bootstrap=FALSE,
                        treatment_model=weights,
                        stabilize=FALSE,
-                       cause=1)$adjcif
+                       cause=1)$adj
   adj_glm <- adjustedcif(data=sim_dat,
                          variable="group",
                          ev_time="time",
@@ -127,7 +127,7 @@ test_that("3 ways of iptw calculation are equal", {
                          bootstrap=FALSE,
                          treatment_model=mod,
                          stabilize=FALSE,
-                         cause=1)$adjcif
+                         cause=1)$adj
   adj_weightit <- adjustedcif(data=sim_dat,
                               variable="group",
                               ev_time="time",
@@ -138,7 +138,7 @@ test_that("3 ways of iptw calculation are equal", {
                               treatment_model=group ~ x1 + x2 + x5 + x6,
                               weight_method="ps",
                               stabilize=FALSE,
-                              cause=1)$adjcif
+                              cause=1)$adj
 
   colnames(adj_w) <- paste0("w_", colnames(adj_w))
   colnames(adj_glm) <- paste0("glm_", colnames(adj_glm))
@@ -195,8 +195,8 @@ test_that("> 2 treatments, no conf_int, no boot, no ...", {
                      treatment_model=mod,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("> 2 treatments, with conf_int, no boot, no ...", {
@@ -209,8 +209,8 @@ test_that("> 2 treatments, with conf_int, no boot, no ...", {
                      treatment_model=mod,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("> 2 treatments, no conf_int, with boot, no ...", {
@@ -225,8 +225,8 @@ test_that("> 2 treatments, no conf_int, with boot, no ...", {
                      treatment_model=mod,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("> 2 treatments, with conf_int, with boot, no ...", {
@@ -241,8 +241,8 @@ test_that("> 2 treatments, with conf_int, with boot, no ...", {
                      treatment_model=mod,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 # DONT RUN: would require package dependency on "mlogit"
@@ -269,6 +269,6 @@ test_that("> 2 treatments, no conf_int, with user-weights", {
                      treatment_model=runif(n=100, min=1, max=2),
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })

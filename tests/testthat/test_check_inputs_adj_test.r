@@ -4,7 +4,7 @@ suppressMessages(requireNamespace("survival"))
 set.seed(42)
 
 adjsurv <- list(boot_data=data.frame(a=1),
-                adjsurv=data.frame(time=runif(20)),
+                adj=data.frame(time=runif(20)),
                 adjcif=data.frame(time=runif(20)))
 class(adjsurv) <- "adjustedsurv"
 
@@ -80,7 +80,7 @@ test_that("adjustedcif, no bootstrapping performed", {
 })
 
 adjsurv <- list(boot_data=data.frame(a=1),
-                adjsurv=data.frame(time=runif(5)),
+                adj=data.frame(time=runif(5)),
                 adjcif=data.frame(time=runif(5)))
 class(adjsurv) <- "adjustedsurv"
 
@@ -88,7 +88,7 @@ test_that("adjustedsurv, not enough points in time", {
   expect_warning(check_inputs_adj_test(adj=adjsurv, from=0, to=0.2),
                paste0("Using only a few points in time might lead to ",
                       "biased estimates. Consider using a finer times ",
-                      "grid in 'adjustedsurv'."))
+                      "grid in 'adjustedsurv' or 'adjustedcif'."))
 })
 
 class(adjsurv) <- "adjustedcif"
@@ -97,5 +97,5 @@ test_that("adjustedcif, not enough points in time", {
   expect_warning(check_inputs_adj_test(adj=adjsurv, from=0, to=0.2),
                  paste0("Using only a few points in time might lead to ",
                         "biased estimates. Consider using a finer times ",
-                        "grid in 'adjustedcif'."))
+                        "grid in 'adjustedsurv' or 'adjustedcif'."))
 })

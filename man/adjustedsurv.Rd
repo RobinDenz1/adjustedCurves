@@ -121,7 +121,7 @@ A general plot of the estimated adjusted survival curves can be obtained using t
 \value{
 Returns an \code{adjustedsurv} object containing the following objects:
 
-\item{adjsurv}{A \code{data.frame} of estimated adjusted survival probabilities for some points in time for each level of \code{variable}. Depending on the arguments used also includes standard errors and confidence intervals.
+\item{adj}{A \code{data.frame} of estimated adjusted survival probabilities for some points in time for each level of \code{variable}. Depending on the arguments used also includes standard errors and confidence intervals.
 }
 \item{data}{The \code{data.frame} used in the original function call.
 }
@@ -138,7 +138,7 @@ When the argument \code{bootstrap} is set to \code{TRUE}, it additionally contai
 
 \item{boot_data}{The adjusted survival curves estimated in each bootstrap sample.
 }
-\item{boot_adjsurv}{The mean adjusted survival curves of all bootstrap samples and corresponding standard errors and percentile confidence intervals.
+\item{boot_adj}{The mean adjusted survival curves of all bootstrap samples and corresponding standard errors and percentile confidence intervals.
 }
 
 When multiple imputation was used, the function additionally contains a \code{mids_analyses} object, containing the \code{adjustedsurv} objects for each imputed dataset.

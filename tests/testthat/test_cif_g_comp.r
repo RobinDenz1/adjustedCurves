@@ -27,8 +27,8 @@ test_that("adjustedcif, using predict_fun", {
                      clean_data=FALSE,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 
   # using standard code
   class(mod) <- "FGR"
@@ -40,8 +40,8 @@ test_that("adjustedcif, using predict_fun", {
                          outcome_model=mod,
                          cause=1)
   expect_s3_class(adj_fgr, "adjustedcif")
-  expect_true(is.numeric(adj_fgr$adjcif$cif))
-  expect_equal(levels(adj_fgr$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj_fgr$adj$cif))
+  expect_equal(levels(adj_fgr$adj$group), levels(sim_dat$group))
 
   # should be equal, apart from the data and call parts
   adj_fgr$data <- NULL

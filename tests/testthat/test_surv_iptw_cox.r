@@ -21,8 +21,8 @@ test_that("2 treatments, no boot", {
                       conf_int=FALSE,
                       treatment_model=mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, with boot", {
@@ -36,8 +36,8 @@ test_that("2 treatments, with boot", {
                       n_boot=2,
                       treatment_model=mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, with WeightIt", {
@@ -51,8 +51,8 @@ test_that("2 treatments, with WeightIt", {
                       treatment_model=group ~ x1 + x2,
                       weight_method="ps")
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, with user-weights", {
@@ -65,8 +65,8 @@ test_that("2 treatments, with user-weights", {
                       bootstrap=FALSE,
                       treatment_model=runif(n=50, min=1, max=2))
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("3 ways of iptw calculation are equal", {
@@ -83,7 +83,7 @@ test_that("3 ways of iptw calculation are equal", {
                         conf_int=FALSE,
                         bootstrap=FALSE,
                         treatment_model=weights,
-                        stabilize=FALSE)$adjsurv
+                        stabilize=FALSE)$adj
   adj_glm <- adjustedsurv(data=sim_dat,
                           variable="group",
                           ev_time="time",
@@ -92,7 +92,7 @@ test_that("3 ways of iptw calculation are equal", {
                           conf_int=FALSE,
                           bootstrap=FALSE,
                           treatment_model=mod,
-                          stabilize=FALSE)$adjsurv
+                          stabilize=FALSE)$adj
   adj_weightit <- adjustedsurv(data=sim_dat,
                                variable="group",
                                ev_time="time",
@@ -103,7 +103,7 @@ test_that("3 ways of iptw calculation are equal", {
                                treatment_model=group ~ x1 + x2 + x3 +
                                  x4 + x5 + x6,
                                weight_method="ps",
-                               stabilize=FALSE)$adjsurv
+                               stabilize=FALSE)$adj
 
   colnames(adj_w) <- paste0("w_", colnames(adj_w))
   colnames(adj_glm) <- paste0("glm_", colnames(adj_glm))
@@ -147,8 +147,8 @@ test_that("> 2 treatments, no boot, no ...", {
                       conf_int=FALSE,
                       treatment_model=mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("> 2 treatments, with boot, no ...", {
@@ -162,8 +162,8 @@ test_that("> 2 treatments, with boot, no ...", {
                       n_boot=2,
                       treatment_model=mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 # DONT RUN: would require package dependency on "mlogit"
@@ -189,6 +189,6 @@ test_that("> 2 treatments, with user-weights", {
                       bootstrap=FALSE,
                       treatment_model=runif(n=50, min=1, max=2))
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })

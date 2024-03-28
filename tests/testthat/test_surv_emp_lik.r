@@ -24,8 +24,8 @@ test_that("2 treatments, no conf_int, no boot", {
                       conf_int=FALSE,
                       treatment_vars=treatment_vars)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, no conf_int, with boot", {
@@ -39,8 +39,8 @@ test_that("2 treatments, no conf_int, with boot", {
                       n_boot=2,
                       treatment_vars=treatment_vars)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, no conf_int, no boot, with times", {
@@ -54,8 +54,8 @@ test_that("2 treatments, no conf_int, no boot, with times", {
                       treatment_vars=treatment_vars,
                       times=c(0.5, 0.8, 1))
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("instant convergence of algorithm", {
@@ -70,8 +70,8 @@ test_that("instant convergence of algorithm", {
                       times=1,
                       newton_tol=1)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 # NOTE: This throws a warning because the same warning shows up twice
@@ -105,8 +105,8 @@ test_that("using standardize", {
                       times=1,
                       standardize=TRUE)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("using the second moment", {
@@ -121,8 +121,8 @@ test_that("using the second moment", {
                       times=1,
                       moment="second")
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 sim_dat$event[sim_dat$group==1] <- 0
@@ -138,6 +138,6 @@ test_that("no events in one group", {
                       treatment_vars=treatment_vars,
                       times=1)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })

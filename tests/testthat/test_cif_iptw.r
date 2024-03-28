@@ -20,8 +20,8 @@ test_that("2 treatments, no conf_int, no boot", {
                      treatment_model=mod,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, with conf_int, no boot", {
@@ -34,8 +34,8 @@ test_that("2 treatments, with conf_int, no boot", {
                      treatment_model=mod,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, no conf_int, with boot", {
@@ -50,8 +50,8 @@ test_that("2 treatments, no conf_int, with boot", {
                      treatment_model=mod,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, with conf_int, with boot", {
@@ -66,8 +66,8 @@ test_that("2 treatments, with conf_int, with boot", {
                      treatment_model=mod,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 #sim_dat <- sim_confounded_crisk(n=150)

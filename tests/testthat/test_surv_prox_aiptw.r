@@ -65,7 +65,7 @@ test_that("default arguments", {
                       conf_int=FALSE,
                       method="prox_aiptw")
   expect_s3_class(out, "adjustedsurv")
-  expect_true(is.numeric(out$adjsurv$surv))
+  expect_true(is.numeric(out$adj$surv))
 })
 
 test_that("using conf_int", {
@@ -80,8 +80,8 @@ test_that("using conf_int", {
                       conf_int=TRUE,
                       method="prox_aiptw")
   expect_s3_class(out, "adjustedsurv")
-  expect_true(is.numeric(out$adjsurv$surv))
-  expect_true(is.numeric(out$adjsurv$ci_lower))
+  expect_true(is.numeric(out$adj$surv))
+  expect_true(is.numeric(out$adj$ci_lower))
 })
 
 test_that("using bootstrapping", {
@@ -98,8 +98,8 @@ test_that("using bootstrapping", {
                       bootstrap=TRUE,
                       n_boot=2)
   expect_s3_class(out, "adjustedsurv")
-  expect_true(is.numeric(out$adjsurv$surv))
-  expect_true(is.numeric(out$boot_adjsurv$ci_lower))
+  expect_true(is.numeric(out$adj$surv))
+  expect_true(is.numeric(out$boot_adj$ci_lower))
 })
 
 test_that("with times", {
@@ -114,8 +114,8 @@ test_that("with times", {
                       conf_int=FALSE,
                       method="prox_aiptw")
   expect_s3_class(out, "adjustedsurv")
-  expect_true(is.numeric(out$adjsurv$surv))
-  expect_true(length(out$adjsurv$time)==4)
+  expect_true(is.numeric(out$adj$surv))
+  expect_true(length(out$adj$time)==4)
 })
 
 test_that("changing some custom arguments", {
@@ -133,7 +133,7 @@ test_that("changing some custom arguments", {
                       optim_control=list(maxit=40),
                       return_fit=FALSE)
   expect_s3_class(out, "adjustedsurv")
-  expect_true(is.numeric(out$adjsurv$surv))
+  expect_true(is.numeric(out$adj$surv))
 })
 
 test_that("with multiple numeric adjust_vars", {
@@ -147,7 +147,7 @@ test_that("with multiple numeric adjust_vars", {
                       conf_int=FALSE,
                       method="prox_aiptw")
   expect_s3_class(out, "adjustedsurv")
-  expect_true(is.numeric(out$adjsurv$surv))
+  expect_true(is.numeric(out$adj$surv))
 })
 
 test_that("with multiple partially factor adjust_vars", {
@@ -161,5 +161,5 @@ test_that("with multiple partially factor adjust_vars", {
                       conf_int=FALSE,
                       method="prox_aiptw")
   expect_s3_class(out, "adjustedsurv")
-  expect_true(is.numeric(out$adjsurv$surv))
+  expect_true(is.numeric(out$adj$surv))
 })

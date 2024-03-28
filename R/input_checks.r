@@ -574,21 +574,21 @@ check_inputs_adj_rmst <- function(adjsurv, from, to, conf_int, difference,
     stop("'from' must be smaller than 'to'.")
   } else if (!(is.logical(conf_int) & length(conf_int)==1)) {
     stop("'conf_int' must be either TRUE or FALSE.")
-  } else if (conf_int & is.null(adjsurv$boot_adjsurv)) {
+  } else if (conf_int & is.null(adjsurv$boot_adj)) {
     warning("Cannot use bootstrapped estimates because",
             " they were not estimated.",
             " Need 'bootstrap=TRUE' in 'adjustedsurv' function call.",
             call.=FALSE)
   }
 
-  if (any(to > max(adjsurv$adjsurv$time, na.rm=TRUE))) {
+  if (any(to > max(adjsurv$adj$time, na.rm=TRUE))) {
     stop("'to' cannot be greater than the latest observed time.")
   }
 
-  if (length(unique((adjsurv$adjsurv$time))) < 10) {
+  if (length(unique((adjsurv$adj$time))) < 10) {
     warning("Using only a few points in time might lead to biased",
             " estimates. Consider using a finer times grid in",
-            " 'adjustedsurv'.", call.=FALSE)
+            " 'adjustedsurv' or 'adjustedcif'.", call.=FALSE)
   }
 
   if (difference & ratio) {
@@ -614,20 +614,15 @@ check_inputs_adj_rmtl <- function(adj, from, to, conf_int, difference, ratio) {
     stop("'from' must be smaller than 'to'.")
   } else if (!(is.logical(conf_int) & length(conf_int)==1)) {
     stop("'conf_int' must be either TRUE or FALSE.")
-  } else if (conf_int & is.null(adj$boot_adjsurv) & is.null(adj$boot_adjcif)) {
+  } else if (conf_int & is.null(adj$boot_adj)) {
     warning("Cannot use bootstrapped estimates because",
             " they were not estimated.",
             " Need 'bootstrap=TRUE' in 'adjustedsurv'/'adjustedcif'",
             " function call.", call.=FALSE)
   }
 
-  if (inherits(adj, "adjustedsurv")) {
-    max_t <- max(adj$adjsurv$time, na.rm=TRUE)
-    n_t <- length(unique((adj$adjsurv$time)))
-  } else {
-    max_t <- max(adj$adjcif$time, na.rm=TRUE)
-    n_t <- length(unique((adj$adjcif$time)))
-  }
+  max_t <- max(adj$adj$time, na.rm=TRUE)
+  n_t <- length(unique((adj$adj$time)))
 
   if (any(to > max_t)) {
     stop("'to' cannot be greater than the latest observed time.")
@@ -666,28 +661,14 @@ check_inputs_adj_test <- function(adj, from, to) {
     stop("'to' must be greater than 'from'.")
   }
 
-  if (inherits(adj, "adjustedsurv")) {
-    if (to > max(adj$adjsurv$time, na.rm=TRUE)) {
-      stop("'to' cannot be greater than the latest observed time.")
-    }
-  } else {
-    if (to > max(adj$adjcif$time, na.rm=TRUE)) {
-      stop("'to' cannot be greater than the latest observed time.")
-    }
+  if (to > max(adj$adj$time, na.rm=TRUE)) {
+    stop("'to' cannot be greater than the latest observed time.")
   }
 
-  if (inherits(adj, "adjustedsurv")) {
-    if (length(unique((adj$adjsurv$time))) < 10) {
-      warning("Using only a few points in time might lead to biased",
-              " estimates. Consider using a finer times grid in",
-              " 'adjustedsurv'.", call.=FALSE)
-    }
-  } else {
-    if (length(unique((adj$adjcif$time))) < 10) {
-      warning("Using only a few points in time might lead to biased",
-              " estimates. Consider using a finer times grid in",
-              " 'adjustedcif'.", call.=FALSE)
-    }
+  if (length(unique((adj$adj$time))) < 10) {
+    warning("Using only a few points in time might lead to biased",
+            " estimates. Consider using a finer times grid in",
+            " 'adjustedsurv' or 'adjustedcif'.", call.=FALSE)
   }
 }
 
@@ -1084,21 +1065,20 @@ check_inputs_plot_difference <- function(x, group_1, group_2, conf_int,
   } else if (p_value & is.null(test) & is.null(integral_to)) {
     stop("If 'p_value' is specified, either 'test' or 'integral_to' also",
          " need to be specified. See details.")
-  } else if (p_value & is.null(test) & is.null(x$boot_adjsurv) &
-             is.null(x$boot_adjcif)) {
+  } else if (p_value & is.null(test) & is.null(x$boot_adj)) {
     stop("'p_value' can only be used when bootstrap=TRUE was used in the",
          " original adjustedsurv or adjustedcif function call.")
-  } else if (use_boot & is.null(x$boot_adjsurv) & is.null(x$boot_adjcif)) {
+  } else if (use_boot & is.null(x$boot_adj)) {
     stop("Bootstrapped estimates can only be calculated if 'bootstrap=TRUE'",
          " was used in the original adjustedsurv or adjustedcif function",
          " call.")
   } else if (conf_int & !use_boot) {
-    if (inherits(x, "adjustedcif") && !"ci_lower" %in% colnames(x$adjcif)) {
+    if (inherits(x, "adjustedcif") && !"ci_lower" %in% colnames(x$adj)) {
       stop("There are no approximate standard error calculations to use.",
            " Either set 'use_boot=TRUE' or rerun the adjustedcif function",
            " with 'conf_int=TRUE' if possible.")
     } else if (inherits(x, "adjustedsurv") &&
-               !"ci_lower" %in% colnames(x$adjsurv)) {
+               !"ci_lower" %in% colnames(x$adj)) {
       stop("There are no approximate standard error calculations to use.",
            " Either set 'use_boot=TRUE' or rerun the adjustedsurv function",
            " with 'conf_int=TRUE' if possible.")
@@ -1121,35 +1101,20 @@ check_inputs_adj_diff <- function(adj, group_1, group_2, conf_int, use_boot) {
                is.null(group_2))) {
     stop("'group_2' has to be a single character vector, specifying one",
          " of the treatment groups in 'variable'.")
-  } else if (inherits(adj, "adjustedsurv") && !is.null(group_1) &&
-             !group_1 %in% levels(adj$adjsurv$group)) {
+  } else if (!is.null(group_1) && !group_1 %in% levels(adj$adj$group)) {
     stop(group_1, " is not a valid group in 'variable'.")
-  } else if (inherits(adj, "adjustedcif") && !is.null(group_1) &&
-             !group_1 %in% levels(adj$adjcif$group)) {
-    stop(group_1, " is not a valid group in 'variable'.")
-  } else if (inherits(adj, "adjustedsurv") && !is.null(group_1) &&
-             !group_2 %in% levels(adj$adjsurv$group)) {
-    stop(group_2, " is not a valid group in 'variable'.")
-  } else if (inherits(adj, "adjustedcif") && !is.null(group_1) &&
-             !group_2 %in% levels(adj$adjcif$group)) {
+  } else if (!is.null(group_1) && !group_2 %in% levels(adj$adj$group)) {
     stop(group_2, " is not a valid group in 'variable'.")
   } else if (!is.null(group_1) && !is.null(group_2) && group_1 == group_2) {
     stop("'group_1' and 'group_2' may not be equal.")
-  } else if (use_boot & is.null(adj$boot_adjsurv) & is.null(adj$boot_adjcif)) {
+  } else if (use_boot & is.null(adj$boot_adj)) {
     stop("Bootstrapped estimates can only be calculated if 'bootstrap=TRUE'",
          " was used in the original adjustedsurv or adjustedcif function",
          " call.")
-  } else if (conf_int & !use_boot) {
-    if (inherits(adj, "adjustedcif") && !"ci_lower" %in% colnames(adj$adjcif)) {
-      stop("There are no approximate standard error calculations to use.",
-           " Either set 'use_boot=TRUE' or rerun the adjustedcif function",
-           " with 'conf_int=TRUE' if possible.")
-    } else if (inherits(adj, "adjustedsurv") &&
-               !"ci_lower" %in% colnames(adj$adjsurv)) {
-      stop("There are no approximate standard error calculations to use.",
-           " Either set 'use_boot=TRUE' or rerun the adjustedsurv function",
-           " with 'conf_int=TRUE' if possible.")
-    }
+  } else if (conf_int & !use_boot && !"ci_lower" %in% colnames(adj$adj)) {
+    stop("There are no approximate standard error calculations to use.",
+         " Either set 'use_boot=TRUE' or rerun the adjustedsurv/adjustedcif",
+         " function with 'conf_int=TRUE' if possible.")
   }
 }
 
@@ -1164,12 +1129,12 @@ check_inputs_surv_q <- function(adjsurv, p, conf_int, use_boot,
     stop("'p' must be a vector or single number containing only",
          " numbers <= 1 & >= 0.")
   } else if (conf_int && !use_boot &&
-             !"ci_lower" %in% colnames(adjsurv$adjsurv) &&
+             !"ci_lower" %in% colnames(adjsurv$adj) &&
              !(difference | ratio)) {
     stop("There are no approximate confidence intervals to use.",
          " Either set 'use_boot=TRUE' or rerun the adjustedsurv function",
          " with 'conf_int=TRUE' if possible.")
-  } else if (conf_int & use_boot & is.null(adjsurv$boot_adjsurv)) {
+  } else if (conf_int & use_boot & is.null(adjsurv$boot_adj)) {
     stop("Bootstrapped estimates can only be calculated if 'bootstrap=TRUE'",
          " was used in the original adjustedsurv or adjustedcif function",
          " call.")
@@ -1186,12 +1151,12 @@ check_inputs_surv_q <- function(adjsurv, p, conf_int, use_boot,
     stop("'ratio' must be either TRUE or FALSE.")
   } else if (!(is.null(group_1) || (length(group_1)==1 &&
                is.character(group_1) &&
-               group_1 %in% levels(adjsurv$adjsurv$group)))) {
+               group_1 %in% levels(adjsurv$adj$group)))) {
     stop("'group_1' must be a single character string specifying a level",
          " of the 'variable' column.")
   } else if (!(is.null(group_2) || (length(group_2)==1 &&
                is.character(group_2) &&
-               group_2 %in% levels(adjsurv$adjsurv$group)))) {
+               group_2 %in% levels(adjsurv$adj$group)))) {
     stop("'group_2' must be a single character string specifying a level",
          " of the 'variable' column.")
   }

@@ -36,8 +36,8 @@ test_that("MI, direct, no boot", {
                       conf_int=FALSE,
                       outcome_model=outc_mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("MI, direct, boot", {
@@ -51,8 +51,8 @@ test_that("MI, direct, boot", {
                       n_boot=2,
                       outcome_model=outc_mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 ### direct_pseudo
@@ -66,8 +66,8 @@ test_that("MI, direct_pseudo, no boot", {
                       outcome_vars=outc_vars,
                       type_time="bs")
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("MI, direct_pseudo, boot", {
@@ -82,8 +82,8 @@ test_that("MI, direct_pseudo, boot", {
                       outcome_vars=outc_vars,
                       type_time="bs")
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 ### iptw_km
@@ -97,8 +97,8 @@ test_that("MI, iptw_km, no boot, glm", {
                       conf_int=FALSE,
                       treatment_model=treat_mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("MI, iptw_km, boot, glm", {
@@ -112,8 +112,8 @@ test_that("MI, iptw_km, boot, glm", {
                       n_boot=2,
                       treatment_model=treat_mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 # use formula object treatment model
@@ -126,8 +126,8 @@ test_that("MI, iptw_km, no boot, weightit", {
                       conf_int=FALSE,
                       treatment_model=group ~ x1 + x2 + x3)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("MI, iptw_km, boot, weightit", {
@@ -141,8 +141,8 @@ test_that("MI, iptw_km, boot, weightit", {
                       n_boot=2,
                       treatment_model=group ~ x1 + x2 + x3)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 
@@ -157,8 +157,8 @@ test_that("MI, iptw_cox, no boot", {
                       conf_int=FALSE,
                       treatment_model=treat_mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("MI, iptw_cox, boot", {
@@ -172,8 +172,8 @@ test_that("MI, iptw_cox, boot", {
                       n_boot=2,
                       treatment_model=treat_mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 # use formula object treatment model
@@ -186,8 +186,8 @@ test_that("MI, iptw_cox, no boot, weightit", {
                       conf_int=FALSE,
                       treatment_model=group ~ x1 + x2 + x3)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("MI, iptw_cox, boot, weightit", {
@@ -201,8 +201,8 @@ test_that("MI, iptw_cox, boot, weightit", {
                       n_boot=2,
                       treatment_model=group ~ x1 + x2 + x3)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 ### iptw_pseudo
@@ -216,8 +216,8 @@ test_that("MI, iptw_pseudo, no boot", {
                       conf_int=FALSE,
                       treatment_model=treat_mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("MI, iptw_pseudo, boot", {
@@ -231,8 +231,8 @@ test_that("MI, iptw_pseudo, boot", {
                       n_boot=2,
                       treatment_model=treat_mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 # use formula object treatment model
@@ -245,8 +245,8 @@ test_that("MI, iptw_pseudo, no boot, weightit", {
                       conf_int=FALSE,
                       treatment_model=group ~ x1 + x2 + x3)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("MI, iptw_pseudo, boot, weightit", {
@@ -260,8 +260,8 @@ test_that("MI, iptw_pseudo, boot, weightit", {
                       n_boot=2,
                       treatment_model=group ~ x1 + x2 + x3)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("MI, iptw_pseudo, using conf_int", {
@@ -275,8 +275,8 @@ test_that("MI, iptw_pseudo, using conf_int", {
                       n_boot=2,
                       treatment_model=group ~ x1 + x2 + x3)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 ### matching
@@ -289,8 +289,8 @@ test_that("MI, matching, no boot", {
                       conf_int=FALSE,
                       treatment_model=treat_mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 ### aiptw
@@ -304,8 +304,8 @@ test_that("MI, aiptw, no boot", {
                       outcome_model=outc_mod,
                       treatment_model=treat_mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("MI, aiptw, boot", {
@@ -320,8 +320,8 @@ test_that("MI, aiptw, boot", {
                       outcome_model=outc_mod,
                       treatment_model=treat_mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 ### aiptw_pseudo
@@ -336,8 +336,8 @@ test_that("MI, aiptw_pseudo, no boot", {
                       treatment_model=treat_mod,
                       type_time="bs")
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("MI, aiptw_pseudo, boot", {
@@ -353,8 +353,8 @@ test_that("MI, aiptw_pseudo, boot", {
                       treatment_model=treat_mod,
                       type_time="bs")
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 ### km
@@ -366,8 +366,8 @@ test_that("MI, km, no boot", {
                       method="km",
                       conf_int=FALSE)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("MI, km, boot", {
@@ -380,8 +380,8 @@ test_that("MI, km, boot", {
                       bootstrap=TRUE,
                       n_boot=3)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 ### emp_lik
@@ -400,8 +400,8 @@ test_that("MI, emp_lik, no boot", {
                       conf_int=FALSE,
                       treatment_vars=treat_vars)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("MI, emp_lik, boot", {
@@ -415,8 +415,8 @@ test_that("MI, emp_lik, boot", {
                       n_boot=3,
                       treatment_vars=treat_vars)})
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 set.seed(3)

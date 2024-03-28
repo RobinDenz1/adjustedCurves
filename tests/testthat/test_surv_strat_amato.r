@@ -22,8 +22,8 @@ test_that("2 treatments, one confounder, no boot", {
                       method="strat_amato",
                       adjust_vars="x1")
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group2))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group2))
 })
 
 test_that("2 treatments, two confounders, no boot", {
@@ -34,8 +34,8 @@ test_that("2 treatments, two confounders, no boot", {
                       method="strat_amato",
                       adjust_vars=c("x1", "x3"))
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group2))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group2))
 })
 
 test_that("2 treatments, two confounders, with boot", {
@@ -48,8 +48,8 @@ test_that("2 treatments, two confounders, with boot", {
                       bootstrap=TRUE,
                       n_boot=2)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group2))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group2))
 })
 
 test_that("2 treatments, two confounders, no boot, using reference data", {
@@ -62,8 +62,8 @@ test_that("2 treatments, two confounders, no boot, using reference data", {
                       bootstrap=FALSE,
                       reference=reference)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group2))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group2))
 })
 
 ## more than two treatments
@@ -80,8 +80,8 @@ test_that("> 2 treatments, one confounder, no boot", {
                       method="strat_amato",
                       adjust_vars="x1")
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("> 2 treatments, two confounders, no boot", {
@@ -92,8 +92,8 @@ test_that("> 2 treatments, two confounders, no boot", {
                       method="strat_amato",
                       adjust_vars=c("x1", "x3"))
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("> 2 treatments, two confounders, with boot", {
@@ -106,8 +106,8 @@ test_that("> 2 treatments, two confounders, with boot", {
                       bootstrap=TRUE,
                       n_boot=2)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, two confounders, no boot, using reference data", {
@@ -120,6 +120,6 @@ test_that("2 treatments, two confounders, no boot, using reference data", {
                       bootstrap=FALSE,
                       reference=reference)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })

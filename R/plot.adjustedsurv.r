@@ -61,12 +61,12 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
   requireNamespace("ggplot2")
 
   # get relevant data for the confidence interval
-  if (use_boot & is.null(x$boot_adjsurv)) {
-    plotdata <- x$adjsurv
+  if (use_boot & is.null(x$boot_adj)) {
+    plotdata <- x$adj
   } else if (use_boot) {
-    plotdata <- x$boot_adjsurv
+    plotdata <- x$boot_adj
   } else {
-    plotdata <- x$adjsurv
+    plotdata <- x$adj
   }
 
   # ensure that curves always start at 0
@@ -193,10 +193,10 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
   }
 
   ## Confidence intervals
-  if (conf_int & use_boot & is.null(x$boot_adjsurv)) {
+  if (conf_int & use_boot & is.null(x$boot_adj)) {
     warning("Cannot use bootstrapped estimates as they were not estimated.",
             " Need bootstrap=TRUE in adjustedsurv() call.", call.=FALSE)
-  } else if (conf_int & !use_boot & !"ci_lower" %in% colnames(x$adjsurv)) {
+  } else if (conf_int & !use_boot & !"ci_lower" %in% colnames(x$adj)) {
     warning("Cannot draw confidence intervals. Either set 'conf_int=TRUE' in",
             " adjustedsurv() call or use bootstrap estimates.", call.=FALSE)
   } else if (conf_int) {
@@ -338,7 +338,7 @@ add_median_surv_lines <- function(p, x, plotdata, max_t, ylim, steps,
 
   # calculate median survival and add other needed values
   fake_adjsurv <- x
-  fake_adjsurv$adjsurv <- plotdata
+  fake_adjsurv$adj <- plotdata
 
   median_surv <- adjusted_surv_quantile(fake_adjsurv,
                                         p=median_surv_quantile[[1]],
@@ -393,7 +393,7 @@ add_median_surv_lines <- function(p, x, plotdata, max_t, ylim, steps,
 ## create dataset used to plot censoring indicators
 get_censoring_ind_data <- function(x, steps, max_t, plotdata) {
 
-  levs <- levels(x$adjsurv$group)
+  levs <- levels(x$adj$group)
 
   # keep only relevant data
   x$data <- x$data[which(x$data[, x$call$ev_time] <= max_t), ]

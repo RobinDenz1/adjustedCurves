@@ -126,12 +126,12 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
     for (i in seq_len(length(out))) {
 
       # direct estimate
-      dat <- out[[i]]$adjsurv
+      dat <- out[[i]]$adj
       dat$.imp <- i
       dats[[i]] <- dat
 
       # bootstrap estimate
-      boot_dat <- out[[i]]$boot_adjsurv
+      boot_dat <- out[[i]]$boot_adj
       boot_dat$.imp <- i
       boot_dats[[i]] <- boot_dat
 
@@ -189,7 +189,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
 
     # output object
     out_obj <- list(mids_analyses=out,
-                    adjsurv=plotdata,
+                    adj=plotdata,
                     data=data$data,
                     mids=data, # TODO: change after rework to plot()
                     method=method,
@@ -214,7 +214,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
       plotdata_boot$ci_lower <- surv_ci$left
       plotdata_boot$ci_upper <- surv_ci$right
 
-      out_obj$boot_adjsurv <- plotdata_boot
+      out_obj$boot_adj <- plotdata_boot
 
     }
 
@@ -365,7 +365,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
       plotdata <- iso_reg_surv(plotdata)
     }
 
-    out <- list(adjsurv=plotdata,
+    out <- list(adj=plotdata,
                 data=data,
                 method=method,
                 categorical=ifelse(length(levs) > 2, TRUE, FALSE),
@@ -388,11 +388,11 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
 
       # put together
       boot_stats$surv <- plotdata_temp$surv
-      out$boot_adjsurv <- boot_stats[!is.na(boot_stats$surv), ]
+      out$boot_adj <- boot_stats[!is.na(boot_stats$surv), ]
 
       if (method %in% c("km", "iptw_km", "iptw_cox", "strat_amato",
                         "strat_nieto")) {
-        out$adjsurv <- out$adjsurv[!is.na(out$adjsurv$surv), ]
+        out$adj <- out$adj[!is.na(out$adj$surv), ]
       }
     }
 
@@ -453,10 +453,10 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
   args <- c(args, pass_args)
 
   method_results <- R.utils::doCall(surv_fun, args=args)
-  adjsurv_boot <- method_results$plotdata
-  adjsurv_boot$boot <- i
+  adj_boot <- method_results$plotdata
+  adj_boot$boot <- i
 
-  return(adjsurv_boot)
+  return(adj_boot)
 }
 
 ## S3 summary method for adjustedsurv objects

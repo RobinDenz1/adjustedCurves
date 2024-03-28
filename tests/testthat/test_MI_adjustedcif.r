@@ -38,8 +38,8 @@ test_that("MI, direct, no boot", {
                      outcome_model=outc_mod,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("MI, direct, boot", {
@@ -55,8 +55,8 @@ test_that("MI, direct, boot", {
                      outcome_model=outc_mod,
                      cause=1)})
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("MI, direct, conf_int", {
@@ -71,8 +71,8 @@ test_that("MI, direct, conf_int", {
                      outcome_model=outc_mod,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 ### direct_pseudo
@@ -87,8 +87,8 @@ test_that("MI, direct_pseudo, no boot", {
                      type_time="bs",
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("MI, direct_pseudo, boot", {
@@ -104,8 +104,8 @@ test_that("MI, direct_pseudo, boot", {
                      type_time="bs",
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 ### iptw
@@ -120,8 +120,8 @@ test_that("MI, iptw, no boot, glm", {
                      treatment_model=treat_mod,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("MI, iptw, boot, glm", {
@@ -137,8 +137,8 @@ test_that("MI, iptw, boot, glm", {
                      treatment_model=treat_mod,
                      cause=1)})
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 ### iptw_pseudo
@@ -153,8 +153,8 @@ test_that("MI, iptw_pseudo, no boot", {
                      treatment_model=treat_mod,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("MI, iptw_pseudo, boot", {
@@ -169,8 +169,8 @@ test_that("MI, iptw_pseudo, boot", {
                      treatment_model=treat_mod,
                      cause=1)})
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 # use formula object treatment model
@@ -184,8 +184,8 @@ test_that("MI, iptw_pseudo, no boot, weightit", {
                      treatment_model=group ~ x1 + x2 + x3,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("MI, iptw_pseudo, boot, weightit", {
@@ -200,8 +200,8 @@ test_that("MI, iptw_pseudo, boot, weightit", {
                      treatment_model=group ~ x1 + x2 + x3,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 ### matching
@@ -215,8 +215,8 @@ test_that("MI, matching, no boot", {
                      treatment_model=treat_mod,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 ### aiptw
@@ -231,8 +231,8 @@ test_that("MI, aiptw, no boot", {
                      treatment_model=treat_mod,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("MI, aiptw, boot", {
@@ -248,8 +248,8 @@ test_that("MI, aiptw, boot", {
                      treatment_model=treat_mod,
                      cause=1)})
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 ### aiptw_pseudo
@@ -265,8 +265,8 @@ test_that("MI, aiptw_pseudo, no boot", {
                      type_time="bs",
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("MI, aiptw_pseudo, boot", {
@@ -283,8 +283,8 @@ test_that("MI, aiptw_pseudo, boot", {
                      type_time="bs",
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 ### aalen_johansen
@@ -297,8 +297,8 @@ test_that("MI, aalen_johansen, no boot", {
                      conf_int=F,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("MI, aalen_johansen, boot", {
@@ -312,8 +312,8 @@ test_that("MI, aalen_johansen, boot", {
                      n_boot=2,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 ### adjusted_curve_test

@@ -26,8 +26,8 @@ test_that("2 treatments, no conf_int, no boot", {
                       outcome_model=outc_mod,
                       treatment_model=treat_mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, with conf_int, no boot", {
@@ -40,8 +40,8 @@ test_that("2 treatments, with conf_int, no boot", {
                       outcome_model=outc_mod,
                       treatment_model=treat_mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, no conf_int, with boot", {
@@ -56,8 +56,8 @@ test_that("2 treatments, no conf_int, with boot", {
                       outcome_model=outc_mod,
                       treatment_model=treat_mod)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, no conf_int, no boot, with times", {
@@ -73,8 +73,8 @@ test_that("2 treatments, no conf_int, no boot, with times", {
                       treatment_model=treat_mod,
                       times=c(0.8, 0.9))
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 cens_mod <- survival::coxph(Surv(time, event==0) ~ x2, data=sim_dat, x=TRUE)
@@ -93,6 +93,6 @@ test_that("2 treatments, no conf_int, no boot, with times, with cens_mod", {
                       censoring_model=cens_mod,
                       times=c(0.8, 0.9))
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })

@@ -20,8 +20,8 @@ test_that("2 treatments, no conf_int, no boot", {
                      type_time="bs",
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, no conf_int, with boot", {
@@ -37,8 +37,8 @@ test_that("2 treatments, no conf_int, with boot", {
                      type_time="bs",
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, no conf_int, no boot, with times", {
@@ -55,8 +55,8 @@ test_that("2 treatments, no conf_int, no boot, with times", {
                      type_time="factor",
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that(
@@ -74,8 +74,8 @@ test_that(
                      type_time="factor",
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that(
@@ -94,8 +94,8 @@ test_that(
                        spline_df=2,
                        cause=1)
     expect_s3_class(adj, "adjustedcif")
-    expect_true(is.numeric(adj$adjcif$cif))
-    expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+    expect_true(is.numeric(adj$adj$cif))
+    expect_equal(levels(adj$adj$group), levels(sim_dat$group))
   })
 
 sim_dat <- readRDS(system.file("testdata",
@@ -118,8 +118,8 @@ test_that("> 2 treatments, no conf_int, no boot", {
                      type_time="bs",
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("> 2 treatments, no conf_int, with boot", {
@@ -135,8 +135,8 @@ test_that("> 2 treatments, no conf_int, with boot", {
                      type_time="bs",
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("> 2 treatments, no conf_int, no boot, with times", {
@@ -153,8 +153,8 @@ test_that("> 2 treatments, no conf_int, no boot, with times", {
                      type_time="factor",
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("> 2 treatments, no conf_int, no boot, with times, type_time='factor'"
@@ -172,6 +172,6 @@ test_that("> 2 treatments, no conf_int, no boot, with times, type_time='factor'"
                      type_time="factor",
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })

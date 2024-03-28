@@ -14,8 +14,8 @@ test_that("2 treatments, no conf_int, no boot", {
                       method="km",
                       conf_int=FALSE)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, with conf_int, no boot", {
@@ -26,8 +26,8 @@ test_that("2 treatments, with conf_int, no boot", {
                       method="km",
                       conf_int=TRUE)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, no conf_int, with boot", {
@@ -40,8 +40,8 @@ test_that("2 treatments, no conf_int, with boot", {
                       bootstrap=TRUE,
                       n_boot=2)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("2 treatments, with conf_int, with boot", {
@@ -54,8 +54,8 @@ test_that("2 treatments, with conf_int, with boot", {
                       bootstrap=TRUE,
                       n_boot=2)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 sim_dat <- readRDS(system.file("testdata",
@@ -75,8 +75,8 @@ test_that("> 2 treatments, no conf_int, no boot", {
                       method="km",
                       conf_int=FALSE)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("> 2 treatments, with conf_int, no boot", {
@@ -87,8 +87,8 @@ test_that("> 2 treatments, with conf_int, no boot", {
                       method="km",
                       conf_int=TRUE)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("> 2 treatments, no conf_int, with boot", {
@@ -101,8 +101,8 @@ test_that("> 2 treatments, no conf_int, with boot", {
                       bootstrap=TRUE,
                       n_boot=2)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("> 2 treatments, with conf_int, with boot", {
@@ -115,8 +115,8 @@ test_that("> 2 treatments, with conf_int, with boot", {
                       bootstrap=TRUE,
                       n_boot=2)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 # very little data
@@ -133,8 +133,8 @@ test_that("little data, checking if add_zeros works", {
                       bootstrap=TRUE,
                       n_boot=2)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
   p <- suppressWarnings(plot(adj, median_surv_lines=TRUE))
   expect_s3_class(p, "ggplot")
   p <- suppressWarnings(plot(adj, use_boot=TRUE, conf_int=TRUE))

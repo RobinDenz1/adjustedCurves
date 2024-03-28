@@ -21,7 +21,7 @@ test_that("2 treatments, no conf_int, no boot", {
                      treatment_model=mod,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
+  expect_true(is.numeric(adj$adj$cif))
 })
 
 test_that("2 treatments, no conf_int, no boot, with ps_score", {
@@ -36,5 +36,5 @@ test_that("2 treatments, no conf_int, no boot, with ps_score", {
                      treatment_model=ps_score,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
+  expect_true(is.numeric(adj$adj$cif))
 })

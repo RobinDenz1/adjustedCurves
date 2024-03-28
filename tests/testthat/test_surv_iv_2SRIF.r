@@ -46,7 +46,7 @@ test_that("general case", {
                           adjust_vars="Z",
                           instrument="W")
   expect_s3_class(adjsurv, "adjustedsurv")
-  expect_true(is.numeric(adjsurv$adjsurv$surv))
+  expect_true(is.numeric(adjsurv$adj$surv))
 })
 
 test_that("with bootstrapping", {
@@ -60,7 +60,7 @@ test_that("with bootstrapping", {
                           bootstrap=TRUE,
                           n_boot=2)
   expect_s3_class(adjsurv, "adjustedsurv")
-  expect_true(is.numeric(adjsurv$adjsurv$surv))
+  expect_true(is.numeric(adjsurv$adj$surv))
 })
 
 test_that("multiple adjust_vars", {
@@ -72,7 +72,7 @@ test_that("multiple adjust_vars", {
                           adjust_vars=c("Z", "Z_2"),
                           instrument="W")
   expect_s3_class(adjsurv, "adjustedsurv")
-  expect_true(is.numeric(adjsurv$adjsurv$surv))
+  expect_true(is.numeric(adjsurv$adj$surv))
 })
 
 test_that("multiple adjust_vars with a factor variable", {
@@ -84,7 +84,7 @@ test_that("multiple adjust_vars with a factor variable", {
                           adjust_vars=c("Z", "Z_2", "Z_3"),
                           instrument="W")
   expect_s3_class(adjsurv, "adjustedsurv")
-  expect_true(is.numeric(adjsurv$adjsurv$surv))
+  expect_true(is.numeric(adjsurv$adj$surv))
 })
 
 test_that("no adjust_vars", {
@@ -96,5 +96,5 @@ test_that("no adjust_vars", {
                           adjust_vars=NULL,
                           instrument="W")
   expect_s3_class(adjsurv, "adjustedsurv")
-  expect_true(is.numeric(adjsurv$adjsurv$surv))
+  expect_true(is.numeric(adjsurv$adj$surv))
 })

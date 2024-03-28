@@ -222,9 +222,9 @@ adjusted_surv_quantile <- function(adjsurv, p=0.5, conf_int=FALSE,
                       group_2=group_2)
 
   if (use_boot) {
-    plotdata <- adjsurv$boot_adjsurv
+    plotdata <- adjsurv$boot_adj
   } else {
-    plotdata <- adjsurv$adjsurv
+    plotdata <- adjsurv$adj
   }
 
   if (difference | ratio) {

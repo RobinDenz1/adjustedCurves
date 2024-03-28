@@ -20,8 +20,8 @@ test_that("one model each", {
                      cause=1,
                      times=c(0.8, 1))
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("multiple models each", {
@@ -37,8 +37,8 @@ test_that("multiple models each", {
                      cause=1,
                      times=c(0.8, 1))
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("no conf_int", {
@@ -53,9 +53,9 @@ test_that("no conf_int", {
                      cause=1,
                      times=c(0.8, 1))
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
-  expect_true(length(colnames(adj$adjcif)) == 3)
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
+  expect_true(length(colnames(adj$adj)) == 3)
 })
 
 test_that("changing some arguments", {
@@ -75,6 +75,6 @@ test_that("changing some arguments", {
                      min_nuisance=0.1,
                      return_models=FALSE)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })

@@ -20,8 +20,8 @@ test_that("adjustedsurv, tibbles, no boot", {
                       conf_int=FALSE,
                       treatment_model=group ~ x1)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("adjustedsurv, tibbles, with boot", {
@@ -36,8 +36,8 @@ test_that("adjustedsurv, tibbles, with boot", {
                       treatment_model=group ~ x1,
                       na.action=stats::na.omit)
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 sim_dat2 <- readRDS(system.file("testdata",
@@ -57,8 +57,8 @@ test_that("adjustedcif, tibbles, no boot", {
                      conf_int=FALSE,
                      cause=1)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("adjustedcif, tibbles, with boot", {
@@ -73,8 +73,8 @@ test_that("adjustedcif, tibbles, with boot", {
                      cause=1,
                      na.action=stats::na.omit)
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 ## multicore processing
@@ -90,8 +90,8 @@ test_that("adjustedsurv, km, with n_cores = 2", {
                             conf_int=FALSE,
                             n_cores=2))
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("adjustedsurv, aiptw, with n_cores = 2", {
@@ -114,8 +114,8 @@ test_that("adjustedsurv, aiptw, with n_cores = 2", {
                             censoring_model=cens_mod,
                             treatment_model=ps_mod))
   expect_s3_class(adj, "adjustedsurv")
-  expect_true(is.numeric(adj$adjsurv$surv))
-  expect_equal(levels(adj$adjsurv$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("adjustedcif, aalen_johansen, with n_cores = 2", {
@@ -130,8 +130,8 @@ test_that("adjustedcif, aalen_johansen, with n_cores = 2", {
                            cause=1,
                            n_cores=2))
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 test_that("adjustedcif, aiptw, with n_cores = 2", {
@@ -154,8 +154,8 @@ test_that("adjustedcif, aiptw, with n_cores = 2", {
                                 censoring_model=cens_mod,
                                 treatment_model=ps_mod)))
   expect_s3_class(adj, "adjustedcif")
-  expect_true(is.numeric(adj$adjcif$cif))
-  expect_equal(levels(adj$adjcif$group), levels(sim_dat$group))
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
 ## warnings and errors

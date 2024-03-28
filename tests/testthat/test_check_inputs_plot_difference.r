@@ -18,7 +18,6 @@ adj <- adjustedsurv(data=sim_dat,
                     n_boot=2)
 
 adj2 <- adj
-adj2$adjcif <- adj$adjsurv
 class(adj2) <- "adjustedcif"
 
 adj_test_cat <- list(categorical=TRUE)
@@ -202,7 +201,7 @@ test_that("p_value without needed args", {
                fixed=TRUE)
 })
 
-adj$boot_adjsurv <- NULL
+adj$boot_adj <- NULL
 
 test_that("using p_value without boot", {
   expect_error(check_inputs_plot_difference(x=adj,
@@ -242,7 +241,7 @@ test_that("using use_boot without boot", {
                fixed=TRUE)
 })
 
-adj$adjsurv <- dplyr::select(adj$adjsurv, c("time", "group", "surv"))
+adj$adj <- dplyr::select(adj$adj, c("time", "group", "surv"))
 
 test_that("using conf_int without approximate stuff surv", {
   expect_error(check_inputs_plot_difference(x=adj,
@@ -264,7 +263,7 @@ test_that("using conf_int without approximate stuff surv", {
                fixed=TRUE)
 })
 
-adj2$adjcif <- dplyr::select(adj2$adjcif, c("time", "group", "surv"))
+adj2$adj <- dplyr::select(adj2$adj, c("time", "group", "surv"))
 
 test_that("using conf_int without approximate stuff surv", {
   expect_error(check_inputs_plot_difference(x=adj2,
