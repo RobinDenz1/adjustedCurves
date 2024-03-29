@@ -28,6 +28,8 @@ This page explains the details of estimating augmented inverse probability of tr
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/comparing_groups.html">Comparing Adjusted Survival Curves or Cumulative Incidence Curves</a>
+    <a class="dropdown-item" href="../articles/faq.html">Frequently Asked Questions about the adjustedCurves Package</a>
     <a class="dropdown-item" href="../articles/introduction.html">An Introduction to the 'adjustedCurves' Package</a>
     <a class="dropdown-item" href="../articles/method_overview.html">Overview of methods in adjustedCurves</a>
     <a class="dropdown-item" href="../articles/plot_customization.html">Customizing Adjusted Survival Curve Plots</a>
@@ -130,8 +132,7 @@ This page explains the details of estimating augmented inverse probability of tr
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://optimizer.r-forge.r-project.org/" class="external-link">numDeriv</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RobinDenz1/adjustedCurves" class="external-link">adjustedCurves</a></span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RobinDenz1/adjustedCurves" class="external-link">adjustedCurves</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#### generate some example data that fufill all assumptions ####</span></span></span>
 <span class="r-in"><span><span class="co"># code was taken from the github repository associated with the original</span></span></span>
@@ -197,6 +198,10 @@ This page explains the details of estimating augmented inverse probability of tr
 <span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">data_gen</span><span class="op">(</span>N<span class="op">=</span><span class="fl">50</span>, para_set<span class="op">=</span><span class="va">para_set</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">data</span><span class="op">$</span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">A</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"numDeriv"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://optimizer.r-forge.r-project.org/" class="external-link">numDeriv</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">adj</span> <span class="op">&lt;-</span> <span class="fu"><a href="adjustedsurv.html">adjustedsurv</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">data</span>,</span></span>
 <span class="r-in"><span>                    variable<span class="op">=</span><span class="st">"A"</span>,</span></span>
 <span class="r-in"><span>                    ev_time<span class="op">=</span><span class="st">"T0"</span>,</span></span>
@@ -207,6 +212,7 @@ This page explains the details of estimating augmented inverse probability of tr
 <span class="r-in"><span>                    outcome_proxy<span class="op">=</span><span class="st">"W"</span>,</span></span>
 <span class="r-in"><span>                    conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adj</span>, iso_reg<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-plt img"><img src="surv_prox_aiptw-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>

@@ -28,6 +28,8 @@ This page explains the details of estimating inverse probability of treatment we
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/comparing_groups.html">Comparing Adjusted Survival Curves or Cumulative Incidence Curves</a>
+    <a class="dropdown-item" href="../articles/faq.html">Frequently Asked Questions about the adjustedCurves Package</a>
     <a class="dropdown-item" href="../articles/introduction.html">An Introduction to the 'adjustedCurves' Package</a>
     <a class="dropdown-item" href="../articles/method_overview.html">Overview of methods in adjustedCurves</a>
     <a class="dropdown-item" href="../articles/plot_customization.html">Customizing Adjusted Survival Curve Plots</a>
@@ -135,6 +137,8 @@ This page explains the details of estimating inverse probability of treatment we
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RobinDenz1/adjustedCurves" class="external-link">adjustedCurves</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"prodlim"</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"riskRegression"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># simulate some data as example</span></span></span>
@@ -153,7 +157,6 @@ This page explains the details of estimating inverse probability of treatment we
 <span class="r-in"><span>                      method<span class="op">=</span><span class="st">"iptw_pseudo"</span>,</span></span>
 <span class="r-in"><span>                      treatment_model<span class="op">=</span><span class="va">glm_mod</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span>, force_bounds<span class="op">=</span><span class="cn">TRUE</span>, iso_reg<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="cif_iptw_pseudo-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Alternatively, use custom weights</span></span></span>
 <span class="r-in"><span><span class="co"># In this example we use weights calculated using the propensity score,</span></span></span>
@@ -169,7 +172,8 @@ This page explains the details of estimating inverse probability of treatment we
 <span class="r-in"><span>                      method<span class="op">=</span><span class="st">"iptw_pseudo"</span>,</span></span>
 <span class="r-in"><span>                      treatment_model<span class="op">=</span><span class="va">weights</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span>, force_bounds<span class="op">=</span><span class="cn">TRUE</span>, iso_reg<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="cif_iptw_pseudo-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"WeightIt"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># And a third alternative: use the WeightIt package</span></span></span>
 <span class="r-in"><span><span class="co"># here an example with equal results to the ones above:</span></span></span>
@@ -182,7 +186,6 @@ This page explains the details of estimating inverse probability of treatment we
 <span class="r-in"><span>                      treatment_model<span class="op">=</span><span class="va">group</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x3</span> <span class="op">+</span> <span class="va">x5</span> <span class="op">+</span> <span class="va">x6</span>,</span></span>
 <span class="r-in"><span>                      weight_method<span class="op">=</span><span class="st">"ps"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span>, force_bounds<span class="op">=</span><span class="cn">TRUE</span>, iso_reg<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="cif_iptw_pseudo-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># here an example using Entropy Balancing Weighting:</span></span></span>
 <span class="r-in"><span><span class="va">adjcif</span> <span class="op">&lt;-</span> <span class="fu"><a href="adjustedcif.html">adjustedcif</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">sim_dat</span>,</span></span>
@@ -194,7 +197,9 @@ This page explains the details of estimating inverse probability of treatment we
 <span class="r-in"><span>                      treatment_model<span class="op">=</span><span class="va">group</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x3</span> <span class="op">+</span> <span class="va">x5</span> <span class="op">+</span> <span class="va">x6</span>,</span></span>
 <span class="r-in"><span>                      weight_method<span class="op">=</span><span class="st">"ebal"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span>, force_bounds<span class="op">=</span><span class="cn">TRUE</span>, iso_reg<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="cif_iptw_pseudo-4.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-plt img"><img src="cif_iptw_pseudo-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

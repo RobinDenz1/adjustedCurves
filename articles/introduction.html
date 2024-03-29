@@ -48,6 +48,8 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/comparing_groups.html">Comparing Adjusted Survival Curves or Cumulative Incidence Curves</a>
+    <a class="dropdown-item" href="../articles/faq.html">Frequently Asked Questions about the adjustedCurves Package</a>
     <a class="dropdown-item" href="../articles/introduction.html">An Introduction to the 'adjustedCurves' Package</a>
     <a class="dropdown-item" href="../articles/method_overview.html">Overview of methods in adjustedCurves</a>
     <a class="dropdown-item" href="../articles/plot_customization.html">Customizing Adjusted Survival Curve Plots</a>
@@ -91,16 +93,15 @@
     
     
 <p>The main purpose of the <code>adjustedCurves</code> R-Package is to
-calculate and plot confounder-adjusted survival curves and
-cause-specific confounder-adjusted cumulative incidence functions (CIF)
-using a variety of methods. Group- or treatment-specific survival curves
-and CIFs are often used to graphically display the treatment (or group)
-effect on the survival probability. When the data at hand comes from a
-randomized controlled trial with balanced subgroups, simple stratified
-estimators of the survival curves or CIFs ignoring other covariates are
-unbiased. When randomization fails or was not done at all however,
-confounding can lead to biased depictions (see Rubin 1974; Pearl
-2009).</p>
+estimate and plot confounder-adjusted survival curves and cause-specific
+confounder-adjusted cumulative incidence functions (CIF) using a variety
+of methods. Group- or treatment-specific survival curves and CIFs are
+often used to graphically display the treatment (or group) effect on the
+survival probability. When the data at hand comes from a randomized
+controlled trial with balanced subgroups, simple stratified estimators
+of the survival curves or CIFs ignoring other covariates are unbiased.
+When randomization fails or was not done at all however, confounding can
+lead to biased depictions (see Pearl 2009).</p>
 <p>Luckily, a lot of different methods to adjust survival curves and
 CIFs for confounding have been proposed. With the
 <code>adjustedCurves</code> package, these methods can be used with
@@ -125,7 +126,7 @@ specified method.</p>
 </h2>
 <p>Let’s start with the standard survival setting. Using the
 <code>sim_confounded_surv</code> function, we simulate some survival
-data (Chatton et al. 2020):</p>
+data:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/therneau/survival" class="external-link">survival</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
@@ -164,14 +165,15 @@ analysis.</p>
 <p>To calculate confounder-adjusted survival curves fo each group of
 this dataset using <em>Direct Standardization</em> (also known as
 <em>G-Computation</em> or <em>Corrected Group Prognosis method</em>, see
-Makuch (1982) or Chang et al. (1982)), we first have to fit a
-<code>coxph</code> model:</p>
+Makuch (1982) or Chang et al. (1982)), we first have to fit a model.
+Here we will use a <code>coxph</code> model, but we could also use
+pretty much any other kind of model.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># it is important to use X=TRUE in the coxph function call</span></span>
 <span><span class="va">outcome_model</span> <span class="op">&lt;-</span> <span class="fu">survival</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/coxph.html" class="external-link">coxph</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">event</span><span class="op">)</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x3</span> <span class="op">+</span> <span class="va">x4</span> <span class="op">+</span> <span class="va">x5</span> <span class="op">+</span> </span>
 <span>                                   <span class="va">x6</span> <span class="op">+</span> <span class="va">group</span>, data<span class="op">=</span><span class="va">data_1</span>, x<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>This model can then be used in a call to the
-<code>adjustedsurv</code> function, as shown below:</p>
+<code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code> function, as shown below:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">adjsurv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/adjustedsurv.html">adjustedsurv</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">data_1</span>,</span>
 <span>                        variable<span class="op">=</span><span class="st">"group"</span>,</span>
@@ -188,14 +190,20 @@ specify the time-to-event variables in our data.frame. Setting the
 G-Computation estimates, based on the previously fit cox-regression
 model supplied using the <code>outcome_model</code> argument.</p>
 <p>Doing this returns a list with some needed output objects. Most
-important however is the <code>adjsurv</code> data.frame in there,
+important however is the <code>adj</code> data.frame in there,
 containing the adjusted survival curves and corresponding confidence
 intervals (because we used <code>conf_int=TRUE</code> in the original
 function call). We can take a look at this object using the following
 code:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">adjsurv</span><span class="op">$</span><span class="va">adjsurv</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## NULL</span></span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">adjsurv</span><span class="op">$</span><span class="va">adj</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##         time      surv group          se  ci_lower  ci_upper</span></span>
+<span><span class="co">## 1 0.00000000 1.0000000     0 0.000000000 1.0000000 1.0000000</span></span>
+<span><span class="co">## 2 0.01457659 0.9959356     0 0.004039858 0.9880177 1.0000000</span></span>
+<span><span class="co">## 3 0.04062032 0.9917639     0 0.005767859 0.9804591 1.0000000</span></span>
+<span><span class="co">## 4 0.04232678 0.9876128     0 0.007034862 0.9738247 1.0000000</span></span>
+<span><span class="co">## 5 0.06129069 0.9834495     0 0.008123567 0.9675276 0.9993714</span></span>
+<span><span class="co">## 6 0.06271999 0.9792709     0 0.009066121 0.9615017 0.9970402</span></span></code></pre>
 <p>More importantly however, we can plot the survival curves directly
 using the <code>plot</code> method:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -207,37 +215,24 @@ the argument <code>conf_int</code> to TRUE:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjsurv</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="introduction_files/figure-html/unnamed-chunk-8-1.png" width="672"></p>
-<p>Instead of using colors to differentiate the curves we can also use
-different linetypes, by setting the <code>linetype</code> argument to
-TRUE and the <code>color</code> argument to <code>FALSE</code>:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjsurv</span>, linetype<span class="op">=</span><span class="cn">TRUE</span>, color<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-9-1.png" width="672"></p>
-<p>We can also add small indicator lines for censored observations using
-<code>censoring_ind="lines"</code>:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjsurv</span>, color<span class="op">=</span><span class="cn">TRUE</span>, censoring_ind<span class="op">=</span><span class="st">"lines"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
-<p>Indicator lines for the median survival time can be added using
-<code>median_surv_lines=TRUE</code>:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjsurv</span>, color<span class="op">=</span><span class="cn">TRUE</span>, median_surv_lines<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-11-1.png" width="672"></p>
-<p>Many more custom settings are available. For more details and
-examples see <code><a href="../reference/plot.adjustedsurv.html">?plot.adjustedsurv</a></code>.</p>
+<p>Many more custom settings, such as median survival time indicator
+lines, censoring indicator lines and risk tables are available. For more
+details and examples see <code><a href="../reference/plot.adjustedsurv.html">?plot.adjustedsurv</a></code> or the
+associated vignette, which goes in even more detail on how the plots can
+be customized.</p>
 </div>
 <div class="section level3">
 <h3 id="inverse-probability-of-treatment-weighting">Inverse Probability of Treatment Weighting<a class="anchor" aria-label="anchor" href="#inverse-probability-of-treatment-weighting"></a>
 </h3>
-<p>The <code>adjustedsurv</code> function essentially works the same
+<p>The <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code> function essentially works the same
 with every available method. Since the methods are however vastly
 different in nature, some additional arguments have to be supplied by
 the user. For example, using the Inverse Probability of Treatment
 Weighting method (IPTW), we need to model the <em>treatment assignment
 mechanism</em> instead of the outcome mechanism (see Xie and Liu
-(2005)). This can be done using a logistic regression model as
-follows:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+(2005)). This can be done in many ways. Below we use a logistic
+regression model for exemplary purposes:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">treatment_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">group</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x3</span> <span class="op">+</span> <span class="va">x4</span> <span class="op">+</span> <span class="va">x5</span> <span class="op">+</span> <span class="va">x6</span>,</span>
 <span>                       data<span class="op">=</span><span class="va">data_1</span>, family<span class="op">=</span><span class="st">"binomial"</span><span class="op">(</span>link<span class="op">=</span><span class="st">"logit"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -249,25 +244,25 @@ follows:</p>
 <span>                        treatment_model<span class="op">=</span><span class="va">treatment_model</span>,</span>
 <span>                        conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>The resulting curves can be plotted as before:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjsurv</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-13-1.png" width="672"></p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjsurv</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="introduction_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
 <p>Since both methods were used correctly here, there are only slight
 differences in the results. Big differences between the two methods
-usually indicate that either the cox-regression model or the logistic
-regression model are incorrectly specified.</p>
+usually indicate that either the outcome model or the
+treatment-assignment model are incorrectly specified.</p>
 </div>
 <div class="section level3">
 <h3 id="augmented-inverse-probability-of-treatment-weighting">Augmented Inverse Probability of Treatment Weighting<a class="anchor" aria-label="anchor" href="#augmented-inverse-probability-of-treatment-weighting"></a>
 </h3>
-<p>Doubly-Robust methods can be helpful in such cases (see Robins and
-Rotnitzky (1992) or Ozenne et al. (2020)). The standard Augmented
-Inverse Probability of Treatment Weighting estimator utilized both kinds
-of models at the same time. If either of the models is correctly
-specified, the resulting estimates will be unbiased. It can be used in
-the same way as the other methods, only that this time both models have
-to be supplied:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<p>Doubly-Robust methods can be helpful in such cases (Ozenne et
+al. 2020). The standard Augmented Inverse Probability of Treatment
+Weighting estimator utilized both kinds of models at the same time. If
+either of the models is correctly specified, the resulting estimates
+will be unbiased. It can be used in the same way as the other methods,
+only that this time both models have to be supplied. Using the same
+models as above we can use the following syntax:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">adjsurv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/adjustedsurv.html">adjustedsurv</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">data_1</span>,</span>
 <span>                        variable<span class="op">=</span><span class="st">"group"</span>,</span>
 <span>                        ev_time<span class="op">=</span><span class="st">"time"</span>,</span>
@@ -278,7 +273,7 @@ to be supplied:</p>
 <span>                        conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjsurv</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-14-1.png" width="672"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-11-1.png" width="672"></p>
 </div>
 </div>
 <div class="section level2">
@@ -293,18 +288,18 @@ due to confounding as the survival curves do. Many of the methods to
 adjust survival curves for confounders can be used to adjust CIFs in
 very similar fashion.</p>
 <p>While the computational details and the underlying theory is slightly
-different (see Ozenne et al. (2020)), the syntax for the R-Package stays
+different (see Ozenne et al. 2020), the syntax for the R-Package stays
 pretty much exactly the same. The only major difference is that instead
-of using the <code>adjustedsurv</code> function, the
-<code>adjustedcif</code> function should be utilized. Additionally, the
-user now also has to specify which event-type is of interest (argument
-<code>cause</code>).</p>
+of using the <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code> function, the
+<code><a href="../reference/adjustedcif.html">adjustedcif()</a></code> function should be utilized. Additionally,
+the user now also has to specify which event-type is of interest using
+the <code>cause</code> argument.</p>
 <p>First we need new example data, mirroring the competing risks
-situation. We are going to use the <code>sim_confounded_crisk</code>
+situation. We are going to use the <code><a href="../reference/sim_confounded_crisk.html">sim_confounded_crisk()</a></code>
 function, which does the same thing as the
-<code>sim_confounded_surv</code> function, but with competing risks
+<code><a href="../reference/sim_confounded_surv.html">sim_confounded_surv()</a></code> function, but with competing risks
 data:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># simulate the data</span></span>
 <span><span class="va">data_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sim_confounded_crisk.html">sim_confounded_crisk</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">300</span><span class="op">)</span></span>
 <span><span class="va">data_2</span><span class="op">$</span><span class="va">group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">data_2</span><span class="op">$</span><span class="va">group</span><span class="op">)</span></span>
@@ -326,12 +321,12 @@ model for the time-to-event process which takes the multiple event-types
 into account. One such method is the <em>Cause-Specific
 Cox-Regression</em> model. A simple implementation of this model is
 contained in the <code>riskRegression</code> R-Package.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">outcome_model</span> <span class="op">&lt;-</span> <span class="fu">riskRegression</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/riskRegression/man/CSC.html" class="external-link">CSC</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/prodlim/man/Hist.html" class="external-link">Hist</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">event</span><span class="op">)</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x3</span> <span class="op">+</span> <span class="va">x4</span> <span class="op">+</span> </span>
 <span>                                       <span class="va">x5</span> <span class="op">+</span> <span class="va">x6</span> <span class="op">+</span> <span class="va">group</span>, data<span class="op">=</span><span class="va">data_2</span><span class="op">)</span></span></code></pre></div>
-<p>This model can then be used in a call to the <code>adjustedcif</code>
-function, as shown below:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<p>This model can then be used in a call to the
+<code><a href="../reference/adjustedcif.html">adjustedcif()</a></code> function, as shown below:</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">adjcif</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/adjustedcif.html">adjustedcif</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">data_2</span>,</span>
 <span>                      variable<span class="op">=</span><span class="st">"group"</span>,</span>
 <span>                      ev_time<span class="op">=</span><span class="st">"time"</span>,</span>
@@ -341,11 +336,11 @@ function, as shown below:</p>
 <span>                      cause<span class="op">=</span><span class="fl">1</span>,</span>
 <span>                      conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-17-1.png" width="672"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-14-1.png" width="672"></p>
 <p>This shows the confounder-adjusted CIFs for <code>cause = 1</code>.
 By setting <code>cause</code> to <code>2</code> we get the
 confounder-adjusted CIFs for the other cause:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">adjcif</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/adjustedcif.html">adjustedcif</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">data_2</span>,</span>
 <span>                      variable<span class="op">=</span><span class="st">"group"</span>,</span>
 <span>                      ev_time<span class="op">=</span><span class="st">"time"</span>,</span>
@@ -355,14 +350,14 @@ confounder-adjusted CIFs for the other cause:</p>
 <span>                      cause<span class="op">=</span><span class="fl">2</span>,</span>
 <span>                      conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-18-1.png" width="672"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-15-1.png" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="inverse-probability-of-treatment-weighting-1">Inverse Probability of Treatment Weighting<a class="anchor" aria-label="anchor" href="#inverse-probability-of-treatment-weighting-1"></a>
 </h3>
 <p>The IPTW estimator can be used exactly the same way as we did with
-the <code>adjustedsurv</code> function:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+the <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code> function:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">treatment_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">group</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x3</span> <span class="op">+</span> <span class="va">x4</span> <span class="op">+</span> <span class="va">x5</span> <span class="op">+</span> <span class="va">x6</span>,</span>
 <span>                       data<span class="op">=</span><span class="va">data_2</span>, family<span class="op">=</span><span class="st">"binomial"</span><span class="op">(</span>link<span class="op">=</span><span class="st">"logit"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -375,10 +370,7 @@ the <code>adjustedsurv</code> function:</p>
 <span>                      cause<span class="op">=</span><span class="fl">1</span>,</span>
 <span>                      conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-19-1.png" width="672"></p>
-<p>The other estimators can be used using essentially the same syntax.
-We used <code>bootstrap=TRUE</code> in the last example, because we will
-use functionality relying on it when comparing groups later.</p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-16-1.png" width="672"></p>
 </div>
 </div>
 <div class="section level2">
@@ -396,7 +388,7 @@ data). The function is only able to create binary treatment variables,
 but we can simply resample all occurrences of 1 into 1 and 2, creating 3
 treatments, where 1 and 2 have an identical treatment effect and
 selection process:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># add another group</span></span>
 <span><span class="co"># NOTE: this is done only to showcase the method and does not</span></span>
 <span><span class="co">#       reflect what should be done in real situations</span></span>
@@ -405,7 +397,7 @@ selection process:</p>
 <span>                                          size<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">data_1</span><span class="op">[</span><span class="va">data_1</span><span class="op">$</span><span class="va">group</span><span class="op">==</span><span class="st">"1"</span>,<span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>The Direct Adjusted survival curves can be calculated exactly as
 before:</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">outcome_model</span> <span class="op">&lt;-</span> <span class="fu">survival</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/coxph.html" class="external-link">coxph</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">event</span><span class="op">)</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x3</span> <span class="op">+</span> <span class="va">x4</span> <span class="op">+</span> </span>
 <span>                                   <span class="va">x5</span> <span class="op">+</span> <span class="va">x6</span> <span class="op">+</span> <span class="va">group</span>, data<span class="op">=</span><span class="va">data_1</span>, x<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
@@ -417,11 +409,11 @@ before:</p>
 <span>                        outcome_model<span class="op">=</span><span class="va">outcome_model</span>,</span>
 <span>                        conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjsurv</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-21-1.png" width="672"></p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-18-1.png" width="672"></p>
 <p>For the IPTW based estimates we first fit a multinomial logistic
 regression model using the <code>multinom</code> function from the
 <code>nnet</code> R-Package and use it with the same code as before:</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">treatment_model</span> <span class="op">&lt;-</span> <span class="fu">nnet</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/nnet/man/multinom.html" class="external-link">multinom</a></span><span class="op">(</span><span class="va">group</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x3</span> <span class="op">+</span> <span class="va">x4</span> <span class="op">+</span> <span class="va">x5</span> <span class="op">+</span> <span class="va">x6</span>,</span>
 <span>                                  data<span class="op">=</span><span class="va">data_1</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## # weights:  24 (14 variable)</span></span>
@@ -430,139 +422,64 @@ regression model using the <code>multinom</code> function from the
 <span><span class="co">## iter  20 value 283.765460</span></span>
 <span><span class="co">## final  value 283.765313 </span></span>
 <span><span class="co">## converged</span></span></code></pre>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">adjsurv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/adjustedsurv.html">adjustedsurv</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">data_1</span>,</span>
 <span>                        variable<span class="op">=</span><span class="st">"group"</span>,</span>
 <span>                        ev_time<span class="op">=</span><span class="st">"time"</span>,</span>
 <span>                        event<span class="op">=</span><span class="st">"event"</span>,</span>
 <span>                        method<span class="op">=</span><span class="st">"iptw_km"</span>,</span>
 <span>                        treatment_model<span class="op">=</span><span class="va">treatment_model</span>,</span>
-<span>                        conf_int<span class="op">=</span><span class="cn">TRUE</span>,</span>
-<span>                        bootstrap<span class="op">=</span><span class="cn">TRUE</span>,</span>
-<span>                        n_boot<span class="op">=</span><span class="fl">50</span><span class="op">)</span></span>
+<span>                        conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjsurv</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-22-1.png" width="672"></p>
-<p>We use <code>bootstrap=TRUE</code> here because we will need it in
-the next section. In practice, however, 50 bootstrap samples would
-definitely not be enough to guarantee convergence. We choose this low
-number here only due to speed considerations enforced by CRAN.</p>
+<p><img src="introduction_files/figure-html/unnamed-chunk-19-1.png" width="672"></p>
 </div>
 <div class="section level2">
-<h2 id="comparing-groups">Comparing Groups<a class="anchor" aria-label="anchor" href="#comparing-groups"></a>
+<h2 id="further-topics">Further Topics<a class="anchor" aria-label="anchor" href="#further-topics"></a>
 </h2>
-<p>The estimated adjusted curves can subsequently be used to compare the
-treatment groups using additional plots and statistics.</p>
+<p>Only a few methods and the most important functionality of this
+package were shown in this vignette. It includes a lot more methods and
+functionality, which is described in great detail in both the
+documentation and the other vignettes of this package.</p>
 <div class="section level3">
-<h3 id="adjusted-differences-in-probabilities">Adjusted Differences in Probabilities<a class="anchor" aria-label="anchor" href="#adjusted-differences-in-probabilities"></a>
+<h3 id="implemented-methods">Implemented Methods<a class="anchor" aria-label="anchor" href="#implemented-methods"></a>
 </h3>
-<p>One simple way to compare the groups is to pick a point in time and
-simply calculate the differences between the survival or failure
-probability at this point. The <code>adjusted_curve_diff</code> function
-automates this process. In the following example we calculate the
-difference between the adjusted survival probability of group 0 and 1 at
-time = 0.4:</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/adjusted_curve_diff.html">adjusted_curve_diff</a></span><span class="op">(</span><span class="va">adjsurv</span>, times<span class="op">=</span><span class="fl">0.4</span>, group_1<span class="op">=</span><span class="st">"0"</span>, group_2<span class="op">=</span><span class="st">"1"</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##   time         diff         se   ci_lower  ci_upper   p_value</span></span>
-<span><span class="co">## 1  0.4 -0.008257592 0.09049062 -0.1856159 0.1691008 0.9272911</span></span></code></pre>
-<p>The confidence interval does include 0, suggesting that this
-difference is not statistically significant. This can also be seen from
-the associated p-value.</p>
-<p>Instead of focusing on a single point in time, we can also plot the
-entire difference curve using the <code>plot_curve_diff</code>
-function:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_curve_diff.html">plot_curve_diff</a></span><span class="op">(</span><span class="va">adjsurv</span>, group_1<span class="op">=</span><span class="st">"0"</span>, group_2<span class="op">=</span><span class="st">"1"</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>, color<span class="op">=</span><span class="st">"blue"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-24-1.png" width="672"></p>
-<p>These kind of curves are a great way to visualize the group effect
-over time. When more than two groups are present, this function can be
-called multiple times with changing <code>group_1</code> and
-<code>group_2</code> values.</p>
+<p>For users who want to learn more about the implemented methods, we
+recommend consulting the documentation of the main functions first
+(<code><a href="../reference/adjustedsurv.html">?adjustedsurv</a></code> or <code><a href="../reference/adjustedcif.html">?adjustedcif</a></code>). This page
+will also guide the user to more detailed method-specific information.
+An overview of all implemented methods is given in the associated
+vignette
+(<code><a href="../articles/method_overview.html">vignette(topic="method_overview", package="adjustedCurves")</a></code>).</p>
 </div>
 <div class="section level3">
-<h3 id="adjusted-survival-time-quantiles">Adjusted Survival Time Quantiles<a class="anchor" aria-label="anchor" href="#adjusted-survival-time-quantiles"></a>
+<h3 id="plot-customization">Plot Customization<a class="anchor" aria-label="anchor" href="#plot-customization"></a>
 </h3>
-<p>Similarly, we can calculate the adjusted survival time quantiles
-using the <code>adjusted_surv_quantile</code> function. For example, the
-adjusted median survival time is given by:</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/adjusted_surv_quantile.html">adjusted_surv_quantile</a></span><span class="op">(</span><span class="va">adjsurv</span>, p<span class="op">=</span><span class="fl">0.5</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##     p group    q_surv  ci_lower  ci_upper</span></span>
-<span><span class="co">## 1 0.5     0 0.5067310 0.4487885 0.5657139</span></span>
-<span><span class="co">## 2 0.5     1 0.8014008 0.4068963        NA</span></span>
-<span><span class="co">## 3 0.5     2 0.4835157 0.4311141 0.6283029</span></span></code></pre>
-<p>In our case, they are all very similar.</p>
+<p>The <code><a href="../reference/plot.adjustedsurv.html">plot.adjustedsurv()</a></code> function contains a lot of
+arguments to customize the adjusted survival curve plots, which may be
+daunting at first. The associated vignette
+(<code><a href="../articles/plot_customization.html">vignette(topic="plot_customization", package="adjustedCurves")</a></code>)
+describes most of these options in great detail with multiple
+examples.</p>
 </div>
 <div class="section level3">
-<h3 id="adjusted-restricted-mean-survival-time">Adjusted Restricted Mean Survival Time<a class="anchor" aria-label="anchor" href="#adjusted-restricted-mean-survival-time"></a>
+<h3 id="comparing-groups">Comparing Groups<a class="anchor" aria-label="anchor" href="#comparing-groups"></a>
 </h3>
-<p>An alternative measure is the restricted mean survival time, which
-denotes the integral of the survival curve from time 0 up to a specified
-point in time (see Royston et al. 2013). A confounder adjusted version
-of this statistic can be calculated by simply integrating the confounder
-adjusted survival curves instead of a normal Kaplan-Meier curve (Conner
-et al. 2019). The <code>adjustedCurves</code> package allows the user to
-do this by simply calling the <code>adjusted_rmst</code> function on a
-previously created <code>adjustedsurv</code> object:</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/adjusted_rmst.html">adjusted_rmst</a></span><span class="op">(</span><span class="va">adjsurv</span>, to<span class="op">=</span><span class="fl">0.4</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##    to group      rmst</span></span>
-<span><span class="co">## 1 0.4     0 0.3485056</span></span>
-<span><span class="co">## 2 0.4     1 0.3415740</span></span>
-<span><span class="co">## 3 0.4     2 0.3547187</span></span></code></pre>
-<p>The function returns adjusted RMST for every level of the
-<code>"group"</code> variable. When bootstrapping was performed when
-calling the <code>adjustedsurv</code> function, standard errors and
-confidence intervals can be also calculated using this function as well
-by setting the <code>conf_int</code> argument to <code>TRUE</code>:</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/adjusted_rmst.html">adjusted_rmst</a></span><span class="op">(</span><span class="va">adjsurv</span>, to<span class="op">=</span><span class="fl">0.4</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##    to group      rmst          se  ci_lower  ci_upper n_boot</span></span>
-<span><span class="co">## 1 0.4     0 0.3485056 0.009156084 0.3305600 0.3664512     50</span></span>
-<span><span class="co">## 2 0.4     1 0.3415740 0.019812278 0.3027427 0.3804054     50</span></span>
-<span><span class="co">## 3 0.4     2 0.3547187 0.009117535 0.3368487 0.3725888     50</span></span></code></pre>
-<p>Similar to the <code>adjusted_curve_diff</code> function, we can
-perform a test of the difference between two RMST values:</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/adjusted_rmst.html">adjusted_rmst</a></span><span class="op">(</span><span class="va">adjsurv</span>, to<span class="op">=</span><span class="fl">0.4</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>, difference<span class="op">=</span><span class="cn">TRUE</span>,</span>
-<span>              group_1<span class="op">=</span><span class="st">"0"</span>, group_2<span class="op">=</span><span class="st">"1"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##    to        diff         se    ci_lower   ci_upper   p_value</span></span>
-<span><span class="co">## 1 0.4 0.006931522 0.02182568 -0.03584602 0.04970907 0.7507993</span></span></code></pre>
-<p>There seems to be no statistically significant difference between the
-two RMSTs. However, due to the very low number of bootstrap replications
-used here these results should not be trusted. In practice one should
-use a much higher number, such as 500 or 1000 replications.</p>
-<p>Instead of focusing on a single point in time, it is also possible to
-plot the RMST as it evolves over time using the
-<code>plot_rmst_curve</code> function:</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_rmst_curve.html">plot_rmst_curve</a></span><span class="op">(</span><span class="va">adjsurv</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-29-1.png" width="672"></p>
-<p>Bootstrap confidence intervals could also be added to this plot using
-<code>conf_int=TRUE</code>.</p>
+<p>Users may also be interested in formally comparing the (treatment)
+groups after adjustment has been made. There are multiple ways to
+perform such comparisons using this package for both standard
+time-to-event data and data with competing events. A vignette explaining
+what these different options are and how to use them is also included in
+this package
+(<code><a href="../articles/comparing_groups.html">vignette(topic="comparing_groups", package="adjustedCurves")</a></code>).
+We recommend consulting this vignette if group comparisons are of
+interest.</p>
 </div>
 <div class="section level3">
-<h3 id="adjusted-restricted-mean-time-lost">Adjusted Restricted Mean Time Lost<a class="anchor" aria-label="anchor" href="#adjusted-restricted-mean-time-lost"></a>
+<h3 id="faq">FAQ<a class="anchor" aria-label="anchor" href="#faq"></a>
 </h3>
-<p>A similar statistic is the adjusted <em>Restricted Mean Time
-Lost</em> (RMTL), which is defined as the area under the cause-specific
-confounder adjusted CIF. It can be calculated in the same way as the
-RMST, but using the <code>adjusted_rmtl</code> function:</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/adjusted_rmtl.html">adjusted_rmtl</a></span><span class="op">(</span><span class="va">adjcif</span>, to<span class="op">=</span><span class="fl">0.4</span>, conf_int<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##    to group       rmtl</span></span>
-<span><span class="co">## 1 0.4     0 0.05621035</span></span>
-<span><span class="co">## 2 0.4     1 0.04968113</span></span></code></pre>
-<p>In contrast to the <code>adjusted_rmst</code> function, this works
-for both <code>adjustedsurv</code> and <code>adjustedcif</code> objects
-because the survival curve can easily be transformed to a CIF. It also
-allows difference tests, just like the <code>adjusted_rmtl</code>
-function.</p>
-<p>We can also plot the RMTL over time, this time using the
-<code>plot_rmtl_curve</code> function:</p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_rmtl_curve.html">plot_rmtl_curve</a></span><span class="op">(</span><span class="va">adjcif</span><span class="op">)</span></span></code></pre></div>
-<p><img src="introduction_files/figure-html/unnamed-chunk-31-1.png" width="672"></p>
+<p>Some of the most frequently asked questions are answered in the FAQ
+vignette
+(<code><a href="../articles/faq.html">vignette(topic="faq", package="adjustedCurves")</a></code>).</p>
 </div>
 </div>
 <div class="section level2">
@@ -570,43 +487,21 @@ function.</p>
 </h2>
 <p>Robin Denz, Renate Klaaßen-Mielke, and Nina Timmesfeld (2023). “A
 Comparison of Different Methods to Adjust Survival Curves for
-Confounders”. In: Statistics in Medicine 42.10, pp. 1461-1479</p>
-<p>Donald B. Rubin (1974). “Estimating Causal Effects of Treatments in
-Randomized and Nonrandomized Studies”. In: Journal of Educational
-Psychology 66.5, pp. 688-701</p>
+Confounders”. In: Statistics in Medicine 42.10, pp. 1461-1479.</p>
 <p>Judea Pearl (2009). Causality: Models, Reasoning and Inference. 2nd
 ed. Cambridge: Cambridge University Press</p>
-<p>Arthur Chatton, Florent Le Borgne, Clemence Leyrat, and Yohann
-Foucher (2020). G-Computation and Inverse Probability Weighting for
-Time-To-Event Outcomes: A Comparative Study. arXiv:2006.16859v1</p>
 <p>Robert W. Makuch (1982). “Adjusted Survival Curve Estimation Using
-Covariates”. In: Journal of Chronic Diseases 35.6, pp. 437-443</p>
+Covariates”. In: Journal of Chronic Diseases 35.6, pp. 437-443.</p>
 <p>I-Ming Chang, Rebecca Gelman, and Marcello Pagano (1982). “Corrected
 Group Prognostic Curves and Summary Statistics”. In: Journal of Chronic
-Diseases 35, pp. 669-674</p>
+Diseases 35, pp. 669-674.</p>
 <p>Jun Xie and Chaofeng Liu (2005). “Adjusted Kaplan-Meier Estimator and
 Log-Rank Test with Inverse Probability of Treatment Weighting for
-Survival Data”. In: Statistics in Medicine 24, pp. 3089-3110</p>
-<p>James M. Robins and Andrea Rotnitzky (1992). “Recovery of Information
-and Adjustment for Dependent Censoring Using Surrogate Markers”. In:
-AIDS Epidemiology: Methodological Issues. Ed. by Nicholas P. Jewell,
-Klaus Dietz, and Vernon T. Farewell. New York: Springer Science +
-Business Media, pp. 297-331</p>
+Survival Data”. In: Statistics in Medicine 24, pp. 3089-3110.</p>
 <p>Brice Maxime Hugues Ozenne, Thomas Harder Scheike, and Laila Staerk
 (2020). “On the Estimation of Average Treatment Effects with
 Right-Censored Time to Event Outcome and Competing Risks”. In:
-Biometrical Journal 62, pp. 751-763</p>
-<p>Weixin Cai and Mark J. van der Laan (2020). “One-Step Targeted
-Maximum Likelihood Estimation for Time-To-Event Outcomes”. In:
-Biometrics 76, pp. 722-733</p>
-<p>Patrick Royston and Mahesh K. B. Parmar (2013). “Restricted Mean
-Survival Time: An Alternative to the Hazard Ratio for the Design and
-Analysis of Randomized Trials with a Time-To-Event Outcome”. In: BMC
-Medical Research Methodology 13.152</p>
-<p>Sarah C. Conner, Lisa M. Sullivan, Emelia J. Benjamin, Michael P.
-LaValley, Sandro Galea, and Ludovic Trinquart (2019). “Adjusted
-Restricted Mean Survival Times in Observational Studies”. In: Statistics
-in Medicine 38, pp. 3832-3860</p>
+Biometrical Journal 62, pp. 751-763.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

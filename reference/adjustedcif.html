@@ -24,6 +24,8 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/comparing_groups.html">Comparing Adjusted Survival Curves or Cumulative Incidence Curves</a>
+    <a class="dropdown-item" href="../articles/faq.html">Frequently Asked Questions about the adjustedCurves Package</a>
     <a class="dropdown-item" href="../articles/introduction.html">An Introduction to the 'adjustedCurves' Package</a>
     <a class="dropdown-item" href="../articles/method_overview.html">Overview of methods in adjustedCurves</a>
     <a class="dropdown-item" href="../articles/plot_customization.html">Customizing Adjusted Survival Curve Plots</a>
@@ -201,7 +203,6 @@
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RobinDenz1/adjustedCurves" class="external-link">adjustedCurves</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/therneau/survival" class="external-link">survival</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tagteam/riskRegression" class="external-link">riskRegression</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -211,6 +212,10 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># treatment assignment model</span></span></span>
 <span class="r-in"><span><span class="va">glm_mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">group</span> <span class="op">~</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x3</span> <span class="op">+</span> <span class="va">x5</span> <span class="op">+</span> <span class="va">x6</span>, data<span class="op">=</span><span class="va">sim_dat</span>, family<span class="op">=</span><span class="st">"binomial"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"riskRegression"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tagteam/riskRegression" class="external-link">riskRegression</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># outcome model</span></span></span>
 <span class="r-in"><span><span class="va">cox_mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/riskRegression/man/CSC.html" class="external-link">CSC</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/prodlim/man/Hist.html" class="external-link">Hist</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">event</span><span class="op">)</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x4</span> <span class="op">+</span> <span class="va">x5</span> <span class="op">+</span> <span class="va">group</span>, data<span class="op">=</span><span class="va">sim_dat</span><span class="op">)</span></span></span>
@@ -225,7 +230,6 @@
 <span class="r-in"><span>                      outcome_model<span class="op">=</span><span class="va">cox_mod</span>,</span></span>
 <span class="r-in"><span>                      conf_int<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>                      bootstrap<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Rare event </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># using IPTW with asymptotic confidence intervals for cause 2</span></span></span>
 <span class="r-in"><span><span class="va">adjcif</span> <span class="op">&lt;-</span> <span class="fu">adjustedcif</span><span class="op">(</span>data<span class="op">=</span><span class="va">sim_dat</span>,</span></span>
@@ -249,7 +253,6 @@
 <span class="r-in"><span>                      treatment_model<span class="op">=</span><span class="va">glm_mod</span>,</span></span>
 <span class="r-in"><span>                      conf_int<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>                      bootstrap<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Rare event </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># using direct adjustment at custom points in time</span></span></span>
 <span class="r-in"><span><span class="va">custom_times</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.001</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.6</span>, <span class="fl">1.1</span><span class="op">)</span></span></span>
@@ -263,7 +266,6 @@
 <span class="r-in"><span>                      conf_int<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>                      bootstrap<span class="op">=</span><span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>                      times<span class="op">=</span><span class="va">custom_times</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Rare event </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># using bootstrapping with direct adjustment</span></span></span>
 <span class="r-in"><span><span class="co"># NOTE: In practice the number of bootstrap replications should be</span></span></span>
@@ -278,6 +280,11 @@
 <span class="r-in"><span>                      conf_int<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>                      bootstrap<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>                      n_boot<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Rare event </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Rare event </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Rare event </span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Rare event </span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Loglik converged before variable  5 ; coefficient may be infinite. </span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Rare event </span>
@@ -312,6 +319,8 @@
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://renozao.github.io/doRNG/" class="external-link">doRNG</a></span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: rngtools</span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"riskRegression"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">adjcif</span> <span class="op">&lt;-</span> <span class="fu">adjustedcif</span><span class="op">(</span>data<span class="op">=</span><span class="va">sim_dat</span>,</span></span>
 <span class="r-in"><span>                      variable<span class="op">=</span><span class="st">"group"</span>,</span></span>
 <span class="r-in"><span>                      ev_time<span class="op">=</span><span class="st">"time"</span>,</span></span>
@@ -323,15 +332,18 @@
 <span class="r-in"><span>                      bootstrap<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>                      n_boot<span class="op">=</span><span class="fl">4</span>,</span></span>
 <span class="r-in"><span>                      n_cores<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: doParallel</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Rare event </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"mice"</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"WeightIt"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># using multiple imputation</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/amices/mice" class="external-link">mice</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ngreifer.github.io/WeightIt/" class="external-link">WeightIt</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># simulate some data as example</span></span></span>
-<span class="r-in"><span><span class="va">sim_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="sim_confounded_crisk.html">sim_confounded_crisk</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">50</span>, max_t<span class="op">=</span><span class="fl">1.2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sim_dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="sim_confounded_crisk.html">sim_confounded_crisk</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">100</span>, max_t<span class="op">=</span><span class="fl">1.2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">sim_dat</span><span class="op">$</span><span class="va">group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">sim_dat</span><span class="op">$</span><span class="va">group</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># introduce random missingness in x1 as example</span></span></span>
@@ -352,6 +364,8 @@
 <span class="r-in"><span>                   treatment_model<span class="op">=</span><span class="va">group</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x5</span> <span class="op">+</span> <span class="va">x6</span>,</span></span>
 <span class="r-in"><span>                   weight_method<span class="op">=</span><span class="st">"ps"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adj</span>, force_bounds<span class="op">=</span><span class="cn">TRUE</span>, iso_reg<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: WeightIt</span>
 <span class="r-plt img"><img src="adjustedcif-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># More specific examples can be found in the documentation of each</span></span></span>

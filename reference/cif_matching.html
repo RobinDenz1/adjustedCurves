@@ -28,6 +28,8 @@ This page explains the details of estimating adjusted cumulative incidence funct
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/comparing_groups.html">Comparing Adjusted Survival Curves or Cumulative Incidence Curves</a>
+    <a class="dropdown-item" href="../articles/faq.html">Frequently Asked Questions about the adjustedCurves Package</a>
     <a class="dropdown-item" href="../articles/introduction.html">An Introduction to the 'adjustedCurves' Package</a>
     <a class="dropdown-item" href="../articles/method_overview.html">Overview of methods in adjustedCurves</a>
     <a class="dropdown-item" href="../articles/plot_customization.html">Customizing Adjusted Survival Curve Plots</a>
@@ -118,16 +120,10 @@ This page explains the details of estimating adjusted cumulative incidence funct
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RobinDenz1/adjustedCurves" class="external-link">adjustedCurves</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/therneau/survival" class="external-link">survival</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"Matching"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/JasjeetSekhon/Matching" class="external-link">Matching</a></span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: MASS</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ## </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ##  Matching (Version 4.10-14, Build Date: 2023-09-13)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ##  See https://www.jsekhon.com for additional documentation.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ##  Please cite software as:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ##   Jasjeet S. Sekhon. 2011. ``Multivariate and Propensity Score Matching</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ##   Software with Automated Balance Optimization: The Matching package for R.''</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ##   Journal of Statistical Software, 42(7): 1-52. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ##</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -147,7 +143,6 @@ This page explains the details of estimating adjusted cumulative incidence funct
 <span class="r-in"><span>                      method<span class="op">=</span><span class="st">"matching"</span>,</span></span>
 <span class="r-in"><span>                      treatment_model<span class="op">=</span><span class="va">glm_mod</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="cif_matching-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Alternatively, supply the propensity score directly</span></span></span>
 <span class="r-in"><span><span class="co"># Here we use the logistic regression to calculate it, so we get</span></span></span>
@@ -165,7 +160,18 @@ This page explains the details of estimating adjusted cumulative incidence funct
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plot the curves</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="cif_matching-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: Matching</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: MASS</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ## </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ##  Matching (Version 4.10-14, Build Date: 2023-09-13)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ##  See https://www.jsekhon.com for additional documentation.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ##  Please cite software as:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ##   Jasjeet S. Sekhon. 2011. ``Multivariate and Propensity Score Matching</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ##   Software with Automated Balance Optimization: The Matching package for R.''</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ##   Journal of Statistical Software, 42(7): 1-52. </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ##</span>
+<span class="r-plt img"><img src="cif_matching-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
