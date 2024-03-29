@@ -73,8 +73,11 @@ The wrapper function was written by Robin Denz, the \code{ate} function (which t
 }
 \examples{
 library(adjustedCurves)
-library(riskRegression)
 library(survival)
+
+if (requireNamespace("riskRegression")) {
+
+library(riskRegression)
 
 set.seed(42)
 
@@ -101,4 +104,5 @@ adjsurv <- adjustedsurv(data=sim_dat,
 
 # plot the curves
 plot(adjsurv)
+}
 }

@@ -106,6 +106,8 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         method="iptw_cox",
                         treatment_model=weights)
 
+if (requireNamespace("WeightIt")) {
+
 # And a third alternative: use the WeightIt package
 # here an example with equal results to the ones above:
 adjsurv <- adjustedsurv(data=sim_dat,
@@ -124,4 +126,5 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         method="iptw_cox",
                         treatment_model=group ~ x1 + x3 + x5 + x6,
                         weight_method="ebal")
+}
 }

@@ -118,11 +118,11 @@ surv_g_comp <- function(outcome_model, data, variable, times,
                                          "wglm", "hal9001"))) {
       requireNamespace("riskRegression")
 
-      surv_lev <- riskRegression::predictRisk(object=outcome_model,
+      surv_lev <- quiet(riskRegression::predictRisk(object=outcome_model,
                                               newdata=data_temp,
                                               times=times,
                                               cause=1,
-                                              ...)
+                                              ...))
       surv_lev <- 1 - surv_lev
 
       # using predictProb
@@ -255,11 +255,11 @@ cif_g_comp <- function(outcome_model, data, variable, times,
                                          "riskRegression", "ARR",
                                          "hal9001"))) {
 
-      surv_lev <- riskRegression::predictRisk(object=outcome_model,
+      surv_lev <- quiet(riskRegression::predictRisk(object=outcome_model,
                                               newdata=data_temp,
                                               times=times,
                                               cause=cause,
-                                              ...)
+                                              ...))
 
       # for fastCrr in fastcmprsk
     } else if (inherits(outcome_model, "fcrr")) {

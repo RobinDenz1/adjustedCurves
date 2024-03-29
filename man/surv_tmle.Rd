@@ -99,6 +99,8 @@ library(adjustedCurves)
 data <- sim_confounded_surv(n=100)
 data$group <- factor(data$group)
 
+if (requireNamespace("concrete")) {
+
 # for a single point in time using only one model for both
 # the treatment mechanism and outcome mechanism
 out <- adjustedsurv(data=data,
@@ -136,4 +138,5 @@ out <- adjustedsurv(data=data,
                     times=c(0.5),
                     conf_int=TRUE,
                     method="tmle")
+}
 }

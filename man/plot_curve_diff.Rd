@@ -230,6 +230,9 @@ Robin Denz
 \examples{
 library(adjustedCurves)
 library(survival)
+
+if (requireNamespace("ggplot2") & requireNamespace("riskRegression")) {
+
 library(ggplot2)
 
 set.seed(42)
@@ -294,4 +297,5 @@ plot_curve_diff(adjsurv, conf_int=TRUE, p_value=TRUE, integral_from=0,
 plot_curve_diff(adjsurv, conf_int=FALSE, p_value=TRUE, integral_from=0,
                 integral_to=0.75, integral=TRUE, fill_area=TRUE,
                 interval=TRUE)
+}
 }

@@ -84,6 +84,8 @@ Jixian Wang supplied the R source code used in the original article, which was u
 \examples{
 library(adjustedCurves)
 
+if (requireNamespace("geepack") & requireNamespace("prodlim")) {
+
 set.seed(42)
 
 # simulate some data as example
@@ -101,8 +103,11 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         method="aiptw_pseudo",
                         outcome_vars=c("x1", "x2", "x3", "x4", "x5", "x6"),
                         treatment_model=glm_mod,
-                        conf_int=TRUE)
+                        conf_int=TRUE,
+                        iso_reg=TRUE,
+                        force_bounds=TRUE)
 
 # plot the curves
 plot(adjsurv, conf_int=TRUE)
+}
 }

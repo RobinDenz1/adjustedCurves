@@ -69,6 +69,9 @@ The wrapper function was written by Robin Denz, the \code{ate} function (which t
 \examples{
 library(adjustedCurves)
 library(survival)
+
+if (requireNamespace("riskRegression")) {
+
 library(riskRegression)
 
 set.seed(42)
@@ -97,4 +100,5 @@ adjcif <- adjustedcif(data=sim_dat,
 
 # plot the curves
 plot(adjcif)
+}
 }

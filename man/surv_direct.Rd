@@ -66,6 +66,9 @@ The function itself was written by Robin Denz. When using \code{coxph} models ho
 \examples{
 library(adjustedCurves)
 library(survival)
+
+if (requireNamespace("riskRegression")) {
+
 library(riskRegression)
 
 set.seed(42)
@@ -108,8 +111,11 @@ adjsurv <- adjustedsurv(data=sim_dat,
 # plot using steps=FALSE to draw them as smooth functions, since
 # they were estimated using a parametric model
 plot(adjsurv, steps=FALSE)
+}
 
+\donttest{
 ## using multiple imputation
+if (requireNamespace("mice")) {
 library(mice)
 
 # introduce random missingness in x1 as example
@@ -132,5 +138,7 @@ adj <- adjustedsurv(data=mids,
                     method="direct",
                     outcome_model=mira)
 plot(adj)
+}
+}
 }
 }

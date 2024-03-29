@@ -73,6 +73,8 @@ Jixian Wang supplied the R source code used in the original article, which was u
 \examples{
 library(adjustedCurves)
 
+if (requireNamespace("geepack") & requireNamespace("prodlim")) {
+
 set.seed(42)
 
 # simulate some data as example
@@ -97,4 +99,5 @@ adjcif <- adjustedcif(data=sim_dat,
 
 # plot the curves
 plot(adjcif)
+}
 }

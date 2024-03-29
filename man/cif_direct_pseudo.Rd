@@ -65,6 +65,8 @@ Robin Denz
 \examples{
 library(adjustedCurves)
 
+if (requireNamespace("geepack") & requireNamespace("prodlim")) {
+
 set.seed(42)
 
 # simulate some data as example
@@ -99,4 +101,5 @@ adjcif <- adjustedcif(data=sim_dat,
 
 # plot the curves
 plot(adjcif)
+}
 }

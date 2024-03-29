@@ -27,7 +27,8 @@ Imports:
     doRNG,
     dplyr (>= 1.0.0),
     foreach,
-    rlang
+    rlang,
+	survival (>= 3.0.0)
 Suggests: 
     MASS,
     Matching (>= 4.9),
@@ -44,7 +45,6 @@ Suggests:
     prodlim (>= 2019.11.13),
     riskRegression (>= 2020.12.08),
     rmarkdown,
-    survival (>= 3.0.0),
     testthat (>= 3.2.1),
     tidyr,
 	ggpp (>= 0.4.3),

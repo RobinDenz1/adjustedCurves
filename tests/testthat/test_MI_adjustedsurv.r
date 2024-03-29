@@ -309,7 +309,9 @@ test_that("MI, aiptw, no boot", {
 })
 
 test_that("MI, aiptw, boot", {
-  adj <- adjustedsurv(data=imp,
+  # NOTE: there is a warning related to the glm fit in one bootstrap sample,
+  #       which can safely be ignored for this test
+  adj <- suppressWarnings(adjustedsurv(data=imp,
                       variable="group",
                       ev_time="time",
                       event="event",
@@ -318,7 +320,7 @@ test_that("MI, aiptw, boot", {
                       bootstrap=TRUE,
                       n_boot=2,
                       outcome_model=outc_mod,
-                      treatment_model=treat_mod)
+                      treatment_model=treat_mod))
   expect_s3_class(adj, "adjustedsurv")
   expect_true(is.numeric(adj$adj$surv))
   expect_equal(levels(adj$adj$group), levels(sim_dat$group))

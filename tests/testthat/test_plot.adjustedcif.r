@@ -167,7 +167,8 @@ test_that("plot, using conf_int_alpha", {
 })
 
 test_that("plot, using steps", {
-  plt <- plot(adj, steps=FALSE)
+  # NOTE: using suppressWarnings() here cause we can safely ignore it
+  plt <- suppressWarnings(plot(adj, steps=FALSE))
   expect_s3_class(plt, "ggplot")
   vdiffr::expect_doppelganger("plot, using steps", fig=plt)
 })
@@ -227,7 +228,7 @@ test_that("Isotonic Regression with missing values", {
   adj_err$adj$cif[1] <- NA
   expect_error(plot(adj_err, iso_reg=TRUE),
                paste0("Isotonic Regression cannot be used when there are ",
-                      "missing values in the final CIF estimates."))
+                      "missing values in the final estimates."))
 })
 
 test_that("single_color overwriting color", {

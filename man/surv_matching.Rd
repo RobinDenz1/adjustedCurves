@@ -67,6 +67,9 @@ Robin Denz
 }
 \examples{
 library(adjustedCurves)
+
+if (requireNamespace("Matching")) {
+
 library(Matching)
 
 set.seed(42)
@@ -101,4 +104,5 @@ adjsurv <- adjustedsurv(data=sim_dat,
 
 # plot the curves
 plot(adjsurv)
+}
 }

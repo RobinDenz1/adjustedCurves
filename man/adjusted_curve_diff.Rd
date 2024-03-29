@@ -102,7 +102,6 @@ Robin Denz
 \examples{
 library(adjustedCurves)
 library(survival)
-library(cmprsk)
 
 #### Simple Survival Case with adjusted survival curves ####
 
@@ -142,11 +141,17 @@ adjdiff <- adjusted_curve_diff(adjsurv, times=c(0.2, 0.4), conf_int=TRUE,
                                use_boot=TRUE)
 
 #### Competing Risks Case with adjusted CIFs ####
+if (requireNamespace("cmprsk") & requireNamespace("riskRegression") &
+    requireNamespace("prodlim")) {
+
+library(cmprsk)
 library(riskRegression)
 library(prodlim)
 
+set.seed(1)
+
 # simulate some data as example
-sim_dat <- sim_confounded_crisk(n=41, max_t=1.2)
+sim_dat <- sim_confounded_crisk(n=100, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # estimate a cause-specific cox-regression for the outcome
@@ -163,7 +168,8 @@ adjcif <- adjustedcif(data=sim_dat,
                       conf_int=TRUE,
                       bootstrap=TRUE,
                       n_boot=10,
-                      cause=1)
+                      cause=1,
+                      product.limit=FALSE)
 
 # calculate the whole difference curve
 adjdiff <- adjusted_curve_diff(adjcif)
@@ -176,4 +182,5 @@ adjratio <- adjusted_curve_ratio(adjcif, conf_int=TRUE)
 # only at specific points in time
 adjdiff <- adjusted_curve_diff(adjcif, times=c(0.2, 0.4), conf_int=TRUE)
 adjratio <- adjusted_curve_ratio(adjcif, times=c(0.2, 0.4), conf_int=TRUE)
+}
 }

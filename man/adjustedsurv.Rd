@@ -176,6 +176,8 @@ glm_mod <- glm(group ~ x2 + x3 + x5 + x6, data=sim_dat, family="binomial")
 cox_mod <- coxph(Surv(time, event) ~ x1 + x2 + x4 + x5 + group,
                  data=sim_dat, x=TRUE)
 
+if (requireNamespace("riskRegression")) {
+
 # using direct adjustment with asymptotic confidence intervals
 adjsurv <- adjustedsurv(data=sim_dat,
                         variable="group",
@@ -231,9 +233,13 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         conf_int=TRUE,
                         bootstrap=TRUE,
                         n_boot=10)
+}
 
 # not run because those are too slow
 \donttest{
+
+if (requireNamespace("riskRegression")) {
+
 # using bootstrapping with direct adjustment, run in parallel
 # on two cores
 adjsurv <- adjustedsurv(data=sim_dat,
@@ -246,8 +252,11 @@ adjsurv <- adjustedsurv(data=sim_dat,
                         bootstrap=TRUE,
                         n_boot=4,
                         n_cores=2)
+}
 
 # using multiple imputation
+if (requireNamespace("mice") & requireNamespace("WeightIt")) {
+
 library(mice)
 library(WeightIt)
 
@@ -272,6 +281,7 @@ adj <- adjustedsurv(data=mids,
                     treatment_model=group ~ x1 + x2 + x5 + x6,
                     weight_method="ps")
 plot(adj)
+}
 
 # More specific examples can be found in the documentation of each
 # respective surv_method. See ?surv_ + "method" for more information.

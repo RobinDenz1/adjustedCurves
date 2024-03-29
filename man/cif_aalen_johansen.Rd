@@ -51,6 +51,9 @@ The wrapper function was written by Robin Denz, the \code{cuminc} function (whic
 }
 \examples{
 library(adjustedCurves)
+
+if (requireNamespace("cmprsk")) {
+
 library(cmprsk)
 
 set.seed(42)
@@ -69,4 +72,5 @@ adjcif <- adjustedcif(data=sim_dat,
 
 # plot the curves
 plot(adjcif)
+}
 }

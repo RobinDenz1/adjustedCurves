@@ -82,6 +82,8 @@ Robin Denz
 \examples{
 library(adjustedCurves)
 
+if (requireNamespace("prodlim") & requireNamespace("riskRegression")) {
+
 set.seed(42)
 
 # simulate some data as example
@@ -116,6 +118,8 @@ adjcif <- adjustedcif(data=sim_dat,
                       treatment_model=weights)
 plot(adjcif, force_bounds=TRUE, iso_reg=TRUE)
 
+if (requireNamespace("WeightIt")) {
+
 # And a third alternative: use the WeightIt package
 # here an example with equal results to the ones above:
 adjcif <- adjustedcif(data=sim_dat,
@@ -138,4 +142,6 @@ adjcif <- adjustedcif(data=sim_dat,
                       treatment_model=group ~ x1 + x3 + x5 + x6,
                       weight_method="ebal")
 plot(adjcif, force_bounds=TRUE, iso_reg=TRUE)
+}
+}
 }

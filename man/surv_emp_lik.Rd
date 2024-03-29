@@ -80,6 +80,8 @@ library(adjustedCurves)
 
 set.seed(42)
 
+if (requireNamespace("MASS")) {
+
 # simulate some data as example
 sim_dat <- sim_confounded_surv(n=50, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
@@ -95,4 +97,5 @@ adjsurv <- adjustedsurv(data=sim_dat,
 
 # plot the curves
 plot(adjsurv)
+}
 }

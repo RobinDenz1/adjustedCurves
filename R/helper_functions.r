@@ -499,23 +499,29 @@ add_rows_with_zero <- function(plotdata, mode="surv") {
   return(plotdata)
 }
 
-## perform isotonic regression on survival estimates
-iso_reg_surv <- function(plotdata) {
+## perform isotonic regression on survival / CIF estimates
+iso_reg_est <- function(plotdata) {
 
-  if (anyNA(plotdata$surv)) {
+  mode <- ifelse("surv" %in% colnames(plotdata), "surv", "cif")
+
+  if (anyNA(plotdata[, mode])) {
     stop("Isotonic Regression cannot be used when there are missing",
-         " values in the final survival estimates.")
+         " values in the final estimates.")
   }
 
   for (lev in levels(plotdata$group)) {
     temp <- plotdata[plotdata$group==lev, ]
-    # to surv estimates
-    new <- rev(stats::isoreg(rev(temp$surv))$yf)
-    plotdata$surv[plotdata$group==lev] <- new
+
+    if (mode=="surv") {
+      new <- rev(stats::isoreg(rev(temp$surv))$yf)
+    } else {
+      new <- stats::isoreg(temp$cif)$yf
+    }
+    plotdata[, mode][plotdata$group==lev] <- new
 
     # shift confidence intervals accordingly
     if ("ci_lower" %in% colnames(temp)) {
-      diff <- temp$surv - new
+      diff <- temp[, mode] - new
 
       plotdata$ci_lower[plotdata$group==lev] <- temp$ci_lower - diff
       plotdata$ci_upper[plotdata$group==lev] <- temp$ci_upper - diff
@@ -526,46 +532,20 @@ iso_reg_surv <- function(plotdata) {
 }
 
 ## force probabilities to be in the 0/1 range
-force_bounds_surv <- function(plotdata) {
-  plotdata <- within(plotdata, {
-    surv <- ifelse(surv < 0, 0, surv)
-    surv <- ifelse(surv > 1, 1, surv)
-  })
+force_bounds_est <- function(plotdata) {
+  mode <- ifelse("surv" %in% colnames(plotdata), "surv", "cif")
 
-  return(plotdata)
-}
-
-## isotonic regression for CIF estimates
-iso_reg_cif <- function(plotdata) {
-
-  if (anyNA(plotdata$cif)) {
-    stop("Isotonic Regression cannot be used when there are missing",
-         " values in the final CIF estimates.")
+  if (mode=="surv") {
+    plotdata <- within(plotdata, {
+      surv <- ifelse(surv < 0, 0, surv)
+      surv <- ifelse(surv > 1, 1, surv)
+    })
+  } else {
+    plotdata <- within(plotdata, {
+      cif <- ifelse(cif < 0, 0, cif)
+      cif <- ifelse(cif > 1, 1, cif)
+    })
   }
-
-  for (lev in levels(plotdata$group)) {
-    temp <- plotdata[plotdata$group==lev, ]
-
-    new <- stats::isoreg(temp$cif)$yf
-    plotdata$cif[plotdata$group==lev] <- new
-
-    if ("ci_lower" %in% colnames(temp)) {
-      diff <- temp$cif - new
-
-      plotdata$ci_lower[plotdata$group==lev] <- temp$ci_lower - diff
-      plotdata$ci_upper[plotdata$group==lev] <- temp$ci_upper - diff
-    }
-  }
-
-  return(plotdata)
-}
-
-## forcing bounds for CIF estimates
-force_bounds_cif <- function(plotdata) {
-  plotdata <- within(plotdata, {
-    cif <- ifelse(cif < 0, 0, cif)
-    cif <- ifelse(cif > 1, 1, cif)
-  })
 
   return(plotdata)
 }

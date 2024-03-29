@@ -66,6 +66,8 @@ The wrapper function was written by Robin Denz, the \code{\link[riskRegression]{
 \examples{
 library(adjustedCurves)
 
+if (requireNamespace("riskRegression")) {
+
 set.seed(42)
 
 # simulate some data as example
@@ -84,4 +86,5 @@ adjcif <- adjustedcif(data=sim_dat,
                       method="iptw",
                       treatment_model=glm_mod)
 plot(adjcif)
+}
 }

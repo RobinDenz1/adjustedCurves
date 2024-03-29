@@ -54,3 +54,7 @@ Documentation
 * Re-factored internal code to vastly increase speed of bootstrapping related computations
 * Added risk table functionality for `plot.adjustedsurv()`
 * Renamed `adjsurv` and `adjcif` output objects of `adjustedsurv()` and `adjsutedcif()` respectively to `adj`
+* Re-worked introduction vignette
+* Added FAQ vignette
+* Added Group Comparison vignette
+* Re-factored examples to only be executed if suggested packages are installed

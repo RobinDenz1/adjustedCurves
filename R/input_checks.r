@@ -1229,7 +1229,7 @@ check_inputs_auc_diff <- function(times, max_t, color, difference, ratio,
 }
 
 ## input checks when using risk tavles in plot.adjustedsurv()
-check_inputs_risk_table <- function(method, type, use_weights, warn) {
+check_inputs_risk_table <- function(method, type, use_weights, stratify, warn) {
 
   # errors
   if (!type %in% c("n_at_risk", "n_cens", "n_events")) {
@@ -1238,8 +1238,8 @@ check_inputs_risk_table <- function(method, type, use_weights, warn) {
   }
 
   # (optional) warnings
-  if (!method %in% c("km", "iptw_km", "iptw_cox") && warn) {
-    warning("Adding risk tables may produce confusing output when",
+  if (!method %in% c("km", "iptw_km", "iptw_cox") && stratify && warn) {
+    warning("Adding stratified risk tables may produce confusing output when",
             " using methods other then 'km', 'iptw_km' or 'iptw_cox',",
             " because all other methods do not use risk tables to estimate",
             " the survival curves. See details. Set risk_table_warn=FALSE",
@@ -1252,4 +1252,3 @@ check_inputs_risk_table <- function(method, type, use_weights, warn) {
             " details. Set risk_table_warn=FALSE to silence this warning.")
   }
 }
-

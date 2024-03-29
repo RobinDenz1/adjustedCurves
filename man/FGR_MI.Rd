@@ -48,6 +48,10 @@ Robin Denz
 \donttest{
 library(adjustedCurves)
 library(survival)
+
+if (requireNamespace("riskRegression") & requireNamespace("prodlim") &
+    requireNamespace("mice")) {
+
 library(riskRegression)
 library(mice)
 library(prodlim)
@@ -66,5 +70,6 @@ mids <- mice::mice(data=sim_dat, method="pmm", m=5, printFlag=FALSE)
 fgr_mods <- FGR_MI(mids=mids,
                    formula=Hist(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
                    cause=1)
+}
 }
 }

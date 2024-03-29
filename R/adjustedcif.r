@@ -176,11 +176,11 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
     }
 
     if (force_bounds) {
-      plotdata <- force_bounds_surv(plotdata)
+      plotdata <- force_bounds_est(plotdata)
     }
 
     if (iso_reg) {
-      plotdata <- iso_reg_surv(plotdata)
+      plotdata <- iso_reg_est(plotdata)
     }
 
     # output object
@@ -346,11 +346,11 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
     plotdata$group <- factor(plotdata$group, levels=levs)
 
     if (force_bounds) {
-      plotdata <- force_bounds_cif(plotdata)
+      plotdata <- force_bounds_est(plotdata)
     }
 
     if (iso_reg) {
-      plotdata <- iso_reg_cif(plotdata)
+      plotdata <- iso_reg_est(plotdata)
     }
 
     out <- list(adj=plotdata,
@@ -492,9 +492,9 @@ summary.adjustedcif <- function(object, ...) {
   }
 
   if (is.null(object$mids_analyses)) {
-    cat("   - Using a single dataset")
+    cat("   - Using a single dataset\n")
   } else {
-    cat("   - Using multiply imputed dataset")
+    cat("   - Using multiply imputed dataset\n")
   }
 }
 

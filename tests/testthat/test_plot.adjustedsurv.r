@@ -378,7 +378,8 @@ test_that("risk table use weights stratify", {
 })
 
 test_that("risk table weights present but not used", {
-  plt <- plot(adj, risk_table=TRUE, risk_table_use_weights=FALSE)
+  plt <- plot(adj, risk_table=TRUE, risk_table_use_weights=FALSE,
+              risk_table_warn=FALSE)
   expect_s3_class(plt, "ggplot")
   vdiffr::expect_doppelganger("risk table weights present but not used",
                               fig=plt)
@@ -411,20 +412,22 @@ adj_mi <- adjustedsurv(data=imp,
                        treatment_model=group ~ x1 + x2 + x5)
 
 test_that("MI, no weights all", {
-  plt <- plot(adj_mi, risk_table=TRUE, risk_table_use_weights=FALSE)
+  plt <- plot(adj_mi, risk_table=TRUE, risk_table_use_weights=FALSE,
+              risk_table_warn=FALSE)
   expect_s3_class(plt, "ggplot")
   vdiffr::expect_doppelganger("MI, no weights all", fig=plt)
 })
 
 test_that("MI, with weights all", {
-  plt <- plot(adj_mi, risk_table=TRUE, risk_table_use_weights=TRUE)
+  plt <- plot(adj_mi, risk_table=TRUE, risk_table_use_weights=TRUE,
+              risk_table_warn=FALSE)
   expect_s3_class(plt, "ggplot")
   vdiffr::expect_doppelganger("MI, with weights all", fig=plt)
 })
 
 test_that("MI, no weights stratify", {
   plt <- plot(adj_mi, risk_table=TRUE, risk_table_use_weights=FALSE,
-              risk_table_stratify=TRUE)
+              risk_table_stratify=TRUE, risk_table_warn=FALSE)
   expect_s3_class(plt, "ggplot")
   vdiffr::expect_doppelganger("MI, no weights stratify", fig=plt)
 })
@@ -443,7 +446,7 @@ test_that("Isotonic Regression with missing values", {
   adj_err$adj$surv[1] <- NA
   expect_error(plot(adj_err, iso_reg=TRUE),
                paste0("Isotonic Regression cannot be used when there are ",
-                      "missing values in the final survival estimates."))
+                      "missing values in the final estimates."))
 })
 
 test_that("single_color overwriting color", {

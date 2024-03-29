@@ -146,9 +146,13 @@ Robin Denz
 }
 \examples{
 library(adjustedCurves)
+library(survival)
+
+if (requireNamespace("riskRegression") & requireNamespace("prodlim") &
+    requireNamespace("ggplot2")) {
+
 library(riskRegression)
 library(prodlim)
-library(survival)
 library(ggplot2)
 
 set.seed(42)
@@ -201,4 +205,5 @@ plot(adjcif, legend.position="bottom", linetype=TRUE,
 
 # adding further ggplot2 elements
 plot(adjcif) + theme_bw()
+}
 }

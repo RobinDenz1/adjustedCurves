@@ -74,7 +74,6 @@ Andrew Ying wrote all of the low-level estimation functions used to actually obt
 \code{\link[stats]{optim}}
 }
 \examples{
-library(numDeriv)
 library(adjustedCurves)
 
 #### generate some example data that fufill all assumptions ####
@@ -139,6 +138,10 @@ set.seed(4356)
 data <- data_gen(N=300, para_set=para_set)
 data$A <- factor(data$A)
 
+if (requireNamespace("numDeriv")) {
+
+library(numDeriv)
+
 adj <- adjustedsurv(data=data,
                     variable="A",
                     ev_time="T0",
@@ -149,4 +152,5 @@ adj <- adjustedsurv(data=data,
                     outcome_proxy="W",
                     conf_int=TRUE)
 plot(adj, iso_reg=TRUE)
+}
 }

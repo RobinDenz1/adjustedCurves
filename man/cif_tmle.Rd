@@ -99,6 +99,8 @@ library(adjustedCurves)
 data <- sim_confounded_crisk(n=100)
 data$group <- factor(data$group)
 
+if (requireNamespace("concrete")) {
+
 # for a single point in time using only one model for both
 # the treatment mechanism and outcome mechanism
 out <- adjustedcif(data=data,
@@ -139,4 +141,5 @@ out <- adjustedcif(data=data,
                    times=c(0.5),
                    conf_int=TRUE,
                    method="tmle")
+}
 }

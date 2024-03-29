@@ -76,7 +76,7 @@ test_that("instant convergence of algorithm", {
 
 # NOTE: This throws a warning because the same warning shows up twice
 test_that("no convergence of algorithm", {
-  expect_warning(adjustedsurv(data=sim_dat,
+  warns <- capture_warnings(adjustedsurv(data=sim_dat,
                               variable="group",
                               ev_time="time",
                               event="event",
@@ -86,11 +86,10 @@ test_that("no convergence of algorithm", {
                               treatment_vars=treatment_vars,
                               times=1,
                               newton_tol=0.0000000000001,
-                              max_iter=1),
-                 fixed=TRUE,
-                 paste0("Algorithm did not converge. Increasing the max_iter ",
-                        "value or decreasing the newton_tol value might help.")
-                 )
+                              max_iter=1))
+  expect_true(all(warns==paste0("Algorithm did not converge. Increasing ",
+                                "the max_iter value or decreasing the ",
+                                "newton_tol value might help.")))
 })
 
 test_that("using standardize", {

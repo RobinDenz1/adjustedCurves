@@ -17,7 +17,7 @@ custom_pred_fun <- getFromNamespace("predict.FGR", "riskRegression")
 
 test_that("adjustedcif, using predict_fun", {
   # using customly supplied fun
-  adj <- adjustedcif(data=sim_dat,
+  adj <- quiet(adjustedcif(data=sim_dat,
                      variable="group",
                      ev_time="time",
                      event="event",
@@ -25,7 +25,7 @@ test_that("adjustedcif, using predict_fun", {
                      predict_fun=custom_pred_fun,
                      outcome_model=mod,
                      clean_data=FALSE,
-                     cause=1)
+                     cause=1))
   expect_s3_class(adj, "adjustedcif")
   expect_true(is.numeric(adj$adj$cif))
   expect_equal(levels(adj$adj$group), levels(sim_dat$group))

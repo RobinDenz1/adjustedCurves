@@ -140,6 +140,9 @@ Robin Denz
 \examples{
 library(adjustedCurves)
 library(survival)
+
+if (requireNamespace("ggplot2") & requireNamespace("riskRegression")) {
+
 library(ggplot2)
 
 set.seed(42)
@@ -176,4 +179,5 @@ plot_rmtl_curve(adjsurv, difference=TRUE)
 # plot with some custom options
 plot_rmtl_curve(adjsurv, max_t=0.5, linetype=TRUE,
                 custom_colors=c("green", "blue"))
+}
 }

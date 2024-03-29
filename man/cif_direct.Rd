@@ -65,6 +65,9 @@ The function itself was written by Robin Denz. When using \code{CauseSpecificCox
 \examples{
 library(adjustedCurves)
 library(survival)
+
+if (requireNamespace("riskRegression") & requireNamespace("prodlim")) {
+
 library(riskRegression)
 library(prodlim)
 
@@ -107,10 +110,15 @@ adjcif <- adjustedcif(data=sim_dat,
 
 # plot the curves
 plot(adjcif)
+}
 
 # not run because it would be too slow
 \donttest{
 ## using multiple imputation
+
+if (requireNamespace("riskRegression") & requireNamespace("prodlim") &
+    requireNamespace("mice")) {
+
 library(mice)
 
 # introduce random missingness in x1 as example
@@ -133,5 +141,6 @@ adj <- adjustedcif(data=mids,
                    cause=1,
                    outcome_model=mira)
 plot(adj)
+}
 }
 }

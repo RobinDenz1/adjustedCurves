@@ -84,12 +84,12 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
   # in some methods estimates can be outside the 0, 1 bounds,
   # if specified set those to 0 or 1 respectively
   if (force_bounds) {
-    plotdata <- force_bounds_surv(plotdata)
+    plotdata <- force_bounds_est(plotdata)
   }
 
   # apply isotonic regression if specified
   if (iso_reg) {
-    plotdata <- iso_reg_surv(plotdata)
+    plotdata <- iso_reg_est(plotdata)
   }
 
   # plot CIF instead of survival
@@ -231,6 +231,7 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
 
     check_inputs_risk_table(method=x$method, type=risk_table_type,
                             use_weights=risk_table_use_weights,
+                            stratify=risk_table_stratify,
                             warn=risk_table_warn)
 
     # set correct weights if specified
@@ -251,15 +252,8 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
       variable <- NULL
     }
 
-    # set correct data
-    if (!is.null(x$mids_analyses)) {
-      data <- x$mids
-    } else {
-      data <- x$data
-    }
-
     p <- add_risk_table(p_surv=p,
-                        data=data,
+                        data=x$data,
                         event=x$call$event,
                         ev_time=x$call$ev_time,
                         variable=variable,
@@ -395,16 +389,22 @@ get_censoring_ind_data <- function(x, steps, max_t, plotdata) {
 
   levs <- levels(x$adj$group)
 
+  if (is.null(x$mids_analyses)) {
+    data <- x$data
+  } else {
+    data <- x$data$data
+  }
+
   # keep only relevant data
-  x$data <- x$data[which(x$data[, x$call$ev_time] <= max_t), ]
+  data <- data[which(data[, x$call$ev_time] <= max_t), ]
 
   # create needed data.frame
   cens_dat <- vector(mode="list", length=length(levs))
   for (i in seq_len(length(levs))) {
 
     # times with censoring
-    cens_times <- sort(unique(x$data[, x$call$ev_time][
-      x$data[, x$call$event]==0 & x$data[, x$call$variable]==levs[i]]))
+    cens_times <- sort(unique(data[, x$call$ev_time][
+      data[, x$call$event]==0 & data[, x$call$variable]==levs[i]]))
     # y axis place to put them
     adjsurv_temp <- plotdata[plotdata$group==levs[i] & !is.na(plotdata$surv), ]
 

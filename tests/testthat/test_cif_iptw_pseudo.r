@@ -2,7 +2,7 @@
 set.seed(42)
 
 sim_dat <- readRDS(system.file("testdata",
-                               "d_sim_crisk_n_50.Rds",
+                               "d_sim_crisk_n_100.Rds",
                                package="adjustedCurves"))
 sim_dat$group <- ifelse(sim_dat$group==0, "Control", "Treatment")
 sim_dat$group <- as.factor(sim_dat$group)
@@ -175,8 +175,10 @@ test_that("3 ways of iptw calculation are equal", {
 
 })
 
+set.seed(44522)
+
 sim_dat <- readRDS(system.file("testdata",
-                               "d_sim_crisk_n_100.Rds",
+                               "d_sim_crisk_n_150.Rds",
                                package="adjustedCurves"))
 sim_dat$group[sim_dat$group==1] <- sample(c(1, 2),
                                         size=nrow(sim_dat[sim_dat$group==1, ]),

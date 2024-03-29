@@ -45,6 +45,8 @@ Robin Denz
 \donttest{
 library(adjustedCurves)
 library(survival)
+
+if (requireNamespace("riskRegression") & requireNamespace("mice")) {
 library(riskRegression)
 library(mice)
 
@@ -56,11 +58,12 @@ sim_dat$group <- as.factor(sim_dat$group)
 sim_dat$x1 <- ifelse(runif(n=50) < 0.5, sim_dat$x1, NA)
 
 # perform multiple imputation
-mids <- mice::mice(data=sim_dat, method="pmm", m=5)
+mids <- mice::mice(data=sim_dat, method="pmm", m=5, printFlag=0)
 
 # use the function
 csc_mods <- CSC_MI(mids=mids,
                    formula=Hist(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group
                    )
+}
 }
 }

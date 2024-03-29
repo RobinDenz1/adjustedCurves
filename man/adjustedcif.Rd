@@ -155,7 +155,6 @@ The function itself was written by Robin Denz, but some \code{cif_method} functi
 \examples{
 library(adjustedCurves)
 library(survival)
-library(riskRegression)
 
 set.seed(42)
 
@@ -165,6 +164,10 @@ sim_dat$group <- as.factor(sim_dat$group)
 
 # treatment assignment model
 glm_mod <- glm(group ~ x2 + x3 + x5 + x6, data=sim_dat, family="binomial")
+
+if (requireNamespace("riskRegression")) {
+
+library(riskRegression)
 
 # outcome model
 cox_mod <- CSC(Hist(time, event) ~ x1 + x2 + x4 + x5 + group, data=sim_dat)
@@ -230,6 +233,8 @@ adjcif <- adjustedcif(data=sim_dat,
                       bootstrap=TRUE,
                       n_boot=10)
 
+}
+
 # not run because those are too slow
 \donttest{
 # using bootstrapping with direct adjustment, run in parallel
@@ -237,6 +242,8 @@ adjcif <- adjustedcif(data=sim_dat,
 library(foreach)
 library(parallel)
 library(doRNG)
+
+if (requireNamespace("riskRegression")) {
 
 adjcif <- adjustedcif(data=sim_dat,
                       variable="group",
@@ -249,13 +256,16 @@ adjcif <- adjustedcif(data=sim_dat,
                       bootstrap=TRUE,
                       n_boot=4,
                       n_cores=2)
+}
+
+if (requireNamespace("mice") & requireNamespace("WeightIt")) {
 
 # using multiple imputation
 library(mice)
 library(WeightIt)
 
 # simulate some data as example
-sim_dat <- sim_confounded_crisk(n=50, max_t=1.2)
+sim_dat <- sim_confounded_crisk(n=100, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # introduce random missingness in x1 as example
@@ -276,6 +286,7 @@ adj <- adjustedcif(data=mids,
                    treatment_model=group ~ x1 + x2 + x5 + x6,
                    weight_method="ps")
 plot(adj, force_bounds=TRUE, iso_reg=TRUE)
+}
 
 # More specific examples can be found in the documentation of each
 # respective cif_method. See ?cif_ + "method" for more information.

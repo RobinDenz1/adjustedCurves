@@ -139,12 +139,14 @@ adjrmst <- adjusted_rmst(adjsurv, from=0, to=1, conf_int=FALSE,
 
 ###### when using data with competing-risks
 
+if (requireNamespace("riskRegression") & requireNamespace("prodlim")) {
+
 library(riskRegression)
 library(prodlim)
 
 # simulate some data as example
 set.seed(42)
-sim_dat <- sim_confounded_crisk(n=50)
+sim_dat <- sim_confounded_crisk(n=100)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # estimate a cause-specific cox-regression model for the outcome
@@ -170,4 +172,5 @@ adjrmtl <- adjusted_rmtl(adjcif, from=0, to=1, conf_int=TRUE)
 # calculate ratio of adjusted restricted mean time lost estimates from 0 to 1
 # including confidence interval and p-value
 adjrmtl <- adjusted_rmtl(adjcif, from=0, to=1, conf_int=TRUE, ratio=TRUE)
+}
 }

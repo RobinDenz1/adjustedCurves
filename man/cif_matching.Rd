@@ -60,6 +60,9 @@ Robin Denz
 \examples{
 library(adjustedCurves)
 library(survival)
+
+if (requireNamespace("Matching")) {
+
 library(Matching)
 
 set.seed(42)
@@ -97,4 +100,5 @@ adjcif <- adjustedcif(data=sim_dat,
 
 # plot the curves
 plot(adjcif)
+}
 }

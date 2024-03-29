@@ -59,12 +59,12 @@ plot.adjustedcif <- function(x, conf_int=FALSE, max_t=Inf,
   # in some methods estimates can be outside the 0, 1 bounds,
   # if specified set those to 0 or 1 respectively
   if (force_bounds) {
-    plotdata <- force_bounds_cif(plotdata)
+    plotdata <- force_bounds_est(plotdata)
   }
 
   # apply isotonic regression if specified
   if (iso_reg) {
-    plotdata <- iso_reg_cif(plotdata)
+    plotdata <- iso_reg_est(plotdata)
   }
 
   mapping <- ggplot2::aes(x=.data$time, y=.data$cif, color=.data$group,
