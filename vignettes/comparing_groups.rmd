@@ -26,9 +26,12 @@ Throughout this vignette we will mostly be concerned with comparing two confound
 
 To illustrate the different ways of comparing two survival curves, we again simulate some data using the `sim_confounded_surv()` function. This time, we set the `group_beta` argument to 0, indicating that there is no actual treatment effect here.
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 library(adjustedCurves)
 library(survival)
+library(ggplot2)
+library(pammtools)
+library(cowplot)
 
 set.seed(34253)
 
@@ -70,7 +73,21 @@ or the ratio between them:
 
 $$\hat{S}_{ratio}(t) = \frac{\hat{S}_1(t)}{\hat{S}_0(t)}$$
 
-at a specific point in time $t$. Here, $\hat{S}_z(t)$ is the estimated adjusted survival probability at $t$, as returned by the `adjustedsurv()` function. These quantities can be estimated directly using the `adjusted_curve_diff()` and `adjusted_curve_ratio()` functions. For $t = 0.7$ (arbitrary choice) we could use:
+at a specific point in time $t$. Here, $\hat{S}_z(t)$ is the estimated adjusted survival probability at $t$, as returned by the `adjustedsurv()` function. Visually this is equivalent to the *vertical difference* between the curves, as shown here with a blue line segment at $t = 0.7$:
+
+```{r echo=FALSE}
+adjsurv07 <- update(adjsurv, times=0.7, bootstrap=FALSE)
+plotdata <- data.frame(x=0.7, xend=0.7, y=min(adjsurv07$adj$surv),
+                       yend=max(adjsurv07$adj$surv))
+
+plot(adjsurv, max_t=1) +
+  geom_vline(xintercept=0.7, linetype="dashed") +
+  geom_segment(data=plotdata, aes(x=x, xend=xend, y=y, yend=yend),
+               inherit.aes=FALSE, linetype="solid", color="blue",
+               linewidth=1)
+```
+
+These quantities can be estimated directly using the `adjusted_curve_diff()` and `adjusted_curve_ratio()` functions. For $t = 0.7$ (arbitrary choice) we could use:
 
 ```{r}
 adjusted_curve_diff(adjsurv, times=0.7, conf_int=TRUE)
@@ -114,13 +131,26 @@ adjusted_surv_quantile(adjsurv, p=0.5, conf_int=TRUE)
 
 We may now also compare these values directly, by calculating their difference (Chen & Zhang 2016):
 
-$$\hat{Q}_{diff} = \hat{Q}_0(p) - \hat{Q}_1(p)$$
+$$\hat{Q}_{diff}(p) = \hat{Q}_0(p) - \hat{Q}_1(p)$$
 
 or ratio:
 
-$$\hat{Q}_{ratio} = \frac{\hat{Q}_1(p)}{\hat{Q}_0(p)}$$
+$$\hat{Q}_{ratio}(p) = \frac{\hat{Q}_1(p)}{\hat{Q}_0(p)}$$
 
-and testing whether this quantity is significantly different from 0 (differences) or 1 (ratios) respectively. This can also be done directly using the `adjusted_surv_quantile()` function. Please note that this is only possible when bootstrapping was performed in the original `adjustedsurv()` call, which is the case here. The syntax when using the difference is as follows:
+and testing whether this quantity is significantly different from 0 (differences) or 1 (ratios) respectively. This type of difference can be understood visually as the *horizontal difference* between the curves, as illustrated with the blue line segment in this plot:
+
+```{r echo=FALSE}
+adjmed <- adjusted_surv_quantile(adjsurv, p=0.5)
+plotdata <- data.frame(x=min(adjmed$q_surv), xend=max(adjmed$q_surv),
+                       y=0.5, yend=0.5)
+
+plot(adjsurv, max_t=1) +
+  geom_hline(yintercept=0.5, linetype="dashed") +
+  geom_segment(data=plotdata, aes(x=x, xend=xend, y=y, yend=yend),
+               inherit.aes=FALSE, linetype="solid", color="blue", linewidth=1)
+```
+
+This type of difference may also be estimated directly using the `adjusted_surv_quantile()` function. Please note that this is only possible when bootstrapping was performed in the original `adjustedsurv()` call, which is the case here. The syntax when using the difference is as follows:
 
 ```{r}
 adjusted_surv_quantile(adjsurv, p=0.5, conf_int=TRUE, difference=TRUE)
@@ -140,7 +170,23 @@ Another summary statistic that may be used to compare two survival curves is the
 
 $$RMST_{z}(to) = \int_{0}^{to} \hat{S}_z(t)dt$$
 
-where $\hat{S}_z(t)$ is again the estimated adjusted survival curve and `to` is the value up to which the survival curves should be integrated. This quantity can be estimated using the `adjusted_rmst()` function. Using `to=0.7` we may use the following syntax:
+where $\hat{S}_z(t)$ is again the estimated adjusted survival curve and `to` is the value up to which the survival curves should be integrated. The following plot visually depicts the area in question for `to = 0.7` in our example:
+
+```{r fig.width=6.5, fig.heigth=4, echo=FALSE}
+adjsurv07 <- update(adjsurv, times=seq(0, 0.7, 0.001), bootstrap=FALSE)
+
+plotdata <- data.frame(ymin=0,
+                       ymax=adjsurv07$adj$surv,
+                       surv=adjsurv07$adj$surv,
+                       time=adjsurv07$adj$time,
+                       group=adjsurv07$adj$group)
+
+plot(adjsurv, facet=TRUE, legend.position="none", max_t=1) +
+  geom_stepribbon(data=plotdata, aes(x=time, ymin=ymin, ymax=ymax, fill=group),
+                  alpha=0.4, inherit.aes=FALSE)
+```
+
+This quantity can be estimated using the `adjusted_rmst()` function. Using `to=0.7` we may use the following syntax:
 
 ```{r}
 adjusted_rmst(adjsurv, to=0.7, conf_int=TRUE)
@@ -195,6 +241,13 @@ which again shows no difference between the curves, as expected.
 A different but closely related summary statistic to compare two survival curves is the area between two survival curves in some interval from $t = a$ to $t = b$, defined as:
 
 $$\gamma(a, b) = \int_{a}^{b} \hat{S}_0(t) - \hat{S}_1(t)dt.$$
+
+The following plot visually shows the area in question using the `plot_curve_diff()` function:
+
+```{r}
+plot_curve_diff(adjsurv, fill_area=TRUE, integral=TRUE, integral_to=0.7,
+                max_t=1, text_pos_x="right")
+```
 
 In expectation, this quantity should be 0 if there is no difference between the two survival curves. As such, it has been used in hypothesis tests in the past (Pepe & Fleming 1989). Since there is no known way to estimate its' standard error directly, we need to estimate it using bootstrapping. The `adjusted_curve_test()` function directly implements this:
 
