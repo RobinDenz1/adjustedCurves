@@ -258,7 +258,7 @@ only possible when bootstrapping was performed in the original
 <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code> call, which is the case here. The syntax
 when using the difference is as follows:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/adjusted_surv_quantile.html">adjusted_surv_quantile</a></span><span class="op">(</span><span class="va">adjsurv</span>, p<span class="op">=</span><span class="fl">0.5</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>, difference<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/adjusted_surv_quantile.html">adjusted_surv_quantile</a></span><span class="op">(</span><span class="va">adjsurv</span>, p<span class="op">=</span><span class="fl">0.5</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>, contrast<span class="op">=</span><span class="st">"diff"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##     p       diff         se    ci_lower  ci_upper   p_value</span></span>
 <span><span class="co">## 1 0.5 0.05066081 0.03935022 -0.02646421 0.1277858 0.1979431</span></span></code></pre>
 <p>The difference is rather small, with a confidence interval that
@@ -268,7 +268,7 @@ no actual group effect). It can be interpreted as the horizontal
 difference between the two survival curves at <span class="math inline">\(q\)</span>. Similar results can be obtained using
 the ratio of the two median survival times:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/adjusted_surv_quantile.html">adjusted_surv_quantile</a></span><span class="op">(</span><span class="va">adjsurv</span>, p<span class="op">=</span><span class="fl">0.5</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>, ratio<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/adjusted_surv_quantile.html">adjusted_surv_quantile</a></span><span class="op">(</span><span class="va">adjsurv</span>, p<span class="op">=</span><span class="fl">0.5</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>, contrast<span class="op">=</span><span class="st">"ratio"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##     p    ratio  ci_lower ci_upper   p_value</span></span>
 <span><span class="co">## 1 0.5 1.126746 0.9392345  1.35458 0.1979431</span></span></code></pre>
 <p>Again, since we are testing essentially the same hypothesis here, the

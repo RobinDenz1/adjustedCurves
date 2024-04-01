@@ -64,8 +64,8 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">adjusted_surv_quantile</span><span class="op">(</span><span class="va">adjsurv</span>, p<span class="op">=</span><span class="fl">0.5</span>, conf_int<span class="op">=</span><span class="cn">FALSE</span>,</span>
 <span>                       conf_level<span class="op">=</span><span class="va">adjsurv</span><span class="op">$</span><span class="va">conf_level</span>,</span>
 <span>                       use_boot<span class="op">=</span><span class="cn">FALSE</span>, interpolation<span class="op">=</span><span class="st">"steps"</span>,</span>
-<span>                       difference<span class="op">=</span><span class="cn">FALSE</span>, ratio<span class="op">=</span><span class="cn">FALSE</span>,</span>
-<span>                       group_1<span class="op">=</span><span class="cn">NULL</span>, group_2<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<span>                       contrast<span class="op">=</span><span class="st">"none"</span>, group_1<span class="op">=</span><span class="cn">NULL</span>,</span>
+<span>                       group_2<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -88,17 +88,14 @@
   <dt>interpolation</dt>
 <dd><p>Either <code>"steps"</code> (default) or <code>"linear"</code>. This parameter controls how interpolation is performed. If this argument is set to <code>"steps"</code>, the curves will be treated as step functions. If it is set to <code>"linear"</code>, the curves wil be treated as if there are straight lines between the point estimates instead. Points that lie between estimated points will be interpolated accordingly.</p></dd>
 
-  <dt>difference</dt>
-<dd><p>Whether to estimate the difference between two adjusted survival time quantiles instead. When <code>conf_int=TRUE</code> is also specified and bootstrapping was performed in the original <code>adjustedsurv</code> call, this function will also estimate the corresponding standard error, the confidence interval and a p-value testing whether the difference is equal to 0. To specify which difference should be calculated, the <code>group_1</code> and <code>group_2</code> arguments can be used. By default, the difference between the first and second level in <code>variable</code> is computed.</p></dd>
-
-  <dt>ratio</dt>
-<dd><p>Whether to estimate the ratio of two adjusted survival time quantiles instead. When <code>conf_int=TRUE</code> is also specified and bootstrapping was performed in the original <code>adjustedsurv</code> call, this function will also estimate the corresponding standard error, the confidence interval and a p-value testing whether the ratio is equal to 1. To specify which ratio should be calculated, the <code>group_1</code> and <code>group_2</code> arguments can be used. By default, the ratio between the first and second level in <code>variable</code> is computed.</p></dd>
+  <dt>contrast</dt>
+<dd><p>A single character string, specifying which contrast should be estimated. Needs to be one of <code>"none"</code> (estimate no contrasts, just return the adjusted survival time quantile, the default), <code>"diff"</code> (estimate the difference) or <code>"ratio"</code> (estimate the ratio). When <code>conf_int=TRUE</code> is also specified and bootstrapping was performed in the original <code>adjustedsurv</code> call, this function will also estimate the corresponding standard error, the confidence interval and a p-value testing whether the difference is equal to 0 (or the ratio is equal to 1). To specify which difference/ratio should be calculated, the <code>group_1</code> and <code>group_2</code> arguments can be used. By default, the difference/ratio between the first and second level in <code>variable</code> is computed.</p></dd>
 
   <dt>group_1</dt>
-<dd><p>Optional argument to get a specific difference or ratio. This argument takes a single character string specifying one of the levels of the <code>variable</code> used in the original <code>adjustedsurv</code> function call. This group will be subtracted from. For example if <code>group_1="A"</code> and <code>group_2="B"</code> and <code>difference=TRUE</code> the difference <code>A - B</code> will be used. If <code>NULL</code>, the order of the factor levels in the original data determines the order. Ignored if <code>difference=FALSE</code> and <code>ratio=FALSE</code>.</p></dd>
+<dd><p>Optional argument to get a specific difference or ratio. This argument takes a single character string specifying one of the levels of the <code>variable</code> used in the original <code>adjustedsurv</code> function call. This group will be subtracted from. For example if <code>group_1="A"</code> and <code>group_2="B"</code> and <code>contrast=="diff"</code> the difference <code>A - B</code> will be used. If <code>NULL</code>, the order of the factor levels in the original data determines the order. Ignored if <code>contrast="none"</code>.</p></dd>
 
   <dt>group_2</dt>
-<dd><p>Also a single character string specifying one of the levels of <code>variable</code>. This corresponds to the right side of the difference/ratio equation. See argument <code>group_2</code>. Ignored if <code>difference=FALSE</code> and <code>ratio=FALSE</code>.</p></dd>
+<dd><p>Also a single character string specifying one of the levels of <code>variable</code>. This corresponds to the right side of the difference/ratio equation. See argument <code>group_2</code>. Ignored if <code>contrast="none"</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -111,12 +108,12 @@
 <p>If the survival probability never drops below <code>p</code>, the survival time quantile cannot be calculated. This function calculates this quantity automatically.</p>
 <p><strong><em>Confidence intervals</em></strong></p>
 <p>When estimating the adjusted survival time quantiles directly, the confidence intervals are simply read off the survival curves similarly to the point estimates. For example, this means that the lower limit of the confidence interval for some survival time quantile is simply the first point in time at which the curve defined by the lower confidence limit goes below \(p\).</p>
-<p>If <code>difference</code> or <code>ratio</code> are set to <code>TRUE</code>, a different approach is used. Note that this functionality works only with bootstrapping (regardless of whether <code>use_boot</code> is <code>TRUE</code> or <code>FALSE</code>). In this case, the survival time quantiles are calculated for each bootstrap sample separately first. Afterwards, the standard deviation of the resulting estimates is calculated for each group. For differences, the pooled standard error is then estimated as \(SE_{group_1 - group_2} = \sqrt{SE_{group_1}^2 + SE_{group_2}^2}\) and used along with the normal approximation to calculate confidence intervals. This is similar to the strategy of Wu (2011). The p-value is also estimated using the pooled standard error and a one-sample two-sided t-test with the null-hypothesis that the difference is equal to 0. The confidence interval and p-value of the ratio is estimated using the method of Fieller (1954).</p>
+<p>If <code>contrast="none"</code>, a different approach is used. Note that this functionality works only with bootstrapping (regardless of whether <code>use_boot</code> is <code>TRUE</code> or <code>FALSE</code>). In this case, the survival time quantiles are calculated for each bootstrap sample separately first. Afterwards, the standard deviation of the resulting estimates is calculated for each group. For differences, the pooled standard error is then estimated as \(SE_{group_1 - group_2} = \sqrt{SE_{group_1}^2 + SE_{group_2}^2}\) and used along with the normal approximation to calculate confidence intervals. This is similar to the strategy of Wu (2011). The p-value is also estimated using the pooled standard error and a one-sample two-sided t-test with the null-hypothesis that the difference is equal to 0. The confidence interval and p-value of the ratio is estimated using the method of Fieller (1954).</p>
 <p>If one or both of the survival time quantiles used for the difference / ratio calculation could not be estimated from the respective bootstrap sample (due to the curves not extending that far) it is simply discarded.</p>
 <p><strong><em>More than Two Groups</em></strong></p>
 <p>If more than two groups are present in <code>variable</code>, all other comparisons except for <code>group_1 vs. group_2</code> are ignored. If multiple comparisons are desired, the user needs to call this function multiple times and adjust the <code>group_1</code> and <code>group_2</code> arguments accordingly.</p>
 <p><strong><em>Multiple Imputation</em></strong></p>
-<p>If multiple imputation was used in the original function call, the survival time quantiles are read off the final pooled survival curves directly. This also works when using <code>difference=TRUE</code> or <code>ratio=TRUE</code>. When using either <code>difference=TRUE</code> or <code>ratio=TRUE</code> in conunction with <code>conf_int=TRUE</code> (plus bootstrapping), the standard errors of the difference or ratio are estimated for each imputed dataset separately and pooled using Rubins Rule afterwards. The pooled standard errors are then used to perform the same calculations as described above.</p>
+<p>If multiple imputation was used in the original function call, the survival time quantiles are read off the final pooled survival curves directly. This also works when using <code>contrast="diff"</code> or <code>contrast="ratio"</code>. When using either <code>contrast="diff"</code> or <code>contrast="ratio"</code> in conunction with <code>conf_int=TRUE</code> (plus bootstrapping), the standard errors of the difference or ratio are estimated for each imputed dataset separately and pooled using Rubins Rule afterwards. The pooled standard errors are then used to perform the same calculations as described above.</p>
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -129,7 +126,7 @@
 <p>If <code>conf_int=TRUE</code> was used it also includes the confidence limits in the <code>ci_lower</code> and <code>ci_upper</code> columns.</p>
 
 
-<p>If <code>difference</code> was used, the resulting <code>data.frame</code> instead contains the columns <code>p</code> (the quantiles from the original function all) and <code>diff</code> (the difference between the two survival time quantiles). If <code>conf_int=TRUE</code> was used it additionally contains the columns <code>se</code> (the standard deviation of the bootstrap estimates), <code>ci_lower</code> and <code>ci_upper</code> (the confidence interval) and <code>n_boot</code> (the number of bootstrap samples that could be used). The output is similar when using <code>ratio=TRUE</code>, except that the <code>diff</code> column is called <code>ratio</code>.</p>
+<p>If <code>contrast="diff"</code> was used, the resulting <code>data.frame</code> instead contains the columns <code>p</code> (the quantiles from the original function all) and <code>diff</code> (the difference between the two survival time quantiles). If <code>conf_int=TRUE</code> was used it additionally contains the columns <code>se</code> (the standard deviation of the bootstrap estimates), <code>ci_lower</code> and <code>ci_upper</code> (the confidence interval) and <code>n_boot</code> (the number of bootstrap samples that could be used). The output is similar when using <code>contrast="ratio"</code>, except that the <code>diff</code> column is called <code>ratio</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -178,7 +175,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.5     1 0.6561380</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># calculate difference of adjusted median survival times between groups</span></span></span>
-<span class="r-in"><span><span class="fu">adjusted_surv_quantile</span><span class="op">(</span><span class="va">adjsurv</span>, difference<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">adjusted_surv_quantile</span><span class="op">(</span><span class="va">adjsurv</span>, contrast<span class="op">=</span><span class="st">"diff"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     p       diff</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.5 -0.1456162</span>
 <span class="r-in"><span></span></span>
