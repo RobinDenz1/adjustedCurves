@@ -212,14 +212,13 @@ get_surv_quantile_contrast <- function(plotdata, q_surv, contrast,
 adjusted_surv_quantile <- function(adjsurv, p=0.5, conf_int=FALSE,
                                    conf_level=adjsurv$conf_level,
                                    use_boot=FALSE, interpolation="steps",
-                                   difference=FALSE, ratio=FALSE,
-                                   group_1=NULL, group_2=NULL) {
+                                   contrast="none", group_1=NULL,
+                                   group_2=NULL) {
 
   check_inputs_surv_q(adjsurv=adjsurv, conf_int=conf_int, p=p,
                       use_boot=use_boot, interpolation=interpolation,
-                      difference=difference, ratio=ratio,
-                      conf_level=conf_level, group_1=group_1,
-                      group_2=group_2)
+                      contrast=contrast, conf_level=conf_level,
+                      group_1=group_1, group_2=group_2)
 
   if (use_boot) {
     plotdata <- adjsurv$boot_adj
@@ -227,7 +226,7 @@ adjusted_surv_quantile <- function(adjsurv, p=0.5, conf_int=FALSE,
     plotdata <- adjsurv$adj
   }
 
-  if (difference | ratio) {
+  if (contrast %in% c("diff", "ratio")) {
     conf_int_main <- FALSE
   } else if (conf_int) {
     conf_int_main <- TRUE
@@ -242,9 +241,7 @@ adjusted_surv_quantile <- function(adjsurv, p=0.5, conf_int=FALSE,
                             method=adjsurv$method, boot_data=adjsurv$boot_data,
                             use_boot=use_boot)
 
-  if (difference | ratio) {
-    contrast <- ifelse(difference, "diff", "ratio")
-
+  if (contrast %in% c("diff", "ratio")) {
     if (conf_int) {
 
       if (is.null(adjsurv$mids_analyses)) {

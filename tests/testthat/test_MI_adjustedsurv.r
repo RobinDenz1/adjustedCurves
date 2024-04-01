@@ -439,17 +439,17 @@ test_that("adjusted_surv_quantile, 2 treatments, no boot", {
 })
 
 test_that("adjusted_surv_quantile, 2 treatments, no boot, difference", {
-  adj_med <- adjusted_surv_quantile(adjsurv, difference=TRUE)
+  adj_med <- adjusted_surv_quantile(adjsurv, contrast="diff")
   expect_equal(round(adj_med$diff, 4), -0.1468)
 })
 
 test_that("adjusted_surv_quantile, 2 treatments, no boot, difference, p", {
-  adj_med <- adjusted_surv_quantile(adjsurv, difference=TRUE, p=c(0.4, 0.5))
+  adj_med <- adjusted_surv_quantile(adjsurv, contrast="diff", p=c(0.4, 0.5))
   expect_equal(round(adj_med$diff, 4), c(-0.1350, -0.1468))
 })
 
 test_that("adjusted_surv_quantile, 2 treatments, conf_int, difference", {
-  adj_med <- adjusted_surv_quantile(adjsurv, difference=TRUE, conf_int=TRUE)
+  adj_med <- adjusted_surv_quantile(adjsurv, contrast="diff", conf_int=TRUE)
   expect_equal(round(adj_med$diff, 4), -0.1468)
   expect_equal(round(adj_med$se, 4), 0.1271)
   expect_equal(round(adj_med$ci_lower, 4), -0.3958)
@@ -457,7 +457,7 @@ test_that("adjusted_surv_quantile, 2 treatments, conf_int, difference", {
 })
 
 test_that("adjusted_surv_quantile, 2 treatments, no boot, ratio", {
-  adj_med <- adjusted_surv_quantile(adjsurv, ratio=TRUE)
+  adj_med <- adjusted_surv_quantile(adjsurv, contrast="ratio")
   expect_equal(round(adj_med$ratio, 4), 0.7653)
 })
 

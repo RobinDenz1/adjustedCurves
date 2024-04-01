@@ -22,18 +22,18 @@ test_that("q surv defaults", {
 })
 
 test_that("q surv defaults, difference", {
-  adj_q <- adjusted_surv_quantile(adj, difference=TRUE)
+  adj_q <- adjusted_surv_quantile(adj, contrast="diff")
   expect_equal(round(adj_q$diff, 4), -0.1468)
 })
 
 test_that("q surv defaults, difference, groups", {
-  adj_q <- adjusted_surv_quantile(adj, difference=TRUE, group_1="1",
+  adj_q <- adjusted_surv_quantile(adj, contrast="diff", group_1="1",
                                   group_2="0")
   expect_equal(round(adj_q$diff, 4), 0.1468)
 })
 
 test_that("q surv defaults, ratio", {
-  adj_q <- adjusted_surv_quantile(adj, ratio=TRUE)
+  adj_q <- adjusted_surv_quantile(adj, contrast="ratio")
   expect_equal(round(adj_q$ratio, 4), 0.7653)
 })
 
@@ -52,7 +52,7 @@ test_that("q surv, conf_int, with boot", {
 })
 
 test_that("q surv, conf_int, difference", {
-  adj_q <- adjusted_surv_quantile(adj, conf_int=TRUE, difference=TRUE)
+  adj_q <- adjusted_surv_quantile(adj, conf_int=TRUE, contrast="diff")
   expect_equal(round(adj_q$diff, 4), -0.1468)
   expect_equal(round(adj_q$se, 4), 0.1165)
   expect_equal(round(adj_q$ci_lower, 4), -0.3751)
@@ -61,7 +61,7 @@ test_that("q surv, conf_int, difference", {
 })
 
 test_that("q surv, conf_int, difference, group", {
-  adj_q <- adjusted_surv_quantile(adj, conf_int=TRUE, difference=TRUE,
+  adj_q <- adjusted_surv_quantile(adj, conf_int=TRUE, contrast="diff",
                                   group_1="1", group_2="0")
   expect_equal(round(adj_q$diff, 4), 0.1468)
   expect_equal(round(adj_q$ci_lower, 4), -0.0816)
@@ -69,7 +69,7 @@ test_that("q surv, conf_int, difference, group", {
 })
 
 test_that("q surv, conf_int, ratio", {
-  adj_q <- adjusted_surv_quantile(adj, conf_int=TRUE, ratio=TRUE)
+  adj_q <- adjusted_surv_quantile(adj, conf_int=TRUE, contrast="ratio")
   expect_equal(round(adj_q$ratio, 4), 0.7653)
   expect_equal(round(adj_q$ci_lower, 4), 0.4006)
   expect_equal(round(adj_q$ci_upper, 4), 1.1306)
@@ -92,7 +92,7 @@ test_that("q surv, multiple p", {
 
 test_that("q surv, multiple p, difference", {
   adj_q <- adjusted_surv_quantile(adj, p=c(0.1, 0.2), conf_int=TRUE,
-                                  difference=TRUE)
+                                  contrast="diff")
   expect_equal(round(adj_q$diff, 4), c(-0.1801, -0.1714))
   expect_equal(round(adj_q$ci_lower, 4), c(-0.1801, -0.6733))
   expect_equal(round(adj_q$ci_upper, 4), c(-0.1801, 0.3306))
@@ -100,7 +100,7 @@ test_that("q surv, multiple p, difference", {
 
 test_that("q surv, multiple p, ratio", {
   adj_q <- adjusted_surv_quantile(adj, p=c(0.1, 0.2), conf_int=TRUE,
-                                  ratio=TRUE)
+                                  contrast="ratio")
   expect_equal(round(adj_q$ratio, 4), c(0.8536, 0.7929))
   expect_equal(round(adj_q$ci_lower, 4), c(0.8536,  0.2761))
   expect_equal(round(adj_q$ci_upper, 4), c(0.8536, 1.5041))
@@ -154,8 +154,8 @@ test_that("q surv, conf_int, with boot, conf_level", {
 
 test_that("q surv, conf_int, difference, conf_level", {
   adj_q <- adjusted_surv_quantile(adj, conf_int=TRUE, conf_level=0.9,
-                                  difference=TRUE)
-  adj_q0.9 <- adjusted_surv_quantile(adj0.9, conf_int=TRUE, difference=TRUE)
+                                  contrast="diff")
+  adj_q0.9 <- adjusted_surv_quantile(adj0.9, conf_int=TRUE, contrast="diff")
   expect_equal(adj_q$diff, adj_q0.9$diff)
   expect_equal(adj_q$ci_lower, adj_q0.9$ci_lower)
   expect_equal(adj_q$ci_upper, adj_q0.9$ci_upper)
@@ -164,8 +164,8 @@ test_that("q surv, conf_int, difference, conf_level", {
 
 test_that("q surv, conf_int, ratio, conf_level", {
   adj_q <- adjusted_surv_quantile(adj, conf_int=TRUE, conf_level=0.9,
-                                  ratio=TRUE)
-  adj_q0.9 <- adjusted_surv_quantile(adj0.9, conf_int=TRUE, ratio=TRUE)
+                                  contrast="ratio")
+  adj_q0.9 <- adjusted_surv_quantile(adj0.9, conf_int=TRUE, contrast="ratio")
   expect_equal(adj_q$ratio, adj_q0.9$ratio)
   expect_equal(adj_q$ci_lower, adj_q0.9$ci_lower)
   expect_equal(adj_q$ci_upper, adj_q0.9$ci_upper)

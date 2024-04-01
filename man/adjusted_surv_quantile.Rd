@@ -11,8 +11,8 @@ This function can be utilized to estimate confounder-adjusted survival time quan
 adjusted_surv_quantile(adjsurv, p=0.5, conf_int=FALSE,
                        conf_level=adjsurv$conf_level,
                        use_boot=FALSE, interpolation="steps",
-                       difference=FALSE, ratio=FALSE,
-                       group_1=NULL, group_2=NULL)
+                       contrast="none", group_1=NULL,
+                       group_2=NULL)
 }
 
 \arguments{
@@ -34,17 +34,14 @@ Whether to use the bootstrap confidence interval estimates of the survival curve
   \item{interpolation}{
 Either \code{"steps"} (default) or \code{"linear"}. This parameter controls how interpolation is performed. If this argument is set to \code{"steps"}, the curves will be treated as step functions. If it is set to \code{"linear"}, the curves wil be treated as if there are straight lines between the point estimates instead. Points that lie between estimated points will be interpolated accordingly.
   }
-  \item{difference}{
-Whether to estimate the difference between two adjusted survival time quantiles instead. When \code{conf_int=TRUE} is also specified and bootstrapping was performed in the original \code{adjustedsurv} call, this function will also estimate the corresponding standard error, the confidence interval and a p-value testing whether the difference is equal to 0. To specify which difference should be calculated, the \code{group_1} and \code{group_2} arguments can be used. By default, the difference between the first and second level in \code{variable} is computed.
-  }
-  \item{ratio}{
-Whether to estimate the ratio of two adjusted survival time quantiles instead. When \code{conf_int=TRUE} is also specified and bootstrapping was performed in the original \code{adjustedsurv} call, this function will also estimate the corresponding standard error, the confidence interval and a p-value testing whether the ratio is equal to 1. To specify which ratio should be calculated, the \code{group_1} and \code{group_2} arguments can be used. By default, the ratio between the first and second level in \code{variable} is computed.
+  \item{contrast}{
+A single character string, specifying which contrast should be estimated. Needs to be one of \code{"none"} (estimate no contrasts, just return the adjusted survival time quantile, the default), \code{"diff"} (estimate the difference) or \code{"ratio"} (estimate the ratio). When \code{conf_int=TRUE} is also specified and bootstrapping was performed in the original \code{adjustedsurv} call, this function will also estimate the corresponding standard error, the confidence interval and a p-value testing whether the difference is equal to 0 (or the ratio is equal to 1). To specify which difference/ratio should be calculated, the \code{group_1} and \code{group_2} arguments can be used. By default, the difference/ratio between the first and second level in \code{variable} is computed.
   }
   \item{group_1}{
-Optional argument to get a specific difference or ratio. This argument takes a single character string specifying one of the levels of the \code{variable} used in the original \code{adjustedsurv} function call. This group will be subtracted from. For example if \code{group_1="A"} and \code{group_2="B"} and \code{difference=TRUE} the difference \code{A - B} will be used. If \code{NULL}, the order of the factor levels in the original data determines the order. Ignored if \code{difference=FALSE} and \code{ratio=FALSE}.
+Optional argument to get a specific difference or ratio. This argument takes a single character string specifying one of the levels of the \code{variable} used in the original \code{adjustedsurv} function call. This group will be subtracted from. For example if \code{group_1="A"} and \code{group_2="B"} and \code{contrast=="diff"} the difference \code{A - B} will be used. If \code{NULL}, the order of the factor levels in the original data determines the order. Ignored if \code{contrast="none"}.
   }
   \item{group_2}{
-Also a single character string specifying one of the levels of \code{variable}. This corresponds to the right side of the difference/ratio equation. See argument \code{group_2}. Ignored if \code{difference=FALSE} and \code{ratio=FALSE}.
+Also a single character string specifying one of the levels of \code{variable}. This corresponds to the right side of the difference/ratio equation. See argument \code{group_2}. Ignored if \code{contrast="none"}.
   }
 }
 \details{
@@ -61,7 +58,7 @@ If the survival probability never drops below \code{p}, the survival time quanti
 
 When estimating the adjusted survival time quantiles directly, the confidence intervals are simply read off the survival curves similarly to the point estimates. For example, this means that the lower limit of the confidence interval for some survival time quantile is simply the first point in time at which the curve defined by the lower confidence limit goes below \eqn{p}.
 
-If \code{difference} or \code{ratio} are set to \code{TRUE}, a different approach is used. Note that this functionality works only with bootstrapping (regardless of whether \code{use_boot} is \code{TRUE} or \code{FALSE}). In this case, the survival time quantiles are calculated for each bootstrap sample separately first. Afterwards, the standard deviation of the resulting estimates is calculated for each group. For differences, the pooled standard error is then estimated as \eqn{SE_{group_1 - group_2} = \sqrt{SE_{group_1}^2 + SE_{group_2}^2}} and used along with the normal approximation to calculate confidence intervals. This is similar to the strategy of Wu (2011). The p-value is also estimated using the pooled standard error and a one-sample two-sided t-test with the null-hypothesis that the difference is equal to 0. The confidence interval and p-value of the ratio is estimated using the method of Fieller (1954).
+If \code{contrast="none"}, a different approach is used. Note that this functionality works only with bootstrapping (regardless of whether \code{use_boot} is \code{TRUE} or \code{FALSE}). In this case, the survival time quantiles are calculated for each bootstrap sample separately first. Afterwards, the standard deviation of the resulting estimates is calculated for each group. For differences, the pooled standard error is then estimated as \eqn{SE_{group_1 - group_2} = \sqrt{SE_{group_1}^2 + SE_{group_2}^2}} and used along with the normal approximation to calculate confidence intervals. This is similar to the strategy of Wu (2011). The p-value is also estimated using the pooled standard error and a one-sample two-sided t-test with the null-hypothesis that the difference is equal to 0. The confidence interval and p-value of the ratio is estimated using the method of Fieller (1954).
 
 If one or both of the survival time quantiles used for the difference / ratio calculation could not be estimated from the respective bootstrap sample (due to the curves not extending that far) it is simply discarded.
 
@@ -71,7 +68,7 @@ If more than two groups are present in \code{variable}, all other comparisons ex
 
 \strong{\emph{Multiple Imputation}}
 
-If multiple imputation was used in the original function call, the survival time quantiles are read off the final pooled survival curves directly. This also works when using \code{difference=TRUE} or \code{ratio=TRUE}. When using either \code{difference=TRUE} or \code{ratio=TRUE} in conunction with \code{conf_int=TRUE} (plus bootstrapping), the standard errors of the difference or ratio are estimated for each imputed dataset separately and pooled using Rubins Rule afterwards. The pooled standard errors are then used to perform the same calculations as described above.
+If multiple imputation was used in the original function call, the survival time quantiles are read off the final pooled survival curves directly. This also works when using \code{contrast="diff"} or \code{contrast="ratio"}. When using either \code{contrast="diff"} or \code{contrast="ratio"} in conunction with \code{conf_int=TRUE} (plus bootstrapping), the standard errors of the difference or ratio are estimated for each imputed dataset separately and pooled using Rubins Rule afterwards. The pooled standard errors are then used to perform the same calculations as described above.
 
 }
 \value{
@@ -80,7 +77,7 @@ Returns a \code{data.frame} containing the columns \code{p} (the quantiles from 
 
 If \code{conf_int=TRUE} was used it also includes the confidence limits in the \code{ci_lower} and \code{ci_upper} columns.
 
-If \code{difference} was used, the resulting \code{data.frame} instead contains the columns \code{p} (the quantiles from the original function all) and \code{diff} (the difference between the two survival time quantiles). If \code{conf_int=TRUE} was used it additionally contains the columns \code{se} (the standard deviation of the bootstrap estimates), \code{ci_lower} and \code{ci_upper} (the confidence interval) and \code{n_boot} (the number of bootstrap samples that could be used). The output is similar when using \code{ratio=TRUE}, except that the \code{diff} column is called \code{ratio}.
+If \code{contrast="diff"} was used, the resulting \code{data.frame} instead contains the columns \code{p} (the quantiles from the original function all) and \code{diff} (the difference between the two survival time quantiles). If \code{conf_int=TRUE} was used it additionally contains the columns \code{se} (the standard deviation of the bootstrap estimates), \code{ci_lower} and \code{ci_upper} (the confidence interval) and \code{n_boot} (the number of bootstrap samples that could be used). The output is similar when using \code{contrast="ratio"}, except that the \code{diff} column is called \code{ratio}.
 }
 \references{
 Omer Ben-Aharon, Racheli Magnezi, Moshe Leshno, and Daniel A. Goldstein (2019). "Median Survival or Mean Survival: Which Measure is the Most Appropriate for Patients, Physicians, and Policymakers?" In: The Oncologist 24, pp. 1469-1478
@@ -125,7 +122,7 @@ adjsurv <- adjustedsurv(data=sim_dat,
 adjusted_surv_quantile(adjsurv)
 
 # calculate difference of adjusted median survival times between groups
-adjusted_surv_quantile(adjsurv, difference=TRUE)
+adjusted_surv_quantile(adjsurv, contrast="diff")
 
 # calculate other quantiles + confidence intervals
 adjusted_surv_quantile(adjsurv, conf_int=TRUE, p=c(0.2, 0.4))

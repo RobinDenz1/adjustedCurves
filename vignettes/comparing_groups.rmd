@@ -153,13 +153,13 @@ plot(adjsurv, max_t=1) +
 This type of difference may also be estimated directly using the `adjusted_surv_quantile()` function. Please note that this is only possible when bootstrapping was performed in the original `adjustedsurv()` call, which is the case here. The syntax when using the difference is as follows:
 
 ```{r}
-adjusted_surv_quantile(adjsurv, p=0.5, conf_int=TRUE, difference=TRUE)
+adjusted_surv_quantile(adjsurv, p=0.5, conf_int=TRUE, contrast="diff")
 ```
 
 The difference is rather small, with a confidence interval that contains 0 and a relatively large p-value, indicating that there is no difference between the curves, as expected (we simulated the data with no actual group effect). It can be interpreted as the horizontal difference between the two survival curves at $q$. Similar results can be obtained using the ratio of the two median survival times:
 
 ```{r}
-adjusted_surv_quantile(adjsurv, p=0.5, conf_int=TRUE, ratio=TRUE)
+adjusted_surv_quantile(adjsurv, p=0.5, conf_int=TRUE, contrast="ratio")
 ```
 
 Again, since we are testing essentially the same hypothesis here, the p-values will always be identical. Choosing whether to use the ratio or the difference is mostly a matter of personal taste.

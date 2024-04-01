@@ -125,7 +125,7 @@ get_risk_table <- function(times, data, ev_time, variable=NULL, event=NULL,
   # remove NA values
   out <- stats::na.omit(out)
 
-  # round values (only relevant if weighted)
+  # round values (only relevant if weighted or MI)
   out$est <- round(out$est, digits=digits)
 
   return(out)
@@ -140,8 +140,7 @@ plot_risk_table.all <- function(plotdata, breaks,
                                 reverse_order=FALSE, custom_colors=NULL) {
 
   p <- ggplot2::ggplot(data=plotdata,
-                       ggplot2::aes(x=.data$time, y=1,
-                                    label=.data$est)) +
+                       ggplot2::aes(x=.data$time, y=1, label=.data$est)) +
     ggplot2::geom_text(size=text_size, alpha=text_alpha, color=text_color,
                        family=text_family, fontface=text_fontface) +
     gg_theme +
