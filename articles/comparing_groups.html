@@ -285,7 +285,7 @@ which can then be interpreted as the mean survival time up to that point
 (Royston et al. 2013). By using the adjusted survival curve to estimate
 this quantity, the resulting RMST is also adjusted (Conner et al. 2019).
 Formally, the RMST is defined as:</p>
-<p><span class="math display">\[RMST_{z}(to) = \int_{0}^{to}
+<p><span class="math display">\[\hat{RMST}_{z}(to) = \int_{0}^{to}
 \hat{S}_z(t)dt\]</span></p>
 <p>where <span class="math inline">\(\hat{S}_z(t)\)</span> is again the
 estimated adjusted survival curve and <code>to</code> is the value up to
@@ -307,11 +307,11 @@ Again, the resulting values seem to be very close to each other, with
 overlapping 95% confidence intervals.</p>
 <p>As before, we may calculate the difference between the two RMST
 values:</p>
-<p><span class="math display">\[RMST_{diff}(to) = RMST_0(to) -
-RMST_1(to)\]</span></p>
+<p><span class="math display">\[\hat{RMST}_{diff}(to) = \hat{RMST}_0(to)
+- \hat{RMST}_1(to)\]</span></p>
 <p>or the ratio between them:</p>
-<p><span class="math display">\[RMST_{ratio}(to) =
-\frac{RMST_1(to)}{RMST_0(to)}.\]</span></p>
+<p><span class="math display">\[\hat{RMST}_{ratio}(to) =
+\frac{\hat{RMST}_1(to)}{\hat{RMST}_0(to)}.\]</span></p>
 <p>This may also be done using the <code><a href="../reference/adjusted_rmst.html">adjusted_rmst()</a></code>
 function. The difference and its’ associated confidence interval may be
 estimated using:</p>
@@ -339,11 +339,11 @@ function.</p>
 <p><img src="comparing_groups_files/figure-html/unnamed-chunk-17-1.png" width="643.2"></p>
 <p>But we may also directly plot the difference:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_rmst_curve.html">plot_rmst_curve</a></span><span class="op">(</span><span class="va">adjsurv</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>, difference<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_rmst_curve.html">plot_rmst_curve</a></span><span class="op">(</span><span class="va">adjsurv</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>, contrast<span class="op">=</span><span class="st">"diff"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="comparing_groups_files/figure-html/unnamed-chunk-18-1.png" width="643.2"></p>
 <p>or their ratio:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_rmst_curve.html">plot_rmst_curve</a></span><span class="op">(</span><span class="va">adjsurv</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>, ratio<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_rmst_curve.html">plot_rmst_curve</a></span><span class="op">(</span><span class="va">adjsurv</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>, contrast<span class="op">=</span><span class="st">"ratio"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="comparing_groups_files/figure-html/unnamed-chunk-19-1.png" width="643.2"></p>
 <p>which again shows no difference between the curves, as expected.</p>
 </div>
@@ -353,8 +353,8 @@ function.</p>
 <p>A different but closely related summary statistic to compare two
 survival curves is the area between two survival curves in some interval
 from <span class="math inline">\(t = a\)</span> to <span class="math inline">\(t = b\)</span>, defined as:</p>
-<p><span class="math display">\[\gamma(a, b) = \int_{a}^{b} \hat{S}_0(t)
-- \hat{S}_1(t)dt.\]</span></p>
+<p><span class="math display">\[\hat{\gamma}(a, b) = \int_{a}^{b}
+\hat{S}_0(t) - \hat{S}_1(t)dt.\]</span></p>
 <p>The following plot visually shows the area in question using the
 <code><a href="../reference/plot_curve_diff.html">plot_curve_diff()</a></code> function:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
