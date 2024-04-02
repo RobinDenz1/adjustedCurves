@@ -1193,7 +1193,7 @@ check_inputs_auc_curve <- function(times, max_t, color,
 }
 
 ## check inputs for plot_rmst_curve and plot_rmtl_curve
-check_inputs_auc_diff <- function(times, max_t, color, difference, ratio,
+check_inputs_auc_diff <- function(times, max_t, color, contrast,
                                   linetype, line_at_ref) {
 
   if (!(length(times)>0 && is.numeric(times) && all(times > 0) |
@@ -1210,15 +1210,9 @@ check_inputs_auc_diff <- function(times, max_t, color, difference, ratio,
          " difference=TRUE or ratio=TRUE")
   } else if (!(is.logical(line_at_ref) && length(line_at_ref)==1)) {
     stop("'line_at_ref' must be either TRUE or FALSE.")
-  } else if (!(is.logical(difference) && length(difference)==1)) {
-    stop("'difference' must be either TRUE or FALSE.")
-  } else if (!(is.logical(ratio) && length(ratio)==1)) {
-    stop("'ratio' must be either TRUE or FALSE.")
-  }
-
-  if (difference & ratio) {
-    stop("Cannot use both 'ratio=TRUE' and 'difference=TRUE' at the",
-         " same time. Set one to FALSE.")
+  } else if (!(length(contrast)==1 && is.character(contrast) &&
+               contrast %in% c("none", "diff", "ratio"))) {
+    stop("'contrast' must be one of c('none', 'diff', 'ratio').")
   }
 }
 

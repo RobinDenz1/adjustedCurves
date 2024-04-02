@@ -29,25 +29,25 @@ test_that("plot, rmst conf_int", {
 })
 
 test_that("plot difference, rmst", {
-  plt <- plot_rmst_curve(adj, difference=TRUE)
+  plt <- plot_rmst_curve(adj, contrast="diff")
   expect_s3_class(plt, "ggplot")
   vdiffr::expect_doppelganger("plot difference, rmst", fig=plt)
 })
 
 test_that("plot difference, rmst conf_int", {
-  plt <- plot_rmst_curve(adj, difference=TRUE, conf_int=TRUE)
+  plt <- plot_rmst_curve(adj, contrast="diff", conf_int=TRUE)
   expect_s3_class(plt, "ggplot")
   vdiffr::expect_doppelganger("plot difference, rmst conf_int", fig=plt)
 })
 
 test_that("plot ratio, rmst", {
-  plt <- plot_rmst_curve(adj, ratio=TRUE)
+  plt <- plot_rmst_curve(adj, contrast="ratio")
   expect_s3_class(plt, "ggplot")
   vdiffr::expect_doppelganger("plot ratio, rmst", fig=plt)
 })
 
 test_that("plot ratio, rmst conf_int", {
-  plt <- plot_rmst_curve(adj, ratio=TRUE, conf_int=TRUE)
+  plt <- plot_rmst_curve(adj, contrast="ratio", conf_int=TRUE)
   expect_s3_class(plt, "ggplot")
   vdiffr::expect_doppelganger("plot ratio, rmst conf_int", fig=plt)
 })
@@ -98,25 +98,25 @@ test_that("plot, linetype", {
 })
 
 test_that("plot difference, max_t", {
-  plt <- plot_rmst_curve(adj, max_t=0.4, difference=TRUE)
+  plt <- plot_rmst_curve(adj, max_t=0.4, contrast="diff")
   expect_s3_class(plt, "ggplot")
   vdiffr::expect_doppelganger("plot difference, max_t", fig=plt)
 })
 
 test_that("plot difference, times", {
-  plt <- plot_rmst_curve(adj, times=seq(0.1, 0.8, 0.05), difference=TRUE)
+  plt <- plot_rmst_curve(adj, times=seq(0.1, 0.8, 0.05), contrast="diff")
   expect_s3_class(plt, "ggplot")
   vdiffr::expect_doppelganger("plot difference, times", fig=plt)
 })
 
 test_that("plot ratio, color", {
-  plt <- plot_rmst_curve(adj, ratio=TRUE, color="blue")
+  plt <- plot_rmst_curve(adj, contrast="ratio", color="blue")
   expect_s3_class(plt, "ggplot")
   vdiffr::expect_doppelganger("plot ratio, color", fig=plt)
 })
 
 test_that("plot ratio, linetype", {
-  plt <- plot_rmst_curve(adj, ratio=TRUE, linetype="dashed")
+  plt <- plot_rmst_curve(adj, contrast="ratio", linetype="dashed")
   expect_s3_class(plt, "ggplot")
   vdiffr::expect_doppelganger("plot ratio, linetype", fig=plt)
 })
@@ -135,13 +135,13 @@ test_that("plot, rmtl conf_int", {
 })
 
 test_that("plot difference, rmtl no arguments", {
-  plt <- plot_rmtl_curve(adj, difference=TRUE)
+  plt <- plot_rmtl_curve(adj, contrast="diff")
   expect_s3_class(plt, "ggplot")
   vdiffr::expect_doppelganger("plot difference, rmtl no arguments", fig=plt)
 })
 
 test_that("plot difference, rmtl conf_int", {
-  plt <- plot_rmtl_curve(adj, conf_int=TRUE, difference=TRUE)
+  plt <- plot_rmtl_curve(adj, conf_int=TRUE, contrast="diff")
   expect_s3_class(plt, "ggplot")
   vdiffr::expect_doppelganger("plot difference, rmtl conf_int", fig=plt)
 })

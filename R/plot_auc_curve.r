@@ -197,9 +197,8 @@ plot_auc_diff <- function(adj, estimate, times=NULL, conf_int=FALSE,
 #' @export
 plot_rmst_curve <- function(adjsurv, times=NULL, conf_int=FALSE,
                             conf_level=0.95, interpolation="steps",
-                            difference=FALSE, ratio=FALSE,
-                            group_1=NULL, group_2=NULL, max_t=Inf,
-                            color=TRUE, linetype=FALSE, facet=FALSE,
+                            contrast="none", group_1=NULL, group_2=NULL,
+                            max_t=Inf, color=TRUE, linetype=FALSE, facet=FALSE,
                             size=1, alpha=1, xlab="Time", ylab="RMST",
                             title=NULL, subtitle=NULL, legend.title="Group",
                             legend.position="right",
@@ -216,7 +215,7 @@ plot_rmst_curve <- function(adjsurv, times=NULL, conf_int=FALSE,
          " adjustedsurv function.")
   }
 
-  if (!difference && !ratio) {
+  if (!contrast %in% c("diff", "ratio")) {
     p <- plot_auc_curve(estimate="rmst", adj=adjsurv, times=times,
                         conf_int=conf_int, interpolation=interpolation,
                         max_t=max_t, color=color,
@@ -230,12 +229,6 @@ plot_rmst_curve <- function(adjsurv, times=NULL, conf_int=FALSE,
                         ...)
   } else {
 
-    if (difference) {
-      type <- "diff"
-    } else if (ratio) {
-      type <- "ratio"
-    }
-
     if (!is.character(color)) {
       color <- "black"
     }
@@ -244,13 +237,13 @@ plot_rmst_curve <- function(adjsurv, times=NULL, conf_int=FALSE,
     }
 
     check_inputs_auc_diff(times=times, max_t=max_t, color=color,
-                          difference=difference, ratio=ratio,
-                          linetype=linetype, line_at_ref=line_at_ref)
+                          contrast=contrast, linetype=linetype,
+                          line_at_ref=line_at_ref)
 
     p <- plot_auc_diff(adj=adjsurv, estimate="rmst", times=times,
                        conf_int=conf_int, conf_level=conf_level,
                        interpolation=interpolation, max_t=max_t,
-                       type=type, group_1=group_1, group_2=group_2,
+                       type=contrast, group_1=group_1, group_2=group_2,
                        color=color, linetype=linetype,
                        size=size, alpha=alpha, xlab=xlab, ylab=ylab,
                        title=title, subtitle=subtitle,
@@ -268,9 +261,8 @@ plot_rmst_curve <- function(adjsurv, times=NULL, conf_int=FALSE,
 #' @export
 plot_rmtl_curve <- function(adj, times=NULL, conf_int=FALSE,
                             conf_level=0.95, interpolation="steps",
-                            difference=FALSE, ratio=FALSE,
-                            group_1=NULL, group_2=NULL, max_t=Inf,
-                            color=TRUE, linetype=FALSE, facet=FALSE,
+                            contrast="none", group_1=NULL, group_2=NULL,
+                            max_t=Inf, color=TRUE, linetype=FALSE, facet=FALSE,
                             size=1, alpha=1, xlab="Time", ylab="RMTL",
                             title=NULL, subtitle=NULL, legend.title="Group",
                             legend.position="right",
@@ -288,7 +280,7 @@ plot_rmtl_curve <- function(adj, times=NULL, conf_int=FALSE,
          " the adjustedcif function.")
   }
 
-  if (!difference && !ratio) {
+  if (!contrast %in% c("diff", "ratio")) {
     p <- plot_auc_curve(estimate="rmtl", adj=adj, times=times,
                         conf_int=conf_int, interpolation=interpolation,
                         max_t=max_t, color=color, linetype=linetype,
@@ -302,12 +294,6 @@ plot_rmtl_curve <- function(adj, times=NULL, conf_int=FALSE,
                         conf_level=conf_level, ...)
   } else {
 
-    if (difference) {
-      type <- "diff"
-    } else if (ratio) {
-      type <- "ratio"
-    }
-
     if (!is.character(color)) {
       color <- "black"
     }
@@ -316,13 +302,13 @@ plot_rmtl_curve <- function(adj, times=NULL, conf_int=FALSE,
     }
 
     check_inputs_auc_diff(times=times, max_t=max_t, color=color,
-                          difference=difference, ratio=ratio,
-                          linetype=linetype, line_at_ref=line_at_ref)
+                          contrast=contrast, linetype=linetype,
+                          line_at_ref=line_at_ref)
 
     p <- plot_auc_diff(adj=adj, estimate="rmtl", times=times,
                        conf_int=conf_int, conf_level=conf_level,
                        interpolation=interpolation, max_t=max_t,
-                       type=type, group_1=group_1, group_2=group_2,
+                       type=contrast, group_1=group_1, group_2=group_2,
                        color=color, linetype=linetype,
                        size=size, alpha=alpha, xlab=xlab, ylab=ylab,
                        title=title, subtitle=subtitle,
@@ -333,6 +319,5 @@ plot_rmtl_curve <- function(adj, times=NULL, conf_int=FALSE,
                        line_at_ref_linetype=line_at_ref_linetype,
                        line_at_ref_alpha=line_at_ref_alpha, ...)
   }
-
   return(p)
 }

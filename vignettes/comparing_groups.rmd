@@ -168,7 +168,7 @@ Again, since we are testing essentially the same hypothesis here, the p-values w
 
 Another summary statistic that may be used to compare two survival curves is the restricted mean survival time (RMST). It is defined as the area under the respective survival curve up to a specific point in time, which can then be interpreted as the mean survival time up to that point (Royston et al. 2013). By using the adjusted survival curve to estimate this quantity, the resulting RMST is also adjusted (Conner et al. 2019). Formally, the RMST is defined as:
 
-$$RMST_{z}(to) = \int_{0}^{to} \hat{S}_z(t)dt$$
+$$\hat{RMST}_{z}(to) = \int_{0}^{to} \hat{S}_z(t)dt$$
 
 where $\hat{S}_z(t)$ is again the estimated adjusted survival curve and `to` is the value up to which the survival curves should be integrated. The following plot visually depicts the area in question for `to = 0.7` in our example:
 
@@ -196,11 +196,11 @@ We also set `conf_int=TRUE` here to obtain the corresponding confidence interval
 
 As before, we may calculate the difference between the two RMST values:
 
-$$RMST_{diff}(to) = RMST_0(to) - RMST_1(to)$$
+$$\hat{RMST}_{diff}(to) = \hat{RMST}_0(to) - \hat{RMST}_1(to)$$
 
 or the ratio between them:
 
-$$RMST_{ratio}(to) = \frac{RMST_1(to)}{RMST_0(to)}.$$
+$$\hat{RMST}_{ratio}(to) = \frac{\hat{RMST}_1(to)}{\hat{RMST}_0(to)}.$$
 
 This may also be done using the `adjusted_rmst()` function. The difference and its' associated confidence interval may be estimated using:
 
@@ -225,13 +225,13 @@ plot_rmst_curve(adjsurv, conf_int=TRUE)
 But we may also directly plot the difference:
 
 ```{r}
-plot_rmst_curve(adjsurv, conf_int=TRUE, difference=TRUE)
+plot_rmst_curve(adjsurv, conf_int=TRUE, contrast="diff")
 ```
 
 or their ratio:
 
 ```{r}
-plot_rmst_curve(adjsurv, conf_int=TRUE, ratio=TRUE)
+plot_rmst_curve(adjsurv, conf_int=TRUE, contrast="ratio")
 ```
 
 which again shows no difference between the curves, as expected.
@@ -240,7 +240,7 @@ which again shows no difference between the curves, as expected.
 
 A different but closely related summary statistic to compare two survival curves is the area between two survival curves in some interval from $t = a$ to $t = b$, defined as:
 
-$$\gamma(a, b) = \int_{a}^{b} \hat{S}_0(t) - \hat{S}_1(t)dt.$$
+$$\hat{\gamma}(a, b) = \int_{a}^{b} \hat{S}_0(t) - \hat{S}_1(t)dt.$$
 
 The following plot visually shows the area in question using the `plot_curve_diff()` function:
 
