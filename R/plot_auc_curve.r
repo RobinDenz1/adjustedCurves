@@ -130,12 +130,8 @@ plot_auc_diff <- function(adj, estimate, times=NULL, conf_int=FALSE,
   }
 
   if (type=="diff") {
-    difference <- TRUE
-    ratio <- FALSE
     ref_value <- 0
   } else if (type=="ratio") {
-    difference <- FALSE
-    ratio <- TRUE
     ref_value <- 1
   }
 
@@ -144,12 +140,12 @@ plot_auc_diff <- function(adj, estimate, times=NULL, conf_int=FALSE,
     plotdata <- adjusted_rmst(adjsurv=adj, from=0, to=times, conf_int=conf_int,
                               conf_level=conf_level, group_1=group_1,
                               group_2=group_2, interpolation=interpolation,
-                              ratio=ratio, difference=difference)
+                              contrast=type)
   } else if (estimate=="rmtl") {
     plotdata <- adjusted_rmtl(adj=adj, from=0, to=times, conf_int=conf_int,
                               conf_level=conf_level, group_1=group_1,
                               group_2=group_2, interpolation=interpolation,
-                              ratio=ratio, difference=difference)
+                              contrast=type)
   }
   plotdata$se <- NULL
 

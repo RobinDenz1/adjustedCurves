@@ -205,13 +205,13 @@ $$\hat{RMST}_{ratio}(to) = \frac{\hat{RMST}_1(to)}{\hat{RMST}_0(to)}.$$
 This may also be done using the `adjusted_rmst()` function. The difference and its' associated confidence interval may be estimated using:
 
 ```{r}
-adjusted_rmst(adjsurv, to=0.7, conf_int=TRUE, difference=TRUE)
+adjusted_rmst(adjsurv, to=0.7, conf_int=TRUE, contrast="diff")
 ```
 
 The ratio can be estimated in a similar fashion, using:
 
 ```{r}
-adjusted_rmst(adjsurv, to=0.7, conf_int=TRUE, ratio=TRUE)
+adjusted_rmst(adjsurv, to=0.7, conf_int=TRUE, contrast="ratio")
 ```
 
 Again, the p-values are identical. This method removes some of the arbitrariness of choosing a single point in time to perform the comparison, as was done using simple differences or ratios. However, it introduces a new limitation, which is the choice of `to`. We may also plot the RMST as a function of this value, by calculating it for a wide range of different `to` values. This is called a *restricted mean survival time curve* (Zhao et al. 2016) and can be done in this package using the `plot_rmst_curve()` function.

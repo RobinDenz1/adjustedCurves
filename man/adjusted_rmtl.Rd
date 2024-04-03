@@ -11,7 +11,8 @@ This function can be utilized to estimate the confounder-adjusted restricted mea
 adjusted_rmtl(adj, to, from=0, conf_int=FALSE,
               conf_level=0.95, interpolation="steps",
               difference=FALSE, ratio=FALSE,
-              group_1=NULL, group_2=NULL)
+              contrast="none", group_1=NULL,
+              group_2=NULL)
 }
 
 \arguments{
@@ -34,16 +35,19 @@ A number specifying the confidence level of the bootstrap confidence intervals.
 Either \code{"steps"} (default) or \code{"linear"}. This parameter controls how interpolation is performed. If this argument is set to \code{"steps"}, the curves will be treated as step functions. If it is set to \code{"linear"}, the curves wil be treated as if there are straight lines between the point estimates instead. Points that lie between estimated points will be interpolated accordingly. Should usually be kept at \code{"steps"}. See Details.
   }
   \item{difference}{
-Whether to estimate the difference between two adjusted RMTLs instead. When \code{conf_int=TRUE} is also specified, this function will also return the standard error of the difference, the associated confidence interval and a p-value. The p-value is the result of a one-sample t-test where the null-hypothesis is that the difference is equal to 0. To specify which difference should be estimated, the \code{group_1} and \code{group_2} arguments can be used. By default, the difference between the first and second level in \code{variable} is computed.
+DEPRECATED. Use \code{contrast="diff"} instead.
   }
   \item{ratio}{
-Whether to estimate the ratio between two RMTLs instead. When \code{conf_int=TRUE} is also specified, this function will also return the associated confidence interval and a p-value. The p-value is the result of a one-sample t-test where the null-hypothesis is that the ratio is equal to 1. To specify which ratio should be calculated, the \code{group_1} and \code{group_2} arguments can be used. By default, the ratio between the first and second level in \code{variable} is computed. The confidence interval and test-statistic is estimated using the Fieller method.
+DEPRECATED. Use \code{contrast="ratio"} instead.
+  }
+  \item{contrast}{
+A single character string, specifying which contrast should be estimated. Needs to be one of \code{"none"} (estimate no contrasts, just return the adjusted RMTL, the default), \code{"diff"} (estimate the difference) or \code{"ratio"} (estimate the ratio). When \code{conf_int=TRUE} is also specified and bootstrapping was performed in the original \code{adjustedsurv} call, this function will also estimate the corresponding standard error, the confidence interval and a p-value testing whether the difference is equal to 0 (or the ratio is equal to 1). To specify which difference/ratio should be calculated, the \code{group_1} and \code{group_2} arguments can be used. By default, the difference/ratio between the first and second level in \code{variable} is computed.
   }
   \item{group_1}{
-Optional argument to get a specific difference or ratio. This argument takes a single character string specifying one of the levels of the \code{variable} used in the original \code{adjustedsurv} or \code{adjustedcif} function call. This group will be subtracted from. For example if \code{group_1="A"} and \code{group_2="B"} and \code{difference=TRUE} the difference \code{A - B} will be used. If \code{NULL}, the order of the factor levels in the original \code{data} determines the order. Ignored if \code{difference=FALSE} and \code{ratio=FALSE}.
+Optional argument to get a specific difference or ratio. This argument takes a single character string specifying one of the levels of the \code{variable} used in the original \code{adjustedsurv} or \code{adjustedcif} function call. This group will be subtracted from. For example if \code{group_1="A"} and \code{group_2="B"} and \code{contrast="diff"} the difference \code{A - B} will be used. If \code{NULL}, the order of the factor levels in the original \code{data} determines the order. Ignored if \code{contrast="none"}.
   }
   \item{group_2}{
-Also a single character string specifying one of the levels of \code{variable}. This corresponds to the right side of the difference / ratio equation. See argument \code{group_2}. Ignored if \code{difference=FALSE} and \code{ratio=FALSE}.
+Also a single character string specifying one of the levels of \code{variable}. This corresponds to the right side of the difference/ratio equation. See argument \code{group_2}. Ignored if \code{contrast="none"}.
   }
 }
 \details{
@@ -58,7 +62,7 @@ If an \code{adjustedsurv} object is supplied in the \code{adj} argument, the CIF
 
 \strong{\emph{Confidence Intervals}}
 
-If the \code{adj} object was created with \code{bootstrap=TRUE} in the corresponding function, bootstrap confidence intervals and standard errors for the RMTLs can be approximated by setting \code{conf_int} to \code{TRUE}. If bootstrap samples occur where the CIF is not estimated up to \code{to}, the bootstrap sample is discarded and not used in further calculations. Approximate variance calculations not relying on the bootstrap estimates are currently not implemented. When using \code{difference=TRUE} the standard error of the difference between the two RMST values is approximated by \eqn{SE_{group_1 - group_2} = \sqrt{SE_{group_1}^2 + SE_{group_2}^2}}. When using \code{ratio=TRUE} the confidence intervals are calculated using the approximate formula given by Fieller (1954), assuming that the values are independent.
+If the \code{adj} object was created with \code{bootstrap=TRUE} in the corresponding function, bootstrap confidence intervals and standard errors for the RMTLs can be approximated by setting \code{conf_int} to \code{TRUE}. If bootstrap samples occur where the CIF is not estimated up to \code{to}, the bootstrap sample is discarded and not used in further calculations. Approximate variance calculations not relying on the bootstrap estimates are currently not implemented. When using \code{contrast="diff"} the standard error of the difference between the two RMST values is approximated by \eqn{SE_{group_1 - group_2} = \sqrt{SE_{group_1}^2 + SE_{group_2}^2}}. When using \code{contrast="ratio"} the confidence intervals are calculated using the approximate formula given by Fieller (1954), assuming that the values are independent.
 
 \strong{\emph{More than Two Groups}}
 
@@ -82,7 +86,7 @@ Returns a \code{data.frame} containing the columns \code{group} (groups in \code
 
 If \code{conf_int=TRUE} was used it additionally contains the columns \code{to} (the supplied \code{to} values), \code{se} (the standard error of the restricted mean time lost), \code{ci_lower} (lower limit of the confidence interval), \code{ci_upper} (upper limit of the confidence interval) and \code{n_boot} (the actual number of bootstrap estimates used).
 
-If \code{difference=TRUE} was used, it instead returns a \code{data.frame} that contains the columns \code{to}, \code{diff} (the difference between the RMTL values), \code{se} (the standard error of the difference), \code{ci_lower} (lower limit of the confidence interval), \code{ci_upper} (upper limit of the confidence interval) and \code{p_value} (the p-value of the one-sample t-test). The same results are presented when using \code{ratio=TRUE}, except that the \code{diff} column is named \code{ratio} and that there is no \code{se} column.
+If \code{contrast="diff"} was used, it instead returns a \code{data.frame} that contains the columns \code{to}, \code{diff} (the difference between the RMTL values), \code{se} (the standard error of the difference), \code{ci_lower} (lower limit of the confidence interval), \code{ci_upper} (upper limit of the confidence interval) and \code{p_value} (the p-value of the one-sample t-test). The same results are presented when using \code{contrast="ratio"}, except that the \code{diff} column is named \code{ratio} and that there is no \code{se} column.
 }
 \references{
 Sarah C. Conner and Ludovic Trunquart (2021). "Estimation and Modeling of the Restricted Mean Time Lost in the Presence of Competing Risks". In: Statistics in Medicine
@@ -135,7 +139,7 @@ adjrmst <- adjusted_rmst(adjsurv, from=0, to=1, conf_int=TRUE,
 
 # calculate difference in adjusted restricted mean survival times from 0 to 1
 adjrmst <- adjusted_rmst(adjsurv, from=0, to=1, conf_int=FALSE,
-                         difference=TRUE)
+                         contrast="diff")
 
 ###### when using data with competing-risks
 
@@ -171,6 +175,6 @@ adjrmtl <- adjusted_rmtl(adjcif, from=0, to=1, conf_int=TRUE)
 
 # calculate ratio of adjusted restricted mean time lost estimates from 0 to 1
 # including confidence interval and p-value
-adjrmtl <- adjusted_rmtl(adjcif, from=0, to=1, conf_int=TRUE, ratio=TRUE)
+adjrmtl <- adjusted_rmtl(adjcif, from=0, to=1, conf_int=TRUE, contrast="ratio")
 }
 }

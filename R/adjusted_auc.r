@@ -199,10 +199,21 @@ auc_ratio <- function(data, group_1, group_2, conf_int, conf_level) {
 adjusted_rmst <- function(adjsurv, to, from=0, conf_int=FALSE,
                           conf_level=0.95, interpolation="steps",
                           difference=FALSE, ratio=FALSE,
-                          group_1=NULL, group_2=NULL) {
+                          contrast="none", group_1=NULL, group_2=NULL) {
 
   check_inputs_adj_rmst(adjsurv=adjsurv, from=from, to=to, conf_int=conf_int,
-                        difference=difference, ratio=ratio)
+                        contrast=contrast)
+
+  # temporary deprecation error
+  if (difference) {
+    stop("The argument 'difference' has been deprecated",
+         " as of version 0.11.1. Instead of 'difference=TRUE' please use",
+         " contrast='diff'.")
+  } else if (ratio) {
+    stop("The argument 'ratio' has been deprecated",
+         " as of version 0.11.1. Instead of 'ratio=TRUE' please use",
+         " contrast='ratio'.")
+  }
 
   # set to FALSE if it can't be done
   if (conf_int & is.null(adjsurv$boot_adj)) {
@@ -212,10 +223,10 @@ adjusted_rmst <- function(adjsurv, to, from=0, conf_int=FALSE,
   out <- area_under_curve(adj=adjsurv, to=to, from=from,
                           conf_int=conf_int, conf_level=conf_level,
                           interpolation=interpolation)
-  if (difference) {
+  if (contrast=="diff") {
     out <- auc_difference(data=out, group_1=group_1, group_2=group_2,
                           conf_int=conf_int, conf_level=conf_level)
-  } else if (ratio) {
+  } else if (contrast=="ratio") {
     out <- auc_ratio(data=out, group_1=group_1, group_2=group_2,
                      conf_int=conf_int, conf_level=conf_level)
   } else if (conf_int) {
@@ -234,10 +245,21 @@ adjusted_rmst <- function(adjsurv, to, from=0, conf_int=FALSE,
 adjusted_rmtl <- function(adj, to, from=0, conf_int=FALSE,
                           conf_level=0.95, interpolation="steps",
                           difference=FALSE, ratio=FALSE,
-                          group_1=NULL, group_2=NULL) {
+                          contrast="none", group_1=NULL, group_2=NULL) {
 
   check_inputs_adj_rmtl(adj=adj, from=from, to=to, conf_int=conf_int,
-                        difference=difference, ratio=ratio)
+                        contrast=contrast)
+
+  # temporary deprecation error
+  if (difference) {
+    stop("The argument 'difference' has been deprecated",
+         " as of version 0.11.1. Instead of 'difference=TRUE' please use",
+         " contrast='diff'.")
+  } else if (ratio) {
+    stop("The argument 'ratio' has been deprecated",
+         " as of version 0.11.1. Instead of 'ratio=TRUE' please use",
+         " contrast='ratio'.")
+  }
 
   # set to FALSE if it can't be done
   if (conf_int & is.null(adj$boot_adj)) {
@@ -266,10 +288,10 @@ adjusted_rmtl <- function(adj, to, from=0, conf_int=FALSE,
     }
   }
 
-  if (difference) {
+  if (contrast=="diff") {
     out <- auc_difference(data=out, group_1=group_1, group_2=group_2,
                           conf_int=conf_int, conf_level=conf_level)
-  } else if (ratio) {
+  } else if (contrast=="ratio") {
     out <- auc_ratio(data=out, group_1=group_1, group_2=group_2,
                      conf_int=conf_int, conf_level=conf_level)
   } else if (conf_int) {

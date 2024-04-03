@@ -29,17 +29,17 @@ test_that("rmst 2 treatments, multiple to, no boot", {
 })
 
 test_that("rmst 2 treatments, no boot, diff", {
-  adj_rmst <- adjusted_rmst(adj, to=1.1, difference=TRUE)
+  adj_rmst <- adjusted_rmst(adj, to=1.1, contrast="diff")
   expect_equal(round(adj_rmst$diff, 4), -0.1510)
 })
 
 test_that("rmst 2 treatments, no boot, diff, multiple to", {
-  adj_rmst <- adjusted_rmst(adj, to=c(1, 1.1), difference=TRUE)
+  adj_rmst <- adjusted_rmst(adj, to=c(1, 1.1), contrast="diff")
   expect_equal(round(adj_rmst$diff, 4), c(-0.1451, -0.1510))
 })
 
 test_that("rmst 2 treatments, no boot, diff, groups", {
-  adj_rmst <- adjusted_rmst(adj, to=1.1, difference=TRUE,
+  adj_rmst <- adjusted_rmst(adj, to=1.1, contrast="diff",
                             group_1="1", group_2="0")
   expect_equal(round(adj_rmst$diff, 4), 0.1510)
 })
@@ -75,7 +75,7 @@ test_that("rmst 2 treatments, with boot, multiple to", {
 })
 
 test_that("rmst 2 treatments, with boot, ratio", {
-  adj_rmst <- adjusted_rmst(adj, to=1.1, conf_int=TRUE, ratio=TRUE)
+  adj_rmst <- adjusted_rmst(adj, to=1.1, conf_int=TRUE, contrast="ratio")
   expect_equal(round(adj_rmst$ratio, 4), 0.7753)
   expect_equal(round(adj_rmst$ci_lower, 4), 0.5245)
   expect_equal(round(adj_rmst$ci_upper, 4), 1.0894)
@@ -83,7 +83,7 @@ test_that("rmst 2 treatments, with boot, ratio", {
 })
 
 test_that("rmst 2 treatments, with boot, diff", {
-  adj_rmst <- adjusted_rmst(adj, to=1.1, conf_int=TRUE, difference=TRUE)
+  adj_rmst <- adjusted_rmst(adj, to=1.1, conf_int=TRUE, contrast="diff")
   expect_equal(round(adj_rmst$diff, 4), -0.1510)
   expect_equal(round(adj_rmst$se, 4), 0.1036)
   expect_equal(round(adj_rmst$ci_lower, 4), -0.3541)
@@ -132,12 +132,12 @@ test_that("rmst 3 treatments, no boot", {
 })
 
 test_that("rmst 3 treatments, no boot, diff", {
-  adj_rmst <- adjusted_rmst(adj, to=1, difference=TRUE)
+  adj_rmst <- adjusted_rmst(adj, to=1, contrast="diff")
   expect_equal(round(adj_rmst$diff, 4), -0.1906)
 })
 
 test_that("rmst 3 treatments, no boot, ratio", {
-  adj_rmst <- adjusted_rmst(adj, to=1, ratio=TRUE)
+  adj_rmst <- adjusted_rmst(adj, to=1, contrast="ratio")
   expect_equal(round(adj_rmst$ratio, 4), 0.7286)
 })
 

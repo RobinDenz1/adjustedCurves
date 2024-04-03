@@ -12,8 +12,7 @@ test_that("not an adjustedsurv/adjustedcif object", {
                                      from=0,
                                      to=1,
                                      conf_int=FALSE,
-                                     difference=FALSE,
-                                     ratio=FALSE),
+                                     contrast="none"),
                paste0("'adj' must be an 'adjustedsurv' object created ",
                       "using the 'adjustedsurv()' function or an ",
                       "'adjustedcif' object created using the ",
@@ -25,8 +24,7 @@ test_that("from smaller 0", {
                                      from=-10,
                                      to=1,
                                      conf_int=FALSE,
-                                     difference=FALSE,
-                                     ratio=FALSE),
+                                     contrast="none"),
                "'from' and 'to' must be >= 0.")
 })
 
@@ -35,8 +33,7 @@ test_that("from wrong format", {
                                      from="0",
                                      to=1,
                                      conf_int=FALSE,
-                                     difference=FALSE,
-                                     ratio=FALSE),
+                                     contrast="none"),
                "'from' and 'to' must be numbers (one for each argument).",
                fixed=TRUE)
 })
@@ -46,8 +43,7 @@ test_that("from not smaller than to", {
                                      from=0,
                                      to=0,
                                      conf_int=FALSE,
-                                     difference=FALSE,
-                                     ratio=FALSE),
+                                     contrast="none"),
                "'from' must be smaller than 'to'.")
 })
 
@@ -56,8 +52,7 @@ test_that("no bootstrapping performed", {
                                        from=0,
                                        to=1,
                                        conf_int=TRUE,
-                                       difference=FALSE,
-                                       ratio=FALSE),
+                                       contrast="none"),
                paste0("Cannot use bootstrapped estimates because they ",
                       "were not estimated. Need 'bootstrap=TRUE' in ",
                       "'adjustedsurv'/'adjustedcif' function call."))
@@ -68,18 +63,8 @@ test_that("conf_int wrong format", {
                                      from=0,
                                      to=1,
                                      conf_int=1,
-                                     difference=FALSE,
-                                     ratio=FALSE),
+                                     contrast="none"),
                "'conf_int' must be either TRUE or FALSE.")
-})
-
-test_that("cannot use both difference and ratio", {
-  expect_warning(check_inputs_adj_rmtl(adj=adjsurv,
-                                       from=0,
-                                       to=1,
-                                       conf_int=FALSE,
-                                       difference=TRUE,
-                                       ratio=TRUE))
 })
 
 test_that("no extrapolation allowed", {
@@ -87,8 +72,7 @@ test_that("no extrapolation allowed", {
                                      from=0,
                                      to=200,
                                      conf_int=FALSE,
-                                     difference=FALSE,
-                                     ratio=FALSE),
+                                     contrast="none"),
                "'to' cannot be greater than the latest observed time.")
 })
 
@@ -100,8 +84,7 @@ test_that("too little points in time", {
                                        from=0,
                                        to=1,
                                        conf_int=FALSE,
-                                       difference=FALSE,
-                                       ratio=FALSE),
+                                       contrast="none"),
                  paste0("Using only a few points in time might lead to ",
                         "biased estimates. Consider using a finer times ",
                         "grid in 'adjustedsurv'."))

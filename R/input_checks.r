@@ -559,8 +559,7 @@ check_inputs_sim_fun <- function(n, lcovars, outcome_betas, surv_dist,
 }
 
 ## for adjusted_rmst function
-check_inputs_adj_rmst <- function(adjsurv, from, to, conf_int, difference,
-                                  ratio) {
+check_inputs_adj_rmst <- function(adjsurv, from, to, conf_int, contrast) {
 
   if ((!is.numeric(from) | !is.numeric(to)) &
       length(from)==1 & length(to)>=1) {
@@ -574,6 +573,9 @@ check_inputs_adj_rmst <- function(adjsurv, from, to, conf_int, difference,
     stop("'from' must be smaller than 'to'.")
   } else if (!(is.logical(conf_int) & length(conf_int)==1)) {
     stop("'conf_int' must be either TRUE or FALSE.")
+  } else if (!(length(contrast)==1 && is.character(contrast) &&
+               contrast %in% c("none", "diff", "ratio"))) {
+    stop("'contrast' must be one of c('none', 'diff', 'ratio').")
   } else if (conf_int & is.null(adjsurv$boot_adj)) {
     warning("Cannot use bootstrapped estimates because",
             " they were not estimated.",
@@ -590,16 +592,10 @@ check_inputs_adj_rmst <- function(adjsurv, from, to, conf_int, difference,
             " estimates. Consider using a finer times grid in",
             " 'adjustedsurv' or 'adjustedcif'.", call.=FALSE)
   }
-
-  if (difference & ratio) {
-    warning("Cannot calculate the difference and the ratio simultaneously.",
-            " Only the difference will be displayed. To obtain the ratio",
-            " instead, set difference=FALSE.")
-  }
 }
 
 ## for adjusted_rmtl function
-check_inputs_adj_rmtl <- function(adj, from, to, conf_int, difference, ratio) {
+check_inputs_adj_rmtl <- function(adj, from, to, conf_int, contrast) {
 
   if ((!is.numeric(from) | !is.numeric(to)) &
        length(from)==1 & length(to)>=1) {
@@ -614,6 +610,9 @@ check_inputs_adj_rmtl <- function(adj, from, to, conf_int, difference, ratio) {
     stop("'from' must be smaller than 'to'.")
   } else if (!(is.logical(conf_int) & length(conf_int)==1)) {
     stop("'conf_int' must be either TRUE or FALSE.")
+  } else if (!(length(contrast)==1 && is.character(contrast) &&
+               contrast %in% c("none", "diff", "ratio"))) {
+    stop("'contrast' must be one of c('none', 'diff', 'ratio').")
   } else if (conf_int & is.null(adj$boot_adj)) {
     warning("Cannot use bootstrapped estimates because",
             " they were not estimated.",
@@ -632,12 +631,6 @@ check_inputs_adj_rmtl <- function(adj, from, to, conf_int, difference, ratio) {
     warning("Using only a few points in time might lead to biased",
             " estimates. Consider using a finer times grid in",
             " 'adjustedsurv'/'adjustedcif'.", call.=FALSE)
-  }
-
-  if (difference & ratio) {
-    warning("Cannot calculate the difference and the ratio simultaneously.",
-            " Only the difference will be displayed. To obtain the ratio",
-            " instead, set difference=FALSE.")
   }
 }
 
