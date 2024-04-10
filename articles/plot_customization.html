@@ -33,7 +33,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">adjustedCurves</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -353,7 +353,7 @@ these arguments. All objects in the list passed to
 before putting it together with the risk table plot. Similarly, all
 objects in the <code>risk_table_additional_layers</code> list will be
 applied to the risk table plot.</p>
-<p>The preceeding example could be fixed using the following code:</p>
+<p>The preceding example could be fixed using the following code:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">more_stuff</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position<span class="op">=</span><span class="st">"top"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, risk_table<span class="op">=</span><span class="cn">TRUE</span>, additional_layers<span class="op">=</span><span class="va">more_stuff</span><span class="op">)</span></span></code></pre></div>

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">adjustedCurves</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,18 +100,23 @@
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.11.1" id="adjustedcurves-0111">adjustedCurves 0.11.1<a class="anchor" aria-label="anchor" href="#adjustedcurves-0111"></a></h2>
-<ul><li>Added the <code>difference</code> and <code>ratio</code> arguments to <code><a href="../reference/plot_rmst_curve.html">plot_rmst_curve()</a></code> and <code><a href="../reference/plot_rmtl_curve.html">plot_rmtl_curve()</a></code>
-</li>
-<li>Added the <code>difference</code> and <code>ratio</code> functionality to the <code><a href="../reference/adjusted_surv_quantile.html">adjusted_surv_quantile()</a></code> function</li>
-<li>Re-factored internal code to vastly increase speed of bootstrapping related computations</li>
-<li>Added risk table functionality for <code><a href="../reference/plot.adjustedsurv.html">plot.adjustedsurv()</a></code>
-</li>
+<p>Enhancements</p>
+<ul><li>Re-factored internal code to vastly increase speed of bootstrapping related computations</li>
+</ul><p>New features</p>
+<ul><li>Added risk table functionality for <code><a href="../reference/plot.adjustedsurv.html">plot.adjustedsurv()</a></code> (all arguments starting with <code>risk_table</code>)</li>
+<li>Allow estimation of difference and ratios in <code><a href="../reference/plot_rmst_curve.html">plot_rmst_curve()</a></code> function</li>
+<li>Allow estimation of difference and ratios in <code><a href="../reference/plot_rmtl_curve.html">plot_rmtl_curve()</a></code> function</li>
+<li>Allow estimation of difference and ratios in <code><a href="../reference/adjusted_surv_quantile.html">adjusted_surv_quantile()</a></code> function</li>
+</ul><p>Refactored</p>
+<ul><li>Re-factored examples to only be executed if suggested packages are installed</li>
 <li>Renamed <code>adjsurv</code> and <code>adjcif</code> output objects of <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code> and <code>adjsutedcif()</code> respectively to <code>adj</code>
 </li>
-<li>Re-worked introduction vignette</li>
+<li>Put functionality of <code>difference</code> and <code>ratio</code> arguments into one <code>contrast</code> argument in <code><a href="../reference/adjusted_rmst.html">adjusted_rmst()</a></code>, <code><a href="../reference/adjusted_rmtl.html">adjusted_rmtl()</a></code>, <code><a href="../reference/adjusted_surv_quantile.html">adjusted_surv_quantile()</a></code>, <code><a href="../reference/plot_rmst_curve.html">plot_rmst_curve()</a></code> and <code><a href="../reference/plot_rmtl_curve.html">plot_rmtl_curve()</a></code> functions</li>
+<li>Temporarily removed support for <code>tmle</code> in <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code> and <code><a href="../reference/adjustedcif.html">adjustedcif()</a></code> due to <code>concrete</code> being removed from CRAN</li>
+</ul><p>Documentation</p>
+<ul><li>Re-worked introduction vignette</li>
 <li>Added FAQ vignette</li>
 <li>Added Group Comparison vignette</li>
-<li>Re-factored examples to only be executed if suggested packages are installed</li>
 </ul></div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>

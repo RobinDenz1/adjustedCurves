@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">adjustedCurves</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,7 +64,8 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">adjusted_rmtl</span><span class="op">(</span><span class="va">adj</span>, <span class="va">to</span>, from<span class="op">=</span><span class="fl">0</span>, conf_int<span class="op">=</span><span class="cn">FALSE</span>,</span>
 <span>              conf_level<span class="op">=</span><span class="fl">0.95</span>, interpolation<span class="op">=</span><span class="st">"steps"</span>,</span>
 <span>              difference<span class="op">=</span><span class="cn">FALSE</span>, ratio<span class="op">=</span><span class="cn">FALSE</span>,</span>
-<span>              group_1<span class="op">=</span><span class="cn">NULL</span>, group_2<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<span>              contrast<span class="op">=</span><span class="st">"none"</span>, group_1<span class="op">=</span><span class="cn">NULL</span>,</span>
+<span>              group_2<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -88,16 +89,19 @@
 <dd><p>Either <code>"steps"</code> (default) or <code>"linear"</code>. This parameter controls how interpolation is performed. If this argument is set to <code>"steps"</code>, the curves will be treated as step functions. If it is set to <code>"linear"</code>, the curves wil be treated as if there are straight lines between the point estimates instead. Points that lie between estimated points will be interpolated accordingly. Should usually be kept at <code>"steps"</code>. See Details.</p></dd>
 
   <dt>difference</dt>
-<dd><p>Whether to estimate the difference between two adjusted RMTLs instead. When <code>conf_int=TRUE</code> is also specified, this function will also return the standard error of the difference, the associated confidence interval and a p-value. The p-value is the result of a one-sample t-test where the null-hypothesis is that the difference is equal to 0. To specify which difference should be estimated, the <code>group_1</code> and <code>group_2</code> arguments can be used. By default, the difference between the first and second level in <code>variable</code> is computed.</p></dd>
+<dd><p>DEPRECATED. Use <code>contrast="diff"</code> instead.</p></dd>
 
   <dt>ratio</dt>
-<dd><p>Whether to estimate the ratio between two RMTLs instead. When <code>conf_int=TRUE</code> is also specified, this function will also return the associated confidence interval and a p-value. The p-value is the result of a one-sample t-test where the null-hypothesis is that the ratio is equal to 1. To specify which ratio should be calculated, the <code>group_1</code> and <code>group_2</code> arguments can be used. By default, the ratio between the first and second level in <code>variable</code> is computed. The confidence interval and test-statistic is estimated using the Fieller method.</p></dd>
+<dd><p>DEPRECATED. Use <code>contrast="ratio"</code> instead.</p></dd>
+
+  <dt>contrast</dt>
+<dd><p>A single character string, specifying which contrast should be estimated. Needs to be one of <code>"none"</code> (estimate no contrasts, just return the adjusted RMTL, the default), <code>"diff"</code> (estimate the difference) or <code>"ratio"</code> (estimate the ratio). When <code>conf_int=TRUE</code> is also specified and bootstrapping was performed in the original <code>adjustedsurv</code> call, this function will also estimate the corresponding standard error, the confidence interval and a p-value testing whether the difference is equal to 0 (or the ratio is equal to 1). To specify which difference/ratio should be calculated, the <code>group_1</code> and <code>group_2</code> arguments can be used. By default, the difference/ratio between the first and second level in <code>variable</code> is computed.</p></dd>
 
   <dt>group_1</dt>
-<dd><p>Optional argument to get a specific difference or ratio. This argument takes a single character string specifying one of the levels of the <code>variable</code> used in the original <code>adjustedsurv</code> or <code>adjustedcif</code> function call. This group will be subtracted from. For example if <code>group_1="A"</code> and <code>group_2="B"</code> and <code>difference=TRUE</code> the difference <code>A - B</code> will be used. If <code>NULL</code>, the order of the factor levels in the original <code>data</code> determines the order. Ignored if <code>difference=FALSE</code> and <code>ratio=FALSE</code>.</p></dd>
+<dd><p>Optional argument to get a specific difference or ratio. This argument takes a single character string specifying one of the levels of the <code>variable</code> used in the original <code>adjustedsurv</code> or <code>adjustedcif</code> function call. This group will be subtracted from. For example if <code>group_1="A"</code> and <code>group_2="B"</code> and <code>contrast="diff"</code> the difference <code>A - B</code> will be used. If <code>NULL</code>, the order of the factor levels in the original <code>data</code> determines the order. Ignored if <code>contrast="none"</code>.</p></dd>
 
   <dt>group_2</dt>
-<dd><p>Also a single character string specifying one of the levels of <code>variable</code>. This corresponds to the right side of the difference / ratio equation. See argument <code>group_2</code>. Ignored if <code>difference=FALSE</code> and <code>ratio=FALSE</code>.</p></dd>
+<dd><p>Also a single character string specifying one of the levels of <code>variable</code>. This corresponds to the right side of the difference/ratio equation. See argument <code>group_2</code>. Ignored if <code>contrast="none"</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -109,7 +113,7 @@
 <p>It can be interpreted as the mean time it takes an individual to succumb to the event of interest in group \(Z = z\) in the interval [0, <code>to</code>]. . More information on the method itself can be found in the references. Note however that simply subtracting the estimates from each other does not give a correct estimate of the area between the CIFs if the respective curves cross at some point. The <code><a href="adjusted_curve_test.html">adjusted_curve_test</a></code> function can be used to calculate the actual area between the curves instead. See <code><a href="adjusted_curve_test.html">?adjusted_curve_test</a></code> for more information.</p>
 <p>If an <code>adjustedsurv</code> object is supplied in the <code>adj</code> argument, the CIF is calculated from the adjusted survival curves using the simple transformation: \(\hat{F}_{z}(t) = 1 - \hat{S}_z(t)\). All further calculations are identical.</p>
 <p><strong><em>Confidence Intervals</em></strong></p>
-<p>If the <code>adj</code> object was created with <code>bootstrap=TRUE</code> in the corresponding function, bootstrap confidence intervals and standard errors for the RMTLs can be approximated by setting <code>conf_int</code> to <code>TRUE</code>. If bootstrap samples occur where the CIF is not estimated up to <code>to</code>, the bootstrap sample is discarded and not used in further calculations. Approximate variance calculations not relying on the bootstrap estimates are currently not implemented. When using <code>difference=TRUE</code> the standard error of the difference between the two RMST values is approximated by \(SE_{group_1 - group_2} = \sqrt{SE_{group_1}^2 + SE_{group_2}^2}\). When using <code>ratio=TRUE</code> the confidence intervals are calculated using the approximate formula given by Fieller (1954), assuming that the values are independent.</p>
+<p>If the <code>adj</code> object was created with <code>bootstrap=TRUE</code> in the corresponding function, bootstrap confidence intervals and standard errors for the RMTLs can be approximated by setting <code>conf_int</code> to <code>TRUE</code>. If bootstrap samples occur where the CIF is not estimated up to <code>to</code>, the bootstrap sample is discarded and not used in further calculations. Approximate variance calculations not relying on the bootstrap estimates are currently not implemented. When using <code>contrast="diff"</code> the standard error of the difference between the two RMST values is approximated by \(SE_{group_1 - group_2} = \sqrt{SE_{group_1}^2 + SE_{group_2}^2}\). When using <code>contrast="ratio"</code> the confidence intervals are calculated using the approximate formula given by Fieller (1954), assuming that the values are independent.</p>
 <p><strong><em>More than Two Groups</em></strong></p>
 <p>If more than two groups are present in <code>variable</code>, all other comparisons except for <code>group_1 vs. group_2</code> are ignored. If multiple comparisons are desired, the user needs to call this function multiple times and adjust the <code>group_1</code> and <code>group_2</code> arguments accordingly.</p>
 <p><strong><em>Multiple Imputation</em></strong></p>
@@ -129,7 +133,7 @@
 <p>If <code>conf_int=TRUE</code> was used it additionally contains the columns <code>to</code> (the supplied <code>to</code> values), <code>se</code> (the standard error of the restricted mean time lost), <code>ci_lower</code> (lower limit of the confidence interval), <code>ci_upper</code> (upper limit of the confidence interval) and <code>n_boot</code> (the actual number of bootstrap estimates used).</p>
 
 
-<p>If <code>difference=TRUE</code> was used, it instead returns a <code>data.frame</code> that contains the columns <code>to</code>, <code>diff</code> (the difference between the RMTL values), <code>se</code> (the standard error of the difference), <code>ci_lower</code> (lower limit of the confidence interval), <code>ci_upper</code> (upper limit of the confidence interval) and <code>p_value</code> (the p-value of the one-sample t-test). The same results are presented when using <code>ratio=TRUE</code>, except that the <code>diff</code> column is named <code>ratio</code> and that there is no <code>se</code> column.</p>
+<p>If <code>contrast="diff"</code> was used, it instead returns a <code>data.frame</code> that contains the columns <code>to</code>, <code>diff</code> (the difference between the RMTL values), <code>se</code> (the standard error of the difference), <code>ci_lower</code> (lower limit of the confidence interval), <code>ci_upper</code> (upper limit of the confidence interval) and <code>p_value</code> (the p-value of the one-sample t-test). The same results are presented when using <code>contrast="ratio"</code>, except that the <code>diff</code> column is named <code>ratio</code> and that there is no <code>se</code> column.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -185,7 +189,7 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># calculate difference in adjusted restricted mean survival times from 0 to 1</span></span></span>
 <span class="r-in"><span><span class="va">adjrmst</span> <span class="op">&lt;-</span> <span class="fu"><a href="adjusted_rmst.html">adjusted_rmst</a></span><span class="op">(</span><span class="va">adjsurv</span>, from<span class="op">=</span><span class="fl">0</span>, to<span class="op">=</span><span class="fl">1</span>, conf_int<span class="op">=</span><span class="cn">FALSE</span>,</span></span>
-<span class="r-in"><span>                         difference<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                         contrast<span class="op">=</span><span class="st">"diff"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">###### when using data with competing-risks</span></span></span>
 <span class="r-in"><span></span></span>
@@ -221,7 +225,7 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># calculate ratio of adjusted restricted mean time lost estimates from 0 to 1</span></span></span>
 <span class="r-in"><span><span class="co"># including confidence interval and p-value</span></span></span>
-<span class="r-in"><span><span class="va">adjrmtl</span> <span class="op">&lt;-</span> <span class="fu">adjusted_rmtl</span><span class="op">(</span><span class="va">adjcif</span>, from<span class="op">=</span><span class="fl">0</span>, to<span class="op">=</span><span class="fl">1</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>, ratio<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">adjrmtl</span> <span class="op">&lt;-</span> <span class="fu">adjusted_rmtl</span><span class="op">(</span><span class="va">adjcif</span>, from<span class="op">=</span><span class="fl">0</span>, to<span class="op">=</span><span class="fl">1</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>, contrast<span class="op">=</span><span class="st">"ratio"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Rare event </span>
 </code></pre></div>

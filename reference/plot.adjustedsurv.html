@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">adjustedCurves</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -258,7 +258,7 @@
 <dd><p>One of <code>c("left", "middle", "right")</code>, specifying where the title of the risk table should be put. Defaults to <code>"left"</code>.</p></dd>
 
   <dt>risk_table_y_vjust</dt>
-<dd><p>A single positive number specifying the distance between the y-axis and the y-axis label. Is only used when <code>risk_table_stratify=FALSE</code>. Set to 5 by default to make the y-axis label allign with the y-axis label of the survival curve plot.</p></dd>
+<dd><p>A single positive number specifying the distance between the y-axis and the y-axis label. Is only used when <code>risk_table_stratify=FALSE</code>. Set to 5 by default to make the y-axis label align with the y-axis label of the survival curve plot.</p></dd>
 
   <dt>risk_table_theme</dt>
 <dd><p>A <code>ggplot2</code> theme object which will be used for the risk table. Defaults to the same theme used for the survival curve plot, but may also be different.</p></dd>
@@ -288,7 +288,7 @@
 <dd><p>A vector of custom colors used when both <code>risk_table_stratify</code> and <code>risk_table_stratify_color</code> are set to <code>TRUE</code>. By default this uses the same colors as the survival curve plot, but it doesn't have to.</p></dd>
 
   <dt>risk_table_use_weights</dt>
-<dd><p>Whether to use weights in the calculation of the values shown in the risk table or not. By default weights are used when they were used in the calculation of the adjusted survival curves as well. Otherwise, unadjusted risk tables are returned. Note that since the sum of all weights is not neccessarily equal to the number of individuals in the dataset (unless <code>stabilize=TRUE</code> was used in the original <code>adjustedsurv</code> call), these numbers may seem odd. If weights are used it is also highly likely that the results will not be integers. See <code>risk_table_digits</code>.</p></dd>
+<dd><p>Whether to use weights in the calculation of the values shown in the risk table or not. By default weights are used when they were used in the calculation of the adjusted survival curves as well. Otherwise, unadjusted risk tables are returned. Note that since the sum of all weights is not necessarily equal to the number of individuals in the dataset (unless <code>stabilize=TRUE</code> was used in the original <code>adjustedsurv</code> call), these numbers may seem odd. If weights are used it is also highly likely that the results will not be integers. See <code>risk_table_digits</code>.</p></dd>
 
   <dt>risk_table_digits</dt>
 <dd><p>A single number specifying how many digits should be used when rounding the numbers presented in the risk table. Since unadjusted calculations always result in integer values, this argument is only relevant when weights or multiple imputation were used. See <code><a href="https://rdrr.io/r/base/Round.html" class="external-link">?round</a></code>.</p></dd>
