@@ -49,12 +49,26 @@ Documentation
 
 # adjustedCurves 0.11.1
 
-* Added the `difference` and `ratio` arguments to `plot_rmst_curve()` and `plot_rmtl_curve()`
-* Added the `difference` and `ratio` functionality to the `adjusted_surv_quantile()` function
+Enhancements
+
 * Re-factored internal code to vastly increase speed of bootstrapping related computations
-* Added risk table functionality for `plot.adjustedsurv()`
+
+New features
+
+* Added risk table functionality for `plot.adjustedsurv()` (all arguments starting with `risk_table`)
+* Allow estimation of difference and ratios in `plot_rmst_curve()` function
+* Allow estimation of difference and ratios in `plot_rmtl_curve()` function
+* Allow estimation of difference and ratios in `adjusted_surv_quantile()` function
+
+Refactored
+
+* Re-factored examples to only be executed if suggested packages are installed
 * Renamed `adjsurv` and `adjcif` output objects of `adjustedsurv()` and `adjsutedcif()` respectively to `adj`
+* Put functionality of `difference` and `ratio` arguments into one `contrast` argument in `adjusted_rmst()`, `adjusted_rmtl()`, `adjusted_surv_quantile()`, `plot_rmst_curve()` and `plot_rmtl_curve()` functions
+* Temporarily removed support for `tmle` in `adjustedsurv()` and `adjustedcif()` due to `concrete` being removed from CRAN
+
+Documentation
+
 * Re-worked introduction vignette
 * Added FAQ vignette
 * Added Group Comparison vignette
-* Re-factored examples to only be executed if suggested packages are installed

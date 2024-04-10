@@ -20,7 +20,7 @@ It is important to state right away that there is no single best method to compa
 
 # Adjusted Survival Curves
 
-Throughout this vignette we will mostly be concerned with comparing two confounder-adjusted survival curves estimated using the `adjustedsurv()` function. Situations with more than two survival curves are not covered directly here, but users may use the presented methods to perform pairwise comparisons among the possible pairings. Comparisons of confounder-adjusted cause-specific CIFs can be peformed in a very similar fashion, as described later in this vignette.
+Throughout this vignette we will mostly be concerned with comparing two confounder-adjusted survival curves estimated using the `adjustedsurv()` function. Situations with more than two survival curves are not covered directly here, but users may use the presented methods to perform pairwise comparisons among the possible pairings. Comparisons of confounder-adjusted cause-specific CIFs can be performed in a very similar fashion, as described later in this vignette.
 
 ## Illustrative Example Data
 

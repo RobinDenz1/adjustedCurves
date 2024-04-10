@@ -68,7 +68,7 @@ If more than two groups are present in \code{variable}, all other comparisons ex
 
 \strong{\emph{Multiple Imputation}}
 
-If multiple imputation was used in the original function call, the survival time quantiles are read off the final pooled survival curves directly. This also works when using \code{contrast="diff"} or \code{contrast="ratio"}. When using either \code{contrast="diff"} or \code{contrast="ratio"} in conunction with \code{conf_int=TRUE} (plus bootstrapping), the standard errors of the difference or ratio are estimated for each imputed dataset separately and pooled using Rubins Rule afterwards. The pooled standard errors are then used to perform the same calculations as described above.
+If multiple imputation was used in the original function call, the survival time quantiles are read off the final pooled survival curves directly. This also works when using \code{contrast="diff"} or \code{contrast="ratio"}. When using either \code{contrast="diff"} or \code{contrast="ratio"} in conjunction with \code{conf_int=TRUE} (plus bootstrapping), the standard errors of the difference or ratio are estimated for each imputed dataset separately and pooled using Rubins Rule afterwards. The pooled standard errors are then used to perform the same calculations as described above.
 
 }
 \value{

@@ -56,6 +56,8 @@ cnames <- c("Method", "Supports Unmeasured Confounding",
             "Is Nonparametric",
             "Computation Speed", "Dependencies")
 
+tab <- subset(tab, method!='"tmle"')
+
 knitr::kable(tab, col.names=cnames)
 ```
 
@@ -75,6 +77,8 @@ tab <- data.frame(
            "glm or multinom object or propensity scores",
            "vector of SuperLearner libraries")
 )
+
+tab <- subset(tab, method!='"tmle"')
 
 knitr::kable(tab, col.names=c("Method", "Allowed Input to treatment_model argument"))
 ```
@@ -133,6 +137,8 @@ cnames <- c("Method", "Supports Unmeasured Confounding",
             "Is Nonparametric",
             "Computation Speed", "Dependencies")
 
+tab <- subset(tab, method!='"tmle"')
+
 knitr::kable(tab, col.names=cnames)
 ```
 
@@ -150,6 +156,7 @@ tab <- data.frame(
            "vector of SuperLearner libraries")
 )
 
+tab <- subset(tab, method!='"tmle"')
 knitr::kable(tab, col.names=c("Method", "Allowed Input to treatment_model argument"))
 ```
 

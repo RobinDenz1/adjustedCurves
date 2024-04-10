@@ -8,7 +8,7 @@
   "codeRepository": "https://github.com/RobinDenz1/adjustedCurves",
   "issueTracker": "https://github.com/RobinDenz1/adjustedCurves/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -231,22 +231,9 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "survival",
-      "name": "survival",
-      "version": ">= 3.0.0",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=survival"
-    },
-    {
-      "@type": "SoftwareApplication",
       "identifier": "testthat",
       "name": "testthat",
-      "version": ">= 3.0.0",
+      "version": ">= 3.2.1",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
@@ -284,7 +271,7 @@
       "@type": "SoftwareApplication",
       "identifier": "vdiffr",
       "name": "vdiffr",
-      "version": ">= 1.0.0",
+      "version": ">= 1.0.7",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
@@ -319,19 +306,6 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "concrete",
-      "name": "concrete",
-      "version": ">= 1.0.5",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=concrete"
-    },
-    {
-      "@type": "SoftwareApplication",
       "identifier": "numDeriv",
       "name": "numDeriv",
       "provider": {
@@ -341,6 +315,19 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=numDeriv"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "cowplot",
+      "name": "cowplot",
+      "version": ">= 1.1.3",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=cowplot"
     }
   ],
   "softwareRequirements": {
@@ -417,9 +404,22 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=rlang"
     },
+    "7": {
+      "@type": "SoftwareApplication",
+      "identifier": "survival",
+      "name": "survival",
+      "version": ">= 3.0.0",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=survival"
+    },
     "SystemRequirements": null
   },
-  "fileSize": "2694.877KB",
+  "fileSize": "3158.658KB",
   "citation": [
     {
       "@type": "ScholarlyArticle",

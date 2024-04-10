@@ -237,7 +237,7 @@ plot(s_iptw, risk_table=TRUE) +
 
 To still allow users to use all standard `ggplot2` options when using risk tables we added two additional arguments: `additional_layers` and `risk_table_additional_layers`. Users may pass a list of objects that can be added to a `ggplot2` object to either of these arguments. All objects in the list passed to `additional_layers` will be added to the survival curve plot before putting it together with the risk table plot. Similarly, all objects in the `risk_table_additional_layers` list will be applied to the risk table plot.
 
-The preceeding example could be fixed using the following code:
+The preceding example could be fixed using the following code:
 
 ```{r}
 more_stuff <- list(theme(legend.position="top"))

@@ -203,7 +203,7 @@ A single positive number specifying the size of the title of the risk table.
 One of \code{c("left", "middle", "right")}, specifying where the title of the risk table should be put. Defaults to \code{"left"}.
   }
   \item{risk_table_y_vjust}{
-A single positive number specifying the distance between the y-axis and the y-axis label. Is only used when \code{risk_table_stratify=FALSE}. Set to 5 by default to make the y-axis label allign with the y-axis label of the survival curve plot.
+A single positive number specifying the distance between the y-axis and the y-axis label. Is only used when \code{risk_table_stratify=FALSE}. Set to 5 by default to make the y-axis label align with the y-axis label of the survival curve plot.
   }
   \item{risk_table_theme}{
 A \code{ggplot2} theme object which will be used for the risk table. Defaults to the same theme used for the survival curve plot, but may also be different.
@@ -233,7 +233,7 @@ Either \code{TRUE} or \code{FALSE}, indicating whether the risk table should hav
 A vector of custom colors used when both \code{risk_table_stratify} and \code{risk_table_stratify_color} are set to \code{TRUE}. By default this uses the same colors as the survival curve plot, but it doesn't have to.
   }
   \item{risk_table_use_weights}{
-Whether to use weights in the calculation of the values shown in the risk table or not. By default weights are used when they were used in the calculation of the adjusted survival curves as well. Otherwise, unadjusted risk tables are returned. Note that since the sum of all weights is not neccessarily equal to the number of individuals in the dataset (unless \code{stabilize=TRUE} was used in the original \code{adjustedsurv} call), these numbers may seem odd. If weights are used it is also highly likely that the results will not be integers. See \code{risk_table_digits}.
+Whether to use weights in the calculation of the values shown in the risk table or not. By default weights are used when they were used in the calculation of the adjusted survival curves as well. Otherwise, unadjusted risk tables are returned. Note that since the sum of all weights is not necessarily equal to the number of individuals in the dataset (unless \code{stabilize=TRUE} was used in the original \code{adjustedsurv} call), these numbers may seem odd. If weights are used it is also highly likely that the results will not be integers. See \code{risk_table_digits}.
   }
   \item{risk_table_digits}{
 A single number specifying how many digits should be used when rounding the numbers presented in the risk table. Since unadjusted calculations always result in integer values, this argument is only relevant when weights or multiple imputation were used. See \code{?round}.

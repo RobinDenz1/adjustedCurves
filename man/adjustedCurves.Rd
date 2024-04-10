@@ -20,7 +20,7 @@ where \eqn{T_z} is the survival time that would have been observed if treatment 
 
 \strong{\emph{What features are included in this package?}}
 
-This package includes 16 methods to estimate confounder-adjusted survival curves (single event) and 8 methods to estimate confounder adjusted cumulative incidence functions (possibly with multiple competing events). It provides \code{plot} functions to easily produce highly customizable and publication-ready graphics. It also allows the user to easily calculate relevant statistics, such as confidence intervals, p-values, and adjusted restricted mean survival time estimates. Multiple Imputation is directly supported.
+This package includes 15 methods to estimate confounder-adjusted survival curves (single event) and 7 methods to estimate confounder adjusted cumulative incidence functions (possibly with multiple competing events). It provides \code{plot} functions to easily produce highly customizable and publication-ready graphics. It also allows the user to easily calculate relevant statistics, such as confidence intervals, p-values, and adjusted restricted mean survival time estimates. Multiple Imputation is directly supported.
 
 \strong{\emph{What does a typical workflow using this package look like?}}
 
@@ -34,7 +34,7 @@ When competing risks are present, the cause-specific confounder-adjusted surviva
 
 \strong{\emph{What features are missing from this package?}}
 
-In a former version, this package included two targeted maximum likelihood based methods for the estimation of adjusted survival curves and one for the estimation of adjusted cumulative incidence functions based on discrete-time data. These methods have been removed because the \pkg{survtmle} package has been removed from CRAN and there is currently no other available implementation of these estimators on CRAN. However, since version 0.10.2 this package contains an implementation of targeted maximum likelihood estimation for continuous time-to-event data (a wrapper function for the \pkg{concrete} package).
+In a former version, this package included two targeted maximum likelihood based methods for the estimation of adjusted survival curves and one for the estimation of adjusted cumulative incidence functions based on discrete-time data. These methods have been removed because the \pkg{survtmle} package has been removed from CRAN and there is currently no other available implementation of these estimators on CRAN. From version 0.10.2 tp 0.11.0 this package then contained an implementation of targeted maximum likelihood estimation for continuous time-to-event data (a wrapper function for the \pkg{concrete} package). This is currently unavailable due to the package being removed from CRAN, but will probably be supported again soon.
 
 This package also currently does not support time-varying treatments or covariates. It also does not support left-censoring, interval-censoring or left-truncation. These features may be added in future releases.
 

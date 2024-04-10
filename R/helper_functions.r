@@ -380,7 +380,7 @@ load_needed_packages <- function(method, kind, treatment_model,
 
     # concrete
     if (method=="tmle") {
-      requireNamespace("concrete")
+      #requireNamespace("concrete")
     }
 
     # data.table
@@ -428,7 +428,7 @@ load_needed_packages <- function(method, kind, treatment_model,
 
     # concrete
     if (method=="tmle") {
-      requireNamespace("concrete")
+      #requireNamespace("concrete")
     }
 
     # data.table
