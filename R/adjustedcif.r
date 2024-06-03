@@ -339,7 +339,8 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
     args <- list(data=data, variable=variable, ev_time=ev_time,
                  event=event, conf_int=conf_int, conf_level=conf_level,
                  times=times, cause=cause, ...)
-    method_results <- R.utils::doCall(cif_fun, args=args)
+    method_results <- R.utils::doCall(cif_fun, args=args,
+                                      .ignoreUnusedArgs=FALSE)
     plotdata <- method_results$plotdata
 
     # keep factor ordering the same
@@ -427,7 +428,7 @@ adjustedcif_boot <- function(data, variable, ev_time, event, cause, method,
                cause=cause)
   args <- c(args, pass_args)
 
-  method_results <- R.utils::doCall(cif_fun, args=args)
+  method_results <- R.utils::doCall(cif_fun, args=args, .ignoreUnusedArgs=FALSE)
   adj_boot <- method_results$plotdata
   adj_boot$boot <- i
 

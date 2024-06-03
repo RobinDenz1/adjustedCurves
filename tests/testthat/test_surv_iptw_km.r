@@ -82,6 +82,38 @@ test_that("2 treatments, no conf_int, with WeightIt", {
   expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
+test_that("2 treatments, no conf_int, with WeightIt + additional args", {
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="iptw_km",
+                      conf_int=FALSE,
+                      bootstrap=FALSE,
+                      treatment_model=group ~ x1 + x2,
+                      weight_method="ps",
+                      estimand="ATT")
+
+  adj2 <- adjustedsurv(data=sim_dat,
+                       variable="group",
+                       ev_time="time",
+                       event="event",
+                       method="iptw_km",
+                       conf_int=FALSE,
+                       bootstrap=FALSE,
+                       treatment_model=group ~ x1 + x2,
+                       weight_method="ps",
+                       estimand="ATE")
+
+  adj$call <- NULL
+  adj2$call <- NULL
+
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
+  expect_true(!all(adj$adj$surv==adj2$adj$surv))
+})
+
 test_that("2 treatments, no conf_int, with user-weights", {
   adj <- adjustedsurv(data=sim_dat,
                       variable="group",

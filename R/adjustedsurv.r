@@ -350,7 +350,8 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
     args <- list(data=data, variable=variable, ev_time=ev_time,
                  event=event, conf_int=conf_int, conf_level=conf_level,
                  times=times, ...)
-    method_results <- R.utils::doCall(surv_fun, args=args)
+    method_results <- R.utils::doCall(surv_fun, args=args,
+                                      .ignoreUnusedArgs=FALSE)
     plotdata <- method_results$plotdata
 
     # keep factor levels in same order as data
@@ -451,7 +452,8 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
                event=event, conf_int=FALSE, conf_level=0.95, times=times)
   args <- c(args, pass_args)
 
-  method_results <- R.utils::doCall(surv_fun, args=args)
+  method_results <- R.utils::doCall(surv_fun, args=args,
+                                    .ignoreUnusedArgs=FALSE)
   adj_boot <- method_results$plotdata
   adj_boot$boot <- i
 

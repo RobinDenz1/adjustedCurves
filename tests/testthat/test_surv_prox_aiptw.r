@@ -129,8 +129,8 @@ test_that("changing some custom arguments", {
                       outcome_proxy="W",
                       conf_int=FALSE,
                       method="prox_aiptw",
-                      optim_method="Nelder-Mead",
-                      optim_control=list(maxit=40),
+                      optim_method_q="Nelder-Mead",
+                      optim_control_q=list(maxit=40),
                       return_fit=FALSE)
   expect_s3_class(out, "adjustedsurv")
   expect_true(is.numeric(out$adj$surv))

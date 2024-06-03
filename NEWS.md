@@ -72,3 +72,9 @@ Documentation
 * Re-worked introduction vignette
 * Added FAQ vignette
 * Added Group Comparison vignette
+
+# adjustedCurves 0.11.2
+
+Bug Fixes
+
+* Fixed a bug that resulted in additional arguments passed by the user through the three-dot (`...`) syntax not being correctly evaluated. For example, supplying `estimand="ATT"` to `adjustedsurv()` with `method="iptw_km"` and a formula in the `treatment_model` argument would result in the `estimand` argument not being passed to `weightit()`.

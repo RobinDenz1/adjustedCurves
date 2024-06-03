@@ -229,7 +229,7 @@ el.est <- function(y, delta, treat, x, psix_moment=c("first", "second"),
 ## Using Empirical Likelihood Estimation
 #' @export
 surv_emp_lik <- function(data, variable, ev_time, event, conf_int=FALSE,
-                         times, treatment_vars, moment="first",
+                         conf_level=0.95, times, treatment_vars, moment="first",
                          standardize=FALSE, gtol=0.00001,
                          max_iter=100, newton_tol=1.0e-06) {
 

@@ -21,8 +21,7 @@ get_iptw_weights <- function(data, treatment_model, weight_method,
   # using WeightIt
   if (inherits(treatment_model, "formula")) {
     args <- list(formula=treatment_model, data=data,
-                 method=weight_method,
-                 estimand="ATE")
+                 method=weight_method)
     weights <- do.call(WeightIt::weightit, c(args, ...))$weights
   # using a logistic regression model
   } else if (inherits(treatment_model, "glm")) {
