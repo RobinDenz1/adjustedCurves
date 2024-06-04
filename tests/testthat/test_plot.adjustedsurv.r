@@ -15,6 +15,23 @@ adj <- adjustedsurv(data=sim_dat,
                     bootstrap=TRUE,
                     n_boot=2)
 
+test_that("plot with risk_table and ev_time / event passed as variables", {
+
+  var1 <- "event"
+  var2 <- "time"
+
+  adj <- adjustedsurv(data=sim_dat,
+                      variable="group",
+                      ev_time=var2,
+                      event=var1,
+                      method="km",
+                      conf_int=TRUE,
+                      bootstrap=TRUE,
+                      n_boot=2)
+  plt <- plot(adj, risk_table=TRUE)
+  expect_s3_class(plt, "ggplot")
+})
+
 test_that("plot, no arguments", {
   plt <- plot(adj)
   expect_s3_class(plt, "ggplot")
