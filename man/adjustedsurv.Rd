@@ -133,6 +133,8 @@ The method used to adjust the survival curves.
 }
 \item{event}{The supplied \code{event} string.
 }
+\item{variable}{The supplied \code{variable} string.
+}
 \item{call}{
 The original function call.
 }

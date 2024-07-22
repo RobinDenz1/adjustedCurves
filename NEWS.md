@@ -78,3 +78,4 @@ Documentation
 Bug Fixes
 
 * Fixed a bug that resulted in additional arguments passed by the user through the three-dot (`...`) syntax not being correctly evaluated. For example, supplying `estimand="ATT"` to `adjustedsurv()` with `method="iptw_km"` and a formula in the `treatment_model` argument would result in the `estimand` argument not being passed to `weightit()`.
+* Fixed issues that ocurred with `plot.adjustedsurv()` when the `adjustedsurv` object was created in a function or loop

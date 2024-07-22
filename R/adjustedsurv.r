@@ -196,6 +196,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
                     conf_level=conf_level,
                     ev_time=ev_time,
                     event=event,
+                    variable=variable,
                     call=match.call())
 
     if (bootstrap) {
@@ -373,6 +374,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
                 categorical=length(levs) > 2,
                 conf_level=conf_level,
                 ev_time=ev_time,
+                variable=variable,
                 event=event,
                 call=match.call())
 

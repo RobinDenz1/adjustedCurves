@@ -247,7 +247,7 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
 
     # set correct variable if risk table should be stratified
     if (risk_table_stratify) {
-      variable <- x$call$variable
+      variable <- x$variable
     } else {
       variable <- NULL
     }
@@ -396,15 +396,15 @@ get_censoring_ind_data <- function(x, steps, max_t, plotdata) {
   }
 
   # keep only relevant data
-  data <- data[which(data[, x$call$ev_time] <= max_t), ]
+  data <- data[which(data[, x$ev_time] <= max_t), ]
 
   # create needed data.frame
   cens_dat <- vector(mode="list", length=length(levs))
   for (i in seq_len(length(levs))) {
 
     # times with censoring
-    cens_times <- sort(unique(data[, x$call$ev_time][
-      data[, x$call$event]==0 & data[, x$call$variable]==levs[i]]))
+    cens_times <- sort(unique(data[, x$ev_time][
+      data[, x$event]==0 & data[, x$variable]==levs[i]]))
     # y axis place to put them
     adjsurv_temp <- plotdata[plotdata$group==levs[i] & !is.na(plotdata$surv), ]
 
