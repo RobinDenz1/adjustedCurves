@@ -1,180 +1,62 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/404.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/CONRTIBUTING.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/articles/comparing_groups.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/articles/faq.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/articles/introduction.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/articles/method_overview.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/articles/plot_customization.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/index.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/CSC_MI.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/FGR_MI.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/adjustedCurves.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/adjusted_curve_diff.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/adjusted_curve_test.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/adjusted_rmst.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/adjusted_rmtl.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/adjusted_surv_quantile.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/adjustedcif.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/adjustedsurv.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/as_ggsurvplot_df.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/cif_aalen_johansen.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/cif_aiptw.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/cif_aiptw_pseudo.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/cif_direct.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/cif_direct_pseudo.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/cif_iptw.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/cif_iptw_pseudo.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/cif_matching.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/models_cif_direct.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/models_surv_direct.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/plot.adjustedcif.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/plot.adjustedsurv.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/plot.curve_test.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/plot_curve_diff.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/plot_rmst_curve.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/plot_rmtl_curve.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/print.curve_test.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/sim_confounded_crisk.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/sim_confounded_surv.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/surv_aiptw.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/surv_aiptw_pseudo.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/surv_direct.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/surv_direct_pseudo.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/surv_emp_lik.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/surv_iptw_cox.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/surv_iptw_km.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/surv_iptw_pseudo.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/surv_iv_2SRIF.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/surv_km.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/surv_matching.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/surv_prox_aiptw.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/surv_prox_iptw.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/surv_strat_amato.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/surv_strat_cupples.html</loc>
-  </url>
-  <url>
-    <loc>https://robindenz1.github.io/adjustedCurves/reference/surv_strat_nieto.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://robindenz1.github.io/adjustedCurves/404.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/CONRTIBUTING.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/LICENSE.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/articles/comparing_groups.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/articles/faq.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/articles/index.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/articles/introduction.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/articles/method_overview.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/articles/plot_customization.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/authors.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/index.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/news/index.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/CSC_MI.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/FGR_MI.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/adjustedCurves.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/adjusted_curve_diff.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/adjusted_curve_test.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/adjusted_rmst.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/adjusted_rmtl.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/adjusted_surv_quantile.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/adjustedcif.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/adjustedsurv.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/as_ggsurvplot_df.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/cif_aalen_johansen.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/cif_aiptw.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/cif_aiptw_pseudo.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/cif_direct.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/cif_direct_pseudo.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/cif_iptw.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/cif_iptw_pseudo.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/cif_matching.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/index.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/models_cif_direct.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/models_surv_direct.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/plot.adjustedcif.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/plot.adjustedsurv.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/plot.curve_test.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/plot_curve_diff.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/plot_rmst_curve.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/plot_rmtl_curve.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/print.curve_test.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/sim_confounded_crisk.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/sim_confounded_surv.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/surv_aiptw.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/surv_aiptw_pseudo.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/surv_direct.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/surv_direct_pseudo.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/surv_emp_lik.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/surv_iptw_cox.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/surv_iptw_km.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/surv_iptw_pseudo.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/surv_iv_2SRIF.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/surv_km.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/surv_matching.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/surv_prox_aiptw.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/surv_prox_iptw.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/surv_strat_amato.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/surv_strat_cupples.html</loc></url>
+<url><loc>https://robindenz1.github.io/adjustedCurves/reference/surv_strat_nieto.html</loc></url>
 </urlset>
+
