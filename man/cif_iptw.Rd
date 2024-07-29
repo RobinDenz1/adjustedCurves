@@ -27,7 +27,7 @@ Further arguments passed to \code{\link[riskRegression]{ate}}.
 \details{
 
 \itemize{
-\item{\strong{Type of Adjustment:} Requires a model describing the treatment assignment mechanism. This must be either a \code{\link{glm}} or a \code{\link{multinom}} object.}
+\item{\strong{Type of Adjustment:} Requires a model describing the treatment assignment mechanism. This must be either a \code{\link{glm}} or a \code{\link[nnet]{multinom}} object.}
 \item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
 \item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
 \item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
