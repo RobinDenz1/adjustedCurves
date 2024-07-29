@@ -30,7 +30,7 @@ Further arguments passed to \code{\link[riskRegression]{ate}}.
 \details{
 
 \itemize{
-\item{\strong{Type of Adjustment:} Requires both a treatment assignment model (\code{\link{glm}}) and a outcome model (\code{\link[riskRegression]{CSC}}). Also allows, but does not rely on, an additional model describing the censoring mechanism (a \code{\link{coxph}} object).}
+\item{\strong{Type of Adjustment:} Requires both a treatment assignment model (\code{\link{glm}}) and a outcome model (\code{\link[riskRegression]{CSC}}). Also allows, but does not rely on, an additional model describing the censoring mechanism (a \code{\link[survival]{coxph}} object).}
 \item{\strong{Doubly-Robust:} Estimates are Doubly-Robust.}
 \item{\strong{Categorical groups:} Currently only two groups in \code{variable} are allowed. Must still be a factor variable.}
 \item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
@@ -64,7 +64,7 @@ The wrapper function was written by Robin Denz, the \code{ate} function (which t
 }
 
 \seealso{
-\code{\link[riskRegression]{ate}}, \code{\link[riskRegression]{CSC}}, \code{\link{coxph}}, \code{\link{glm}}
+\code{\link[riskRegression]{ate}}, \code{\link[riskRegression]{CSC}}, \code{\link[survival]{coxph}}, \code{\link{glm}}
 }
 \examples{
 library(adjustedCurves)

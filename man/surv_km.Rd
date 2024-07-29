@@ -47,7 +47,7 @@ The wrapper function was written by Robin Denz, the \code{survfit} function (whi
 }
 
 \seealso{
-\code{\link{survfit}}
+\code{\link[survival]{survfit}}
 }
 \examples{
 library(adjustedCurves)

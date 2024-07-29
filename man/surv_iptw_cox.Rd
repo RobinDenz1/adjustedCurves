@@ -33,7 +33,7 @@ Further arguments passed to \code{\link[WeightIt]{weightit}}.
 \details{
 
 \itemize{
-\item{\strong{Type of Adjustment:} Requires a model describing the treatment assignment mechanism. This must be either a \code{\link{glm}} or \code{\link{multinom}} object.}
+\item{\strong{Type of Adjustment:} Requires a model describing the treatment assignment mechanism. This must be either a \code{\link{glm}} or \code{\link[nnet]{multinom}} object.}
 \item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
 \item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
 \item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are not available.}
@@ -43,7 +43,7 @@ Further arguments passed to \code{\link[WeightIt]{weightit}}.
 \item{\strong{Dependencies:} This method relies on the \pkg{survival} package. Additionally, the \pkg{WeightIt} package is required if \code{treatment_model} is a formula object.}
 }
 
-This method works by modeling the treatment assignment mechanism. Adjusted survival curves are calculated by first estimating appropriate case-weights for each observation in \code{data}. This can be done using inverse probability of treatment weights using the propensity score (usually estimated using a logistic regression model) or by some other method (see \code{?weightit}). Those estimates are then used to fit a weighted Cox-Regression model, stratified by \code{variable}. Survival Curves based on this model are estimated using the method implemented in the \code{survfit.coxph} function. More information can be found in the literature listed under "references". The only difference to the \code{\link[=surv_iptw_km]{iptw_km}} method is a slightly different weighting approach.
+This method works by modeling the treatment assignment mechanism. Adjusted survival curves are calculated by first estimating appropriate case-weights for each observation in \code{data}. This can be done using inverse probability of treatment weights using the propensity score (usually estimated using a logistic regression model) or by some other method (see \code{?weightit}). Those estimates are then used to fit a weighted Cox-Regression model, stratified by \code{variable}. Survival Curves based on this model are estimated using the method implemented in the \code[survival]{survfit.coxph} function. More information can be found in the literature listed under "references". The only difference to the \code{\link[=surv_iptw_km]{iptw_km}} method is a slightly different weighting approach.
 
 By default this method uses a a robust sandwich-type variance estimator (\code{robust=TRUE} in the \code{coxph} function call) to calculate the standard error used in the construction of confidence intervals. This estimator has been shown to be biased by Austin (2016). Coupled with stabilized weights however (\code{stabilize=TRUE}) this gives conservative estimates of the variance and confidence intervals (Xu et al. 2010). It is still recommended to use bootstrap confidence intervals instead. This can be done by setting \code{bootstrap=TRUE} in the \code{adjustedsurv} function call.
 }
@@ -70,7 +70,7 @@ Robin Denz
 }
 
 \seealso{
-\code{\link[WeightIt]{weightit}}, \code{\link[survival]{coxph}}, \code{\link{survfit.coxph}}
+\code{\link[WeightIt]{weightit}}, \code{\link[survival]{coxph}}, \code{\link[survival]{survfit.coxph}}
 }
 \examples{
 library(adjustedCurves)

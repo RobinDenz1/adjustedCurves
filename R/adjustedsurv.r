@@ -153,7 +153,7 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
                          var_w = mean(se^2, na.rm = mi_extrapolation),
                          # Estimated between imputation variance
                          var_b = stats::var(surv, na.rm = mi_extrapolation),
-                         # Number of bootstrap replications
+                         # Number of imputed datasets
                          B = dplyr::n(),
                          # Estimated total variance
                          var_t = var_w + var_b + var_b/B,

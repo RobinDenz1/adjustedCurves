@@ -27,7 +27,7 @@ The number of degrees of freedom used for the natural-spline or B-spline functio
 \details{
 
 \itemize{
-\item{\strong{Type of Adjustment:} Requires a treatment assignment model (\code{\link{glm}} or \code{\link{multinom}}) and a character vector of variable names used to model the outcome mechanism (internally uses \code{\link[geepack]{geese}}). In contrast to the \code{\link[=cif_aiptw]{"aiptw"}} method this function does not allow for dependent censoring.}
+\item{\strong{Type of Adjustment:} Requires a treatment assignment model (\code{\link{glm}} or \code{\link[nnet]{multinom}}) and a character vector of variable names used to model the outcome mechanism (internally uses \code{\link[geepack]{geese}}). In contrast to the \code{\link[=cif_aiptw]{"aiptw"}} method this function does not allow for dependent censoring.}
 \item{\strong{Doubly-Robust:} Estimates are Doubly-Robust.}
 \item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
 \item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
