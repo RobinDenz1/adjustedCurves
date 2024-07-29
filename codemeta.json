@@ -41,14 +41,7 @@
     {
       "@type": "SoftwareApplication",
       "identifier": "MASS",
-      "name": "MASS",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=MASS"
+      "name": "MASS"
     },
     {
       "@type": "SoftwareApplication",
@@ -419,7 +412,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "3158.658KB",
+  "fileSize": "3164.253KB",
   "citation": [
     {
       "@type": "ScholarlyArticle",

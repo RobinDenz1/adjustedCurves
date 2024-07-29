@@ -27,6 +27,8 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
                          force_bounds=FALSE, mi_extrapolation=FALSE,
                          ...) {
 
+  var_w <- var_b <- B <- var_t <- surv_est <- NULL
+
   # use data.frame methods only, no tibbles etc.
   if (inherits(data, "data.frame")) {
     data <- as.data.frame(data)
