@@ -206,9 +206,18 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
 
       plotdata_boot <- boot_dats %>%
         dplyr::group_by(., time, group) %>%
-        dplyr::summarise(cif=mean(cif),
-                         se=mean(se),
-                         .groups="drop_last")
+        dplyr::summarise(cif_est=mean(cif),
+                         var_w = mean(se^2, na.rm = mi_extrapolation),
+                         # Estimated between imputation variance
+                         var_b = stats::var(cif, na.rm = mi_extrapolation),
+                         # Number of bootstrap replications
+                         B = dplyr::n(),
+                         # Estimated total variance
+                         var_t = var_w + var_b + var_b/B,
+                         se = sqrt(var_t),
+                         .groups="drop_last") %>%
+        dplyr::select(-B) %>%
+        dplyr::rename(cif = cif_est)
       plotdata_boot <- as.data.frame(plotdata_boot)
 
       # re-calculate confidence intervals using pooled se
