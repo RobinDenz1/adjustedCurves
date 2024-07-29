@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">adjustedCurves</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -108,6 +108,7 @@
 <p>Bug Fixes</p>
 <ul><li>Fixed a bug that resulted in additional arguments passed by the user through the three-dot (<code>...</code>) syntax not being correctly evaluated. For example, supplying <code>estimand="ATT"</code> to <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code> with <code>method="iptw_km"</code> and a formula in the <code>treatment_model</code> argument would result in the <code>estimand</code> argument not being passed to <code><a href="https://ngreifer.github.io/WeightIt/reference/weightit.html" class="external-link">weightit()</a></code>.</li>
 <li>Fixed issues that ocurred with <code><a href="../reference/plot.adjustedsurv.html">plot.adjustedsurv()</a></code> when the <code>adjustedsurv</code> object was created in a function or loop</li>
+<li>In previous versions the formula to pool standard errors when using multiple imputation was not implemented correctly. Fixed now, might lead to slightly different results when using multiply imputed data in the new and earlier versions. Many thanks to Dr. Jack M Wolf for finding and fixing this issue.</li>
 </ul></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

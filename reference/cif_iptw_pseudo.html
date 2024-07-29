@@ -11,7 +11,7 @@ This page explains the details of estimating inverse probability of treatment we
 
     <a class="navbar-brand me-2" href="../index.html">adjustedCurves</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,7 +80,7 @@ This page explains the details of estimating inverse probability of treatment we
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
 
-<ul><li><p><strong>Type of Adjustment:</strong> Requires a model describing the treatment assignment mechanism. This must be either a <code><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></code> or <code>multinom</code> object. Alternatively, weights can be supplied directly or estimated using <code>WeightIt</code></p></li>
+<ul><li><p><strong>Type of Adjustment:</strong> Requires a model describing the treatment assignment mechanism. This must be either a <code><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></code> or <code><a href="https://rdrr.io/pkg/nnet/man/multinom.html" class="external-link">multinom</a></code> object. Alternatively, weights can be supplied directly or estimated using <code>WeightIt</code></p></li>
 <li><p><strong>Doubly-Robust:</strong> Estimates are not Doubly-Robust.</p></li>
 <li><p><strong>Categorical groups:</strong> Any number of levels in <code>variable</code> are allowed. Must be a factor variable.</p></li>
 <li><p><strong>Approximate Variance:</strong> Calculations to approximate the variance and confidence intervals are available.</p></li>
