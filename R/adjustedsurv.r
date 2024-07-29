@@ -146,9 +146,21 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
       # use Rubins Rule
       plotdata <- dats %>%
         dplyr::group_by(., time, group) %>%
-        dplyr::summarise(surv=mean(surv, na.rm=mi_extrapolation),
-                         se=mean(se, na.rm=mi_extrapolation),
-                         .groups="drop_last")
+        dplyr::summarise(surv_est=mean(surv, na.rm=mi_extrapolation),
+                         # Estimated within imputation variance
+                         var_w = mean(se^2, na.rm = mi_extrapolation),
+                         # Estimated between imputation variance
+                         var_b = stats::var(surv, na.rm = mi_extrapolation),
+                         # Number of bootstrap replications
+                         B = dplyr::n(),
+                         # Estimated total variance
+                         var_t = var_w + var_b + var_b/B,
+                         se = sqrt(var_t),
+                         .groups="drop_last") %>%
+        # dplyr::select(-var_w, -var_b, -B, -var_t) %>%
+        dplyr::select(-B) %>%
+        dplyr::rename(surv = surv_est)
+
       plotdata <- as.data.frame(plotdata)
 
       # re-calculate confidence intervals using pooled se
