@@ -36,7 +36,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/RobinDenz1/adjustedCurves/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/RobinDenz1/adjustedCurves/blob/v0.11.2/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
@@ -104,7 +104,7 @@
 <li>Added Group Comparison vignette</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.11.2" id="adjustedcurves-0112">adjustedCurves 0.11.2<a class="anchor" aria-label="anchor" href="#adjustedcurves-0112"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.11.2" id="adjustedcurves-0112">adjustedCurves 0.11.2<a class="anchor" aria-label="anchor" href="#adjustedcurves-0112"></a></h2><p class="text-muted">CRAN release: 2024-07-29</p>
 <p>Bug Fixes</p>
 <ul><li>Fixed a bug that resulted in additional arguments passed by the user through the three-dot (<code>...</code>) syntax not being correctly evaluated. For example, supplying <code>estimand="ATT"</code> to <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code> with <code>method="iptw_km"</code> and a formula in the <code>treatment_model</code> argument would result in the <code>estimand</code> argument not being passed to <code><a href="https://ngreifer.github.io/WeightIt/reference/weightit.html" class="external-link">weightit()</a></code>.</li>
 <li>Fixed issues that ocurred with <code><a href="../reference/plot.adjustedsurv.html">plot.adjustedsurv()</a></code> when the <code>adjustedsurv</code> object was created in a function or loop</li>

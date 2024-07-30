@@ -71,7 +71,7 @@ This page explains the details of estimating inverse probability of treatment we
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
 
-<ul><li><p><strong>Type of Adjustment:</strong> Requires a model describing the treatment assignment mechanism. This must be either a <code><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></code> or a <code>multinom</code> object.</p></li>
+<ul><li><p><strong>Type of Adjustment:</strong> Requires a model describing the treatment assignment mechanism. This must be either a <code><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></code> or a <code><a href="https://rdrr.io/pkg/nnet/man/multinom.html" class="external-link">multinom</a></code> object.</p></li>
 <li><p><strong>Doubly-Robust:</strong> Estimates are not Doubly-Robust.</p></li>
 <li><p><strong>Categorical groups:</strong> Any number of levels in <code>variable</code> are allowed. Must be a factor variable.</p></li>
 <li><p><strong>Approximate Variance:</strong> Calculations to approximate the variance and confidence intervals are available.</p></li>
