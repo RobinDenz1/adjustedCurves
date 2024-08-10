@@ -80,3 +80,10 @@ Bug Fixes
 * Fixed a bug that resulted in additional arguments passed by the user through the three-dot (`...`) syntax not being correctly evaluated. For example, supplying `estimand="ATT"` to `adjustedsurv()` with `method="iptw_km"` and a formula in the `treatment_model` argument would result in the `estimand` argument not being passed to `weightit()`.
 * Fixed issues that ocurred with `plot.adjustedsurv()` when the `adjustedsurv` object was created in a function or loop
 * In previous versions the formula to pool standard errors when using multiple imputation was not implemented correctly. Fixed now, might lead to slightly different results when using multiply imputed data in the new and earlier versions. Many thanks to Dr. Jack M Wolf for finding and fixing this issue.
+
+# adjustedCurves 0.11.3
+
+Bug Fixes
+
+* The correct way to pool standard errors when using multiple imputation is now also used when using bootstrapping + multiple imputation
+* Corrected a typo that lead to the `censoring_model` argument being ignored when using `method="aiptw"` in `adjustedcif()`.

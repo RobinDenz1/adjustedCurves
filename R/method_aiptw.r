@@ -71,7 +71,7 @@ surv_aiptw <- function(data, variable, ev_time, event, conf_int,
                    event=event, conf_int=conf_int, conf_level=conf_level,
                    times=times, outcome_model=outcome_model,
                    treatment_model=treatment_model,
-                   cencoring_model=censoring_model, verbose=verbose,
+                   censoring_model=censoring_model, verbose=verbose,
                    cause=1, ...)
 
   plotdata <- out$plotdata
