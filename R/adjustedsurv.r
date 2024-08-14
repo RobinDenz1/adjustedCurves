@@ -333,7 +333,8 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
           adjustedsurv_boot(data=data, variable=variable, ev_time=ev_time,
                             event=event, method=method,
                             times=times, i=i, surv_fun=surv_fun,
-                            na.action=na.action, ...)
+                            na.action=na.action, force_bounds=force_bounds,
+                            iso_reg=iso_reg, ...)
                                      }
         parallel::stopCluster(cl)
 
@@ -347,6 +348,8 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
                                              times=times, i=i,
                                              surv_fun=surv_fun,
                                              na.action=na.action,
+                                             force_bounds=force_bounds,
+                                             iso_reg=iso_reg,
                                              ...)
         }
       }
@@ -437,7 +440,8 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
 
 ## perform one bootstrap iteration
 adjustedsurv_boot <- function(data, variable, ev_time, event, method,
-                              times, i, surv_fun, na.action, ...) {
+                              times, i, surv_fun, na.action, force_bounds,
+                              iso_reg, ...) {
 
   # draw sample
   indices <- sample(x=rownames(data), size=nrow(data), replace=TRUE)
@@ -485,6 +489,15 @@ adjustedsurv_boot <- function(data, variable, ev_time, event, method,
   method_results <- R.utils::doCall(surv_fun, args=args,
                                     .ignoreUnusedArgs=FALSE)
   adj_boot <- method_results$plotdata
+
+  if (force_bounds) {
+    adj_boot <- force_bounds_est(adj_boot)
+  }
+
+  if (iso_reg) {
+    adj_boot <- iso_reg_est(adj_boot, na_ignore=TRUE)
+  }
+
   adj_boot$boot <- i
 
   return(adj_boot)

@@ -318,7 +318,8 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
           adjustedcif_boot(data=data, variable=variable, ev_time=ev_time,
                            event=event, method=method, times=times, i=i,
                            cif_fun=cif_fun, cause=cause,
-                           na.action=na.action, ...)
+                           na.action=na.action, force_bounds=force_bounds,
+                           iso_reg=iso_reg, ...)
         }
         parallel::stopCluster(cl)
 
@@ -331,7 +332,9 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
                                             method=method,
                                             times=times, i=i, cause=cause,
                                             cif_fun=cif_fun,
-                                            na.action=na.action, ...)
+                                            na.action=na.action,
+                                            force_bounds=force_bounds,
+                                            iso_reg=iso_reg, ...)
         }
       }
 
@@ -412,7 +415,8 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
 
 ## perform one bootstrap iteration
 adjustedcif_boot <- function(data, variable, ev_time, event, cause, method,
-                             times, i, cif_fun, na.action, ...) {
+                             times, i, cif_fun, na.action, force_bounds,
+                             iso_reg, ...) {
 
   # draw sample
   indices <- sample(x=rownames(data), size=nrow(data), replace=TRUE)
@@ -452,6 +456,15 @@ adjustedcif_boot <- function(data, variable, ev_time, event, cause, method,
 
   method_results <- R.utils::doCall(cif_fun, args=args, .ignoreUnusedArgs=FALSE)
   adj_boot <- method_results$plotdata
+
+  if (force_bounds) {
+    adj_boot <- force_bounds_est(adj_boot)
+  }
+
+  if (iso_reg) {
+    adj_boot <- iso_reg_est(adj_boot, na_ignore=TRUE)
+  }
+
   adj_boot$boot <- i
 
   return(adj_boot)

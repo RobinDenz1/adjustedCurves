@@ -251,3 +251,83 @@ test_that("adjustedcif, NA in relevant data when using weights", {
                       " 'treatment_model' argument if there are missing",
                       " values in relevant columns of 'data'."))
 })
+
+test_that("adjustedsurv, using force_bounds and iso_reg with bootstrapping", {
+  set.seed(435)
+  adj_without <- adjustedsurv(data=sim_dat,
+                              variable="group",
+                              ev_time="time",
+                              event="event",
+                              method="iptw_pseudo",
+                              treatment_model=group ~ x1 + x2,
+                              bootstrap=TRUE,
+                              n_boot=10,
+                              force_bounds=FALSE,
+                              iso_reg=FALSE,
+                              conf_int=FALSE,
+                              na.action="na.omit")
+  min_without <- min(adj_without$boot_data$surv, na.rm=TRUE)
+  max_without <- max(adj_without$boot_data$surv, na.rm=TRUE)
+
+  set.seed(435)
+  adj_with <- adjustedsurv(data=sim_dat,
+                           variable="group",
+                           ev_time="time",
+                           event="event",
+                           method="iptw_pseudo",
+                           treatment_model=group ~ x1 + x2,
+                           bootstrap=TRUE,
+                           n_boot=10,
+                           force_bounds=TRUE,
+                           iso_reg=TRUE,
+                           conf_int=FALSE,
+                           na.action="na.omit")
+  min_with <- min(adj_with$boot_data$surv, na.rm=TRUE)
+  max_with <- max(adj_with$boot_data$surv, na.rm=TRUE)
+
+  expect_true(min_without < 0)
+  expect_true(max_without > 1)
+  expect_true(min_with==0)
+  expect_true(max_with==1)
+})
+
+test_that("adjustedcif, using force_bounds and iso_reg with bootstrapping", {
+  set.seed(435)
+  adj_without <- suppressWarnings(adjustedcif(data=sim_dat,
+                              variable="group",
+                              ev_time="time",
+                              event="event",
+                              method="iptw_pseudo",
+                              treatment_model=group ~ x1 + x2,
+                              bootstrap=TRUE,
+                              n_boot=10,
+                              force_bounds=FALSE,
+                              iso_reg=FALSE,
+                              conf_int=FALSE,
+                              na.action="na.omit",
+                             cause=1))
+  min_without <- min(adj_without$boot_data$cif, na.rm=TRUE)
+  max_without <- max(adj_without$boot_data$cif, na.rm=TRUE)
+
+  set.seed(435)
+  adj_with <- suppressWarnings(adjustedcif(data=sim_dat,
+                           variable="group",
+                           ev_time="time",
+                           event="event",
+                           method="iptw_pseudo",
+                           treatment_model=group ~ x1 + x2,
+                           bootstrap=TRUE,
+                           n_boot=10,
+                           force_bounds=TRUE,
+                           iso_reg=TRUE,
+                           conf_int=FALSE,
+                           na.action="na.omit",
+                           cause=1))
+  min_with <- min(adj_with$boot_data$cif, na.rm=TRUE)
+  max_with <- max(adj_with$boot_data$cif, na.rm=TRUE)
+
+  expect_true(min_without < 0)
+  expect_true(max_without > 1)
+  expect_true(min_with==0)
+  expect_true(max_with==1)
+})

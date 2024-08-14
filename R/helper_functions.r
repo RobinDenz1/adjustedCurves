@@ -499,13 +499,17 @@ add_rows_with_zero <- function(plotdata, mode="surv") {
 }
 
 ## perform isotonic regression on survival / CIF estimates
-iso_reg_est <- function(plotdata) {
+iso_reg_est <- function(plotdata, na_ignore=FALSE) {
 
   mode <- ifelse("surv" %in% colnames(plotdata), "surv", "cif")
 
-  if (anyNA(plotdata[, mode])) {
+  any_mis <- anyNA(plotdata[, mode])
+  if (any_mis & !na_ignore) {
     stop("Isotonic Regression cannot be used when there are missing",
          " values in the final estimates.")
+  } else if (any_mis & na_ignore) {
+    plotdata_na <- plotdata[is.na(plotdata[, mode]), ]
+    plotdata <- plotdata[!is.na(plotdata[, mode]), ]
   }
 
   for (lev in levels(plotdata$group)) {
@@ -525,6 +529,11 @@ iso_reg_est <- function(plotdata) {
       plotdata$ci_lower[plotdata$group==lev] <- temp$ci_lower - diff
       plotdata$ci_upper[plotdata$group==lev] <- temp$ci_upper - diff
     }
+  }
+
+  if (any_mis & na_ignore) {
+    plotdata <- rbind(plotdata, plotdata_na)
+    plotdata <- plotdata[order(plotdata$group, plotdata$time), ]
   }
 
   return(plotdata)
