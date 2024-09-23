@@ -84,22 +84,12 @@ surv_g_comp <- function(outcome_model, data, variable, times,
                               newdata=data_temp,
                               times=times,
                               ...)
-      # use function from pec package for fast & easy survival prediction
-      # NOTE: while aalen & cox.aalen are not working in predictRisk, keep them
-      #       here
+    # use function from pec package for fast & easy survival prediction
     } else if (inherits(outcome_model, c("pecCforest", "pecRpart",
-                                         "selectCox", "aalen", "cox.aalen"))) {
+                                         "selectCox"))) {
       requireNamespace("pec")
 
-      # get model.matrix if needed
-      if (inherits(outcome_model, c("aalen"))) {
-        mod_vars <- all.vars(outcome_model$call$formula)
-        mod_form <- paste0(" ~ ", paste0(mod_vars, collapse=" + "))
-        mod_data <- as.data.frame(stats::model.matrix(
-          stats::as.formula(mod_form), data=data_temp))
-      } else {
-        mod_data <- data_temp
-      }
+      mod_data <- data_temp
 
       # predict survival
       surv_lev <- pec::predictSurvProb(outcome_model,
@@ -115,7 +105,8 @@ surv_g_comp <- function(outcome_model, data, variable, times,
                                          "ranger", "rfsrc", "riskRegression",
                                          "ARR", "penfitS3", "gbm",
                                          "flexsurvreg", "singleEventCB",
-                                         "wglm", "hal9001"))) {
+                                         "wglm", "hal9001", "aalen",
+                                         "cox.aalen"))) {
       requireNamespace("riskRegression")
 
       surv_lev <- quiet(riskRegression::predictRisk(object=outcome_model,
