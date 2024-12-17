@@ -1,9 +1,15 @@
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 <!-- badges: start -->
-[![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+
+[![Project Status: Active - The project has reached a stable, usable
+state and is being actively
+developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![](https://www.r-pkg.org/badges/version/adjustedCurves?color=green)](https://cran.r-project.org/package=adjustedCurves)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/adjustedCurves?color=blue)](https://cran.r-project.org/package=adjustedCurves)
 [![R-CMD-check](https://github.com/RobinDenz1/adjustedCurves/workflows/R-CMD-check/badge.svg)](https://github.com/RobinDenz1/adjustedCurves/actions)
-[![Codecov test coverage](https://codecov.io/gh/RobinDenz1/adjustedCurves/branch/main/graph/badge.svg)](https://app.codecov.io/gh/RobinDenz1/adjustedCurves?branch=main)
+[![Codecov test
+coverage](https://codecov.io/gh/RobinDenz1/adjustedCurves/branch/main/graph/badge.svg)](https://app.codecov.io/gh/RobinDenz1/adjustedCurves?branch=main)
 <!-- badges: end -->
 
 # adjustedCurves <img src="man/figures/logo.png" height="240" align="right" />
@@ -12,38 +18,49 @@ Author: Robin Denz
 
 ## Description
 
-`adjustedCurves` is an R-Package which can be used to estimate and plot confounder-adjusted survival curves + confidence intervals as well as cause-specific confounder-adjusted cumulative incidence functions + confidence intervals using a variety of methods.
-It provides a convenient wrapper around existing R-Packages on the topic and adds additional methods and functionality on top of it.
-Those additional features include the calculation of adjusted restricted mean survival times and testing whether two confounder-adjusted survival curves are different in a given interval.
+`adjustedCurves` is an R-Package which can be used to estimate and plot
+confounder-adjusted survival curves + confidence intervals as well as
+cause-specific confounder-adjusted cumulative incidence functions +
+confidence intervals using a variety of methods. It provides a
+convenient wrapper around existing R-Packages on the topic and adds
+additional methods and functionality on top of it. Those additional
+features include the calculation of adjusted restricted mean survival
+times and testing whether two confounder-adjusted survival curves are
+different in a given interval.
 
-Detailed descriptions of each method can be found in the literature cited in the documentation. 
+Detailed descriptions of each method can be found in the literature
+cited in the documentation.
 
 ## Installation
 
 A stable version can be installed directly from CRAN using:
 
-```R
+``` r
 install.packages("adjustedCurves")
 ```
 
-The developmental version can be installed using the `devtools` R-Package:
+The developmental version can be installed using the `devtools`
+R-Package:
 
-```R
+``` r
 library(devtools)
 
-devtools::install_github("https://github.com/RobinDenz1/adjustedCurves")
+install_github("https://github.com/RobinDenz1/adjustedCurves")
 ```
 
 ## Bug Reports and Feature Requests
 
-If you encounter any bugs or have any specific feature requests, please file an [Issue](https://github.com/RobinDenz1/adjustedCurves/issues).
+If you encounter any bugs or have any specific feature requests, please
+file an [Issue](https://github.com/RobinDenz1/adjustedCurves/issues).
 
 ## Examples
 
-This minimal example shows how to estimate and plot adjusted survival curves using *Direct Adjustment* with this package:
+This minimal example shows how to estimate and plot adjusted survival
+curves using *Direct Adjustment* with this package:
 
-```R
+``` r
 library(adjustedCurves)
+library(ggplot2)
 library(survival)
 
 # simulate some data as example
@@ -67,10 +84,13 @@ adjsurv <- adjustedsurv(data=sim_dat,
 # plot with confidence intervals
 plot(adjsurv, conf_int=TRUE)
 ```
-<img src="man/figures/example_direct.png" />
 
-Here is an example of how to estimate and plot adjusted survival curves using *Inverse Probability of Treatment Weighting*:
-```R
+<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+
+Here is an example of how to estimate and plot adjusted survival curves
+using *Inverse Probability of Treatment Weighting*:
+
+``` r
 # estimate a treatment assignment model
 glm_mod <- glm(group ~ x2 + x3 + x5 + x6, data=sim_dat,
                family="binomial"(link="logit"))
@@ -87,17 +107,23 @@ adjsurv <- adjustedsurv(data=sim_dat,
 # plot with confidence intervals
 plot(adjsurv, conf_int=TRUE)
 ```
-<img src="man/figures/example_iptw_km.png" />
 
-It is also possible to plot the difference between two curves using the `plot_curve_diff()` function:
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
 
-```R
+It is also possible to plot the difference between two curves using the
+`plot_curve_diff()` function:
+
+``` r
 plot_curve_diff(adjsurv, conf_int=TRUE, color="blue")
 ```
-<img src="man/figures/example_diffplot.png" />
 
-To test whether the two adjusted survival curves are different in a specified interval (here 0 to 0.75), the `adjustedsurv` call has to be made with `bootstrap=TRUE`:
-```R
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
+
+To test whether the two adjusted survival curves are different in a
+specified interval (here 0 to 0.75), the `adjustedsurv` call has to be
+made with `bootstrap=TRUE`:
+
+``` r
 adjsurv <- adjustedsurv(data=sim_dat,
                         variable="group",
                         ev_time="time",
@@ -110,6 +136,15 @@ adjsurv <- adjustedsurv(data=sim_dat,
 
 adj_test <- adjusted_curve_test(adjsurv, from=0, to=0.75)
 summary(adj_test)
+#> ------------------------------------------------------------------
+#>    Test of the Difference between two adjusted Survival Curves
+#> ------------------------------------------------------------------
+#> 
+#> Using the interval: 0 to 0.75 
+#> 
+#>             ABC ABC SE 95% CI (lower) 95% CI (upper) P-Value N Boot
+#> 0 vs. 1 -0.0129 0.0268         -0.066         0.0401   0.616   1000
+#> ------------------------------------------------------------------
 ```
 
 More examples can be found in the documentation and the vignettes.
@@ -118,14 +153,18 @@ More examples can be found in the documentation and the vignettes.
 
 The main paper associated with this R-Package is:
 
-Robin Denz, Renate Klaaßen-Mielke, and Nina Timmesfeld (2023). *A comparison of different methods to adjust survival curves for confounders*. Statistics in Medicine. 42.10, pp. 1461-1479. <doi:10.1002/sim.9681>
+Robin Denz, Renate Klaaßen-Mielke, and Nina Timmesfeld (2023). *A
+comparison of different methods to adjust survival curves for
+confounders*. Statistics in Medicine. 42.10, pp. 1461-1479.
+<doi:10.1002/sim.9681>
 
-In addition, the relevant primary literature of the respective method should be cited. This can be found in the documentation of the method.
+In addition, the relevant primary literature of the respective method
+should be cited. This can be found in the documentation of the method.
 
 ## License
 
-© 2021 Robin Denz
+© 2024 Robin Denz
 
-The contents of this repository are distributed under the GNU General Public License. You can find the full text of this License in this github repository. Alternatively, see <http://www.gnu.org/licenses/>.
-
-
+The contents of this repository are distributed under the GNU General
+Public License. You can find the full text of this License in this
+github repository. Alternatively, see <http://www.gnu.org/licenses/>.

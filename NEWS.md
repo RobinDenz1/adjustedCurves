@@ -83,6 +83,10 @@ Bug Fixes
 
 # adjustedCurves 0.11.3
 
+Refactor:
+
+* Now uses README.Rmd instead of the regular README.md
+
 Bug Fixes
 
 * The correct way to pool standard errors when using multiple imputation is now also used when using bootstrapping + multiple imputation
