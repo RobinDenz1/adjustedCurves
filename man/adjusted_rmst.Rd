@@ -10,7 +10,6 @@ This function can be utilized to estimate the confounder-adjusted restricted mea
 \usage{
 adjusted_rmst(adjsurv, to, from=0, conf_int=FALSE,
               conf_level=0.95, interpolation="steps",
-              difference=FALSE, ratio=FALSE,
               contrast="none", group_1=NULL,
               group_2=NULL)
 }
@@ -32,12 +31,6 @@ A number specifying the confidence level of the bootstrap confidence intervals.
   }
   \item{interpolation}{
 Either \code{"steps"} (default) or \code{"linear"}. This parameter controls how interpolation is performed. If this argument is set to \code{"steps"}, the curves will be treated as step functions. If it is set to \code{"linear"}, the curves wil be treated as if there are straight lines between the point estimates instead. Points that lie between estimated points will be interpolated accordingly. Should usually be kept at \code{"steps"}. See Details.
-  }
-  \item{difference}{
-DEPRECATED. Use \code{contrast="diff"} instead.
-  }
-  \item{ratio}{
-DEPRECATED. Use \code{contrast="ratio"} instead.
   }
   \item{contrast}{
 A single character string, specifying which contrast should be estimated. Needs to be one of \code{"none"} (estimate no contrasts, just return the adjusted RMST, the default), \code{"diff"} (estimate the difference) or \code{"ratio"} (estimate the ratio). When \code{conf_int=TRUE} is also specified and bootstrapping was performed in the original \code{adjustedsurv} call, this function will also estimate the corresponding standard error, the confidence interval and a p-value testing whether the difference is equal to 0 (or the ratio is equal to 1). To specify which difference/ratio should be calculated, the \code{group_1} and \code{group_2} arguments can be used. By default, the difference/ratio between the first and second level in \code{variable} is computed.

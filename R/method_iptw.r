@@ -18,7 +18,8 @@
 surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
                          conf_level=0.95, times=NULL, treatment_model,
                          weight_method="ps", stabilize=FALSE,
-                         trim=FALSE, trim_quantiles=FALSE, ...) {
+                         trim=FALSE, trim_quantiles=FALSE,
+                         extend_to_last=TRUE, ...) {
 
   levs <- levels(data[, variable])
 
@@ -45,6 +46,11 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
 
     # calculate weighted risk set and events
     tj <- c(0, sort(unique(dat_group[, ev_time][dat_group[, event]==1])))
+
+    if (extend_to_last) {
+      tj <- c(tj, max(dat_group[, ev_time], na.rm=TRUE))
+    }
+
     dj <- vapply(tj, function(x){sum(weights_group[dat_group[, ev_time]==x &
                                                      dat_group[, event]==1])},
                  FUN.VALUE=numeric(1))

@@ -83,9 +83,14 @@ Bug Fixes
 
 # adjustedCurves 0.11.3
 
+New features
+
+* Added the `extend_to_last` argument to `method="iptw_km"` in `adjustedsurv()`, which allows users to draw the IPTW survival curves up to the last observed point in time per group whether that time was censored or not. Unpublished simulation studies have shown that estimates beyond the last event time are very unstable, which is why in previous versions of this package (<= 0.11.2), this argument did not exist, but was essentially set to \code{FALSE}. To get the same results as with old versions, set this argument to \code{FALSE}.
+
 Refactor:
 
 * Now uses README.Rmd instead of the regular README.md
+* Removed the already deprecated `difference` and `ratio` argument from `adjusted_rmst()` and `adjusted_rmtl()`
 
 Bug Fixes
 

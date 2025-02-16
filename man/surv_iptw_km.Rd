@@ -26,6 +26,9 @@ Can be either \code{FALSE} (default) or a numeric value at which to trim the wei
   \item{trim_quantiles}{
 Alternative argument to trim weights based on quantiles. Can be either \code{FALSE} (default) to use no trimming, or a numeric vector containing exactly two values between 0 and 1. These values specify the quantiles that the weights should be trimmed at. For example, if \code{c(0.01, 0.99)} is supplied to this argument, all weights that are lower than the 0.01 quantile of the weight distribution will be set to that quantile and all weights that are higher than the 0.99 quantile of the weight distributions will be set to the 0.99 quantile.
   }
+  \item{extend_to_last}{
+Either \code{TRUE} (default) or \code{FALSE}, indicating whether the survival curves should be extended up to the last censored observation time (\code{TRUE}) or only to the last event time (\code{FALSE}).
+  }
   \item{...}{
 Further arguments passed to \code{\link[WeightIt]{weightit}}.
   }
