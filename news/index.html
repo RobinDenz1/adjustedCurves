@@ -112,8 +112,12 @@
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.11.3" id="adjustedcurves-0113">adjustedCurves 0.11.3<a class="anchor" aria-label="anchor" href="#adjustedcurves-0113"></a></h2>
-<p>Refactor:</p>
+<p>New features</p>
+<ul><li>Added the <code>extend_to_last</code> argument to <code>method="iptw_km"</code> in <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code>, which allows users to draw the IPTW survival curves up to the last observed point in time per group whether that time was censored or not. Unpublished simulation studies have shown that estimates beyond the last event time are very unstable, which is why in previous versions of this package (&lt;= 0.11.2), this argument did not exist, but was essentially set to . To get the same results as with old versions, set this argument to .</li>
+</ul><p>Refactor:</p>
 <ul><li>Now uses README.Rmd instead of the regular README.md</li>
+<li>Removed the already deprecated <code>difference</code> and <code>ratio</code> argument from <code><a href="../reference/adjusted_rmst.html">adjusted_rmst()</a></code> and <code><a href="../reference/adjusted_rmtl.html">adjusted_rmtl()</a></code>
+</li>
 </ul><p>Bug Fixes</p>
 <ul><li>The correct way to pool standard errors when using multiple imputation is now also used when using bootstrapping + multiple imputation</li>
 <li>Corrected a typo that lead to the <code>censoring_model</code> argument being ignored when using <code>method="aiptw"</code> in <code><a href="../reference/adjustedcif.html">adjustedcif()</a></code>.</li>

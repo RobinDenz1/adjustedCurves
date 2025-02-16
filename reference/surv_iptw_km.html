@@ -69,6 +69,9 @@ This page explains the details of estimating inverse probability of treatment we
   <dt id="arg-trim-quantiles">trim_quantiles<a class="anchor" aria-label="anchor" href="#arg-trim-quantiles"></a></dt>
 <dd><p>Alternative argument to trim weights based on quantiles. Can be either <code>FALSE</code> (default) to use no trimming, or a numeric vector containing exactly two values between 0 and 1. These values specify the quantiles that the weights should be trimmed at. For example, if <code>c(0.01, 0.99)</code> is supplied to this argument, all weights that are lower than the 0.01 quantile of the weight distribution will be set to that quantile and all weights that are higher than the 0.99 quantile of the weight distributions will be set to the 0.99 quantile.</p></dd>
 
+  <dt id="arg-extend-to-last">extend_to_last<a class="anchor" aria-label="anchor" href="#arg-extend-to-last"></a></dt>
+<dd><p>Either <code>TRUE</code> (default) or <code>FALSE</code>, indicating whether the survival curves should be extended up to the last censored observation time (<code>TRUE</code>) or only to the last event time (<code>FALSE</code>).</p></dd>
+
   <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Further arguments passed to <code><a href="https://ngreifer.github.io/WeightIt/reference/weightit.html" class="external-link">weightit</a></code>.</p></dd>
 
