@@ -15,12 +15,12 @@ get_risk_table.all <- function(times, data, ev_time, event=NULL,
                   FUN.VALUE=numeric(1))
   # cumulative number of right-censored observations
   } else if (type=="n_cens") {
-    est <- vapply(times, FUN=function(x){sum(weights[data[, ev_time] < x &
+    est <- vapply(times, FUN=function(x){sum(weights[data[, ev_time] <= x &
                                              data[, event]==0])},
                        FUN.VALUE=numeric(1))
   # cumulative number of events
   } else if (type=="n_events") {
-    est <- vapply(times, FUN=function(x){sum(weights[data[, ev_time] < x &
+    est <- vapply(times, FUN=function(x){sum(weights[data[, ev_time] <= x &
                                                      data[, event]==1])},
                   FUN.VALUE=numeric(1))
   }

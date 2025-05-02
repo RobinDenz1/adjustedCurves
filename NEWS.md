@@ -85,7 +85,7 @@ Bug Fixes
 
 New features
 
-* Added the `extend_to_last` argument to `method="iptw_km"` in `adjustedsurv()`, which allows users to draw the IPTW survival curves up to the last observed point in time per group whether that time was censored or not. Unpublished simulation studies have shown that estimates beyond the last event time are very unstable, which is why in previous versions of this package (<= 0.11.2), this argument did not exist, but was essentially set to \code{FALSE}. To get the same results as with old versions, set this argument to \code{FALSE}.
+* Added the `extend_to_last` argument to `method="iptw_km"` in `adjustedsurv()`, which allows users to draw the IPTW survival curves up to the last observed point in time per group whether that time was censored or not. Unpublished simulation studies have shown that estimates beyond the last event time are very unstable, which is why in previous versions of this package (<= 0.11.2), this argument did not exist, but was essentially set to `FALSE`. To get the same results as with old versions, set this argument to `FALSE`.
 
 Refactor:
 
@@ -96,3 +96,4 @@ Bug Fixes
 
 * The correct way to pool standard errors when using multiple imputation is now also used when using bootstrapping + multiple imputation
 * Corrected a typo that lead to the `censoring_model` argument being ignored when using `method="aiptw"` in `adjustedcif()`.
+* When using `risk_table=TRUE` with `risk_table_type="n_events"` or `risk_table_type="n_cens"`, events or censored observations at the same point in time were mistakenly excluded (a `<` was used internally instead of `<=`). This has been fixed, potentially leading to different results than earlier with discrete values of time.
