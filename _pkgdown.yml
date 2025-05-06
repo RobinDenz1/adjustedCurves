@@ -1,4 +1,73 @@
 url: https://robindenz1.github.io/adjustedCurves/
 template:
   bootstrap: 5
-
+articles:
+    - title: Articles
+      navbar: ~
+      contents:
+      - introduction
+      - method_overview
+      - plot_customization
+      - comparing_groups
+      - faq
+reference:
+    - title: Adjusted survival curves
+      desc: Estimate and plot confounder adjusted survival curves using various methods
+    - contents:
+      - adjustedsurv
+      - plot.adjustedsurv
+      - surv_direct
+      - models_surv_direct
+      - surv_direct_pseudo
+      - surv_iptw_km
+      - surv_iptw_cox
+      - surv_iptw_pseudo
+      - surv_matching
+      - surv_emp_lik
+      - surv_aiptw
+      - surv_aiptw_pseudo
+      - surv_strat_amato
+      - surv_strat_nieto
+      - surv_strat_cupples
+      - surv_iv_2SRIF
+      - surv_prox_iptw
+      - surv_prox_aiptw
+      - surv_km
+      
+    - title: Adjusted cumulative incidence functions
+      desc: Estimate and plot confounder adjusted cumulative incidence functions from competing events data using various methods
+    - contents:
+      - adjustedcif
+      - plot.adjustedcif
+      - cif_direct
+      - models_cif_direct
+      - cif_direct_pseudo
+      - cif_iptw
+      - cif_iptw_pseudo
+      - cif_matching
+      - cif_aiptw
+      - cif_aiptw_pseudo
+      - aalen_johansen
+      
+    - title: Statistics and Group Comparisons
+      desc: Various Statistics and ways to compare groups based on adjusted survival curves or CIFs
+    - contents:
+      - adjusted_curve_diff
+      - adjusted_rmst
+      - adjusted_rmtl
+      - adjusted_surv_quantile
+      - adjusted_curve_test
+      - print.curve_test
+      - plot.curve_test
+      - plot_curve_diff
+      - plot_rmst_curve
+      - plot_rmtl_curve
+      
+    - title: Misc
+    - contents:
+      - adjustedCurves-package
+      - as_ggsurvplot_df
+      - sim_confounded_surv
+      - sim_confounded_crisk
+      - CSC_MI
+      - FGR_MI

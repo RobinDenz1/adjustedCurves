@@ -1,24 +1,54 @@
-# adjustedCurves 0.9.0
 
-* This is the first release of this package
+# adjustedCurves 0.11.3 (developmental version)
 
-# adjustedCurves 0.9.1
+New features
 
-* Include CRAN in installation instructions
-* Updated code and tests to run with updated versions of the mice and ggplot2 packages
-* Updated documentation of package man page to include features not supported at the moment
+* Added the `extend_to_last` argument to `method="iptw_km"` in `adjustedsurv()`, which allows users to draw the IPTW survival curves up to the last observed point in time per group whether that time was censored or not. Unpublished simulation studies have shown that estimates beyond the last event time are very unstable, which is why in previous versions of this package (<= 0.11.2), this argument did not exist, but was essentially set to `FALSE`. To get the same results as with old versions, set this argument to `FALSE`.
 
-# adjustedCurves 0.10.0
+Refactor:
 
-* Removed support for tmle, ostmle methods
-* Changed citation information because manuscript was published
-* Changed `print` method to be equal to `summary` method
-* Fixed issues with unit-tests that require packages under "Suggests" only
+* Now uses README.Rmd instead of the regular README.md
+* Removed the already deprecated `difference` and `ratio` argument from `adjusted_rmst()` and `adjusted_rmtl()`
 
-# adjustedCurves 0.10.1
+Bug Fixes
 
-* Fixed small issues in unit tests caused by changes in the `WeightIt` package
-* Made some small documentation updates
+* The correct way to pool standard errors when using multiple imputation is now also used when using bootstrapping + multiple imputation
+* Corrected a typo that lead to the `censoring_model` argument being ignored when using `method="aiptw"` in `adjustedcif()`.
+* When using `risk_table=TRUE` with `risk_table_type="n_events"` or `risk_table_type="n_cens"`, events or censored observations at the same point in time were mistakenly excluded (a `<` was used internally instead of `<=`). This has been fixed, potentially leading to different results than earlier with discrete values of time.
+
+# adjustedCurves 0.11.2
+
+Bug Fixes
+
+* Fixed a bug that resulted in additional arguments passed by the user through the three-dot (`...`) syntax not being correctly evaluated. For example, supplying `estimand="ATT"` to `adjustedsurv()` with `method="iptw_km"` and a formula in the `treatment_model` argument would result in the `estimand` argument not being passed to `weightit()`.
+* Fixed issues that ocurred with `plot.adjustedsurv()` when the `adjustedsurv` object was created in a function or loop
+* In previous versions the formula to pool standard errors when using multiple imputation was not implemented correctly. Fixed now, might lead to slightly different results when using multiply imputed data in the new and earlier versions. Many thanks to Dr. Jack M Wolf for finding and fixing this issue.
+
+# adjustedCurves 0.11.1
+
+Enhancements
+
+* Re-factored internal code to vastly increase speed of bootstrapping related computations
+
+New features
+
+* Added risk table functionality for `plot.adjustedsurv()` (all arguments starting with `risk_table`)
+* Allow estimation of difference and ratios in `plot_rmst_curve()` function
+* Allow estimation of difference and ratios in `plot_rmtl_curve()` function
+* Allow estimation of difference and ratios in `adjusted_surv_quantile()` function
+
+Refactored
+
+* Re-factored examples to only be executed if suggested packages are installed
+* Renamed `adjsurv` and `adjcif` output objects of `adjustedsurv()` and `adjsutedcif()` respectively to `adj`
+* Put functionality of `difference` and `ratio` arguments into one `contrast` argument in `adjusted_rmst()`, `adjusted_rmtl()`, `adjusted_surv_quantile()`, `plot_rmst_curve()` and `plot_rmtl_curve()` functions
+* Temporarily removed support for `tmle` in `adjustedsurv()` and `adjustedcif()` due to `concrete` being removed from CRAN
+
+Documentation
+
+* Re-worked introduction vignette
+* Added FAQ vignette
+* Added Group Comparison vignette
 
 # adjustedCurves 0.11.0
 
@@ -47,53 +77,24 @@ Documentation
 * Added a new vignette with an overview of implemented features of each method
 * Small changes to formulations
 
-# adjustedCurves 0.11.1
+# adjustedCurves 0.10.1
 
-Enhancements
+* Fixed small issues in unit tests caused by changes in the `WeightIt` package
+* Made some small documentation updates
 
-* Re-factored internal code to vastly increase speed of bootstrapping related computations
+# adjustedCurves 0.10.0
 
-New features
+* Removed support for tmle, ostmle methods
+* Changed citation information because manuscript was published
+* Changed `print` method to be equal to `summary` method
+* Fixed issues with unit-tests that require packages under "Suggests" only
 
-* Added risk table functionality for `plot.adjustedsurv()` (all arguments starting with `risk_table`)
-* Allow estimation of difference and ratios in `plot_rmst_curve()` function
-* Allow estimation of difference and ratios in `plot_rmtl_curve()` function
-* Allow estimation of difference and ratios in `adjusted_surv_quantile()` function
+# adjustedCurves 0.9.1
 
-Refactored
+* Include CRAN in installation instructions
+* Updated code and tests to run with updated versions of the mice and ggplot2 packages
+* Updated documentation of package man page to include features not supported at the moment
 
-* Re-factored examples to only be executed if suggested packages are installed
-* Renamed `adjsurv` and `adjcif` output objects of `adjustedsurv()` and `adjsutedcif()` respectively to `adj`
-* Put functionality of `difference` and `ratio` arguments into one `contrast` argument in `adjusted_rmst()`, `adjusted_rmtl()`, `adjusted_surv_quantile()`, `plot_rmst_curve()` and `plot_rmtl_curve()` functions
-* Temporarily removed support for `tmle` in `adjustedsurv()` and `adjustedcif()` due to `concrete` being removed from CRAN
+# adjustedCurves 0.9.0
 
-Documentation
-
-* Re-worked introduction vignette
-* Added FAQ vignette
-* Added Group Comparison vignette
-
-# adjustedCurves 0.11.2
-
-Bug Fixes
-
-* Fixed a bug that resulted in additional arguments passed by the user through the three-dot (`...`) syntax not being correctly evaluated. For example, supplying `estimand="ATT"` to `adjustedsurv()` with `method="iptw_km"` and a formula in the `treatment_model` argument would result in the `estimand` argument not being passed to `weightit()`.
-* Fixed issues that ocurred with `plot.adjustedsurv()` when the `adjustedsurv` object was created in a function or loop
-* In previous versions the formula to pool standard errors when using multiple imputation was not implemented correctly. Fixed now, might lead to slightly different results when using multiply imputed data in the new and earlier versions. Many thanks to Dr. Jack M Wolf for finding and fixing this issue.
-
-# adjustedCurves 0.11.3
-
-New features
-
-* Added the `extend_to_last` argument to `method="iptw_km"` in `adjustedsurv()`, which allows users to draw the IPTW survival curves up to the last observed point in time per group whether that time was censored or not. Unpublished simulation studies have shown that estimates beyond the last event time are very unstable, which is why in previous versions of this package (<= 0.11.2), this argument did not exist, but was essentially set to `FALSE`. To get the same results as with old versions, set this argument to `FALSE`.
-
-Refactor:
-
-* Now uses README.Rmd instead of the regular README.md
-* Removed the already deprecated `difference` and `ratio` argument from `adjusted_rmst()` and `adjusted_rmtl()`
-
-Bug Fixes
-
-* The correct way to pool standard errors when using multiple imputation is now also used when using bootstrapping + multiple imputation
-* Corrected a typo that lead to the `censoring_model` argument being ignored when using `method="aiptw"` in `adjustedcif()`.
-* When using `risk_table=TRUE` with `risk_table_type="n_events"` or `risk_table_type="n_cens"`, events or censored observations at the same point in time were mistakenly excluded (a `<` was used internally instead of `<=`). This has been fixed, potentially leading to different results than earlier with discrete values of time.
+* This is the first release of this package
