@@ -47,7 +47,7 @@ reference:
       - cif_matching
       - cif_aiptw
       - cif_aiptw_pseudo
-      - aalen_johansen
+      - cif_aalen_johansen
       
     - title: Statistics and Group Comparisons
       desc: Various Statistics and ways to compare groups based on adjusted survival curves or CIFs
