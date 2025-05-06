@@ -18,11 +18,11 @@
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/comparing_groups.html">Comparing Adjusted Survival Curves or Cumulative Incidence Curves</a></li>
-    <li><a class="dropdown-item" href="../articles/faq.html">Frequently Asked Questions about the adjustedCurves Package</a></li>
-    <li><a class="dropdown-item" href="../articles/introduction.html">An Introduction to the 'adjustedCurves' Package</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/introduction.html">An Introduction to the 'adjustedCurves' Package</a></li>
     <li><a class="dropdown-item" href="../articles/method_overview.html">Overview of methods in adjustedCurves</a></li>
     <li><a class="dropdown-item" href="../articles/plot_customization.html">Customizing Adjusted Survival Curve Plots</a></li>
+    <li><a class="dropdown-item" href="../articles/comparing_groups.html">Comparing Adjusted Survival Curves or Cumulative Incidence Curves</a></li>
+    <li><a class="dropdown-item" href="../articles/faq.html">Frequently Asked Questions about the adjustedCurves Package</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -40,26 +40,44 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.9.0" id="adjustedcurves-090">adjustedCurves 0.9.0<a class="anchor" aria-label="anchor" href="#adjustedcurves-090"></a></h2><p class="text-muted">CRAN release: 2022-09-22</p>
-<ul><li>This is the first release of this package</li>
+<h2 class="pkg-version" data-toc-text="0.11.3" id="adjustedcurves-0113-developmental-version">adjustedCurves 0.11.3 (developmental version)<a class="anchor" aria-label="anchor" href="#adjustedcurves-0113-developmental-version"></a></h2>
+<p>New features</p>
+<ul><li>Added the <code>extend_to_last</code> argument to <code>method="iptw_km"</code> in <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code>, which allows users to draw the IPTW survival curves up to the last observed point in time per group whether that time was censored or not. Unpublished simulation studies have shown that estimates beyond the last event time are very unstable, which is why in previous versions of this package (&lt;= 0.11.2), this argument did not exist, but was essentially set to <code>FALSE</code>. To get the same results as with old versions, set this argument to <code>FALSE</code>.</li>
+</ul><p>Refactor:</p>
+<ul><li>Now uses README.Rmd instead of the regular README.md</li>
+<li>Removed the already deprecated <code>difference</code> and <code>ratio</code> argument from <code><a href="../reference/adjusted_rmst.html">adjusted_rmst()</a></code> and <code><a href="../reference/adjusted_rmtl.html">adjusted_rmtl()</a></code>
+</li>
+</ul><p>Bug Fixes</p>
+<ul><li>The correct way to pool standard errors when using multiple imputation is now also used when using bootstrapping + multiple imputation</li>
+<li>Corrected a typo that lead to the <code>censoring_model</code> argument being ignored when using <code>method="aiptw"</code> in <code><a href="../reference/adjustedcif.html">adjustedcif()</a></code>.</li>
+<li>When using <code>risk_table=TRUE</code> with <code>risk_table_type="n_events"</code> or <code>risk_table_type="n_cens"</code>, events or censored observations at the same point in time were mistakenly excluded (a <code>&lt;</code> was used internally instead of <code>&lt;=</code>). This has been fixed, potentially leading to different results than earlier with discrete values of time.</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.9.1" id="adjustedcurves-091">adjustedCurves 0.9.1<a class="anchor" aria-label="anchor" href="#adjustedcurves-091"></a></h2><p class="text-muted">CRAN release: 2022-11-22</p>
-<ul><li>Include CRAN in installation instructions</li>
-<li>Updated code and tests to run with updated versions of the mice and ggplot2 packages</li>
-<li>Updated documentation of package man page to include features not supported at the moment</li>
+<h2 class="pkg-version" data-toc-text="0.11.2" id="adjustedcurves-0112">adjustedCurves 0.11.2<a class="anchor" aria-label="anchor" href="#adjustedcurves-0112"></a></h2><p class="text-muted">CRAN release: 2024-07-29</p>
+<p>Bug Fixes</p>
+<ul><li>Fixed a bug that resulted in additional arguments passed by the user through the three-dot (<code>...</code>) syntax not being correctly evaluated. For example, supplying <code>estimand="ATT"</code> to <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code> with <code>method="iptw_km"</code> and a formula in the <code>treatment_model</code> argument would result in the <code>estimand</code> argument not being passed to <code><a href="https://ngreifer.github.io/WeightIt/reference/weightit.html" class="external-link">weightit()</a></code>.</li>
+<li>Fixed issues that ocurred with <code><a href="../reference/plot.adjustedsurv.html">plot.adjustedsurv()</a></code> when the <code>adjustedsurv</code> object was created in a function or loop</li>
+<li>In previous versions the formula to pool standard errors when using multiple imputation was not implemented correctly. Fixed now, might lead to slightly different results when using multiply imputed data in the new and earlier versions. Many thanks to Dr. Jack M Wolf for finding and fixing this issue.</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.10.0" id="adjustedcurves-0100">adjustedCurves 0.10.0<a class="anchor" aria-label="anchor" href="#adjustedcurves-0100"></a></h2><p class="text-muted">CRAN release: 2023-02-16</p>
-<ul><li>Removed support for tmle, ostmle methods</li>
-<li>Changed citation information because manuscript was published</li>
-<li>Changed <code>print</code> method to be equal to <code>summary</code> method</li>
-<li>Fixed issues with unit-tests that require packages under “Suggests” only</li>
-</ul></div>
-    <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.10.1" id="adjustedcurves-0101">adjustedCurves 0.10.1<a class="anchor" aria-label="anchor" href="#adjustedcurves-0101"></a></h2><p class="text-muted">CRAN release: 2023-04-20</p>
-<ul><li>Fixed small issues in unit tests caused by changes in the <code>WeightIt</code> package</li>
-<li>Made some small documentation updates</li>
+<h2 class="pkg-version" data-toc-text="0.11.1" id="adjustedcurves-0111">adjustedCurves 0.11.1<a class="anchor" aria-label="anchor" href="#adjustedcurves-0111"></a></h2><p class="text-muted">CRAN release: 2024-04-10</p>
+<p>Enhancements</p>
+<ul><li>Re-factored internal code to vastly increase speed of bootstrapping related computations</li>
+</ul><p>New features</p>
+<ul><li>Added risk table functionality for <code><a href="../reference/plot.adjustedsurv.html">plot.adjustedsurv()</a></code> (all arguments starting with <code>risk_table</code>)</li>
+<li>Allow estimation of difference and ratios in <code><a href="../reference/plot_rmst_curve.html">plot_rmst_curve()</a></code> function</li>
+<li>Allow estimation of difference and ratios in <code><a href="../reference/plot_rmtl_curve.html">plot_rmtl_curve()</a></code> function</li>
+<li>Allow estimation of difference and ratios in <code><a href="../reference/adjusted_surv_quantile.html">adjusted_surv_quantile()</a></code> function</li>
+</ul><p>Refactored</p>
+<ul><li>Re-factored examples to only be executed if suggested packages are installed</li>
+<li>Renamed <code>adjsurv</code> and <code>adjcif</code> output objects of <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code> and <code>adjsutedcif()</code> respectively to <code>adj</code>
+</li>
+<li>Put functionality of <code>difference</code> and <code>ratio</code> arguments into one <code>contrast</code> argument in <code><a href="../reference/adjusted_rmst.html">adjusted_rmst()</a></code>, <code><a href="../reference/adjusted_rmtl.html">adjusted_rmtl()</a></code>, <code><a href="../reference/adjusted_surv_quantile.html">adjusted_surv_quantile()</a></code>, <code><a href="../reference/plot_rmst_curve.html">plot_rmst_curve()</a></code> and <code><a href="../reference/plot_rmtl_curve.html">plot_rmtl_curve()</a></code> functions</li>
+<li>Temporarily removed support for <code>tmle</code> in <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code> and <code><a href="../reference/adjustedcif.html">adjustedcif()</a></code> due to <code>concrete</code> being removed from CRAN</li>
+</ul><p>Documentation</p>
+<ul><li>Re-worked introduction vignette</li>
+<li>Added FAQ vignette</li>
+<li>Added Group Comparison vignette</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.11.0" id="adjustedcurves-0110">adjustedCurves 0.11.0<a class="anchor" aria-label="anchor" href="#adjustedcurves-0110"></a></h2><p class="text-muted">CRAN release: 2024-02-13</p>
@@ -84,44 +102,26 @@
 <li>Small changes to formulations</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.11.1" id="adjustedcurves-0111">adjustedCurves 0.11.1<a class="anchor" aria-label="anchor" href="#adjustedcurves-0111"></a></h2><p class="text-muted">CRAN release: 2024-04-10</p>
-<p>Enhancements</p>
-<ul><li>Re-factored internal code to vastly increase speed of bootstrapping related computations</li>
-</ul><p>New features</p>
-<ul><li>Added risk table functionality for <code><a href="../reference/plot.adjustedsurv.html">plot.adjustedsurv()</a></code> (all arguments starting with <code>risk_table</code>)</li>
-<li>Allow estimation of difference and ratios in <code><a href="../reference/plot_rmst_curve.html">plot_rmst_curve()</a></code> function</li>
-<li>Allow estimation of difference and ratios in <code><a href="../reference/plot_rmtl_curve.html">plot_rmtl_curve()</a></code> function</li>
-<li>Allow estimation of difference and ratios in <code><a href="../reference/adjusted_surv_quantile.html">adjusted_surv_quantile()</a></code> function</li>
-</ul><p>Refactored</p>
-<ul><li>Re-factored examples to only be executed if suggested packages are installed</li>
-<li>Renamed <code>adjsurv</code> and <code>adjcif</code> output objects of <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code> and <code>adjsutedcif()</code> respectively to <code>adj</code>
-</li>
-<li>Put functionality of <code>difference</code> and <code>ratio</code> arguments into one <code>contrast</code> argument in <code><a href="../reference/adjusted_rmst.html">adjusted_rmst()</a></code>, <code><a href="../reference/adjusted_rmtl.html">adjusted_rmtl()</a></code>, <code><a href="../reference/adjusted_surv_quantile.html">adjusted_surv_quantile()</a></code>, <code><a href="../reference/plot_rmst_curve.html">plot_rmst_curve()</a></code> and <code><a href="../reference/plot_rmtl_curve.html">plot_rmtl_curve()</a></code> functions</li>
-<li>Temporarily removed support for <code>tmle</code> in <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code> and <code><a href="../reference/adjustedcif.html">adjustedcif()</a></code> due to <code>concrete</code> being removed from CRAN</li>
-</ul><p>Documentation</p>
-<ul><li>Re-worked introduction vignette</li>
-<li>Added FAQ vignette</li>
-<li>Added Group Comparison vignette</li>
+<h2 class="pkg-version" data-toc-text="0.10.1" id="adjustedcurves-0101">adjustedCurves 0.10.1<a class="anchor" aria-label="anchor" href="#adjustedcurves-0101"></a></h2><p class="text-muted">CRAN release: 2023-04-20</p>
+<ul><li>Fixed small issues in unit tests caused by changes in the <code>WeightIt</code> package</li>
+<li>Made some small documentation updates</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.11.2" id="adjustedcurves-0112">adjustedCurves 0.11.2<a class="anchor" aria-label="anchor" href="#adjustedcurves-0112"></a></h2><p class="text-muted">CRAN release: 2024-07-29</p>
-<p>Bug Fixes</p>
-<ul><li>Fixed a bug that resulted in additional arguments passed by the user through the three-dot (<code>...</code>) syntax not being correctly evaluated. For example, supplying <code>estimand="ATT"</code> to <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code> with <code>method="iptw_km"</code> and a formula in the <code>treatment_model</code> argument would result in the <code>estimand</code> argument not being passed to <code><a href="https://ngreifer.github.io/WeightIt/reference/weightit.html" class="external-link">weightit()</a></code>.</li>
-<li>Fixed issues that ocurred with <code><a href="../reference/plot.adjustedsurv.html">plot.adjustedsurv()</a></code> when the <code>adjustedsurv</code> object was created in a function or loop</li>
-<li>In previous versions the formula to pool standard errors when using multiple imputation was not implemented correctly. Fixed now, might lead to slightly different results when using multiply imputed data in the new and earlier versions. Many thanks to Dr. Jack M Wolf for finding and fixing this issue.</li>
+<h2 class="pkg-version" data-toc-text="0.10.0" id="adjustedcurves-0100">adjustedCurves 0.10.0<a class="anchor" aria-label="anchor" href="#adjustedcurves-0100"></a></h2><p class="text-muted">CRAN release: 2023-02-16</p>
+<ul><li>Removed support for tmle, ostmle methods</li>
+<li>Changed citation information because manuscript was published</li>
+<li>Changed <code>print</code> method to be equal to <code>summary</code> method</li>
+<li>Fixed issues with unit-tests that require packages under “Suggests” only</li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.11.3" id="adjustedcurves-0113">adjustedCurves 0.11.3<a class="anchor" aria-label="anchor" href="#adjustedcurves-0113"></a></h2>
-<p>New features</p>
-<ul><li>Added the <code>extend_to_last</code> argument to <code>method="iptw_km"</code> in <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code>, which allows users to draw the IPTW survival curves up to the last observed point in time per group whether that time was censored or not. Unpublished simulation studies have shown that estimates beyond the last event time are very unstable, which is why in previous versions of this package (&lt;= 0.11.2), this argument did not exist, but was essentially set to <code>FALSE</code>. To get the same results as with old versions, set this argument to <code>FALSE</code>.</li>
-</ul><p>Refactor:</p>
-<ul><li>Now uses README.Rmd instead of the regular README.md</li>
-<li>Removed the already deprecated <code>difference</code> and <code>ratio</code> argument from <code><a href="../reference/adjusted_rmst.html">adjusted_rmst()</a></code> and <code><a href="../reference/adjusted_rmtl.html">adjusted_rmtl()</a></code>
-</li>
-</ul><p>Bug Fixes</p>
-<ul><li>The correct way to pool standard errors when using multiple imputation is now also used when using bootstrapping + multiple imputation</li>
-<li>Corrected a typo that lead to the <code>censoring_model</code> argument being ignored when using <code>method="aiptw"</code> in <code><a href="../reference/adjustedcif.html">adjustedcif()</a></code>.</li>
-<li>When using <code>risk_table=TRUE</code> with <code>risk_table_type="n_events"</code> or <code>risk_table_type="n_cens"</code>, events or censored observations at the same point in time were mistakenly excluded (a <code>&lt;</code> was used internally instead of <code>&lt;=</code>). This has been fixed, potentially leading to different results than earlier with discrete values of time.</li>
+<h2 class="pkg-version" data-toc-text="0.9.1" id="adjustedcurves-091">adjustedCurves 0.9.1<a class="anchor" aria-label="anchor" href="#adjustedcurves-091"></a></h2><p class="text-muted">CRAN release: 2022-11-22</p>
+<ul><li>Include CRAN in installation instructions</li>
+<li>Updated code and tests to run with updated versions of the mice and ggplot2 packages</li>
+<li>Updated documentation of package man page to include features not supported at the moment</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.9.0" id="adjustedcurves-090">adjustedCurves 0.9.0<a class="anchor" aria-label="anchor" href="#adjustedcurves-090"></a></h2><p class="text-muted">CRAN release: 2022-09-22</p>
+<ul><li>This is the first release of this package</li>
 </ul></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
