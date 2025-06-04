@@ -1,13 +1,13 @@
 pandoc: 3.1.11
-pkgdown: 2.1.2
+pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
+  adjustedCurves: adjustedCurves.html
   comparing_groups: comparing_groups.html
   faq: faq.html
-  introduction: introduction.html
   method_overview: method_overview.html
   plot_customization: plot_customization.html
-last_built: 2025-05-06T06:34Z
+last_built: 2025-06-04T19:58Z
 urls:
   reference: https://robindenz1.github.io/adjustedCurves/reference
   article: https://robindenz1.github.io/adjustedCurves/articles

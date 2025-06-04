@@ -20,7 +20,7 @@ This package also currently does not support time-varying treatments or covariat
 What if the variable of interest is continuous?
 All methods in this package are designed strictly for categorical variables of interest. If the variable of interest is continuous the user has to manually categorize the variable and save it as a factor first. This is, however, generally discouraged because artificial categorization may lead to bias or misleading results. To face this issue we have developed the contsurvplot R package which implements multiple plotting methods to visualize the (causal) effect of a continuous variable when analyzing survival data (Denz &amp;amp; Timmesfeld 2023).
 Where can I get more information?
-The documentation pages contain a lot of information, relevant examples and literature references. Additional examples can be found in the vignette of this package, which can be accessed using vignette(topic="introduction", package="adjustedCurves") or in the main paper associated with this package (Denz et al. 2023). We are also working on a separate article on this package that is going to be published in a peer-reviewed journal.
+The documentation pages contain a lot of information, relevant examples and literature references. Additional examples can be found in the vignette of this package, which can be accessed using vignette(topic="adjustedCurves", package="adjustedCurves") or in the main paper associated with this package (Denz et al. 2023). We are also working on a separate article on this package that is going to be published in a peer-reviewed journal.
 I want to suggest a new feature / I want to report a bug. Where can I do this?
 Bug reports, suggestions and feature requests are highly welcome. Please file an issue on the official github page or contact the author directly using the supplied e-mail address.'><meta property="og:description" content='
 
@@ -43,7 +43,7 @@ This package also currently does not support time-varying treatments or covariat
 What if the variable of interest is continuous?
 All methods in this package are designed strictly for categorical variables of interest. If the variable of interest is continuous the user has to manually categorize the variable and save it as a factor first. This is, however, generally discouraged because artificial categorization may lead to bias or misleading results. To face this issue we have developed the contsurvplot R package which implements multiple plotting methods to visualize the (causal) effect of a continuous variable when analyzing survival data (Denz &amp;amp; Timmesfeld 2023).
 Where can I get more information?
-The documentation pages contain a lot of information, relevant examples and literature references. Additional examples can be found in the vignette of this package, which can be accessed using vignette(topic="introduction", package="adjustedCurves") or in the main paper associated with this package (Denz et al. 2023). We are also working on a separate article on this package that is going to be published in a peer-reviewed journal.
+The documentation pages contain a lot of information, relevant examples and literature references. Additional examples can be found in the vignette of this package, which can be accessed using vignette(topic="adjustedCurves", package="adjustedCurves") or in the main paper associated with this package (Denz et al. 2023). We are also working on a separate article on this package that is going to be published in a peer-reviewed journal.
 I want to suggest a new feature / I want to report a bug. Where can I do this?
 Bug reports, suggestions and feature requests are highly welcome. Please file an issue on the official github page or contact the author directly using the supplied e-mail address.'><meta property="og:image" content="https://robindenz1.github.io/adjustedCurves/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -61,11 +61,11 @@ Bug reports, suggestions and feature requests are highly welcome. Please file an
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/adjustedCurves.html">Get started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/introduction.html">An Introduction to the 'adjustedCurves' Package</a></li>
-    <li><a class="dropdown-item" href="../articles/method_overview.html">Overview of methods in adjustedCurves</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/method_overview.html">Overview of methods in adjustedCurves</a></li>
     <li><a class="dropdown-item" href="../articles/plot_customization.html">Customizing Adjusted Survival Curve Plots</a></li>
     <li><a class="dropdown-item" href="../articles/comparing_groups.html">Comparing Adjusted Survival Curves or Cumulative Incidence Curves</a></li>
     <li><a class="dropdown-item" href="../articles/faq.html">Frequently Asked Questions about the adjustedCurves Package</a></li>
@@ -108,7 +108,7 @@ Bug reports, suggestions and feature requests are highly welcome. Please file an
 <p><strong><em>What if the variable of interest is continuous?</em></strong></p>
 <p>All methods in this package are designed strictly for categorical variables of interest. If the variable of interest is continuous the user has to manually categorize the variable and save it as a factor first. This is, however, generally discouraged because artificial categorization may lead to bias or misleading results. To face this issue we have developed the <code>contsurvplot</code> R package which implements multiple plotting methods to visualize the (causal) effect of a continuous variable when analyzing survival data (Denz &amp; Timmesfeld 2023).</p>
 <p><strong><em>Where can I get more information?</em></strong></p>
-<p>The documentation pages contain a lot of information, relevant examples and literature references. Additional examples can be found in the vignette of this package, which can be accessed using <code><a href="../articles/introduction.html">vignette(topic="introduction", package="adjustedCurves")</a></code> or in the main paper associated with this package (Denz et al. 2023). We are also working on a separate article on this package that is going to be published in a peer-reviewed journal.</p>
+<p>The documentation pages contain a lot of information, relevant examples and literature references. Additional examples can be found in the vignette of this package, which can be accessed using <code><a href="../articles/adjustedCurves.html">vignette(topic="adjustedCurves", package="adjustedCurves")</a></code> or in the main paper associated with this package (Denz et al. 2023). We are also working on a separate article on this package that is going to be published in a peer-reviewed journal.</p>
 <p><strong><em>I want to suggest a new feature / I want to report a bug. Where can I do this?</em></strong></p>
 <p>Bug reports, suggestions and feature requests are highly welcome. Please file an issue on the official github page or contact the author directly using the supplied e-mail address.</p>
     </div>
@@ -135,7 +135,7 @@ Bug reports, suggestions and feature requests are highly welcome. Please file an
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>
