@@ -44,7 +44,7 @@ All methods in this package are designed strictly for categorical variables of i
 
 \strong{\emph{Where can I get more information?}}
 
-The documentation pages contain a lot of information, relevant examples and literature references. Additional examples can be found in the vignette of this package, which can be accessed using \code{vignette(topic="introduction", package="adjustedCurves")} or in the main paper associated with this package (Denz et al. 2023). We are also working on a separate article on this package that is going to be published in a peer-reviewed journal.
+The documentation pages contain a lot of information, relevant examples and literature references. Additional examples can be found in the vignette of this package, which can be accessed using \code{vignette(topic="adjustedCurves", package="adjustedCurves")} or in the main paper associated with this package (Denz et al. 2023). We are also working on a separate article on this package that is going to be published in a peer-reviewed journal.
 
 \strong{\emph{I want to suggest a new feature / I want to report a bug. Where can I do this?}}
 
