@@ -78,6 +78,7 @@ sim_dat <- sim_confounded_surv(n=50, max_t=1.2)
 sim_dat$group <- as.factor(sim_dat$group)
 
 # estimate a cox-regression for the outcome
+# NOTE: some authors also recommend using strata(group), see FAQ vignette
 cox_mod <- coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6 + group,
                  data=sim_dat, x=TRUE)
 

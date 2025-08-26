@@ -54,6 +54,14 @@ This is currently not supported. More information may be found in the question a
 
 Yes, that is possible. For example, if the user wants to use `method="direct"` with a `coxph` model as outcome model, interactions can be included using the standard syntax in the `coxph` call if they are not the main variable of interest. If, on the other hand, the main thing of interest *is* the interaction (e.g. the user wants to plot survival curves / CIFs for all possible combinations of two categorical variables) a slightly different procedure is needed. Users then need to construct a new variable that directly combines the two categorical variables (for example using the `interaction()` function) and use this new variable in both the `adjustedsurv()` / `adjustedcif()` call and the `coxph` model.
 
+## Why do adjusted survival curves produced with `method="direct"` have a different shape than Kaplan-Meier curves?
+
+When using `method="direct"`, the adjusted survival probability is estimated at all points in time at which an event occurred in the pooled sample. When a Cox model is used with this method and the Cox model does not include a `strata()` term for the `variable` of interest, this means that there will be much more "jumps" in the resulting survival curves than one would see in a classic Kaplan-Meier curve. This is not a bug, it's a feature. If a `strata()` term for `variable` is included, however, the curves have jumps at exactly the same spots as a standard Kaplan-Meier curve.
+
+## Should I include a `strata()` term for the `variable` of interest when using a Cox model with `method="direct"`?
+
+Whenever a `strata()` term is included in a Cox model, it basically tells the `coxph()` function to assume that there are different baseline hazard functions per level of that `strata()` variable. This is often beneficial, because it essentially makes the model more flexible. It does, however, also introduce another parameter in the model, meaning that the resulting estimates might be slightly less precise. If you think that there are different baseline hazard functions per `variable` level, include a `strata()` call, if not, don't. Please also note that a Cox model is not always the best model for every situation. The `"direct"` method in this package allows users to use many other kinds of models, such as additive hazard models or accelerated failure time models, which might be a better fit in some situations. See `?surv_direct_models` for more details. 
+
 ## How do I cite this package?
 
 We recommend citing the relevant method-specific paper and the paper associated with this package when using it in a scientific publication. For example, when using `method="iptw_km"` in the `adjustedsurv()` function, we recommend citing both Xie et al. (2005) and the article associated with the package (Denz et al. 2023). 
