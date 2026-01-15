@@ -458,8 +458,6 @@ add_rows_with_zero <- function(plotdata, mode="surv") {
                                         "n_boot", "surv"))
       }
     }
-    rownames(row_0) <- NULL
-    plotdata <- rbind(row_0, plotdata)
 
   } else if (length(levs_no_zero)!=0 & mode=="cif") {
     row_0 <- data.frame(time=0, group=levs_no_zero, cif=0)
@@ -477,9 +475,19 @@ add_rows_with_zero <- function(plotdata, mode="surv") {
                                         "n_boot", "cif"))
       }
     }
-    rownames(row_0) <- NULL
-    plotdata <- rbind(row_0, plotdata)
+  } else {
+    return(plotdata)
   }
+
+  # multiple imputation fix
+  if ("var_w" %in% colnames(plotdata)) {
+    row_0$var_w <- 0
+    row_0$var_b <- 0
+    row_0$var_t <- 0
+  }
+
+  rownames(row_0) <- NULL
+  plotdata <- rbind(row_0, plotdata)
 
   return(plotdata)
 }

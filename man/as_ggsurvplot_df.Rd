@@ -21,6 +21,9 @@ Returns a \code{data.frame} containing the required information, extracted from 
 \author{
 Robin Denz
 }
+\details{
+If the \code{adjsurv} object was created using multiply imputed data, all values correspond to the pooled estimates, including numbers at risk and numbers of events. Further, if a weighted analysis was performed, the weights are used to derive the numbers at risk and numbers of events.
+}
 \seealso{
 \code{\link{adjustedsurv}}, \code{\link{plot.adjustedsurv}}
 }

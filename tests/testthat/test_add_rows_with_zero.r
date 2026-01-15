@@ -35,3 +35,14 @@ test_that("needs zeros, with ci, with boot", {
   expect_true(nrow(dat_ci_boot)==(nrow(new_dat)-2))
   expect_true(!0 %in% dat_ci_boot$time & 0 %in% new_dat$time)
 })
+
+test_that("no error with multiple imputation", {
+
+  dat_ci$var_w <- 0
+  dat_ci$var_b <- 0
+  dat_ci$var_t <- 0
+
+  new_dat <- add_rows_with_zero(dat_ci)
+  expect_true(nrow(dat_ci)==(nrow(new_dat)-2))
+  expect_true(!0 %in% dat_ci$time & 0 %in% new_dat$time)
+})
