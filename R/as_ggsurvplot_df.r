@@ -23,6 +23,9 @@ as_ggsurvplot_df <- function(adjsurv) {
   if (adjsurv$method=="iptw_km") {
     df$n.risk <- adjsurv$n_at_risk$n_at_risk
     df$n.event <- adjsurv$n_at_risk$n_events
+  } else if (adjsurv$method=="km") {
+    df$n.risk <- adjsurv$survfit_object$n.risk
+    df$n.event <- adjsurv$survfit_object$n.event
   }
 
   return(df)
