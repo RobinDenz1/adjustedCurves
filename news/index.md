@@ -1,5 +1,19 @@
 # Changelog
 
+## adjustedCurves 0.11.4 (developmental version)
+
+Bug Fixes
+
+- Fixed a bug that occurred when using
+  [`plot.adjustedsurv()`](https://robindenz1.github.io/adjustedCurves/reference/plot.adjustedsurv.md)
+  with the `times` argument in case a dataset with multiple imputation
+  was supplied.
+- Numbers at risk and number of events are now included in the output of
+  [`as_ggsurvplot_df()`](https://robindenz1.github.io/adjustedCurves/reference/as_ggsurvplot_df.md),
+  even when `method = "km"` was used. Additionally, with multiple
+  imputation, the correctly pooled values are now included, instead of
+  nothing.
+
 ## adjustedCurves 0.11.3
 
 CRAN release: 2025-07-13

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">adjustedCurves</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.3.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,12 @@
       <small>Source: <a href="https://github.com/RobinDenz1/adjustedCurves/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.11.4" id="adjustedcurves-0114-developmental-version">adjustedCurves 0.11.4 (developmental version)<a class="anchor" aria-label="anchor" href="#adjustedcurves-0114-developmental-version"></a></h2>
+<p>Bug Fixes</p>
+<ul><li>Fixed a bug that occurred when using <code><a href="../reference/plot.adjustedsurv.html">plot.adjustedsurv()</a></code> with the <code>times</code> argument in case a dataset with multiple imputation was supplied.</li>
+<li>Numbers at risk and number of events are now included in the output of <code><a href="../reference/as_ggsurvplot_df.html">as_ggsurvplot_df()</a></code>, even when <code>method = "km"</code> was used. Additionally, with multiple imputation, the correctly pooled values are now included, instead of nothing.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.11.3" id="adjustedcurves-0113">adjustedCurves 0.11.3<a class="anchor" aria-label="anchor" href="#adjustedcurves-0113"></a></h2><p class="text-muted">CRAN release: 2025-07-13</p>
 <p>New features</p>

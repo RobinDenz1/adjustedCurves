@@ -28,6 +28,13 @@ from the `adjustedsurv` object.
 
 Robin Denz
 
+## Details
+
+If the `adjsurv` object was created using multiply imputed data, all
+values correspond to the pooled estimates, including numbers at risk and
+numbers of events. Further, if a weighted analysis was performed, the
+weights are used to derive the numbers at risk and numbers of events.
+
 ## See also
 
 [`adjustedsurv`](https://robindenz1.github.io/adjustedCurves/reference/adjustedsurv.md),
