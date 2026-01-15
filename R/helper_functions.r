@@ -565,7 +565,13 @@ max_observed_time <- function(mids, variable, ev_time, event, levs, cause,
   }
 
   # keep only events
-  event_dat <- mids$data[mids$data[, event]==cause,]
+  # NOTE: in crude methods, the curves are defined up to the last censoring time
+  #       per group, not only to the last event!
+  if (method %in% c("km", "aalen_johansen")) {
+    event_dat <- mids$data
+  } else {
+    event_dat <- mids$data[mids$data[, event]==cause,]
+  }
 
   if (method %in% group_specific_methods) {
     # calculate maximal observed time in each group
