@@ -20,48 +20,47 @@ as_ggsurvplot_df <- function(adjsurv) {
     df$lower <- adjsurv$adj$ci_lower
   }
 
-  if (!is.null(adjsurv$mids_analyses)) {
-
-    # set correct weights if specified
-    if (!is.null(adjsurv$weights) && is.null(adjsurv$mids_analyses)) {
-      weights <- adjsurv$weights
-    } else if (!is.null(adjsurv$mids_analyses) &&
-               !is.null(adjsurv$mids_analyses[[1]]$weights)) {
-      weights <- lapply(adjsurv$mids_analyses, FUN=function(d){d$weights})
-    } else {
-      weights <- NULL
-    }
-
-    # calculate pooled risk table
-    n.risk <- get_risk_table(times=df$time,
-                             data=adjsurv$data,
-                             ev_time=adjsurv$ev_time,
-                             variable=adjsurv$variable,
-                             event=adjsurv$event,
-                             type="n_at_risk",
-                             weights=weights,
-                             digits=Inf)
-    colnames(n.risk) <- c("time", "strata", "n.risk")
-
-    n.risk$n.event <- get_risk_table(times=df$time,
-                                     data=adjsurv$data,
-                                     ev_time=adjsurv$ev_time,
-                                     variable=adjsurv$variable,
-                                     event=adjsurv$event,
-                                     type="n_events",
-                                     weights=weights,
-                                     digits=Inf)$est
-    df <- merge(df, n.risk, by=c("time", "strata"))
-
+  # set correct weights if specified
+  if (!is.null(adjsurv$weights) && is.null(adjsurv$mids_analyses)) {
+    weights <- adjsurv$weights
+  } else if (!is.null(adjsurv$mids_analyses) &&
+             !is.null(adjsurv$mids_analyses[[1]]$weights)) {
+    weights <- lapply(adjsurv$mids_analyses, FUN=function(d){d$weights})
   } else {
-    if (adjsurv$method=="iptw_km") {
-      df$n.risk <- adjsurv$n_at_risk$n_at_risk
-      df$n.event <- adjsurv$n_at_risk$n_events
-    } else if (adjsurv$method=="km") {
-      df$n.risk <- adjsurv$survfit_object$n.risk
-      df$n.event <- adjsurv$survfit_object$n.event
-    }
+    weights <- NULL
   }
+
+  # calculate pooled risk table
+  times <- sort(unique(adjsurv$adj$time))
+  n.risk <- get_risk_table(times=times,
+                           data=adjsurv$data,
+                           ev_time=adjsurv$ev_time,
+                           variable=adjsurv$variable,
+                           event=adjsurv$event,
+                           type="n_at_risk",
+                           weights=weights,
+                           digits=Inf)
+  colnames(n.risk)[colnames(n.risk)=="group"] <- "strata"
+  colnames(n.risk)[colnames(n.risk)=="est"] <- "n.risk"
+
+  n.risk$strata <- factor(n.risk$strata, levels=levels(df$strata))
+  df <- merge(df, n.risk, by=c("time", "strata"), all.x=TRUE, all.y=FALSE)
+
+  n.event <- get_risk_table(times=times,
+                            data=adjsurv$data,
+                            ev_time=adjsurv$ev_time,
+                            variable=adjsurv$variable,
+                            event=adjsurv$event,
+                            type="raw_events",
+                            weights=weights,
+                            digits=Inf)
+  colnames(n.event)[colnames(n.event)=="group"] <- "strata"
+  colnames(n.event)[colnames(n.event)=="est"] <- "n.event"
+
+  n.event$strata <- factor(n.event$strata, levels=levels(df$strata))
+  df <- merge(df, n.event, by=c("time", "strata"))
+
+  df <- df[order(df$strata, df$time), ]
 
   return(df)
 }

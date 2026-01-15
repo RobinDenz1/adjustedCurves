@@ -20,7 +20,7 @@ test_that("as_ggsurvplot_df works as expected", {
   df <- as_ggsurvplot_df(adj)
 
   expect_true(is.data.frame(df))
-  expect_equal(colnames(df), c("time", "surv", "strata", "n.risk", "n.event"))
+  expect_equal(colnames(df), c("time", "strata", "surv", "n.risk", "n.event"))
 })
 
 test_that("as_ggsurvplot_df wrong input", {

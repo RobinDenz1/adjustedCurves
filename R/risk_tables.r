@@ -23,6 +23,11 @@ get_risk_table.all <- function(times, data, ev_time, event=NULL,
     est <- vapply(times, FUN=function(x){sum(weights[data[, ev_time] <= x &
                                                      data[, event]==1])},
                   FUN.VALUE=numeric(1))
+  # number of events at t, not cumulative
+  } else if (type=="raw_events") {
+    est <- vapply(times, FUN=function(x){sum(weights[data[, ev_time] == x &
+                                                       data[, event]==1])},
+                  FUN.VALUE=numeric(1))
   }
   out <- data.frame(time=times, est=est)
 
@@ -47,7 +52,6 @@ get_risk_table.groups <- function(times, data, variable, ev_time, event=NULL,
 
     out_i <- get_risk_table.all(times=times, data=dat_temp, ev_time=ev_time,
                                 event=event, type=type, weights=weights_i)
-
     out_i$group <- levs[i]
     out[[i]] <- out_i
   }
