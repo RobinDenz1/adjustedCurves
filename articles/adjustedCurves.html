@@ -190,13 +190,18 @@ code:</p>
 using the <code>plot</code> method:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjsurv</span><span class="op">)</span></span></code></pre></div>
-<p><img src="adjustedCurves_files/figure-html/unnamed-chunk-7-1.png" width="672"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="adjustedCurves_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" alt="" width="672"></p>
 <p>This plot function comes with many options which are listed in the
 documentation. To plot the point-wise confidence intervals, we can set
 the argument <code>conf_int</code> to TRUE:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjsurv</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="adjustedCurves_files/figure-html/unnamed-chunk-8-1.png" width="672"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="adjustedCurves_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="672"></p>
 <p>Many more custom settings, such as median survival time indicator
 lines, censoring indicator lines and risk tables are available. For more
 details and examples see <code><a href="../reference/plot.adjustedsurv.html">?plot.adjustedsurv</a></code> or the
@@ -214,7 +219,7 @@ Weighting method (IPTW), we need to model the <em>treatment assignment
 mechanism</em> instead of the outcome mechanism (see Xie and Liu
 (2005)). This can be done in many ways. Below we use a logistic
 regression model for exemplary purposes:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">treatment_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">group</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x3</span> <span class="op">+</span> <span class="va">x4</span> <span class="op">+</span> <span class="va">x5</span> <span class="op">+</span> <span class="va">x6</span>,</span>
 <span>                       data<span class="op">=</span><span class="va">data_1</span>, family<span class="op">=</span><span class="st">"binomial"</span><span class="op">(</span>link<span class="op">=</span><span class="st">"logit"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -226,9 +231,11 @@ regression model for exemplary purposes:</p>
 <span>                        treatment_model<span class="op">=</span><span class="va">treatment_model</span>,</span>
 <span>                        conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>The resulting curves can be plotted as before:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjsurv</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="adjustedCurves_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="adjustedCurves_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" alt="" width="672"></p>
 <p>Since both methods were used correctly here, there are only slight
 differences in the results. Big differences between the two methods
 usually indicate that either the outcome model or the
@@ -244,7 +251,7 @@ either of the models is correctly specified, the resulting estimates
 will be unbiased. It can be used in the same way as the other methods,
 only that this time both models have to be supplied. Using the same
 models as above we can use the following syntax:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">adjsurv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/adjustedsurv.html">adjustedsurv</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">data_1</span>,</span>
 <span>                        variable<span class="op">=</span><span class="st">"group"</span>,</span>
 <span>                        ev_time<span class="op">=</span><span class="st">"time"</span>,</span>
@@ -255,7 +262,9 @@ models as above we can use the following syntax:</p>
 <span>                        conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjsurv</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="adjustedCurves_files/figure-html/unnamed-chunk-11-1.png" width="672"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="adjustedCurves_files/figure-html/unnamed-chunk-11-1.png" class="r-plt" alt="" width="672"></p>
 </div>
 </div>
 <div class="section level2">
@@ -281,7 +290,7 @@ situation. We are going to use the <code><a href="../reference/sim_confounded_cr
 function, which does the same thing as the
 <code><a href="../reference/sim_confounded_surv.html">sim_confounded_surv()</a></code> function, but with competing risks
 data:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># simulate the data</span></span>
 <span><span class="va">data_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sim_confounded_crisk.html">sim_confounded_crisk</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">300</span><span class="op">)</span></span>
 <span><span class="va">data_2</span><span class="op">$</span><span class="va">group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">data_2</span><span class="op">$</span><span class="va">group</span><span class="op">)</span></span>
@@ -303,12 +312,12 @@ model for the time-to-event process which takes the multiple event-types
 into account. One such method is the <em>Cause-Specific
 Cox-Regression</em> model. A simple implementation of this model is
 contained in the <code>riskRegression</code> R-Package.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">outcome_model</span> <span class="op">&lt;-</span> <span class="fu">riskRegression</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/riskRegression/man/CSC.html" class="external-link">CSC</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/prodlim/man/Hist.html" class="external-link">Hist</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">event</span><span class="op">)</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x3</span> <span class="op">+</span> <span class="va">x4</span> <span class="op">+</span> </span>
 <span>                                       <span class="va">x5</span> <span class="op">+</span> <span class="va">x6</span> <span class="op">+</span> <span class="va">group</span>, data<span class="op">=</span><span class="va">data_2</span><span class="op">)</span></span></code></pre></div>
 <p>This model can then be used in a call to the
 <code><a href="../reference/adjustedcif.html">adjustedcif()</a></code> function, as shown below:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">adjcif</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/adjustedcif.html">adjustedcif</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">data_2</span>,</span>
 <span>                      variable<span class="op">=</span><span class="st">"group"</span>,</span>
 <span>                      ev_time<span class="op">=</span><span class="st">"time"</span>,</span>
@@ -318,11 +327,11 @@ contained in the <code>riskRegression</code> R-Package.</p>
 <span>                      cause<span class="op">=</span><span class="fl">1</span>,</span>
 <span>                      conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="adjustedCurves_files/figure-html/unnamed-chunk-14-1.png" width="672"></p>
+<p><img src="adjustedCurves_files/figure-html/unnamed-chunk-14-1.png" class="r-plt" alt="" width="672"></p>
 <p>This shows the confounder-adjusted CIFs for <code>cause = 1</code>.
 By setting <code>cause</code> to <code>2</code> we get the
 confounder-adjusted CIFs for the other cause:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">adjcif</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/adjustedcif.html">adjustedcif</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">data_2</span>,</span>
 <span>                      variable<span class="op">=</span><span class="st">"group"</span>,</span>
 <span>                      ev_time<span class="op">=</span><span class="st">"time"</span>,</span>
@@ -332,14 +341,14 @@ confounder-adjusted CIFs for the other cause:</p>
 <span>                      cause<span class="op">=</span><span class="fl">2</span>,</span>
 <span>                      conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="adjustedCurves_files/figure-html/unnamed-chunk-15-1.png" width="672"></p>
+<p><img src="adjustedCurves_files/figure-html/unnamed-chunk-15-1.png" class="r-plt" alt="" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="inverse-probability-of-treatment-weighting-1">Inverse Probability of Treatment Weighting<a class="anchor" aria-label="anchor" href="#inverse-probability-of-treatment-weighting-1"></a>
 </h3>
 <p>The IPTW estimator can be used exactly the same way as we did with
 the <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code> function:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">treatment_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">group</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x3</span> <span class="op">+</span> <span class="va">x4</span> <span class="op">+</span> <span class="va">x5</span> <span class="op">+</span> <span class="va">x6</span>,</span>
 <span>                       data<span class="op">=</span><span class="va">data_2</span>, family<span class="op">=</span><span class="st">"binomial"</span><span class="op">(</span>link<span class="op">=</span><span class="st">"logit"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -352,7 +361,9 @@ the <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code> fun
 <span>                      cause<span class="op">=</span><span class="fl">1</span>,</span>
 <span>                      conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="adjustedCurves_files/figure-html/unnamed-chunk-16-1.png" width="672"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="adjustedCurves_files/figure-html/unnamed-chunk-16-1.png" class="r-plt" alt="" width="672"></p>
 </div>
 </div>
 <div class="section level2">
@@ -370,7 +381,7 @@ data). The function is only able to create binary treatment variables,
 but we can simply resample all occurrences of 1 into 1 and 2, creating 3
 treatments, where 1 and 2 have an identical treatment effect and
 selection process:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># add another group</span></span>
 <span><span class="co"># NOTE: this is done only to showcase the method and does not</span></span>
 <span><span class="co">#       reflect what should be done in real situations</span></span>
@@ -379,7 +390,7 @@ selection process:</p>
 <span>                                          size<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">data_1</span><span class="op">[</span><span class="va">data_1</span><span class="op">$</span><span class="va">group</span><span class="op">==</span><span class="st">"1"</span>,<span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>The Direct Adjusted survival curves can be calculated exactly as
 before:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">outcome_model</span> <span class="op">&lt;-</span> <span class="fu">survival</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/coxph.html" class="external-link">coxph</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">event</span><span class="op">)</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x3</span> <span class="op">+</span> <span class="va">x4</span> <span class="op">+</span> </span>
 <span>                                   <span class="va">x5</span> <span class="op">+</span> <span class="va">x6</span> <span class="op">+</span> <span class="va">group</span>, data<span class="op">=</span><span class="va">data_1</span>, x<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
@@ -391,11 +402,14 @@ before:</p>
 <span>                        outcome_model<span class="op">=</span><span class="va">outcome_model</span>,</span>
 <span>                        conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjsurv</span><span class="op">)</span></span></code></pre></div>
-<p><img src="adjustedCurves_files/figure-html/unnamed-chunk-18-1.png" width="672"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="adjustedCurves_files/figure-html/unnamed-chunk-18-1.png" class="r-plt" alt="" width="672"></p>
 <p>For the IPTW based estimates we first fit a multinomial logistic
 regression model using the <code>multinom</code> function from the
 <code>nnet</code> R-Package and use it with the same code as before:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">treatment_model</span> <span class="op">&lt;-</span> <span class="fu">nnet</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/nnet/man/multinom.html" class="external-link">multinom</a></span><span class="op">(</span><span class="va">group</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x3</span> <span class="op">+</span> <span class="va">x4</span> <span class="op">+</span> <span class="va">x5</span> <span class="op">+</span> <span class="va">x6</span>,</span>
 <span>                                  data<span class="op">=</span><span class="va">data_1</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## # weights:  24 (14 variable)</span></span>
@@ -404,7 +418,7 @@ regression model using the <code>multinom</code> function from the
 <span><span class="co">## iter  20 value 283.765460</span></span>
 <span><span class="co">## final  value 283.765313 </span></span>
 <span><span class="co">## converged</span></span></code></pre>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">adjsurv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/adjustedsurv.html">adjustedsurv</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">data_1</span>,</span>
 <span>                        variable<span class="op">=</span><span class="st">"group"</span>,</span>
 <span>                        ev_time<span class="op">=</span><span class="st">"time"</span>,</span>
@@ -413,7 +427,7 @@ regression model using the <code>multinom</code> function from the
 <span>                        treatment_model<span class="op">=</span><span class="va">treatment_model</span>,</span>
 <span>                        conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjsurv</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="adjustedCurves_files/figure-html/unnamed-chunk-19-1.png" width="672"></p>
+<p><img src="adjustedCurves_files/figure-html/unnamed-chunk-19-1.png" class="r-plt" alt="" width="672"></p>
 </div>
 <div class="section level2">
 <h2 id="further-topics">Further Topics<a class="anchor" aria-label="anchor" href="#further-topics"></a>
@@ -496,7 +510,7 @@ Biometrical Journal 62, pp. 751-763.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

@@ -124,7 +124,10 @@ tables easier.</p>
 following plot:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-3-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="643.2"></p>
 <p>This is already fairly decent, but it could be made much more
 informative as illustrated below.</p>
 </div>
@@ -135,26 +138,37 @@ informative as illustrated below.</p>
 used by default. By changing the <code>linetype</code> and
 <code>color</code> arguments, it is however also possible to use black
 and white plots instead:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, linetype<span class="op">=</span><span class="cn">TRUE</span>, color<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-4-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">colour</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="643.2"></p>
 <p>If colors should be used, it may be usefull to change the colors
 using the <code>custom_colors</code> argument:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, custom_colors<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"blue"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-5-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" alt="" width="643.2"></p>
 <p>When using linetypes, users can also supply custom linetypes in a
 similar fashion:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, linetype<span class="op">=</span><span class="cn">TRUE</span>, custom_linetypes<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dotdash"</span>, <span class="st">"solid"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-6-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="643.2"></p>
 <p>Titles and axis labels may also be changed using the respective
 arguments:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, xlab<span class="op">=</span><span class="st">"Time in Years"</span>, ylab<span class="op">=</span><span class="st">"S(t)"</span>,</span>
 <span>     title<span class="op">=</span><span class="st">"This is the title"</span>, subtitle<span class="op">=</span><span class="st">"This is the subtitle"</span>,</span>
 <span>     legend.title<span class="op">=</span><span class="st">"Sex"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-7-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Sex"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Sex"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" alt="" width="643.2"></p>
 </div>
 <div class="section level2">
 <h2 id="confidence-intervals">Confidence Intervals<a class="anchor" aria-label="anchor" href="#confidence-intervals"></a>
@@ -164,10 +178,12 @@ arguments:</p>
 original <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code> function call, it is of course
 possible to visualize them using the <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> method as
 well:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Loading required namespace: pammtools</span></span></code></pre>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-8-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="643.2"></p>
 <p>Note that the confidence level cannot be changed here. This can only
 be done directly in the <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code> function.</p>
 </div>
@@ -181,21 +197,39 @@ may also make sense to add some indicator lines to the plot to visually
 help the reader to read off the median survival time from the plot as
 well. This can be done using the <code>median_surv_lines</code>
 argument:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, median_surv_lines<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-9-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="643.2"></p>
 <p>The drawn lines may also be customized. Below we make the lines
 thicker, change their color and change their linetype from
 <code>"dashed"</code> to <code>"dotdash"</code>:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, median_surv_lines<span class="op">=</span><span class="cn">TRUE</span>, median_surv_linetype<span class="op">=</span><span class="st">"dotdash"</span>,</span>
 <span>     median_surv_size<span class="op">=</span><span class="fl">0.7</span>, median_surv_color<span class="op">=</span><span class="st">"grey"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-10-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" alt="" width="643.2"></p>
 <p>It is also possible to use other survival time quantiles by changing
 the <code>median_surv_quantile</code> argument:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, median_surv_lines<span class="op">=</span><span class="cn">TRUE</span>, median_surv_quantile<span class="op">=</span><span class="fl">0.4</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-11-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-11-1.png" class="r-plt" alt="" width="643.2"></p>
 </div>
 <div class="section level2">
 <h2 id="censoring-indicators">Censoring Indicators<a class="anchor" aria-label="anchor" href="#censoring-indicators"></a>
@@ -204,24 +238,45 @@ the <code>median_surv_quantile</code> argument:</p>
 is often added to the plot as well. This can be done in this package as
 well, using the <code>censoring_ind</code> argument. We could, for
 example, add small vertical lines to show the censored observations:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, censoring_ind<span class="op">=</span><span class="st">"lines"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-12-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" alt="" width="643.2"></p>
 <p>Alternatively, points of any shape could be added as well:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, censoring_ind<span class="op">=</span><span class="st">"points"</span>, censoring_ind_shape<span class="op">=</span><span class="fl">3</span>,</span>
 <span>     censoring_ind_size<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-13-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-13-1.png" class="r-plt" alt="" width="643.2"></p>
 </div>
 <div class="section level2">
 <h2 id="risk-tables">Risk Tables<a class="anchor" aria-label="anchor" href="#risk-tables"></a>
 </h2>
 <p>First, let’s call the <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> function with the default
 risk table arguments:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, risk_table<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Loading required namespace: cowplot</span></span></code></pre>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-14-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-14-1.png" class="r-plt" alt="" width="643.2"></p>
 <div class="section level3">
 <h3 id="changing-the-content-of-risk-tables">Changing the content of risk tables<a class="anchor" aria-label="anchor" href="#changing-the-content-of-risk-tables"></a>
 </h3>
@@ -230,80 +285,170 @@ number at risk is shown by default. We could use the unweighted number
 at risk by setting <code>risk_table_use_weights=FALSE</code>, but this
 wouldn’t make much sense. Instead of using the weighted number at risk,
 we can also use the weighted number of cumulative events:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, risk_table<span class="op">=</span><span class="cn">TRUE</span>, risk_table_type<span class="op">=</span><span class="st">"n_events"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-15-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-15-1.png" class="r-plt" alt="" width="643.2"></p>
 <p>or the weighted cumulative number of censored observations:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, risk_table<span class="op">=</span><span class="cn">TRUE</span>, risk_table_type<span class="op">=</span><span class="st">"n_cens"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-16-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-16-1.png" class="r-plt" alt="" width="643.2"></p>
 <p>By setting <code>risk_table_stratify=TRUE</code>, we are also able to
 stratify the risk table by the different levels in
 <code>variable</code>:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, risk_table<span class="op">=</span><span class="cn">TRUE</span>, risk_table_stratify<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-17-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-17-1.png" class="r-plt" alt="" width="643.2"></p>
 <p>Since weights are used here, there is no guarantee that the number of
 people at risk are integer values. By default the numbers are rounded to
 one digit to make this clear, but we can also set the
 <code>risk_table_digits</code> argument to 0 to round them to the
 nearest integer, which may be a little less confusing for some
 people:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, risk_table<span class="op">=</span><span class="cn">TRUE</span>, risk_table_stratify<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>     risk_table_digits<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-18-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-18-1.png" class="r-plt" alt="" width="643.2"></p>
 <p>The risk tables only show numbers at the break points of the x-axis
 shown in the survival curve plot, to make everything align nicely. To
 get more numbers at more points in time, we can simply augment the
 <code>x_breaks</code> or <code>x_n_breaks</code> arguments, like
 this:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, risk_table<span class="op">=</span><span class="cn">TRUE</span>, risk_table_stratify<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>     risk_table_digits<span class="op">=</span><span class="fl">0</span>, x_n_breaks<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-19-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-19-1.png" class="r-plt" alt="" width="643.2"></p>
 </div>
 <div class="section level3">
 <h3 id="changing-aesthetic-parameters">Changing aesthetic parameters<a class="anchor" aria-label="anchor" href="#changing-aesthetic-parameters"></a>
 </h3>
 <p>The size and look of the numbers may be changed as well:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, risk_table<span class="op">=</span><span class="cn">TRUE</span>, risk_table_stratify<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>     risk_table_digits<span class="op">=</span><span class="fl">0</span>, x_n_breaks<span class="op">=</span><span class="fl">10</span>, risk_table_size<span class="op">=</span><span class="fl">3</span>,</span>
 <span>     risk_table_family<span class="op">=</span><span class="st">"serif"</span>, risk_table_fontface<span class="op">=</span><span class="st">"italic"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-20-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-20-1.png" class="r-plt" alt="" width="643.2"></p>
 <p>Additionally, users may turn off the coloring of the numbers:</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, risk_table<span class="op">=</span><span class="cn">TRUE</span>, risk_table_stratify<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>     risk_table_digits<span class="op">=</span><span class="fl">0</span>, x_n_breaks<span class="op">=</span><span class="fl">10</span>,</span>
 <span>     risk_table_stratify_color<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-21-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-21-1.png" class="r-plt" alt="" width="643.2"></p>
 <p>Or use different colors:</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, risk_table<span class="op">=</span><span class="cn">TRUE</span>, risk_table_stratify<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>     risk_table_digits<span class="op">=</span><span class="fl">0</span>, x_n_breaks<span class="op">=</span><span class="fl">10</span>,</span>
 <span>     risk_table_custom_colors<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"brown"</span>, <span class="st">"orange"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-22-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-22-1.png" class="r-plt" alt="" width="643.2"></p>
 <p>The title and axis labels may of course also be changed or
 removed:</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, risk_table<span class="op">=</span><span class="cn">TRUE</span>, risk_table_stratify<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>     risk_table_digits<span class="op">=</span><span class="fl">0</span>, x_n_breaks<span class="op">=</span><span class="fl">10</span>,</span>
 <span>     risk_table_title<span class="op">=</span><span class="st">"Weighted Number of people at risk"</span>,</span>
 <span>     risk_table_title_size<span class="op">=</span><span class="fl">10</span>, risk_table_title_position<span class="op">=</span><span class="st">"middle"</span>,</span>
 <span>     risk_table_ylab<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-23-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-23-1.png" class="r-plt" alt="" width="643.2"></p>
 <p>Internally, separate plots are created for the survival curves and
 for the risk table and put together afterwards using the
 <code><a href="https://wilkelab.org/cowplot/reference/plot_grid.html" class="external-link">plot_grid()</a></code> function of the <code>cowplot</code> package.
 Because of this, users may also set different <code>ggplot2</code>
 themes for the plots:</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, risk_table<span class="op">=</span><span class="cn">TRUE</span>, risk_table_stratify<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>     risk_table_digits<span class="op">=</span><span class="fl">0</span>, x_n_breaks<span class="op">=</span><span class="fl">10</span>,</span>
 <span>     risk_table_theme<span class="op">=</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>     gg_theme<span class="op">=</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-24-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-24-1.png" class="r-plt" alt="" width="643.2"></p>
 </div>
 <div class="section level3">
 <h3 id="additional-customization-options">Additional customization options<a class="anchor" aria-label="anchor" href="#additional-customization-options"></a>
@@ -314,17 +459,29 @@ themes for the plots:</p>
 using risk tables, because the output now consists of two plots that
 have been put together.</p>
 <p>This means that this code works fine:</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># legend is successfully put at the top</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position<span class="op">=</span><span class="st">"top"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-25-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-25-1.png" class="r-plt" alt="" width="643.2"></p>
 <p>While the following code does not work:</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># legend remains at the right side</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, risk_table<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position<span class="op">=</span><span class="st">"top"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-26-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-26-1.png" class="r-plt" alt="" width="643.2"></p>
 <p>To still allow users to use all standard <code>ggplot2</code> options
 when using risk tables we added two additional arguments:
 <code>additional_layers</code> and
@@ -336,26 +493,53 @@ before putting it together with the risk table plot. Similarly, all
 objects in the <code>risk_table_additional_layers</code> list will be
 applied to the risk table plot.</p>
 <p>The preceding example could be fixed using the following code:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">more_stuff</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position<span class="op">=</span><span class="st">"top"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, risk_table<span class="op">=</span><span class="cn">TRUE</span>, additional_layers<span class="op">=</span><span class="va">more_stuff</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-27-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-27-1.png" class="r-plt" alt="" width="643.2"></p>
 <p>In this particular case, we could have also simply set the
 <code>legend.position</code> to top, but this of course only works for
 arguments directly supported by the <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> method. Using
 the arguments mentioned above, we can do quite a bit more, such as
 adding more geoms:</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">more_stuff</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span>yintercept<span class="op">=</span><span class="fl">0.7</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, risk_table<span class="op">=</span><span class="cn">TRUE</span>, additional_layers<span class="op">=</span><span class="va">more_stuff</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-28-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-28-1.png" class="r-plt" alt="" width="643.2"></p>
 <p>Which also works for the risk table subplot using the other
 argument:</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># remove x-axis ticks from risk table for some reason</span></span>
 <span><span class="va">more_stuff</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.ticks.x<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, risk_table<span class="op">=</span><span class="cn">TRUE</span>, risk_table_additional_layers<span class="op">=</span><span class="va">more_stuff</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-29-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-29-1.png" class="r-plt" alt="" width="643.2"></p>
 </div>
 </div>
 <div class="section level2">
@@ -363,14 +547,25 @@ argument:</p>
 </h2>
 <p>In this particular case, we would probably use something similar to
 the following code to create a decent output:</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">s_iptw</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span>, censoring_ind<span class="op">=</span><span class="st">"lines"</span>, risk_table<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>     risk_table_stratify<span class="op">=</span><span class="cn">TRUE</span>, risk_table_digits<span class="op">=</span><span class="fl">0</span>, x_n_breaks<span class="op">=</span><span class="fl">10</span>,</span>
 <span>     risk_table_title_size<span class="op">=</span><span class="fl">11</span>, median_surv_lines<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>     gg_theme<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span>, risk_table_theme<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>     legend.position<span class="op">=</span><span class="st">"top"</span>, custom_colors<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"red"</span><span class="op">)</span>,</span>
 <span>     xlab<span class="op">=</span><span class="st">"Time in Years"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="plot_customization_files/figure-html/unnamed-chunk-30-1.png" width="643.2"></p>
+<pre><code><span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">fill</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span>
+<span><span class="co">## Ignoring unknown labels:</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">linetype</span> : <span style="color: #0000BB;">"Group"</span></span></span></code></pre>
+<p><img src="plot_customization_files/figure-html/unnamed-chunk-30-1.png" class="r-plt" alt="" width="643.2"></p>
 <p>Of course this is just one of many possibilities.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -384,7 +579,7 @@ the following code to create a decent output:</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

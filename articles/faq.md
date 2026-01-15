@@ -1,0 +1,172 @@
+# Frequently Asked Questions about the adjustedCurves Package
+
+This vignette answers some of the most frequently asked questions about
+the package.
+
+### How do I add a table with the number at risk below the plot?
+
+Since version 0.11.1, it is possible to use the `risk_table` argument of
+the
+[`plot.adjustedsurv()`](https://robindenz1.github.io/adjustedCurves/reference/plot.adjustedsurv.md)
+function to directly add such tables to the plot. It is, however,
+recommended to read the associated point in the documentation page first
+([`?plot.adjustedsurv`](https://robindenz1.github.io/adjustedCurves/reference/plot.adjustedsurv.md))
+first to find out whether adding such tables is a good idea or not.
+
+### How do I get a p-value?
+
+There is no easy answer to this question, because it is inherently
+vague. What should the p-value be for? Which hypothesis should be tested
+using it? The package offers multiple different ways to compare adjusted
+survival curves and CIFs, as described in the associated vignette
+([`vignette(topic="comparing_groups", package="adjustedCurves")`](https://robindenz1.github.io/adjustedCurves/articles/comparing_groups.md))
+and the documentation pages. Some of these also return p-values.
+
+### Does this package support time-varying covariates?
+
+No, time-varying covariates are currently not supported. There are two
+main reasons for this: (1) with time-varying covariates, it is unclear
+what the target estimand should be (see for example Hernán & Robins
+2020) and (2) estimating one of the possible target estimands is,
+depending on the causal assumptions, a very complicated endeavor which
+cannot be easily automated. It is doubtful that this package will ever
+contain such methods, but we won’t rule it out completely.
+
+### Which method should I use?
+
+Unfortunately there is no easy answer for this question either. It
+depends both on goals of the analysis, the causal assumptions and the
+observed data. Some theoretical guidance and comparison of most of the
+implemented methods is given in the associated simulation study (see
+Denz et al. 2023). More practical guidance (e.g. which method can I use
+to get adjusted survival curves if there are more than two groups of
+interest etc.) can be found in the methods vignette
+([`vignette(topic="method_overview", package="adjustedCurves")`](https://robindenz1.github.io/adjustedCurves/articles/method_overview.md)).
+
+### How can I interpret the results?
+
+The interpretation of the results heavily depend on the causal
+assumptions made by the user. Resulting survival curves or CIFs cannot
+generally be interpreted as counterfactual survival curves. This
+interpretation is only possible under the causal identifiability
+assumptions and method-specific assumptions, as described in Denz et
+al. (2023). If these assumptions cannot be made, the results should only
+be interpreted as “marginal survival curves / CIFs after adjusting for
+confounders X”.
+
+### Is it possible to obtain adjusted survival curves for data with competing events?
+
+No, this is generally impossible. Users may, however, use the
+[`adjustedcif()`](https://robindenz1.github.io/adjustedCurves/reference/adjustedcif.md)
+function to estimate confounder-adjusted cause-specific cumulative
+incidence functions instead.
+
+### Can I use this package if the variable I am interested in is continuous?
+
+It is possible, but not recommended. To get adjusted survival curves or
+CIFs for a continuous variable of interest with this package, users need
+to categorize the variable before doing any kind of analysis. This leads
+to a loss of information, which may lead to biased estimates or a loss
+of statistical power. To circumvent this issue, we developed another
+R-package called `contsurvplot` which directly implements plotting
+methods for continuous variables, as described in Denz & Timmesfeld
+(2023).
+
+### Does this package offer an adjusted log-rank test?
+
+No, it currently doesn’t. We only know of one type of log-rank test that
+allows confounder-adjustment, which is the inverse probability of
+treatment weighted log-rank test described by Xie et al. (2005). Since
+this only works for one type of method, it is not implemented here. It
+is, however, implemented in the `RISCA` package. Other ways to compare
+survival curves or CIFs using the `adjustedCurves` package are described
+in the documentation and the associated vignette
+([`vignette(topic="comparing_groups", package="adjustedCurves")`](https://robindenz1.github.io/adjustedCurves/articles/comparing_groups.md)).
+
+### How do I deal with missing values?
+
+The package offers direct support for multiple imputation as performed
+using the `mice` package. How exactly these imputations should be
+performed is beyond the scope of this package. We recommend seeking
+information on the `mice` package website or the associated book.
+
+### I have fit a `coxph` model with start/stop type data. Can I use this model to obtain adjusted survival curves?
+
+This is currently not supported. More information may be found in the
+question about time-varying covariates.
+
+### Can interactions be included when estimating adjusted survival curves or CIFs?
+
+Yes, that is possible. For example, if the user wants to use
+`method="direct"` with a `coxph` model as outcome model, interactions
+can be included using the standard syntax in the `coxph` call if they
+are not the main variable of interest. If, on the other hand, the main
+thing of interest *is* the interaction (e.g. the user wants to plot
+survival curves / CIFs for all possible combinations of two categorical
+variables) a slightly different procedure is needed. Users then need to
+construct a new variable that directly combines the two categorical
+variables (for example using the
+[`interaction()`](https://rdrr.io/r/base/interaction.html) function) and
+use this new variable in both the
+[`adjustedsurv()`](https://robindenz1.github.io/adjustedCurves/reference/adjustedsurv.md)
+/
+[`adjustedcif()`](https://robindenz1.github.io/adjustedCurves/reference/adjustedcif.md)
+call and the `coxph` model.
+
+### Why do adjusted survival curves produced with `method="direct"` have a different shape than Kaplan-Meier curves?
+
+When using `method="direct"`, the adjusted survival probability is
+estimated at all points in time at which an event occurred in the pooled
+sample. When a Cox model is used with this method and the Cox model does
+not include a [`strata()`](https://rdrr.io/pkg/survival/man/strata.html)
+term for the `variable` of interest, this means that there will be much
+more “jumps” in the resulting survival curves than one would see in a
+classic Kaplan-Meier curve. This is not a bug, it’s a feature. If a
+[`strata()`](https://rdrr.io/pkg/survival/man/strata.html) term for
+`variable` is included, however, the curves have jumps at exactly the
+same spots as a standard Kaplan-Meier curve.
+
+### Should I include a `strata()` term for the `variable` of interest when using a Cox model with `method="direct"`?
+
+Whenever a [`strata()`](https://rdrr.io/pkg/survival/man/strata.html)
+term is included in a Cox model, it basically tells the
+[`coxph()`](https://rdrr.io/pkg/survival/man/coxph.html) function to
+assume that there are different baseline hazard functions per level of
+that [`strata()`](https://rdrr.io/pkg/survival/man/strata.html)
+variable. This is often beneficial, because it essentially makes the
+model more flexible. It does, however, also introduce another parameter
+in the model, meaning that the resulting estimates might be slightly
+less precise. If you think that there are different baseline hazard
+functions per `variable` level, include a
+[`strata()`](https://rdrr.io/pkg/survival/man/strata.html) call, if not,
+don’t. Please also note that a Cox model is not always the best model
+for every situation. The `"direct"` method in this package allows users
+to use many other kinds of models, such as additive hazard models or
+accelerated failure time models, which might be a better fit in some
+situations. See `?surv_direct_models` for more details.
+
+### How do I cite this package?
+
+We recommend citing the relevant method-specific paper and the paper
+associated with this package when using it in a scientific publication.
+For example, when using `method="iptw_km"` in the
+[`adjustedsurv()`](https://robindenz1.github.io/adjustedCurves/reference/adjustedsurv.md)
+function, we recommend citing both Xie et al. (2005) and the article
+associated with the package (Denz et al. 2023).
+
+## References
+
+Robin Denz, Renate Klaaßen-Mielke, and Nina Timmesfeld (2023). “A
+Comparison of Different Methods to Adjust Survival Curves for
+Confounders”. In: Statistics in Medicine 42.10, pp. 1461-1479.
+
+Robin Denz, Nina Timmesfeld (2023). “Visualizing the (Causal) Effect of
+a Continuous Variable on a Time-To-Event Outcome”. In: Epidemiology
+34.5, pp. 652-660.
+
+Jun Xie and Chaofeng Liu (2005). “Adjusted Kaplan-Meier Estimator and
+Log- Rank Test with Inverse Probability of Treatment Weighting for
+Survival Data”. In: Statistics in Medicine 24, pp. 3089-3110.
+
+Miguel Hernán and James Robins (2020). Causal Inference: What If. Boca
+Raton: Chapman & Hall/CRC
