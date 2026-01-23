@@ -2,17 +2,30 @@
 
 ## adjustedCurves 0.11.4 (developmental version)
 
+Enhancements
+
+- Numbers at risk and number of events are now included in the output of
+  [`as_ggsurvplot_df()`](https://robindenz1.github.io/adjustedCurves/reference/as_ggsurvplot_df.md),
+  even when `method = "km"` was used. Additionally, with multiple
+  imputation, the correctly pooled values are now included, instead of
+  nothing.
+
 Bug Fixes
 
 - Fixed a bug that occurred when using
   [`plot.adjustedsurv()`](https://robindenz1.github.io/adjustedCurves/reference/plot.adjustedsurv.md)
   with the `times` argument in case a dataset with multiple imputation
   was supplied.
-- Numbers at risk and number of events are now included in the output of
-  [`as_ggsurvplot_df()`](https://robindenz1.github.io/adjustedCurves/reference/as_ggsurvplot_df.md),
-  even when `method = "km"` was used. Additionally, with multiple
-  imputation, the correctly pooled values are now included, instead of
-  nothing.
+- Fixed a bug in which the estimates of the cumulative incidence
+  function were incorrectly extracted from the
+  [`cuminc()`](https://rdrr.io/pkg/cmprsk/man/cuminc.html) function when
+  using
+  [`adjustedcif()`](https://robindenz1.github.io/adjustedCurves/reference/adjustedcif.md)
+  with `method="aalen_johansen"`. Essentially, the step functions were
+  evaluated at the time before the actual step, so that any results
+  obtained by using the previous versions were off by one time step.
+  With many points in time the changes should be small, but with only a
+  few events there might be substantial differences.
 
 ## adjustedCurves 0.11.3
 
