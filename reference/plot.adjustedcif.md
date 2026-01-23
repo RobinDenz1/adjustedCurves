@@ -322,7 +322,4 @@ plot(adjcif) + theme_bw()
 #> Warning: Rare event 
 #> Warning: Rare event 
 #> Loading required namespace: pammtools
-#> Ignoring unknown labels:
-#> • linetype : "Group"
-#> • fill : "Group"
 ```

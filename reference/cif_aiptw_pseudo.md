@@ -172,7 +172,4 @@ adjcif <- adjustedcif(data=sim_dat,
 plot(adjcif)
 }
 #> Loading required namespace: geepack
-#> Ignoring unknown labels:
-#> • linetype : "Group"
-#> • fill : "Group"
 ```

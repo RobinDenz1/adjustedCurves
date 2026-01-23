@@ -499,9 +499,6 @@ adj <- adjustedsurv(data=mids,
                     weight_method="ps")
 plot(adj)
 }
-#> Ignoring unknown labels:
-#> • linetype : "Group"
-#> • fill : "Group"
 
 
 # More specific examples can be found in the documentation of each

@@ -164,7 +164,4 @@ adjcif <- adjustedcif(data=sim_dat,
 plot(adjcif)
 }
 #> Warning: Rare event 
-#> Ignoring unknown labels:
-#> • linetype : "Group"
-#> • fill : "Group"
 ```

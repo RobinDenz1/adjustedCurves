@@ -128,9 +128,6 @@ adjsurv <- adjustedsurv(data=sim_dat,
 
 # plot the curves
 plot(adjsurv)
-#> Ignoring unknown labels:
-#> • linetype : "Group"
-#> • fill : "Group"
 #> Warning: Removed 12 rows containing missing values or values outside the scale range
 #> (`geom_step()`).
 ```

@@ -187,7 +187,4 @@ adjsurv <- adjustedsurv(data=dt,
 
 # plot the curves
 plot(adjsurv)
-#> Ignoring unknown labels:
-#> • linetype : "Group"
-#> • fill : "Group"
 ```

@@ -287,6 +287,4 @@ plot_rmtl_curve(adjsurv, contrast="diff")
 plot_rmtl_curve(adjsurv, max_t=0.5, linetype=TRUE,
                 custom_colors=c("green", "blue"))
 }
-#> Ignoring unknown labels:
-#> • fill : "Group"
 ```

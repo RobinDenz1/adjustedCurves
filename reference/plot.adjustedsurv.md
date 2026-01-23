@@ -650,32 +650,8 @@ plot(adjsurv, censoring_ind="points", censoring_ind_size=4)
 # adding further ggplot2 elements
 plot(adjsurv) + theme_bw()
 }
-#> Ignoring unknown labels:
-#> • linetype : "Group"
-#> • fill : "Group"
 #> Loading required namespace: cowplot
-#> Ignoring unknown labels:
-#> • linetype : "Group"
-#> Ignoring unknown labels:
-#> • linetype : "Group"
-#> Ignoring unknown labels:
-#> • linetype : "Group"
 #> Warning: Adding stratified risk tables may produce confusing output when using methods other then 'km', 'iptw_km' or 'iptw_cox', because all other methods do not use risk tables to estimate the survival curves. See details. Set risk_table_warn=FALSE to silence this warning.
-#> Ignoring unknown labels:
-#> • linetype : "Group"
-#> Ignoring unknown labels:
-#> • linetype : "Group"
-#> Ignoring unknown labels:
-#> • linetype : "Group"
-#> Ignoring unknown labels:
-#> • linetype : "Group"
-#> • fill : "Group"
-#> Ignoring unknown labels:
-#> • linetype : "Group"
-#> • fill : "Group"
-#> Ignoring unknown labels:
-#> • linetype : "Group"
-#> • fill : "Group"
 
 # NOTE: more examples are shown in the associated vignette
 ```

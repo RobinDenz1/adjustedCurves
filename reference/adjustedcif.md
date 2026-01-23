@@ -503,9 +503,6 @@ adj <- adjustedcif(data=mids,
 plot(adj, force_bounds=TRUE, iso_reg=TRUE)
 }
 #> Loading required namespace: WeightIt
-#> Ignoring unknown labels:
-#> • linetype : "Group"
-#> • fill : "Group"
 
 
 # More specific examples can be found in the documentation of each

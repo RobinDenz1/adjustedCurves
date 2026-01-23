@@ -157,7 +157,4 @@ plot(adjsurv)
 #> Warning: Dichotomous variables coded with 0 and 1 found in  'treatment_vars'. Consider recoding to -1 and 1 to avoid estimation problems.
 #> Warning: Dichotomous variables coded with 0 and 1 found in  'treatment_vars'. Consider recoding to -1 and 1 to avoid estimation problems.
 #> Warning: Dichotomous variables coded with 0 and 1 found in  'treatment_vars'. Consider recoding to -1 and 1 to avoid estimation problems.
-#> Ignoring unknown labels:
-#> • linetype : "Group"
-#> • fill : "Group"
 ```

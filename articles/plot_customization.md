@@ -59,10 +59,6 @@ the following plot:
 plot(s_iptw)
 ```
 
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-
 ![](plot_customization_files/figure-html/unnamed-chunk-3-1.png)
 
 This is already fairly decent, but it could be made much more
@@ -78,10 +74,6 @@ however also possible to use black and white plots instead:
 plot(s_iptw, linetype=TRUE, color=FALSE)
 ```
 
-    ## Ignoring unknown labels:
-    ## • colour : "Group"
-    ## • fill : "Group"
-
 ![](plot_customization_files/figure-html/unnamed-chunk-4-1.png)
 
 If colors should be used, it may be usefull to change the colors using
@@ -91,10 +83,6 @@ the `custom_colors` argument:
 plot(s_iptw, custom_colors=c("red", "blue"))
 ```
 
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-
 ![](plot_customization_files/figure-html/unnamed-chunk-5-1.png)
 
 When using linetypes, users can also supply custom linetypes in a
@@ -103,9 +91,6 @@ similar fashion:
 ``` r
 plot(s_iptw, linetype=TRUE, custom_linetypes=c("dotdash", "solid"))
 ```
-
-    ## Ignoring unknown labels:
-    ## • fill : "Group"
 
 ![](plot_customization_files/figure-html/unnamed-chunk-6-1.png)
 
@@ -117,10 +102,6 @@ plot(s_iptw, xlab="Time in Years", ylab="S(t)",
      title="This is the title", subtitle="This is the subtitle",
      legend.title="Sex")
 ```
-
-    ## Ignoring unknown labels:
-    ## • linetype : "Sex"
-    ## • fill : "Sex"
 
 ![](plot_customization_files/figure-html/unnamed-chunk-7-1.png)
 
@@ -137,9 +118,6 @@ plot(s_iptw, conf_int=TRUE)
 ```
 
     ## Loading required namespace: pammtools
-
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
 
 ![](plot_customization_files/figure-html/unnamed-chunk-8-1.png)
 
@@ -163,13 +141,6 @@ time from the plot as well. This can be done using the
 plot(s_iptw, median_surv_lines=TRUE)
 ```
 
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-
 ![](plot_customization_files/figure-html/unnamed-chunk-9-1.png)
 
 The drawn lines may also be customized. Below we make the lines thicker,
@@ -181,13 +152,6 @@ plot(s_iptw, median_surv_lines=TRUE, median_surv_linetype="dotdash",
      median_surv_size=0.7, median_surv_color="grey")
 ```
 
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-
 ![](plot_customization_files/figure-html/unnamed-chunk-10-1.png)
 
 It is also possible to use other survival time quantiles by changing the
@@ -196,13 +160,6 @@ It is also possible to use other survival time quantiles by changing the
 ``` r
 plot(s_iptw, median_surv_lines=TRUE, median_surv_quantile=0.4)
 ```
-
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
 
 ![](plot_customization_files/figure-html/unnamed-chunk-11-1.png)
 
@@ -217,13 +174,6 @@ small vertical lines to show the censored observations:
 plot(s_iptw, censoring_ind="lines")
 ```
 
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-
 ![](plot_customization_files/figure-html/unnamed-chunk-12-1.png)
 
 Alternatively, points of any shape could be added as well:
@@ -232,13 +182,6 @@ Alternatively, points of any shape could be added as well:
 plot(s_iptw, censoring_ind="points", censoring_ind_shape=3,
      censoring_ind_size=2)
 ```
-
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
 
 ![](plot_customization_files/figure-html/unnamed-chunk-13-1.png)
 
@@ -254,16 +197,6 @@ plot(s_iptw, risk_table=TRUE)
 
     ## Loading required namespace: cowplot
 
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-
 ![](plot_customization_files/figure-html/unnamed-chunk-14-1.png)
 
 ### Changing the content of risk tables
@@ -278,16 +211,6 @@ also use the weighted number of cumulative events:
 plot(s_iptw, risk_table=TRUE, risk_table_type="n_events")
 ```
 
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-
 ![](plot_customization_files/figure-html/unnamed-chunk-15-1.png)
 
 or the weighted cumulative number of censored observations:
@@ -295,16 +218,6 @@ or the weighted cumulative number of censored observations:
 ``` r
 plot(s_iptw, risk_table=TRUE, risk_table_type="n_cens")
 ```
-
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
 
 ![](plot_customization_files/figure-html/unnamed-chunk-16-1.png)
 
@@ -314,16 +227,6 @@ risk table by the different levels in `variable`:
 ``` r
 plot(s_iptw, risk_table=TRUE, risk_table_stratify=TRUE)
 ```
-
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
 
 ![](plot_customization_files/figure-html/unnamed-chunk-17-1.png)
 
@@ -338,16 +241,6 @@ plot(s_iptw, risk_table=TRUE, risk_table_stratify=TRUE,
      risk_table_digits=0)
 ```
 
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-
 ![](plot_customization_files/figure-html/unnamed-chunk-18-1.png)
 
 The risk tables only show numbers at the break points of the x-axis
@@ -359,16 +252,6 @@ get more numbers at more points in time, we can simply augment the
 plot(s_iptw, risk_table=TRUE, risk_table_stratify=TRUE,
      risk_table_digits=0, x_n_breaks=10)
 ```
-
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
 
 ![](plot_customization_files/figure-html/unnamed-chunk-19-1.png)
 
@@ -382,16 +265,6 @@ plot(s_iptw, risk_table=TRUE, risk_table_stratify=TRUE,
      risk_table_family="serif", risk_table_fontface="italic")
 ```
 
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-
 ![](plot_customization_files/figure-html/unnamed-chunk-20-1.png)
 
 Additionally, users may turn off the coloring of the numbers:
@@ -402,16 +275,6 @@ plot(s_iptw, risk_table=TRUE, risk_table_stratify=TRUE,
      risk_table_stratify_color=FALSE)
 ```
 
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-
 ![](plot_customization_files/figure-html/unnamed-chunk-21-1.png)
 
 Or use different colors:
@@ -421,16 +284,6 @@ plot(s_iptw, risk_table=TRUE, risk_table_stratify=TRUE,
      risk_table_digits=0, x_n_breaks=10,
      risk_table_custom_colors=c("brown", "orange"))
 ```
-
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
 
 ![](plot_customization_files/figure-html/unnamed-chunk-22-1.png)
 
@@ -443,16 +296,6 @@ plot(s_iptw, risk_table=TRUE, risk_table_stratify=TRUE,
      risk_table_title_size=10, risk_table_title_position="middle",
      risk_table_ylab=NULL)
 ```
-
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
 
 ![](plot_customization_files/figure-html/unnamed-chunk-23-1.png)
 
@@ -468,16 +311,6 @@ plot(s_iptw, risk_table=TRUE, risk_table_stratify=TRUE,
      risk_table_theme=ggplot2::theme_classic(),
      gg_theme=ggplot2::theme_minimal())
 ```
-
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
 
 ![](plot_customization_files/figure-html/unnamed-chunk-24-1.png)
 
@@ -497,10 +330,6 @@ plot(s_iptw) +
   theme(legend.position="top")
 ```
 
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-
 ![](plot_customization_files/figure-html/unnamed-chunk-25-1.png)
 
 While the following code does not work:
@@ -510,16 +339,6 @@ While the following code does not work:
 plot(s_iptw, risk_table=TRUE) +
   theme(legend.position="top")
 ```
-
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
 
 ![](plot_customization_files/figure-html/unnamed-chunk-26-1.png)
 
@@ -539,16 +358,6 @@ more_stuff <- list(theme(legend.position="top"))
 plot(s_iptw, risk_table=TRUE, additional_layers=more_stuff)
 ```
 
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-
 ![](plot_customization_files/figure-html/unnamed-chunk-27-1.png)
 
 In this particular case, we could have also simply set the
@@ -563,16 +372,6 @@ more_stuff <- list(geom_hline(yintercept=0.7))
 plot(s_iptw, risk_table=TRUE, additional_layers=more_stuff)
 ```
 
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-
 ![](plot_customization_files/figure-html/unnamed-chunk-28-1.png)
 
 Which also works for the risk table subplot using the other argument:
@@ -582,16 +381,6 @@ Which also works for the risk table subplot using the other argument:
 more_stuff <- list(theme(axis.ticks.x=element_blank()))
 plot(s_iptw, risk_table=TRUE, risk_table_additional_layers=more_stuff)
 ```
-
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
 
 ![](plot_customization_files/figure-html/unnamed-chunk-29-1.png)
 
@@ -610,16 +399,7 @@ plot(s_iptw, conf_int=TRUE, censoring_ind="lines", risk_table=TRUE,
 ```
 
     ## Ignoring unknown labels:
-    ## • linetype : "Group"
     ## • fill : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
 
 ![](plot_customization_files/figure-html/unnamed-chunk-30-1.png)
 

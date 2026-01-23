@@ -133,10 +133,6 @@ the `plot` method:
 plot(adjsurv)
 ```
 
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-
 ![](adjustedCurves_files/figure-html/unnamed-chunk-7-1.png)
 
 This plot function comes with many options which are listed in the
@@ -146,9 +142,6 @@ the argument `conf_int` to TRUE:
 ``` r
 plot(adjsurv, conf_int=TRUE)
 ```
-
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
 
 ![](adjustedCurves_files/figure-html/unnamed-chunk-8-1.png)
 
@@ -190,9 +183,6 @@ The resulting curves can be plotted as before:
 plot(adjsurv, conf_int=TRUE)
 ```
 
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-
 ![](adjustedCurves_files/figure-html/unnamed-chunk-10-1.png)
 
 Since both methods were used correctly here, there are only slight
@@ -222,9 +212,6 @@ adjsurv <- adjustedsurv(data=data_1,
 
 plot(adjsurv, conf_int=TRUE)
 ```
-
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
 
 ![](adjustedCurves_files/figure-html/unnamed-chunk-11-1.png)
 
@@ -342,9 +329,6 @@ adjcif <- adjustedcif(data=data_2,
 plot(adjcif, conf_int=TRUE)
 ```
 
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-
 ![](adjustedCurves_files/figure-html/unnamed-chunk-16-1.png)
 
 ## Adjusted Curves with More than Two Groups
@@ -387,10 +371,6 @@ adjsurv <- adjustedsurv(data=data_1,
                         conf_int=TRUE)
 plot(adjsurv)
 ```
-
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
 
 ![](adjustedCurves_files/figure-html/unnamed-chunk-18-1.png)
 

@@ -293,6 +293,4 @@ plot_rmst_curve(adjsurv, contrast="diff")
 plot_rmst_curve(adjsurv, max_t=0.5, linetype=TRUE,
                 custom_colors=c("green", "blue"))
 }
-#> Ignoring unknown labels:
-#> • fill : "Group"
 ```

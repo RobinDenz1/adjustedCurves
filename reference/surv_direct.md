@@ -218,7 +218,4 @@ plot(adj)
 }
 # }
 }
-#> Ignoring unknown labels:
-#> • linetype : "Group"
-#> • fill : "Group"
 ```

@@ -194,9 +194,6 @@ adjcif <- adjustedcif(data=sim_dat,
 plot(adjcif)
 }
 #> Warning: Rare event 
-#> Ignoring unknown labels:
-#> • linetype : "Group"
-#> • fill : "Group"
 
 
 # not run because it would be too slow
@@ -236,9 +233,6 @@ plot(adj)
 #> Warning: Estimated risk outside the range [0,1].
 #> Consider setting the argument 'product.limit' to FALSE. 
 #> Warning: Rare event 
-#> Ignoring unknown labels:
-#> • linetype : "Group"
-#> • fill : "Group"
 
 # }
 ```

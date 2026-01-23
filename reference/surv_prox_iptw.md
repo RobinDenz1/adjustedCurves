@@ -223,7 +223,4 @@ adj <- adjustedsurv(data=data,
                     conf_int=TRUE)
 plot(adj, iso_reg=TRUE)
 }
-#> Ignoring unknown labels:
-#> • linetype : "Group"
-#> • fill : "Group"
 ```

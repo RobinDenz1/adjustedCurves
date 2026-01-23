@@ -164,7 +164,4 @@ adjcif <- adjustedcif(data=sim_dat,
 # plot the curves
 plot(adjcif)
 }
-#> Ignoring unknown labels:
-#> • linetype : "Group"
-#> • fill : "Group"
 ```

@@ -221,7 +221,4 @@ adjcif <- adjustedcif(data=sim_dat,
 plot(adjcif, force_bounds=TRUE, iso_reg=TRUE)
 }
 }
-#> Ignoring unknown labels:
-#> • linetype : "Group"
-#> • fill : "Group"
 ```

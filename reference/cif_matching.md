@@ -151,7 +151,4 @@ plot(adjcif)
 #> ##   Software with Automated Balance Optimization: The Matching package for R.''
 #> ##   Journal of Statistical Software, 42(7): 1-52. 
 #> ##
-#> Ignoring unknown labels:
-#> • linetype : "Group"
-#> • fill : "Group"
 ```

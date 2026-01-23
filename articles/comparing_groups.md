@@ -79,13 +79,6 @@ plot(adjsurv, conf_int=TRUE, risk_table=TRUE, risk_table_stratify=TRUE,
      risk_table_digits=0, x_n_breaks=10)
 ```
 
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-
     ## Warning: Removed 7 rows containing missing values or values outside the scale range
     ## (`geom_stepribbon()`).
 
@@ -112,10 +105,6 @@ estimated adjusted survival probability at $t$, as returned by the
 [`adjustedsurv()`](https://robindenz1.github.io/adjustedCurves/reference/adjustedsurv.md)
 function. Visually this is equivalent to the *vertical difference*
 between the curves, as shown here with a blue line segment at $t = 0.7$:
-
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
 
 ![](comparing_groups_files/figure-html/unnamed-chunk-4-1.png)
 
@@ -213,10 +202,6 @@ and testing whether this quantity is significantly different from 0
 understood visually as the *horizontal difference* between the curves,
 as illustrated with the blue line segment in this plot:
 
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
-    ## • fill : "Group"
-
 ![](comparing_groups_files/figure-html/unnamed-chunk-10-1.png)
 
 This type of difference may also be estimated directly using the
@@ -268,9 +253,6 @@ where ${\widehat{S}}_{z}(t)$ is again the estimated adjusted survival
 curve and `to` is the value up to which the survival curves should be
 integrated. The following plot visually depicts the area in question for
 `to = 0.7` in our example:
-
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
 
 ![](comparing_groups_files/figure-html/unnamed-chunk-13-1.png)
 
@@ -338,9 +320,6 @@ Here we simply plot the RMST curves per group:
 ``` r
 plot_rmst_curve(adjsurv, conf_int=TRUE)
 ```
-
-    ## Ignoring unknown labels:
-    ## • linetype : "Group"
 
 ![](comparing_groups_files/figure-html/unnamed-chunk-17-1.png)
 
