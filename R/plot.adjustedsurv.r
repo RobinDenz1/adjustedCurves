@@ -98,9 +98,20 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
 
   if (!linetype) {
     mapping$linetype <- NULL
+    linetype_title <- NULL
+  } else {
+    linetype_title <- legend.title
   }
   if (!color) {
     mapping$colour <- NULL
+    color_title <- NULL
+  } else {
+    color_title <- legend.title
+  }
+  if (!conf_int | (conf_int & !color)) {
+    fill_title <- NULL
+  } else {
+    fill_title <- legend.title
   }
 
   p <- ggplot2::ggplot(plotdata, mapping)
@@ -144,8 +155,8 @@ plot.adjustedsurv <- function(x, conf_int=FALSE, max_t=Inf,
   }
 
   p <- p + gg_theme +
-    ggplot2::labs(x=xlab, y=ylab, color=legend.title,
-                  linetype=legend.title, fill=legend.title,
+    ggplot2::labs(x=xlab, y=ylab, color=color_title,
+                  linetype=linetype_title, fill=fill_title,
                   title=title, subtitle=subtitle) +
     ggplot2::theme(legend.position=legend.position) +
     ggplot2::scale_x_continuous(breaks=x_breaks, n.breaks=x_n_breaks) +

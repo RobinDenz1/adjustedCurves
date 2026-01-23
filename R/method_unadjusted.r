@@ -53,6 +53,7 @@ cif_aalen_johansen <- function(data, variable, ev_time, event, cause,
   for (i in seq_len(length(cif_names))) {
     len_vec <- length(cif[[cif_names[i]]]$time)
     rows <- c(seq(1, len_vec, 2), len_vec)
+
     plotdata[[i]] <- data.frame(time=cif[[cif_names[i]]]$time[rows],
                                 cif=cif[[cif_names[i]]]$est[rows],
                                 group=levs[i],

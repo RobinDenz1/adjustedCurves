@@ -41,7 +41,7 @@ test_that("plot, no arguments", {
 test_that("plot, with conf_int", {
   plt <- plot(adj, conf_int=TRUE)
   expect_s3_class(plt, "ggplot")
-  vdiffr::expect_doppelganger("plot, with conf_int", fig=plt)
+  suppressWarnings(vdiffr::expect_doppelganger("plot, with conf_int", fig=plt))
 })
 
 test_that("plot, using boot", {
@@ -189,7 +189,8 @@ test_that("plot, using single_linetype", {
 test_that("plot, using conf_int_alpha", {
   plt <- plot(adj, conf_int=TRUE, conf_int_alpha=0.1)
   expect_s3_class(plt, "ggplot")
-  vdiffr::expect_doppelganger("plot, using conf_int_alpha", fig=plt)
+  suppressWarnings(vdiffr::expect_doppelganger("plot, using conf_int_alpha",
+                                               fig=plt))
 })
 
 test_that("plot, using steps", {
@@ -207,20 +208,23 @@ test_that("plot, using cif", {
 test_that("plot, using no colors ci", {
   plt <- plot(adj, conf_int=TRUE, color=FALSE)
   expect_s3_class(plt, "ggplot")
-  vdiffr::expect_doppelganger("plot, using no colors ci", fig=plt)
+  suppressWarnings(vdiffr::expect_doppelganger("plot, using no colors ci",
+                                               fig=plt))
 })
 
 test_that("plot, using no colors ci with steps", {
   plt <- suppressWarnings(plot(adj, conf_int=TRUE, color=FALSE, steps=FALSE))
   expect_s3_class(plt, "ggplot")
-  vdiffr::expect_doppelganger("plot, ci no color steps", fig=plt)
+  suppressWarnings(vdiffr::expect_doppelganger("plot, ci no color steps",
+                                               fig=plt))
 })
 
 test_that("plot, using single colors ci with steps", {
   plt <- suppressWarnings(plot(adj, conf_int=TRUE, color=FALSE, steps=FALSE,
                                single_color="red"))
   expect_s3_class(plt, "ggplot")
-  vdiffr::expect_doppelganger("plot, ci single color steps", fig=plt)
+  suppressWarnings(vdiffr::expect_doppelganger("plot, ci single color steps",
+                                               fig=plt))
 })
 
 test_that("plot, using many many things", {
@@ -253,7 +257,8 @@ test_that("plot, using many many things", {
               censoring_ind_width=0.1,
               censoring_ind_size=0.6)
   expect_s3_class(plt, "ggplot")
-  vdiffr::expect_doppelganger("plot, using many many things", fig=plt)
+  suppressWarnings(vdiffr::expect_doppelganger("plot, using many many things",
+                                               fig=plt))
 })
 
 ##### risk tables

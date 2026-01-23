@@ -30,7 +30,7 @@ test_that("plot, reversed differences", {
 test_that("plot, with conf_int", {
   plt <- suppressWarnings(plot_curve_ratio(adj, conf_int=TRUE))
   expect_s3_class(plt, "ggplot")
-  vdiffr::expect_doppelganger("plot, with conf_int", fig=plt)
+  suppressWarnings(vdiffr::expect_doppelganger("plot, with conf_int", fig=plt))
 })
 
 test_that("plot, with conf_int boot", {
@@ -48,7 +48,7 @@ test_that("plot, with lines", {
 test_that("plot, with lines ci", {
   plt <- suppressWarnings(plot_curve_ratio(adj, type="lines", conf_int=TRUE))
   expect_s3_class(plt, "ggplot")
-  vdiffr::expect_doppelganger("plot, with lines ci", fig=plt)
+  suppressWarnings(vdiffr::expect_doppelganger("plot, with lines ci", fig=plt))
 })
 
 test_that("plot, without line at 1", {

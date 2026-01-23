@@ -52,16 +52,27 @@ plot_auc_curve <- function(adj, estimate, times=NULL, conf_int=FALSE,
                           linetype=.data$group, group=.data$group)
   if (!linetype) {
     mapping$linetype <- NULL
+    linetype_title <- NULL
+  } else {
+    linetype_title <- legend.title
   }
   if (!color) {
     mapping$colour <- NULL
+    color_title <- NULL
+  } else {
+    color_title <- legend.title
+  }
+  if (!conf_int | (conf_int & !color)) {
+    fill_title <- NULL
+  } else {
+    fill_title <- legend.title
   }
 
   p <- ggplot2::ggplot(plotdata, mapping) +
     ggplot2::geom_line(linewidth=size, alpha=alpha) +
     ggplot2::labs(x=xlab, y=ylab, title=title, subtitle=subtitle,
-                  color=legend.title, linetype=legend.title,
-                  fill=legend.title) +
+                  color=color_title, linetype=linetype_title,
+                  fill=fill_title) +
     gg_theme +
     ggplot2::theme(legend.position=legend.position)
 

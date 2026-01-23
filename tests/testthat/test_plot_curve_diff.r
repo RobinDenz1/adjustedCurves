@@ -30,7 +30,9 @@ test_that("plot, reversed differences", {
 test_that("plot, with conf_int", {
   plt <- plot_curve_diff(adj, conf_int=TRUE)
   expect_s3_class(plt, "ggplot")
-  vdiffr::expect_doppelganger("plot, with conf_int", fig=plt)
+  suppressWarnings(
+    vdiffr::expect_doppelganger("plot, with conf_int", fig=plt)
+  )
 })
 
 test_that("plot, with conf_int boot", {
@@ -48,7 +50,9 @@ test_that("plot, with lines", {
 test_that("plot, with lines ci", {
   plt <- plot_curve_diff(adj, type="lines", conf_int=TRUE)
   expect_s3_class(plt, "ggplot")
-  vdiffr::expect_doppelganger("plot, with lines ci", fig=plt)
+  suppressWarnings(
+    vdiffr::expect_doppelganger("plot, with lines ci", fig=plt)
+  )
 })
 
 test_that("plot, with points", {
@@ -149,7 +153,9 @@ test_that("plot, with much stuff", {
                          line_at_ref_color="red",
                          loess_smoother=TRUE, loess_span=0.55)
   expect_s3_class(plt, "ggplot")
-  vdiffr::expect_doppelganger("plot, with much stuff", fig=plt)
+  suppressWarnings(
+    vdiffr::expect_doppelganger("plot, with much stuff", fig=plt)
+  )
 })
 
 sim_dat$event[1] <- 2
