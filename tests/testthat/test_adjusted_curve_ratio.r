@@ -52,15 +52,15 @@ test_that("surv, times, conf_int", {
 test_that("cif, times", {
   adj_diff <- adjusted_curve_ratio(adjcif, times=0.8)
   expect_equal(nrow(adj_diff), 1)
-  expect_equal(round(adj_diff$ratio[1], 4), 1.4344)
+  expect_equal(round(adj_diff$ratio[1], 4), 1.4194)
 })
 
 test_that("cif, times, conf_int", {
   adj_diff <- adjusted_curve_ratio(adjcif, times=0.8, conf_int=TRUE,
                                    use_boot=TRUE)
   expect_equal(nrow(adj_diff), 1)
-  expect_equal(round(adj_diff$ratio[1], 4), 1.4344)
-  expect_equal(round(adj_diff$ci_lower[1], 4), 1.3341)
-  expect_equal(round(adj_diff$ci_upper[1], 4), 1.5466)
+  expect_equal(round(adj_diff$ratio[1], 4), 1.4194)
+  expect_equal(round(adj_diff$ci_lower[1], 4), 1.3114)
+  expect_equal(round(adj_diff$ci_upper[1], 4), 1.5373)
   expect_equal(round(adj_diff$p_value[1], 4), 0)
 })

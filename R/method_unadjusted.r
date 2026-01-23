@@ -51,10 +51,12 @@ cif_aalen_johansen <- function(data, variable, ev_time, event, cause,
   cif_names <- paste(levs, cause)
   plotdata <- vector(mode="list", length=length(cif_names))
   for (i in seq_len(length(cif_names))) {
-    plotdata[[i]] <- data.frame(time=cif[[cif_names[i]]]$time,
-                                cif=cif[[cif_names[i]]]$est,
+    len_vec <- length(cif[[cif_names[i]]]$time)
+    rows <- c(seq(1, len_vec, 2), len_vec)
+    plotdata[[i]] <- data.frame(time=cif[[cif_names[i]]]$time[rows],
+                                cif=cif[[cif_names[i]]]$est[rows],
                                 group=levs[i],
-                                se=cif[[cif_names[i]]]$var)
+                                se=cif[[cif_names[i]]]$var[rows])
   }
   plotdata <- as.data.frame(dplyr::bind_rows(plotdata))
 
@@ -69,9 +71,9 @@ cif_aalen_johansen <- function(data, variable, ev_time, event, cause,
   }
 
   # remove weird structure in cmprsk::cuminc call
-  ids <- seq(2, nrow(plotdata), 2)
-  ids <- ids[1:(length(ids-1))]
-  plotdata <- plotdata[ids, ]
+  #ids <- seq(1, nrow(plotdata), 2)
+  #ids <- ids[1:(length(ids-1))]
+  #plotdata <- plotdata[ids, ]
 
   if (!is.null(times)) {
     plotdata <- specific_times(plotdata, times, est="cif")

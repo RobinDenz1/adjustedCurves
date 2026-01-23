@@ -107,36 +107,36 @@ adj <- adjustedcif(data=sim_dat,
 
 test_that("rmtl cif, no boot", {
   adj_rmtl <- adjusted_rmtl(adj, to=1.1)
-  expect_equal(round(adj_rmtl$rmtl, 4), c(0.1856, 0.1599))
+  expect_equal(round(adj_rmtl$rmtl, 4), c(0.2247, 0.2157))
 })
 
 test_that("rmtl cif, no boot, linear", {
   adj_rmtl <- adjusted_rmtl(adj, to=1.1, interpolation="linear")
-  expect_equal(round(adj_rmtl$rmtl, 4), c(0.1918, 0.1618))
+  expect_equal(round(adj_rmtl$rmtl, 4), c(0.2317, 0.2182))
 })
 
 test_that("rmtl cif, with boot", {
   adj_rmtl <- adjusted_rmtl(adj, to=1.1, conf_int=TRUE)
-  expect_equal(round(adj_rmtl$rmtl, 4), c(0.1856, 0.1599))
-  expect_equal(round(adj_rmtl$se, 4), c(0.0775, 0.1185))
+  expect_equal(round(adj_rmtl$rmtl, 4), c(0.2247, 0.2157))
+  expect_equal(round(adj_rmtl$se, 4), c(0.0770, 0.1295))
   expect_equal(adj_rmtl$n_boot, c(10, 10))
 })
 
 test_that("rmtl cif, with boot, linear", {
   adj_rmtl <- adjusted_rmtl(adj, to=1.1, conf_int=TRUE, interpolation="linear")
-  expect_equal(round(adj_rmtl$rmtl, 4), c(0.1918, 0.1618))
-  expect_equal(round(adj_rmtl$se, 4), c(0.0784, 0.1204))
+  expect_equal(round(adj_rmtl$rmtl, 4), c(0.2317, 0.2182))
+  expect_equal(round(adj_rmtl$se, 4), c(0.0781, 0.1314))
   expect_equal(adj_rmtl$n_boot, c(10, 10))
 })
 
 test_that("rmtl cif, no boot, using from", {
   adj_rmtl <- adjusted_rmtl(adj, to=1.1, from=0.3)
-  expect_equal(round(adj_rmtl$rmtl, 4), c(0.1650, 0.1536))
+  expect_equal(round(adj_rmtl$rmtl, 4), c(0.1936, 0.1964))
 })
 
 test_that("rmtl cif, with boot, using from", {
   adj_rmtl <- adjusted_rmtl(adj, to=1.1, from=0.3, conf_int=TRUE)
-  expect_equal(round(adj_rmtl$rmtl, 4), c(0.1650, 0.1536))
-  expect_equal(round(adj_rmtl$se, 4), c(0.0664, 0.1104))
+  expect_equal(round(adj_rmtl$rmtl, 4), c(0.1936, 0.1964))
+  expect_equal(round(adj_rmtl$se, 4), c(0.0662, 0.1119))
   expect_equal(adj_rmtl$n_boot, c(10, 10))
 })

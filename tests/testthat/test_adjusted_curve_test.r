@@ -94,6 +94,7 @@ test_that("survival, > 2 treatments, S3 method", {
 
 # competing risks case
 
+set.seed(1234)
 sim_dat <- sim_confounded_crisk(n=200, max_t=1.5)
 sim_dat$group <- factor(sim_dat$group)
 
@@ -108,36 +109,41 @@ adj <- adjustedcif(data=sim_dat,
                    n_boot=10)
 
 test_that("CIF, 2 treatments, no from", {
+  set.seed(134)
   adj_test <- adjusted_curve_test(adj, to=1)
-  expect_equal(round(adj_test$observed_diff_integral, 4), 0.1378)
-  expect_equal(round(adj_test$integral_se, 4), 0.0403)
-  expect_equal(round(adj_test$p_value, 4), 0)
+  expect_equal(round(adj_test$observed_diff_integral, 4), -0.0164)
+  expect_equal(round(adj_test$integral_se, 4), 0.0453)
+  expect_equal(round(adj_test$p_value, 4), 0.8)
   expect_equal(adj_test$n_boot, 10)
 })
 
 test_that("CIF, 2 treatments, no from, linear", {
+  set.seed(134)
   adj_test <- adjusted_curve_test(adj, to=1, interpolation="linear")
-  expect_equal(round(adj_test$observed_diff_integral, 4), 0.1387)
-  expect_equal(round(adj_test$integral_se, 4), 0.0403)
-  expect_equal(round(adj_test$p_value, 4), 0)
+  expect_equal(round(adj_test$observed_diff_integral, 4), -0.0154)
+  expect_equal(round(adj_test$integral_se, 4), 0.0458)
+  expect_equal(round(adj_test$p_value, 4), 0.8)
   expect_equal(adj_test$n_boot, 10)
 })
 
 test_that("CIF, 2 treatments, with from", {
+  set.seed(1234)
   adj_test <- adjusted_curve_test(adj, to=1, from=0.5)
-  expect_equal(round(adj_test$observed_diff_integral, 4), 0.0816)
-  expect_equal(round(adj_test$integral_se, 4), 0.0232)
-  expect_equal(round(adj_test$p_value, 4), 0)
+  expect_equal(round(adj_test$observed_diff_integral, 3), -0.001)
+  expect_equal(round(adj_test$integral_se, 4), 0.0296)
+  expect_equal(round(adj_test$p_value, 4), 1)
   expect_equal(adj_test$n_boot, 10)
 })
 
 test_that("CIF, 2 treatments, S3 methods", {
+  set.seed(455)
   adj_test <- adjusted_curve_test(adj, to=1.3, from=0.5)
   adj_test$method <- "iptw"
   expect_snapshot_output(print(adj_test))
   expect_snapshot_output(summary(adj_test))
 })
 
+set.seed(1324)
 sim_dat$group <- as.character(sim_dat$group)
 sim_dat$group[sim_dat$group=="1"] <- sample(x=c(1, 2),
                                     size=nrow(sim_dat[sim_dat$group=="1", ]),
@@ -155,30 +161,34 @@ adj <- adjustedcif(data=sim_dat,
                    n_boot=10)
 
 test_that("CIF, > 2 treatments, no from", {
+  set.seed(1234)
   adj_test <- adjusted_curve_test(adj, to=1)
-  expect_equal(round(adj_test$`0 vs. 1`$observed_diff_integral, 4), 0.1386)
-  expect_equal(round(adj_test$`0 vs. 2`$integral_se, 4), 0.0225)
-  expect_equal(round(adj_test$`1 vs. 2`$p_value, 4), 0.4)
+  expect_equal(round(adj_test$`0 vs. 1`$observed_diff_integral, 3), 0)
+  expect_equal(round(adj_test$`0 vs. 2`$integral_se, 4), 0.0539)
+  expect_equal(round(adj_test$`1 vs. 2`$p_value, 4), 0.7)
   expect_equal(adj_test$`0 vs. 1`$n_boot, 10)
 })
 
 test_that("CIF, > 2 treatments, no from, linear", {
+  set.seed(4525)
   adj_test <- adjusted_curve_test(adj, to=1, interpolation="linear")
-  expect_equal(round(adj_test$`0 vs. 1`$observed_diff_integral, 4), 0.1390)
-  expect_equal(round(adj_test$`0 vs. 2`$integral_se, 4), 0.0228)
-  expect_equal(round(adj_test$`1 vs. 2`$p_value, 4), 0.4)
+  expect_equal(round(adj_test$`0 vs. 1`$observed_diff_integral, 4), 0.0016)
+  expect_equal(round(adj_test$`0 vs. 2`$integral_se, 4), 0.054)
+  expect_equal(round(adj_test$`1 vs. 2`$p_value, 4), 0.7)
   expect_equal(adj_test$`0 vs. 1`$n_boot, 10)
 })
 
 test_that("CIF, > 2 treatments, with from", {
+  set.seed(1234)
   adj_test <- adjusted_curve_test(adj, to=1, from=0.5)
-  expect_equal(round(adj_test$`0 vs. 1`$observed_diff_integral, 4), 0.0793)
-  expect_equal(round(adj_test$`0 vs. 2`$integral_se, 4), 0.0152)
-  expect_equal(round(adj_test$`1 vs. 2`$p_value, 4), 0.4)
+  expect_equal(round(adj_test$`0 vs. 1`$observed_diff_integral, 4), 0.0073)
+  expect_equal(round(adj_test$`0 vs. 2`$integral_se, 4), 0.0308)
+  expect_equal(round(adj_test$`1 vs. 2`$p_value, 4), 0.7)
   expect_equal(adj_test$`0 vs. 1`$n_boot, 10)
 })
 
 test_that("CIF, > 2 treatments, S3 methods", {
+  set.seed(12345)
   adj_test <- adjusted_curve_test(adj, to=1.3, from=0.5)
   expect_snapshot_output(print(adj_test))
   expect_snapshot_output(summary(adj_test))
