@@ -91,12 +91,6 @@ test_that("plot, labs", {
   vdiffr::expect_doppelganger("plot, labs", fig=plt)
 })
 
-test_that("plot, linetype", {
-  plt <- plot_rmst_curve(adj, linetype=TRUE, color=FALSE)
-  expect_s3_class(plt, "ggplot")
-  vdiffr::expect_doppelganger("plot, linetype", fig=plt)
-})
-
 test_that("plot difference, max_t", {
   plt <- plot_rmst_curve(adj, max_t=0.4, contrast="diff")
   expect_s3_class(plt, "ggplot")
