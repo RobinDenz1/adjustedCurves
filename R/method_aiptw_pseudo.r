@@ -113,6 +113,17 @@ method_aiptw_pseudo <- function(data, variable, ev_time, event, cause,
 
   if (mode=="cif") {
     colnames(plotdata)[colnames(plotdata)=="surv"] <- "cif"
+
+    if (all(as.numeric(data[[event]]) %in% c(0, 1))) {
+      plotdata$cif <- 1 - plotdata$cif
+
+      if (conf_int) {
+        upper <- 1 - plotdata$ci_lower
+        lower <- 1 - plotdata$ci_upper
+        plotdata$ci_lower <- lower
+        plotdata$ci_upper <- upper
+      }
+    }
   }
 
   output <- list(plotdata=plotdata,

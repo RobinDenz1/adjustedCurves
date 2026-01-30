@@ -98,6 +98,22 @@ test_that(
     expect_equal(levels(adj$adj$group), levels(sim_dat$group))
   })
 
+test_that("2 treatments, no conf_int, no boot", {
+  adj <- suppressWarnings(
+    adjustedcif(data=sim_dat,
+                variable="group",
+                ev_time="time",
+                event="event",
+                method="direct_pseudo",
+                conf_int=FALSE,
+                outcome_vars=outcome_vars,
+                type_time="bs",
+                cause=1)
+  )
+
+  expect_true(adj$adj$cif[1] < 0.1)
+})
+
 sim_dat <- readRDS(system.file("testdata",
                                "d_sim_crisk_n_50.Rds",
                                package="adjustedCurves"))

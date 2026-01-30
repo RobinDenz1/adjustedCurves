@@ -119,6 +119,27 @@ test_that("2 treatments, no conf_int, no boot, with times, ns time", {
   expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
+sim_dat$event <- ifelse(sim_dat$event==0, 0, 1)
+
+test_that("works with survival data", {
+
+  # NOTE: in reference to issue #54
+  adj <- suppressWarnings(
+    adjustedcif(data=sim_dat,
+                variable="group",
+                ev_time="time",
+                event="event",
+                method="aiptw_pseudo",
+                conf_int=TRUE,
+                outcome_vars=outcome_vars,
+                treatment_model=treat_mod,
+                type_time="bs",
+                cause=1)
+  )
+
+  expect_true(adj$adj$cif[1] < 0.8)
+})
+
 # new data
 sim_dat <- readRDS(system.file("testdata",
                                "d_sim_crisk_n_50.Rds",

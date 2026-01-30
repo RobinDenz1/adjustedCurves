@@ -4,11 +4,13 @@
 Enhancements
 
 * Numbers at risk and number of events are now included in the output of `as_ggsurvplot_df()`, even when `method = "km"` was used. Additionally, with multiple imputation, the correctly pooled values are now included, instead of nothing.
+* Updated all `ggplot2` based functions, so that the weird messages about unused labels no longer appear with newer versions of `ggplot2`.
 
 Bug Fixes
 
 * Fixed a bug that occurred when using `plot.adjustedsurv()` with the `times` argument in case a dataset with multiple imputation was supplied.
 * Fixed a bug in which the estimates of the cumulative incidence function were incorrectly extracted from the `cuminc()` function when using `adjustedcif()` with `method="aalen_johansen"`. Essentially, the step functions were evaluated at the time before the actual step, so that any results obtained by using the previous versions were off by one time step. With many points in time the changes should be small, but with only a few events there might be substantial differences.
+* Fixed a bug where survival estimates were returned if `adjustedcif()` was used with non-competing risks data and `method="iptw_pseudo"`, `method="aiptw_pseudo"` or `method="direct_pseudo"`.
 
 # adjustedCurves 0.11.3
 

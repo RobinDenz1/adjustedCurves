@@ -78,6 +78,10 @@ method_direct_pseudo <- function(data, variable, ev_time, event, cause,
 
   if (mode=="cif") {
     colnames(plotdata)[colnames(plotdata)=="surv"] <- "cif"
+
+    if (all(as.numeric(data[[event]]) %in% c(0, 1))) {
+      plotdata$cif <- 1 - plotdata$cif
+    }
   }
 
   output <- list(plotdata=plotdata,

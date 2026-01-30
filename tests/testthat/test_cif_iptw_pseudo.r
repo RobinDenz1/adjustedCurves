@@ -175,6 +175,23 @@ test_that("3 ways of iptw calculation are equal", {
 
 })
 
+test_that("works with survival data", {
+
+  sim_dat$event <- ifelse(sim_dat$event==0, 0, 1)
+
+  adj <- suppressWarnings(
+    adjustedcif(data=sim_dat,
+                variable="group",
+                ev_time="time",
+                event="event",
+                method="iptw_pseudo",
+                conf_int=TRUE,
+                treatment_model=mod,
+                cause=1)
+  )
+  expect_true(adj$adj$cif[1] < 0.3)
+})
+
 set.seed(44522)
 
 sim_dat <- readRDS(system.file("testdata",
