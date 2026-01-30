@@ -43,9 +43,11 @@
 <h2 class="pkg-version" data-toc-text="0.11.4" id="adjustedcurves-0114-developmental-version">adjustedCurves 0.11.4 (developmental version)<a class="anchor" aria-label="anchor" href="#adjustedcurves-0114-developmental-version"></a></h2>
 <p>Enhancements</p>
 <ul><li>Numbers at risk and number of events are now included in the output of <code><a href="../reference/as_ggsurvplot_df.html">as_ggsurvplot_df()</a></code>, even when <code>method = "km"</code> was used. Additionally, with multiple imputation, the correctly pooled values are now included, instead of nothing.</li>
+<li>Updated all <code>ggplot2</code> based functions, so that the weird messages about unused labels no longer appear with newer versions of <code>ggplot2</code>.</li>
 </ul><p>Bug Fixes</p>
 <ul><li>Fixed a bug that occurred when using <code><a href="../reference/plot.adjustedsurv.html">plot.adjustedsurv()</a></code> with the <code>times</code> argument in case a dataset with multiple imputation was supplied.</li>
 <li>Fixed a bug in which the estimates of the cumulative incidence function were incorrectly extracted from the <code><a href="https://rdrr.io/pkg/cmprsk/man/cuminc.html" class="external-link">cuminc()</a></code> function when using <code><a href="../reference/adjustedcif.html">adjustedcif()</a></code> with <code>method="aalen_johansen"</code>. Essentially, the step functions were evaluated at the time before the actual step, so that any results obtained by using the previous versions were off by one time step. With many points in time the changes should be small, but with only a few events there might be substantial differences.</li>
+<li>Fixed a bug where survival estimates were returned if <code><a href="../reference/adjustedcif.html">adjustedcif()</a></code> was used with non-competing risks data and <code>method="iptw_pseudo"</code>, <code>method="aiptw_pseudo"</code> or <code>method="direct_pseudo"</code>.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.11.3" id="adjustedcurves-0113">adjustedCurves 0.11.3<a class="anchor" aria-label="anchor" href="#adjustedcurves-0113"></a></h2><p class="text-muted">CRAN release: 2025-07-13</p>
