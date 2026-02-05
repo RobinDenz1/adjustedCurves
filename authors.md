@@ -7,7 +7,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/RobinDenz1/adjustedCurves/blob/main/inst/CITATION)
+[`inst/CITATION`](https://github.com/RobinDenz1/adjustedCurves/blob/v0.11.4/inst/CITATION)
 
 Denz R, Klaaßen-Mielke R, Timmesfeld N (2023). “A comparison of
 different methods to adjust survival curves for confounders.”
