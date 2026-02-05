@@ -1,6 +1,6 @@
 # Changelog
 
-## adjustedCurves 0.11.4 (developmental version)
+## adjustedCurves 0.11.4
 
 Enhancements
 
