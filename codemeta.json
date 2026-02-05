@@ -8,7 +8,7 @@
   "codeRepository": "https://github.com/RobinDenz1/adjustedCurves",
   "issueTracker": "https://github.com/RobinDenz1/adjustedCurves/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "0.11.3",
+  "version": "0.11.4",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -419,7 +419,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "3170.919KB",
+  "fileSize": "3143.197KB",
   "citation": [
     {
       "@type": "ScholarlyArticle",
