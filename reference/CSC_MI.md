@@ -87,7 +87,7 @@ csc_mods <- CSC_MI(mids=mids,
 #> Registered S3 method overwritten by 'broom':
 #>   method        from          
 #>   nobs.multinom riskRegression
-#> riskRegression version 2025.09.17
+#> riskRegression version 2026.02.13
 #> 
 #> Attaching package: ‘mice’
 #> The following object is masked from ‘package:stats’:
@@ -96,7 +96,5 @@ csc_mods <- CSC_MI(mids=mids,
 #> The following objects are masked from ‘package:base’:
 #> 
 #>     cbind, rbind
-#> Warning: Loglik converged before variable  1 ; coefficient may be infinite. 
-#> Warning: Loglik converged before variable  1 ; coefficient may be infinite. 
 # }
 ```

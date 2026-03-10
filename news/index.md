@@ -1,6 +1,17 @@
 # Changelog
 
+## adjustedCurves 0.11.5 (developmental version)
+
+Bug Fixes
+
+- Fixed a small bug that occurred in
+  [`adjustedsurv()`](https://robindenz1.github.io/adjustedCurves/reference/adjustedsurv.md)
+  with `method="iptw_km"`, when one or more rows of the supplied `data`
+  contained an event exactly at time 0.
+
 ## adjustedCurves 0.11.4
+
+CRAN release: 2026-02-05
 
 Enhancements
 
