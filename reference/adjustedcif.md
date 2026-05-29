@@ -17,7 +17,7 @@ adjustedcif(data, variable, ev_time, event, cause,
             n_cores=1, na.action=options()$na.action,
             clean_data=TRUE, iso_reg=FALSE,
             force_bounds=FALSE, mi_extrapolation=FALSE,
-            ...)
+            parallel_backend="psock", ...)
 ```
 
 ## Arguments
@@ -150,6 +150,17 @@ adjustedcif(data, variable, ev_time, event, cause,
   extending further than they should). By keeping this argument at
   `FALSE`, these times are removed from the output. If set to `TRUE`,
   all available estimates will be used.
+
+- parallel_backend:
+
+  A single character string, specifying what kind of parallel backend
+  should be used when performing bootstrapping on multiple processing
+  cores. Must be either `"psock"` (default) or `"fork"`. The former
+  works on both Windows, Linux and MacOS. The latter does not work on
+  Windows, but might be useful when parallelizing over multiple
+  computers and processing clusters per computer. Note that even on the
+  same random number generator seed, different parallel backends may
+  produce different results.
 
 - ...:
 

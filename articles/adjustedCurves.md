@@ -21,6 +21,7 @@ study comparing these methods can be found in Denz et al. (2023).
 A stable version of this package can be installed directly from CRAN:
 
 ``` r
+
 install.packages("adjustedCurves")
 ```
 
@@ -28,6 +29,7 @@ Alternatively, the developmental version can be installed from github
 using the `remotes` package:
 
 ``` r
+
 remotes::install_github("RobinDenz1/adjustedCurves")
 ```
 
@@ -40,6 +42,7 @@ Let’s start with the standard survival setting. Using the
 `sim_confounded_surv` function, we simulate some survival data:
 
 ``` r
+
 library(survival)
 library(ggplot2)
 library(riskRegression)
@@ -82,6 +85,7 @@ al. (1982)), we first have to fit a model. Here we will use a `coxph`
 model, but we could also use pretty much any other kind of model.
 
 ``` r
+
 # it is important to use X=TRUE in the coxph function call
 outcome_model <- survival::coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + x5 + 
                                    x6 + group, data=data_1, x=TRUE)
@@ -92,6 +96,7 @@ This model can then be used in a call to the
 function, as shown below:
 
 ``` r
+
 adjsurv <- adjustedsurv(data=data_1,
                         variable="group",
                         ev_time="time",
@@ -115,6 +120,7 @@ we used `conf_int=TRUE` in the original function call). We can take a
 look at this object using the following code:
 
 ``` r
+
 head(adjsurv$adj)
 ```
 
@@ -130,6 +136,7 @@ More importantly however, we can plot the survival curves directly using
 the `plot` method:
 
 ``` r
+
 plot(adjsurv)
 ```
 
@@ -140,6 +147,7 @@ documentation. To plot the point-wise confidence intervals, we can set
 the argument `conf_int` to TRUE:
 
 ``` r
+
 plot(adjsurv, conf_int=TRUE)
 ```
 
@@ -165,6 +173,7 @@ mechanism (see Xie and Liu (2005)). This can be done in many ways. Below
 we use a logistic regression model for exemplary purposes:
 
 ``` r
+
 treatment_model <- glm(group ~ x1 + x2 + x3 + x4 + x5 + x6,
                        data=data_1, family="binomial"(link="logit"))
 
@@ -180,6 +189,7 @@ adjsurv <- adjustedsurv(data=data_1,
 The resulting curves can be plotted as before:
 
 ``` r
+
 plot(adjsurv, conf_int=TRUE)
 ```
 
@@ -201,6 +211,7 @@ this time both models have to be supplied. Using the same models as
 above we can use the following syntax:
 
 ``` r
+
 adjsurv <- adjustedsurv(data=data_1,
                         variable="group",
                         ev_time="time",
@@ -244,6 +255,7 @@ function, which does the same thing as the
 function, but with competing risks data:
 
 ``` r
+
 # simulate the data
 data_2 <- sim_confounded_crisk(n=300)
 data_2$group <- as.factor(data_2$group)
@@ -269,6 +281,7 @@ implementation of this model is contained in the `riskRegression`
 R-Package.
 
 ``` r
+
 outcome_model <- riskRegression::CSC(Hist(time, event) ~ x1 + x2 + x3 + x4 + 
                                        x5 + x6 + group, data=data_2)
 ```
@@ -278,6 +291,7 @@ This model can then be used in a call to the
 function, as shown below:
 
 ``` r
+
 adjcif <- adjustedcif(data=data_2,
                       variable="group",
                       ev_time="time",
@@ -295,6 +309,7 @@ This shows the confounder-adjusted CIFs for `cause = 1`. By setting
 `cause` to `2` we get the confounder-adjusted CIFs for the other cause:
 
 ``` r
+
 adjcif <- adjustedcif(data=data_2,
                       variable="group",
                       ev_time="time",
@@ -315,6 +330,7 @@ The IPTW estimator can be used exactly the same way as we did with the
 function:
 
 ``` r
+
 treatment_model <- glm(group ~ x1 + x2 + x3 + x4 + x5 + x6,
                        data=data_2, family="binomial"(link="logit"))
 
@@ -348,6 +364,7 @@ treatments, where 1 and 2 have an identical treatment effect and
 selection process:
 
 ``` r
+
 # add another group
 # NOTE: this is done only to showcase the method and does not
 #       reflect what should be done in real situations
@@ -359,6 +376,7 @@ data_1$group[data_1$group=="1"] <- sample(c("1", "2"), replace=TRUE,
 The Direct Adjusted survival curves can be calculated exactly as before:
 
 ``` r
+
 outcome_model <- survival::coxph(Surv(time, event) ~ x1 + x2 + x3 + x4 + 
                                    x5 + x6 + group, data=data_1, x=TRUE)
 
@@ -379,6 +397,7 @@ regression model using the `multinom` function from the `nnet` R-Package
 and use it with the same code as before:
 
 ``` r
+
 treatment_model <- nnet::multinom(group ~ x1 + x2 + x3 + x4 + x5 + x6,
                                   data=data_1)
 ```
@@ -391,6 +410,7 @@ treatment_model <- nnet::multinom(group ~ x1 + x2 + x3 + x4 + x5 + x6,
     ## converged
 
 ``` r
+
 adjsurv <- adjustedsurv(data=data_1,
                         variable="group",
                         ev_time="time",

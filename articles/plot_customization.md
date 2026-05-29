@@ -18,6 +18,7 @@ simulated data, which can be created easily using the
 function included in this package.
 
 ``` r
+
 library(ggplot2)
 library(adjustedCurves)
 
@@ -31,6 +32,7 @@ We will use an inverse probability of treatment weighted Kaplan-Meier
 estimator here to obtain the adjusted survival curves:
 
 ``` r
+
 s_iptw <- adjustedsurv(data=data,
                        variable="group",
                        ev_time="time",
@@ -56,6 +58,7 @@ function on this `adjustedsurv` object without any argument results in
 the following plot:
 
 ``` r
+
 plot(s_iptw)
 ```
 
@@ -71,6 +74,7 @@ by default. By changing the `linetype` and `color` arguments, it is
 however also possible to use black and white plots instead:
 
 ``` r
+
 plot(s_iptw, linetype=TRUE, color=FALSE)
 ```
 
@@ -80,6 +84,7 @@ If colors should be used, it may be usefull to change the colors using
 the `custom_colors` argument:
 
 ``` r
+
 plot(s_iptw, custom_colors=c("red", "blue"))
 ```
 
@@ -89,6 +94,7 @@ When using linetypes, users can also supply custom linetypes in a
 similar fashion:
 
 ``` r
+
 plot(s_iptw, linetype=TRUE, custom_linetypes=c("dotdash", "solid"))
 ```
 
@@ -98,6 +104,7 @@ Titles and axis labels may also be changed using the respective
 arguments:
 
 ``` r
+
 plot(s_iptw, xlab="Time in Years", ylab="S(t)",
      title="This is the title", subtitle="This is the subtitle",
      legend.title="Sex")
@@ -114,6 +121,7 @@ function call, it is of course possible to visualize them using the
 [`plot()`](https://rdrr.io/r/graphics/plot.default.html) method as well:
 
 ``` r
+
 plot(s_iptw, conf_int=TRUE)
 ```
 
@@ -138,6 +146,7 @@ time from the plot as well. This can be done using the
 `median_surv_lines` argument:
 
 ``` r
+
 plot(s_iptw, median_surv_lines=TRUE)
 ```
 
@@ -148,6 +157,7 @@ change their color and change their linetype from `"dashed"` to
 `"dotdash"`:
 
 ``` r
+
 plot(s_iptw, median_surv_lines=TRUE, median_surv_linetype="dotdash",
      median_surv_size=0.7, median_surv_color="grey")
 ```
@@ -158,6 +168,7 @@ It is also possible to use other survival time quantiles by changing the
 `median_surv_quantile` argument:
 
 ``` r
+
 plot(s_iptw, median_surv_lines=TRUE, median_surv_quantile=0.4)
 ```
 
@@ -171,6 +182,7 @@ well, using the `censoring_ind` argument. We could, for example, add
 small vertical lines to show the censored observations:
 
 ``` r
+
 plot(s_iptw, censoring_ind="lines")
 ```
 
@@ -179,6 +191,7 @@ plot(s_iptw, censoring_ind="lines")
 Alternatively, points of any shape could be added as well:
 
 ``` r
+
 plot(s_iptw, censoring_ind="points", censoring_ind_shape=3,
      censoring_ind_size=2)
 ```
@@ -192,6 +205,7 @@ First, let’s call the
 the default risk table arguments:
 
 ``` r
+
 plot(s_iptw, risk_table=TRUE)
 ```
 
@@ -208,6 +222,7 @@ make much sense. Instead of using the weighted number at risk, we can
 also use the weighted number of cumulative events:
 
 ``` r
+
 plot(s_iptw, risk_table=TRUE, risk_table_type="n_events")
 ```
 
@@ -216,6 +231,7 @@ plot(s_iptw, risk_table=TRUE, risk_table_type="n_events")
 or the weighted cumulative number of censored observations:
 
 ``` r
+
 plot(s_iptw, risk_table=TRUE, risk_table_type="n_cens")
 ```
 
@@ -225,6 +241,7 @@ By setting `risk_table_stratify=TRUE`, we are also able to stratify the
 risk table by the different levels in `variable`:
 
 ``` r
+
 plot(s_iptw, risk_table=TRUE, risk_table_stratify=TRUE)
 ```
 
@@ -237,6 +254,7 @@ one digit to make this clear, but we can also set the
 which may be a little less confusing for some people:
 
 ``` r
+
 plot(s_iptw, risk_table=TRUE, risk_table_stratify=TRUE,
      risk_table_digits=0)
 ```
@@ -249,6 +267,7 @@ get more numbers at more points in time, we can simply augment the
 `x_breaks` or `x_n_breaks` arguments, like this:
 
 ``` r
+
 plot(s_iptw, risk_table=TRUE, risk_table_stratify=TRUE,
      risk_table_digits=0, x_n_breaks=10)
 ```
@@ -260,6 +279,7 @@ plot(s_iptw, risk_table=TRUE, risk_table_stratify=TRUE,
 The size and look of the numbers may be changed as well:
 
 ``` r
+
 plot(s_iptw, risk_table=TRUE, risk_table_stratify=TRUE,
      risk_table_digits=0, x_n_breaks=10, risk_table_size=3,
      risk_table_family="serif", risk_table_fontface="italic")
@@ -270,6 +290,7 @@ plot(s_iptw, risk_table=TRUE, risk_table_stratify=TRUE,
 Additionally, users may turn off the coloring of the numbers:
 
 ``` r
+
 plot(s_iptw, risk_table=TRUE, risk_table_stratify=TRUE,
      risk_table_digits=0, x_n_breaks=10,
      risk_table_stratify_color=FALSE)
@@ -280,6 +301,7 @@ plot(s_iptw, risk_table=TRUE, risk_table_stratify=TRUE,
 Or use different colors:
 
 ``` r
+
 plot(s_iptw, risk_table=TRUE, risk_table_stratify=TRUE,
      risk_table_digits=0, x_n_breaks=10,
      risk_table_custom_colors=c("brown", "orange"))
@@ -290,6 +312,7 @@ plot(s_iptw, risk_table=TRUE, risk_table_stratify=TRUE,
 The title and axis labels may of course also be changed or removed:
 
 ``` r
+
 plot(s_iptw, risk_table=TRUE, risk_table_stratify=TRUE,
      risk_table_digits=0, x_n_breaks=10,
      risk_table_title="Weighted Number of people at risk",
@@ -306,6 +329,7 @@ function of the `cowplot` package. Because of this, users may also set
 different `ggplot2` themes for the plots:
 
 ``` r
+
 plot(s_iptw, risk_table=TRUE, risk_table_stratify=TRUE,
      risk_table_digits=0, x_n_breaks=10,
      risk_table_theme=ggplot2::theme_classic(),
@@ -325,6 +349,7 @@ have been put together.
 This means that this code works fine:
 
 ``` r
+
 # legend is successfully put at the top
 plot(s_iptw) +
   theme(legend.position="top")
@@ -335,6 +360,7 @@ plot(s_iptw) +
 While the following code does not work:
 
 ``` r
+
 # legend remains at the right side
 plot(s_iptw, risk_table=TRUE) +
   theme(legend.position="top")
@@ -354,6 +380,7 @@ be applied to the risk table plot.
 The preceding example could be fixed using the following code:
 
 ``` r
+
 more_stuff <- list(theme(legend.position="top"))
 plot(s_iptw, risk_table=TRUE, additional_layers=more_stuff)
 ```
@@ -368,6 +395,7 @@ the arguments mentioned above, we can do quite a bit more, such as
 adding more geoms:
 
 ``` r
+
 more_stuff <- list(geom_hline(yintercept=0.7))
 plot(s_iptw, risk_table=TRUE, additional_layers=more_stuff)
 ```
@@ -377,6 +405,7 @@ plot(s_iptw, risk_table=TRUE, additional_layers=more_stuff)
 Which also works for the risk table subplot using the other argument:
 
 ``` r
+
 # remove x-axis ticks from risk table for some reason
 more_stuff <- list(theme(axis.ticks.x=element_blank()))
 plot(s_iptw, risk_table=TRUE, risk_table_additional_layers=more_stuff)
@@ -390,6 +419,7 @@ In this particular case, we would probably use something similar to the
 following code to create a decent output:
 
 ``` r
+
 plot(s_iptw, conf_int=TRUE, censoring_ind="lines", risk_table=TRUE,
      risk_table_stratify=TRUE, risk_table_digits=0, x_n_breaks=10,
      risk_table_title_size=11, median_surv_lines=TRUE,

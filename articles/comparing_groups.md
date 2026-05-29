@@ -34,6 +34,7 @@ function. This time, we set the `group_beta` argument to 0, indicating
 that there is no actual treatment effect here.
 
 ``` r
+
 library(adjustedCurves)
 library(survival)
 library(ggplot2)
@@ -58,6 +59,7 @@ probably not be enough to get stable estimates. We limit this number to
 100 here only due to computation time limitations of CRAN.
 
 ``` r
+
 adjsurv <- adjustedsurv(data=data,
                         variable="group",
                         ev_time="time",
@@ -75,6 +77,7 @@ adjsurv <- adjustedsurv(data=data,
 The resulting survival curves look like this:
 
 ``` r
+
 plot(adjsurv, conf_int=TRUE, risk_table=TRUE, risk_table_stratify=TRUE,
      risk_table_digits=0, x_n_breaks=10)
 ```
@@ -89,22 +92,27 @@ curves, which is what we would expect because there is no actual
 treatment effect and we correctly adjusted for the two confounders `x2`
 and `x5`.
 
-### Contrasting Survival Probabilities at $t$
+### Contrasting Survival Probabilities at $`t`$
 
 The probably easiest way to compare two survival curves is to directly
 compute their difference (Klein et al. 2007):
 
-$${\widehat{S}}_{diff}(t) = {\widehat{S}}_{0}(t) - {\widehat{S}}_{1}(t)$$
+``` math
+\hat{S}_{diff}(t) = \hat{S}_0(t) - \hat{S}_1(t)
+```
 
 or the ratio between them:
 
-$${\widehat{S}}_{ratio}(t) = \frac{{\widehat{S}}_{1}(t)}{{\widehat{S}}_{0}(t)}$$
+``` math
+\hat{S}_{ratio}(t) = \frac{\hat{S}_1(t)}{\hat{S}_0(t)}
+```
 
-at a specific point in time $t$. Here, ${\widehat{S}}_{z}(t)$ is the
-estimated adjusted survival probability at $t$, as returned by the
+at a specific point in time $`t`$. Here, $`\hat{S}_z(t)`$ is the
+estimated adjusted survival probability at $`t`$, as returned by the
 [`adjustedsurv()`](https://robindenz1.github.io/adjustedCurves/reference/adjustedsurv.md)
 function. Visually this is equivalent to the *vertical difference*
-between the curves, as shown here with a blue line segment at $t = 0.7$:
+between the curves, as shown here with a blue line segment at
+$`t = 0.7`$:
 
 ![](comparing_groups_files/figure-html/unnamed-chunk-4-1.png)
 
@@ -112,9 +120,10 @@ These quantities can be estimated directly using the
 [`adjusted_curve_diff()`](https://robindenz1.github.io/adjustedCurves/reference/adjusted_curve_diff.md)
 and
 [`adjusted_curve_ratio()`](https://robindenz1.github.io/adjustedCurves/reference/adjusted_curve_diff.md)
-functions. For $t = 0.7$ (arbitrary choice) we could use:
+functions. For $`t = 0.7`$ (arbitrary choice) we could use:
 
 ``` r
+
 adjusted_curve_diff(adjsurv, times=0.7, conf_int=TRUE)
 ```
 
@@ -124,6 +133,7 @@ adjusted_curve_diff(adjsurv, times=0.7, conf_int=TRUE)
 or
 
 ``` r
+
 adjusted_curve_ratio(adjsurv, times=0.7, conf_int=TRUE)
 ```
 
@@ -131,17 +141,18 @@ adjusted_curve_ratio(adjsurv, times=0.7, conf_int=TRUE)
     ## 1  0.7 1.238726 0.8510227  1.86518 0.2627507
 
 In this case, there seem to be only small differences between the
-survival curves at $t = 0.7$. Note that the p-values will always be
+survival curves at $`t = 0.7`$. Note that the p-values will always be
 identical between the two function calls, because they use essentially
 the same methodology to derive them.
 
 One potential problem of this type of comparison is that it is only
 concerned with a single point in time. There may be larger differences
 at other points in time that are neglected when only looking at
-$t = 0.7$. We can, however, also plot the difference or ratio curve
+$`t = 0.7`$. We can, however, also plot the difference or ratio curve
 directly using either (Coory et al. 2014):
 
 ``` r
+
 plot_curve_diff(adjsurv, conf_int=TRUE, max_t=0.7)
 ```
 
@@ -150,6 +161,7 @@ plot_curve_diff(adjsurv, conf_int=TRUE, max_t=0.7)
 or
 
 ``` r
+
 plot_curve_ratio(adjsurv, conf_int=TRUE, max_t=0.7)
 ```
 
@@ -163,16 +175,17 @@ to show the entire curves.
 ### Adjusted Survival Time Quantiles
 
 Survival time quantiles are defined as the earliest point in time at
-which the survival probability in a group reaches a specific value $q$.
-The most popular survival time quantile is the *median survival time*,
-which is just the 0.5 survival time quantile. This kind of value can be
-estimated for adjusted survival curves as well, leading to estimates of
-the adjusted survival time quantiles. Formally:
+which the survival probability in a group reaches a specific value
+$`q`$. The most popular survival time quantile is the *median survival
+time*, which is just the 0.5 survival time quantile. This kind of value
+can be estimated for adjusted survival curves as well, leading to
+estimates of the adjusted survival time quantiles. Formally:
 
-$${\widehat{Q}}_{z}(p) = min\left( t|{\widehat{S}}_{z}(t) \leq p \right)$$
+``` math
+\hat{Q}_z(p) = min\left(t | \hat{S}_z(t) \leq p\right)
+```
 
-where ${\widehat{S}}_{z}(t)$ is the estimated adjusted survival function
-for .
+where $`\hat{S}_z(t)`$ is the estimated adjusted survival function for .
 
 This statistic can be calculated directly from an `adjustedsurv` object
 using the
@@ -181,6 +194,7 @@ function. Using the above example, we may calculate the median survival
 time using:
 
 ``` r
+
 adjusted_surv_quantile(adjsurv, p=0.5, conf_int=TRUE)
 ```
 
@@ -191,11 +205,15 @@ adjusted_surv_quantile(adjsurv, p=0.5, conf_int=TRUE)
 We may now also compare these values directly, by calculating their
 difference (Chen & Zhang 2016):
 
-$${\widehat{Q}}_{diff}(p) = {\widehat{Q}}_{0}(p) - {\widehat{Q}}_{1}(p)$$
+``` math
+\hat{Q}_{diff}(p) = \hat{Q}_0(p) - \hat{Q}_1(p)
+```
 
 or ratio:
 
-$${\widehat{Q}}_{ratio}(p) = \frac{{\widehat{Q}}_{1}(p)}{{\widehat{Q}}_{0}(p)}$$
+``` math
+\hat{Q}_{ratio}(p) = \frac{\hat{Q}_1(p)}{\hat{Q}_0(p)}
+```
 
 and testing whether this quantity is significantly different from 0
 (differences) or 1 (ratios) respectively. This type of difference can be
@@ -213,6 +231,7 @@ call, which is the case here. The syntax when using the difference is as
 follows:
 
 ``` r
+
 adjusted_surv_quantile(adjsurv, p=0.5, conf_int=TRUE, contrast="diff")
 ```
 
@@ -223,10 +242,11 @@ The difference is rather small, with a confidence interval that contains
 0 and a relatively large p-value, indicating that there is no difference
 between the curves, as expected (we simulated the data with no actual
 group effect). It can be interpreted as the horizontal difference
-between the two survival curves at $q$. Similar results can be obtained
-using the ratio of the two median survival times:
+between the two survival curves at $`q`$. Similar results can be
+obtained using the ratio of the two median survival times:
 
 ``` r
+
 adjusted_surv_quantile(adjsurv, p=0.5, conf_int=TRUE, contrast="ratio")
 ```
 
@@ -247,10 +267,12 @@ which can then be interpreted as the mean survival time up to that point
 this quantity, the resulting RMST is also adjusted (Conner et al. 2019).
 Formally, the RMST is defined as:
 
-$${\widehat{RMST}}_{z}(to) = \int_{0}^{to}{\widehat{S}}_{z}(t)dt$$
+``` math
+\hat{RMST}_{z}(to) = \int_{0}^{to} \hat{S}_z(t)dt
+```
 
-where ${\widehat{S}}_{z}(t)$ is again the estimated adjusted survival
-curve and `to` is the value up to which the survival curves should be
+where $`\hat{S}_z(t)`$ is again the estimated adjusted survival curve
+and `to` is the value up to which the survival curves should be
 integrated. The following plot visually depicts the area in question for
 `to = 0.7` in our example:
 
@@ -261,6 +283,7 @@ This quantity can be estimated using the
 function. Using `to=0.7` we may use the following syntax:
 
 ``` r
+
 adjusted_rmst(adjsurv, to=0.7, conf_int=TRUE)
 ```
 
@@ -277,11 +300,15 @@ with overlapping 95% confidence intervals.
 
 As before, we may calculate the difference between the two RMST values:
 
-$${\widehat{RMST}}_{diff}(to) = {\widehat{RMST}}_{0}(to) - {\widehat{RMST}}_{1}(to)$$
+``` math
+\hat{RMST}_{diff}(to) = \hat{RMST}_0(to) - \hat{RMST}_1(to)
+```
 
 or the ratio between them:
 
-$${\widehat{RMST}}_{ratio}(to) = \frac{{\widehat{RMST}}_{1}(to)}{{\widehat{RMST}}_{0}(to)}.$$
+``` math
+\hat{RMST}_{ratio}(to) = \frac{\hat{RMST}_1(to)}{\hat{RMST}_0(to)}.
+```
 
 This may also be done using the
 [`adjusted_rmst()`](https://robindenz1.github.io/adjustedCurves/reference/adjusted_rmst.md)
@@ -289,6 +316,7 @@ function. The difference and its’ associated confidence interval may be
 estimated using:
 
 ``` r
+
 adjusted_rmst(adjsurv, to=0.7, conf_int=TRUE, contrast="diff")
 ```
 
@@ -298,6 +326,7 @@ adjusted_rmst(adjsurv, to=0.7, conf_int=TRUE, contrast="diff")
 The ratio can be estimated in a similar fashion, using:
 
 ``` r
+
 adjusted_rmst(adjsurv, to=0.7, conf_int=TRUE, contrast="ratio")
 ```
 
@@ -318,6 +347,7 @@ function.
 Here we simply plot the RMST curves per group:
 
 ``` r
+
 plot_rmst_curve(adjsurv, conf_int=TRUE)
 ```
 
@@ -326,6 +356,7 @@ plot_rmst_curve(adjsurv, conf_int=TRUE)
 But we may also directly plot the difference:
 
 ``` r
+
 plot_rmst_curve(adjsurv, conf_int=TRUE, contrast="diff")
 ```
 
@@ -334,6 +365,7 @@ plot_rmst_curve(adjsurv, conf_int=TRUE, contrast="diff")
 or their ratio:
 
 ``` r
+
 plot_rmst_curve(adjsurv, conf_int=TRUE, contrast="ratio")
 ```
 
@@ -345,15 +377,18 @@ which again shows no difference between the curves, as expected.
 
 A different but closely related summary statistic to compare two
 survival curves is the area between two survival curves in some interval
-from $t = a$ to $t = b$, defined as:
+from $`t = a`$ to $`t = b`$, defined as:
 
-$$\widehat{\gamma}(a,b) = \int_{a}^{b}{\widehat{S}}_{0}(t) - {\widehat{S}}_{1}(t)dt.$$
+``` math
+\hat{\gamma}(a, b) = \int_{a}^{b} \hat{S}_0(t) - \hat{S}_1(t)dt.
+```
 
 The following plot visually shows the area in question using the
 [`plot_curve_diff()`](https://robindenz1.github.io/adjustedCurves/reference/plot_curve_diff.md)
 function:
 
 ``` r
+
 plot_curve_diff(adjsurv, fill_area=TRUE, integral=TRUE, integral_to=0.7,
                 max_t=1, text_pos_x="right")
 ```
@@ -376,6 +411,7 @@ bootstrapping. The
 function directly implements this:
 
 ``` r
+
 adjtest <- adjusted_curve_test(adjsurv, from=0, to=0.7)
 adjtest
 ```
@@ -403,6 +439,7 @@ associated [`plot()`](https://rdrr.io/r/graphics/plot.default.html)
 function:
 
 ``` r
+
 plot(adjtest, type="curves")
 ```
 
@@ -441,7 +478,7 @@ not always be the case in real data analysis. Each of the comparison
 methods asks fundamentally different questions about the data, resulting
 in different hypotheses being tested. For example, it may be the case
 that there indeed is a difference between survival probabilities at
-$t = 5$, but there is no difference in median survival time.
+$`t = 5`$, but there is no difference in median survival time.
 
 Users need to make sure that the choice of comparison method is in
 accord with the causal question they want to answer. It is also good

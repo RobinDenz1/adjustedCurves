@@ -87,7 +87,7 @@ csc_mods <- CSC_MI(mids=mids,
 #> Registered S3 method overwritten by 'broom':
 #>   method        from          
 #>   nobs.multinom riskRegression
-#> riskRegression version 2026.02.13
+#> riskRegression version 2026.03.11
 #> 
 #> Attaching package: ‘mice’
 #> The following object is masked from ‘package:stats’:

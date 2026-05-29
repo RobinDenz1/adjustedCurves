@@ -22,6 +22,7 @@ cited in the documentation.
 A stable version can be installed directly from CRAN using:
 
 ``` r
+
 install.packages("adjustedCurves")
 ```
 
@@ -29,6 +30,7 @@ The developmental version can be installed using the `devtools`
 R-Package:
 
 ``` r
+
 library(devtools)
 
 install_github("https://github.com/RobinDenz1/adjustedCurves")
@@ -45,6 +47,7 @@ This minimal example shows how to estimate and plot adjusted survival
 curves using *Direct Adjustment* with this package:
 
 ``` r
+
 library(adjustedCurves)
 library(ggplot2)
 library(survival)
@@ -77,6 +80,7 @@ Here is an example of how to estimate and plot adjusted survival curves
 using *Inverse Probability of Treatment Weighting*:
 
 ``` r
+
 # estimate a treatment assignment model
 glm_mod <- glm(group ~ x2 + x3 + x5 + x6, data=sim_dat,
                family="binomial"(link="logit"))
@@ -101,6 +105,7 @@ It is also possible to plot the difference between two curves using the
 function:
 
 ``` r
+
 plot_curve_diff(adjsurv, conf_int=TRUE, color="blue")
 ```
 
@@ -111,6 +116,7 @@ specified interval (here 0 to 0.75), the `adjustedsurv` call has to be
 made with `bootstrap=TRUE`:
 
 ``` r
+
 adjsurv <- adjustedsurv(data=sim_dat,
                         variable="group",
                         ev_time="time",

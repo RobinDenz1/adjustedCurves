@@ -2,6 +2,15 @@
 
 ## adjustedCurves 0.11.5 (developmental version)
 
+Enhancements
+
+- Added the `parallel_backend` argument to
+  [`adjustedsurv()`](https://robindenz1.github.io/adjustedCurves/reference/adjustedsurv.md)
+  and
+  [`adjustedcif()`](https://robindenz1.github.io/adjustedCurves/reference/adjustedcif.md)
+  to allow usage of FORK based parallel backends on Linux and MacOS, as
+  suggested by [@HUI950319](https://github.com/HUI950319)
+
 Bug Fixes
 
 - Fixed a small bug that occurred in
