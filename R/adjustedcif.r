@@ -328,7 +328,7 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
                            event=event, method=method, times=times,
                            i=i, cif_fun=cif_fun, na.action=na.action,
                            force_bounds=force_bounds, iso_reg=iso_reg,
-                           causa=cause, ...)
+                           cause=cause, ...)
         }, mc.cores=n_cores, mc.set.seed=TRUE)
 
       } else {
