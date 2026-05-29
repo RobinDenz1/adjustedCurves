@@ -11,7 +11,7 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
                         na.action=options()$na.action,
                         clean_data=TRUE, iso_reg=FALSE,
                         force_bounds=FALSE, mi_extrapolation=FALSE,
-                        ...) {
+                        parallel_backend="psock", ...) {
 
   var_w <- var_b <- B <- var_t <- cif_est <- NULL
 
@@ -27,7 +27,8 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
                            conf_int=conf_int, conf_level=conf_level,
                            times=times, bootstrap=bootstrap,
                            n_boot=n_boot, na.action=na.action,
-                           clean_data=clean_data, ...)
+                           clean_data=clean_data,
+                           parallel_backend=parallel_backend, ...)
 
   # get required packages
   three_dots <- list(...)
@@ -282,7 +283,7 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
     # bootstrap the whole procedure, can be useful to get se, p-values
     if (bootstrap) {
 
-      if (n_cores > 1) {
+      if (n_cores > 1 && parallel_backend=="psock") {
         # needed packages for parallel processing
         requireNamespace("parallel")
         requireNamespace("doRNG")
@@ -308,6 +309,27 @@ adjustedcif <- function(data, variable, ev_time, event, cause, method,
                            iso_reg=iso_reg, ...)
         }
         parallel::stopCluster(cl)
+
+      } else if (n_cores > 1 && parallel_backend=="fork") {
+
+        # error on windows
+        if (.Platform$OS.type=="windows") {
+          stop("parallel_backend='fork' is currently not available on",
+               " Windows. Use parallel_backend='psock' instead or set",
+               " n_cores=1.", call.=FALSE)
+        }
+
+        requireNamespace("parallel")
+
+        old_kind <- RNGkind("L'Ecuyer-CMRG")
+        on.exit(RNGkind(old_kind[1]), add = TRUE)
+        boot_out <- parallel::mclapply(seq_len(n_boot), function(i) {
+          adjustedcif_boot(data=data, variable=variable, ev_time=ev_time,
+                           event=event, method=method, times=times,
+                           i=i, cif_fun=cif_fun, na.action=na.action,
+                           force_bounds=force_bounds, iso_reg=iso_reg,
+                           causa=cause, ...)
+        }, mc.cores=n_cores, mc.set.seed=TRUE)
 
       } else {
 

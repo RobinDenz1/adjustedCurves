@@ -18,7 +18,8 @@ test_that("variable not in data", {
                                          bootstrap=FALSE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                "grouup is not a valid column name in 'data'.")
 })
 
@@ -34,7 +35,8 @@ test_that("variable has wrong type", {
                                          bootstrap=FALSE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
               paste0("The column in 'data' specified by 'variable' needs to be",
                      " a factor variable."))
 })
@@ -51,7 +53,8 @@ test_that("variable has wrong length", {
                                          bootstrap=FALSE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                 paste0("'variable' must be a character string of length 1",
                        " specifying the grouping variable in 'data'."))
 })
@@ -68,7 +71,8 @@ test_that("non-standard evaluation in variable", {
                                          bootstrap=FALSE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                paste0("'variable' must be a character string specifying ",
                       "a variable in 'data'."))
 })
@@ -85,7 +89,8 @@ test_that("variable is really wrong", {
                                          bootstrap=FALSE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                paste0("Arguments 'variable', 'ev_time' and 'event' ",
                       "must be character strings, specifying variables ",
                       "in 'data'."))
@@ -103,7 +108,8 @@ test_that("ev_time not in data", {
                                          bootstrap=FALSE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                "time2 is not a valid column name in 'data'.")
 })
 
@@ -119,7 +125,8 @@ test_that("ev_time wrong format", {
                                          bootstrap=FALSE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                "The column in 'data' specified by 'ev_time' must be numeric.")
 })
 
@@ -135,7 +142,8 @@ test_that("ev_time wrong length", {
                                          bootstrap=FALSE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                paste0("'ev_time' must be a character string of length 1 ",
                       "specifying the time until the event or ",
                       "censoring occured."))
@@ -156,7 +164,8 @@ test_that("ev_time contains negative values", {
                                          bootstrap=FALSE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                "All values in the 'ev_time' variable must be >= 0.")
 })
 
@@ -172,7 +181,8 @@ test_that("non-standard evaluation in ev_time", {
                                          bootstrap=FALSE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                paste0("'ev_time' must be a character string specifying a ",
                       "variable in 'data'."))
 })
@@ -189,7 +199,8 @@ test_that("event not in data", {
                                          bootstrap=FALSE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                "event2 is not a valid column name in 'data'.")
 })
 
@@ -205,7 +216,8 @@ test_that("event wrong format", {
                                          bootstrap=FALSE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
       "The column in 'data' specified by 'event' must be numeric or logical.")
 })
 
@@ -221,7 +233,8 @@ test_that("event wrong type", {
                                          bootstrap=FALSE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                paste0("Arguments 'variable', 'ev_time' and 'event'",
                       " must be ", "character strings, specifying ",
                       "variables in 'data'."))
@@ -242,7 +255,8 @@ test_that("event contains more than two event types", {
                                          bootstrap=FALSE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                paste0("The 'event' variable has to be a ",
                       "binary event indicator.", " For data with competing ",
                       "risks, see the 'adjustedcif' function."))
@@ -260,7 +274,8 @@ test_that("event wrong length", {
                                          bootstrap=FALSE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                paste0("'event' must be a character string of length 1",
                       " specifying the binary event indicator."))
 })
@@ -277,7 +292,8 @@ test_that("non-standard evaluation in event", {
                                          bootstrap=FALSE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                paste0("'event' must be a character string specifying ",
                       "a variable in 'data'."))
 })
@@ -294,7 +310,8 @@ test_that("method undefined", {
                                          bootstrap=FALSE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                paste0("Method 'km3' is undefined. See documentation",
                       " for details on available methods."))
 })
@@ -311,7 +328,8 @@ test_that("method wrong length", {
                                          bootstrap=FALSE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                paste0("'method' must be a single character string. ",
                       "Using multiple methods in one call is ",
                       "currently not supported."))
@@ -329,7 +347,8 @@ test_that("wrong conf_int type", {
                                          bootstrap=FALSE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                "'conf_int' must be either TRUE or FALSE.")
 })
 
@@ -345,7 +364,8 @@ test_that("wrong conf_int length", {
                                          bootstrap=FALSE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                "'conf_int' must be either TRUE or FALSE, not a vector.")
 })
 
@@ -361,7 +381,8 @@ test_that("wrong conf_level type", {
                                          bootstrap=FALSE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                "'conf_level' must be a number < 1 and > 0.")
 })
 
@@ -377,7 +398,8 @@ test_that("wrong conf_level format", {
                                          bootstrap=FALSE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                "'conf_level' must be a number < 1 and > 0.")
 })
 
@@ -393,7 +415,8 @@ test_that("wrong conf_level length", {
                                          bootstrap=FALSE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                "'conf_level' must be a number < 1 and > 0, not a vector.")
 })
 
@@ -409,7 +432,8 @@ test_that("wrong bootstrap type", {
                                          bootstrap=1,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                "'bootstrap' must be either TRUE or FALSE.")
 })
 
@@ -425,7 +449,8 @@ test_that("wrong bootstrap length", {
                                          bootstrap=c(TRUE, TRUE),
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                "'bootstrap' must be either TRUE or FALSE, not a vector.")
 })
 
@@ -441,7 +466,8 @@ test_that("wrong n_boot type", {
                                          bootstrap=TRUE,
                                          n_boot=-2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                "'n_boot' must be a positive integer > 2.")
 })
 
@@ -457,7 +483,8 @@ test_that("wrong n_boot length", {
                                          bootstrap=TRUE,
                                          n_boot=c(10, 10),
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                "'n_boot' must be a positive integer > 2, not a vector.")
 })
 
@@ -473,7 +500,8 @@ test_that("wrong times", {
                                          bootstrap=TRUE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                "'times' must be a numeric vector or NULL.")
 })
 
@@ -489,7 +517,8 @@ test_that("wrong na.action type", {
                                          bootstrap=TRUE,
                                          n_boot=2,
                                          na.action=1,
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
   "'na.action' must be a function or a single character string. See details.")
 })
 
@@ -505,7 +534,8 @@ test_that("wrong na.action length", {
                                          bootstrap=TRUE,
                                          n_boot=2,
                                          na.action=c("1", "1"),
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                paste0("'na.action' must be a function or a character string,",
                       " not a vector. See documentation."))
 })
@@ -522,7 +552,8 @@ test_that("wrong clean_data type", {
                                          bootstrap=TRUE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=1),
+                                         clean_data=1,
+                                         parallel_backend="psock"),
                "'clean_data' must be either TRUE or FALSE.")
 })
 
@@ -538,7 +569,8 @@ test_that("wrong clean_data length", {
                                          bootstrap=TRUE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=c(TRUE, TRUE)),
+                                         clean_data=c(TRUE, TRUE),
+                                         parallel_backend="psock"),
                "'clean_data' must be either TRUE or FALSE, not a vector.")
 })
 
@@ -554,7 +586,8 @@ test_that("no extrapolation", {
                                          bootstrap=TRUE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                paste0("Values in 'times' must be smaller than ",
                       "max(data[,ev_time]). No extrapolation allowed."),
                fixed=TRUE)
@@ -573,7 +606,8 @@ test_that("bootstrap only with treatment_model that can be updated", {
                                          n_boot=2,
                                          na.action="na.omit",
                                          clean_data=TRUE,
-                                         treatment_model=runif(n=20)),
+                                         treatment_model=runif(n=20),
+                                         parallel_backend="psock"),
                paste0("'treatment_model' needs to be a model that can be ",
                       "refit or a formula object when using bootstrap=TRUE."))
 })
@@ -590,7 +624,8 @@ test_that("no outcome_vars argument", {
                                          bootstrap=TRUE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                paste0("Argument 'outcome_vars' must be specified when using ",
                       "method='direct_pseudo'. See documentation."))
 })
@@ -608,7 +643,8 @@ test_that("wrong outcome_vars argument", {
                                          n_boot=2,
                                          na.action="na.omit",
                                          clean_data=TRUE,
-                                         outcome_vars=2),
+                                         outcome_vars=2,
+                                         parallel_backend="psock"),
                paste0("'outcome_vars' should be a character vector of ",
                       "column names in 'data', used to model ",
                       "the outcome mechanism."))
@@ -628,7 +664,8 @@ test_that("ps_scores > 1 or < 0", {
                                          na.action="na.omit",
                                          clean_data=TRUE,
                                          outcome_vars=c("x1"),
-                                         treatment_model=rep(2, nrow(sim_dat))),
+                                         treatment_model=rep(2, nrow(sim_dat)),
+                                         parallel_backend="psock"),
                paste0("Propensity Scores supplied using the 'treatment_model' ",
                       "argument must be smaller than 1 and bigger than 0."))
 })
@@ -647,7 +684,8 @@ test_that("ps_scores wrong length", {
                                          na.action="na.omit",
                                          clean_data=TRUE,
                                          outcome_vars=c("x1"),
-                                         treatment_model=c(0.1, 0.2)),
+                                         treatment_model=c(0.1, 0.2),
+                                         parallel_backend="psock"),
                paste0("The vector of propensity score supplied in the ",
                       "'treatment_model' argument must be of ",
                       "length nrow(data)."), fixed=TRUE)
@@ -667,7 +705,8 @@ test_that("wrong type_time argument", {
                                          na.action="na.omit",
                                          clean_data=TRUE,
                                          outcome_vars=c("x1"),
-                                         type_time="aha"),
+                                         type_time="aha",
+                                         parallel_backend="psock"),
                "'type_time' should be either 'factor', 'bs' or 'ns'.")
 })
 
@@ -686,7 +725,8 @@ test_that("too many spline_df", {
                                            clean_data=TRUE,
                                            outcome_vars=c("x1"),
                                            type_time="bs",
-                                           spline_df=10),
+                                           spline_df=10,
+                                           parallel_backend="psock"),
                "'spline_df' > len(times) might lead to problems.",
                fixed=TRUE)
 })
@@ -705,7 +745,8 @@ test_that("too many spline_df with default", {
                                            na.action="na.omit",
                                            clean_data=TRUE,
                                            outcome_vars=c("x1"),
-                                           type_time="bs"),
+                                           type_time="bs",
+                                           parallel_backend="psock"),
                  paste0("'spline_df' > length(times) might lead to ",
                         "problems when type_time!='factor'."),
                  fixed=TRUE)
@@ -724,7 +765,8 @@ test_that("not enough time points", {
                                          n_boot=2,
                                          na.action="na.omit",
                                          clean_data=TRUE,
-                                         outcome_vars=c("x1")),
+                                         outcome_vars=c("x1"),
+                                         parallel_backend="psock"),
                paste0("'geese' models require at least two distinct ",
                       "time points. Add more points in time to 'times' ",
                       "and try again."))
@@ -742,7 +784,8 @@ test_that("missing treatment_vars argument", {
                                          bootstrap=TRUE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                paste0("Argument 'treatment_vars' has to be specified when ",
                       "using method='emp_lik'."))
 })
@@ -760,7 +803,8 @@ test_that("wrong treatment_vars argument", {
                                          n_boot=2,
                                          na.action="na.omit",
                                          clean_data=TRUE,
-                                         treatment_vars=1),
+                                         treatment_vars=1,
+                                         parallel_backend="psock"),
                paste0("'treatment_vars' should be a character vector of ",
                       "column names in 'data', used to model the ",
                       "outcome mechanism."))
@@ -779,7 +823,8 @@ test_that("treatment_vars not in data", {
                                          n_boot=2,
                                          na.action="na.omit",
                                          clean_data=TRUE,
-                                         treatment_vars=c("x7", "x8")),
+                                         treatment_vars=c("x7", "x8"),
+                                         parallel_backend="psock"),
                paste0("'treatment_vars' should be a character vector of ",
                       "column names in 'data', used to model the ",
                       "outcome mechanism."))
@@ -799,7 +844,8 @@ test_that("wrong standardize argument", {
                                          na.action="na.omit",
                                          clean_data=TRUE,
                                          treatment_vars=c("x1"),
-                                         standardize=2),
+                                         standardize=2,
+                                         parallel_backend="psock"),
                "Argument 'standardize' must be either TRUE or FALSE.")
 })
 
@@ -817,7 +863,8 @@ test_that("wrong moment argument", {
                                          na.action="na.omit",
                                          clean_data=TRUE,
                                          treatment_vars=c("x1"),
-                                         moment=1),
+                                         moment=1,
+                                         parallel_backend="psock"),
                "Argument 'moment' must be either 'first' or 'second'.")
 })
 
@@ -834,7 +881,8 @@ test_that("0/1 variables in method='emp_lik'", {
                                            n_boot=2,
                                            na.action="na.omit",
                                            clean_data=TRUE,
-                                           treatment_vars=c("x1")),
+                                           treatment_vars=c("x1"),
+                                           parallel_backend="psock"),
                paste0("Dichotomous variables coded with 0 and 1 found in",
                       "  'treatment_vars'. Consider recoding to -1 and 1 ",
                       "to avoid estimation problems."))
@@ -853,7 +901,8 @@ test_that("weights in matching", {
                                      n_boot=2,
                                      na.action="na.omit",
                                      clean_data=TRUE,
-                                     treatment_model=runif(20, min=10, max=20)),
+                                     treatment_model=runif(20, min=10, max=20),
+                                     parallel_backend="psock"),
                  paste0("Propensity Scores > 1 or < 0 not allowed. ",
                         "Perhaps you supplied weights on accident?"))
 })
@@ -870,7 +919,8 @@ test_that("no treatment_model with matching", {
                                          bootstrap=FALSE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                paste0("Argument 'treatment_model' must be specified when ",
                       "using method='matching'."))
 })
@@ -887,7 +937,8 @@ test_that("no treatment_model with method='aiptw'", {
                                          bootstrap=FALSE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
     "Argument 'treatment_model' must be specified when using method='aiptw'.")
 })
 
@@ -907,7 +958,8 @@ test_that("no outcome_model with method='aiptw'", {
                                          n_boot=2,
                                          na.action="na.omit",
                                          clean_data=TRUE,
-                                         treatment_model=treat_mod),
+                                         treatment_model=treat_mod,
+                                         parallel_backend="psock"),
       "Argument 'outcome_model' must be specified when using method='aiptw'.")
 })
 
@@ -923,7 +975,8 @@ test_that("no outcome_model with method='direct'", {
                                          bootstrap=FALSE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
       "Argument 'outcome_model' must be specified when using method='direct'.")
 })
 
@@ -943,7 +996,8 @@ test_that("bootstrapping with pecRpart", {
                                          n_boot=2,
                                          na.action="na.omit",
                                          clean_data=TRUE,
-                                         outcome_model=outcome_model),
+                                         outcome_model=outcome_model,
+                                         parallel_backend="psock"),
                paste0("Bootstrapping is currently not supported with ",
                       "method='direct' and an 'outcome_model' of ",
                       "class 'pecRpart'."))
@@ -964,7 +1018,8 @@ test_that("glm with censoring", {
                                          n_boot=2,
                                          na.action="na.omit",
                                          clean_data=TRUE,
-                                         outcome_model=outcome_model),
+                                         outcome_model=outcome_model,
+                                         parallel_backend="psock"),
                paste0("'outcome_model' of class c('glm', 'ols', ",
                       "'randomForest') are only allowed when there ",
                       "is no censoring."), fixed=TRUE)
@@ -985,7 +1040,8 @@ test_that("coxph not including 'variable'", {
                                          n_boot=2,
                                          na.action="na.omit",
                                          clean_data=TRUE,
-                                         outcome_model=outcome_model),
+                                         outcome_model=outcome_model,
+                                         parallel_backend="psock"),
                "'variable' has to be included in the cox-regression model.")
 })
 
@@ -1004,7 +1060,8 @@ test_that("strat_cupples with continuous confounder", {
                                          n_boot=2,
                                          na.action="na.omit",
                                          clean_data=TRUE,
-                                         adjust_vars="x7"),
+                                         adjust_vars="x7",
+                                         parallel_backend="psock"),
                paste0("Variables in 'adjust_vars' have to be integer, ",
                       "factor or character variables. Continuous variables ",
                       "are not allowed when using method='strat_cupples'."))
@@ -1023,7 +1080,8 @@ test_that("adjust_vars not in data", {
                                          n_boot=2,
                                          na.action="na.omit",
                                          clean_data=TRUE,
-                                         adjust_vars="x8"),
+                                         adjust_vars="x8",
+                                         parallel_backend="psock"),
                "'adjust_vars' must specify valid column names in 'data'.")
 })
 
@@ -1041,7 +1099,8 @@ test_that("invalid reference data", {
                                          na.action="na.omit",
                                          clean_data=TRUE,
                                          adjust_vars="x1",
-                                         reference=sim_dat[, c("x2", "x3")]),
+                                         reference=sim_dat[, c("x2", "x3")],
+                                         parallel_backend="psock"),
                paste0("If a 'reference' data.frame is supplied, it ",
                       "needs to contain all variables listed ",
                       "in 'adjust_vars'."))
@@ -1062,7 +1121,8 @@ test_that("strat_cupples with '.ALL' column", {
                                          n_boot=2,
                                          na.action="na.omit",
                                          clean_data=TRUE,
-                                         adjust_vars="x1"),
+                                         adjust_vars="x1",
+                                         parallel_backend="psock"),
                paste0("The column name '.ALL' cannot be used with ",
                       "method='strat_cupples'. Please rename that ",
                       "variable and rerun the function."))
@@ -1080,7 +1140,8 @@ test_that("'adjust_vars' not specified with strat_ method", {
                                          bootstrap=TRUE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
 "Argument 'adjust_vars' needs to be specified when using method='strat_amato'.")
 })
 
@@ -1099,7 +1160,8 @@ test_that("strat_amato with '.COVARS' column", {
                                          n_boot=2,
                                          na.action="na.omit",
                                          clean_data=TRUE,
-                                         adjust_vars="x1"),
+                                         adjust_vars="x1",
+                                         parallel_backend="psock"),
                paste0("The column name '.COVARS' cannot be used with ",
                       "method='strat_amato'. Please rename that variable ",
                       "and rerun the function."))
@@ -1117,7 +1179,8 @@ test_that("no 'treatment_model' with iptw_km / iptw_cox", {
                                          bootstrap=TRUE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                paste0("Argument 'treatment_model' must be defined when ",
                       "using method='iptw_km'. See documentation."))
 })
@@ -1134,7 +1197,8 @@ test_that("no 'treatment_model' with iptw_pseudo / aiptw_pseudo", {
                                          bootstrap=TRUE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                paste0("Argument 'treatment_model' must be specified when ",
                       "using method='iptw_pseudo'. See documentation."))
 })
@@ -1155,7 +1219,8 @@ test_that("wrong 'treatment_model' with iptw_km / iptw_cox", {
                                          n_boot=2,
                                          na.action="na.omit",
                                          clean_data=TRUE,
-                                         treatment_model=treat_mod),
+                                         treatment_model=treat_mod,
+                                         parallel_backend="psock"),
                paste0("'treatment_model' must be a glm or multinom object, ",
                       "a formula or a numeric vector of weights. ",
                       "See documentation."))
@@ -1175,7 +1240,8 @@ test_that("wrong 'treatment_model' with aiptw_pseudo", {
                                          na.action="na.omit",
                                          clean_data=TRUE,
                                          treatment_model=treat_mod,
-                                         outcome_vars=c("x1", "x2")),
+                                         outcome_vars=c("x1", "x2"),
+                                         parallel_backend="psock"),
                paste0("Argument 'treatment_model' must be one of: 'glm', ",
                       "'multinom', 'mira' or a numeric vector of ",
                       "propensity scores."))
@@ -1199,7 +1265,8 @@ test_that("wrong selectCox mod", {
                                          n_boot=2,
                                          na.action="na.omit",
                                          clean_data=TRUE,
-                                         outcome_model=mod),
+                                         outcome_model=mod,
+                                         parallel_backend="psock"),
                paste0("The final 'fit' object in the 'selectCox' model ",
                       "must be a coxph object, not survfit."))
 })
@@ -1217,7 +1284,8 @@ test_that("wrong weights length with iptw_km / iptw_cox", {
                                          n_boot=2,
                                          na.action="na.omit",
                                          clean_data=TRUE,
-                                         treatment_model=c(1, 2)),
+                                         treatment_model=c(1, 2),
+                                         parallel_backend="psock"),
                paste0("If weights are supplied directly in the ",
                       "'treatment_model' argument, they must be of ",
                       "length nrow(data)."), fixed=TRUE)
@@ -1236,7 +1304,8 @@ test_that("negative weights with iptw_km / iptw_cox", {
                                         n_boot=2,
                                         na.action="na.omit",
                                         clean_data=TRUE,
-                                        treatment_model=rep(-1, nrow(sim_dat))),
+                                        treatment_model=rep(-1, nrow(sim_dat)),
+                                        parallel_backend="psock"),
                paste0("Weights supplied directly to the 'treatment_model' ",
                       "argument must be positive."))
 })
@@ -1257,7 +1326,8 @@ test_that("only one treatment", {
                                          n_boot=2,
                                          na.action="na.omit",
                                          clean_data=TRUE,
-                                         treatment_model=group ~ x1),
+                                         treatment_model=group ~ x1,
+                                         parallel_backend="psock"),
                "There have to be at least two groups in 'variable'.")
 })
 
@@ -1276,7 +1346,8 @@ test_that("categorical when not allowed", {
                                          bootstrap=TRUE,
                                          n_boot=2,
                                          na.action="na.omit",
-                                         clean_data=TRUE),
+                                         clean_data=TRUE,
+                                         parallel_backend="psock"),
                paste0("Categorical treatments are currently not supported ",
                       "for method='matching'."))
 })
@@ -1294,7 +1365,8 @@ test_that("conf_int when not allowed", {
                                          n_boot=2,
                                          na.action="na.omit",
                                          clean_data=TRUE,
-                                         treatment_model=treat_mod),
+                                         treatment_model=treat_mod,
+                                         parallel_backend="psock"),
                paste0("Asymptotic or exact variance calculations are ",
                       "currently not available for method='matching'. ",
                       "Use bootstrap=TRUE to get bootstrap estimates."),
@@ -1316,7 +1388,8 @@ test_that("'variable' is not a factor", {
                                          n_boot=2,
                                          na.action="na.omit",
                                          clean_data=TRUE,
-                                         treatment_vars=c("x1", "x3")),
+                                         treatment_vars=c("x1", "x3"),
+                                         parallel_backend="psock"),
                paste0("The column in 'data' specified by 'variable' needs ",
                       "to be a factor variable."))
 })
@@ -1359,7 +1432,8 @@ test_that("wrong outcome_model with mira", {
                                          n_boot=2,
                                          na.action="na.omit",
                                          clean_data=TRUE,
-                                         outcome_model=outcome_model),
+                                         outcome_model=outcome_model,
+                                         parallel_backend="psock"),
                paste0("When using multiple imputation, mira objects need ",
                       "to be supplied to 'outcome_model' instead of ",
                       "single models. See documentation."))
@@ -1378,7 +1452,8 @@ test_that("wrong treatment_model with mira", {
                                          n_boot=2,
                                          na.action="na.omit",
                                          clean_data=TRUE,
-                                         treatment_model=treatment_model),
+                                         treatment_model=treatment_model,
+                                         parallel_backend="psock"),
                paste0("When using multiple imputation, mira objects or a ",
                       "formula need to be supplied to 'treatment_model' ",
                       "instead of single models. See documentation."))
@@ -1397,7 +1472,8 @@ test_that("wrong censoring_model with mira", {
                                          n_boot=2,
                                          na.action="na.omit",
                                          clean_data=TRUE,
-                                         censoring_model=outcome_model),
+                                         censoring_model=outcome_model,
+                                         parallel_backend="psock"),
                paste0("When using multiple imputation, mira objects need to ",
                       "be supplied to 'censoring_model' instead of single ",
                       "models. See documentation."))

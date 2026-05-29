@@ -1,6 +1,10 @@
 
 # adjustedCurves 0.11.5 (developmental version)
 
+Enhancements
+
+* Added the `parallel_backend` argument to `adjustedsurv()` and `adjustedcif()` to allow usage of FORK based parallel backends on Linux and MacOS, as suggested by @HUI950319
+
 Bug Fixes
 
 * Fixed a small bug that occurred in `adjustedsurv()` with `method="iptw_km"`, when one or more rows of the supplied `data` contained an event exactly at time 0.

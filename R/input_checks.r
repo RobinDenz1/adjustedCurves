@@ -2,7 +2,8 @@
 ## for adjustedsurv function
 check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
                                       conf_int, conf_level, times, bootstrap,
-                                      n_boot, na.action, clean_data, ...) {
+                                      n_boot, na.action, clean_data,
+                                      parallel_backend, ...) {
   obj <- list(...)
 
   ## check if non-standard evaluation is used
@@ -82,6 +83,9 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
   # clean_data
   } else if (!is.logical(clean_data)) {
     stop("'clean_data' must be either TRUE or FALSE.")
+  } else if (!(length(parallel_backend)==1 && is.character(parallel_backend) &&
+               parallel_backend %in% c("psock", "fork"))) {
+    stop("'parallel_backend' must be either 'psock' or 'fork'.")
   }
 
   # data.frame properties
@@ -655,7 +659,7 @@ check_inputs_adj_test <- function(adj, from, to) {
 check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
                                      conf_int, conf_level, times, bootstrap,
                                      n_boot, cause, na.action,
-                                     clean_data, ...) {
+                                     clean_data, parallel_backend, ...) {
   obj <- list(...)
 
   ## check for non-standard evaluation
@@ -737,6 +741,9 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
   # clean_data
   } else if (!is.logical(clean_data)) {
     stop("'clean_data' must be either TRUE or FALSE.")
+  } else if (!(length(parallel_backend)==1 && is.character(parallel_backend) &&
+               parallel_backend %in% c("psock", "fork"))) {
+    stop("'parallel_backend' must be either 'psock' or 'fork'.")
   }
 
   # data.frame properties

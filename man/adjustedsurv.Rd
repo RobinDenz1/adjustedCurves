@@ -14,7 +14,7 @@ adjustedsurv(data, variable, ev_time, event, method,
              n_cores=1, na.action=options()$na.action,
              clean_data=TRUE, iso_reg=FALSE,
              force_bounds=FALSE, mi_extrapolation=FALSE,
-             ...)
+             parallel_backend="psock", ...)
 }
 
 \arguments{
@@ -65,6 +65,9 @@ Either \code{TRUE} or \code{FALSE} (default), controlling whether the resulting 
   }
   \item{mi_extrapolation}{
 Whether to allow extrapolation due to imputed survival times or not. This argument is only relevant when using multiply imputed \code{data} with missing covariates in \code{variable}, \code{ev_time} or \code{event}. Depending on the algorithm used to obtain the imputed datasets, it may be possible that one or more imputed datasets contain survival times in a group that are larger than the maximum observed survival time in that group. This may lead to unwanted extrapolation (e.g. the survival curves extending further than they should). By keeping this argument at \code{FALSE}, these times are removed from the output. If set to \code{TRUE}, all available estimates will be used.
+  }
+  \item{parallel_backend}{
+A single character string, specifying what kind of parallel backend should be used when performing bootstrapping on multiple processing cores. Must be either \code{"psock"} (default) or \code{"fork"}. The former works on both Windows, Linux and MacOS. The latter does not work on Windows, but might be useful when parallelizing over multiple computers and processing clusters per computer. Note that even on the same random number generator seed, different parallel backends may produce different results.
   }
   \item{...}{
 Further arguments passed to the respective \code{surv_method}. For example when using \code{method="direct"} all further arguments are passed to the \code{surv_direct} function. See details.
