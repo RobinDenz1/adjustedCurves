@@ -6,6 +6,11 @@ read_from_fun <- function(x, data, interpolation, est="surv", time="time") {
   # keep only data with non-missing est
   data <- data[which(!is.na(data[, est])), ]
 
+  # edge case with no values left
+  if (nrow(data)==0) {
+    return(NA)
+  }
+
   time_vec <- data[, time]
   est_vec <- data[, est]
 
