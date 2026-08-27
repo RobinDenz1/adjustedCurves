@@ -1,5 +1,5 @@
 pandoc: 3.8.3
-pkgdown: 2.2.0
+pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   adjustedCurves: adjustedCurves.html
@@ -7,7 +7,7 @@ articles:
   faq: faq.html
   method_overview: method_overview.html
   plot_customization: plot_customization.html
-last_built: 2026-05-29T17:44Z
+last_built: 2026-08-27T10:54Z
 urls:
   reference: https://robindenz1.github.io/adjustedCurves/reference
   article: https://robindenz1.github.io/adjustedCurves/articles

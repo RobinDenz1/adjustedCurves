@@ -45,6 +45,7 @@
 <ul><li>Added the <code>parallel_backend</code> argument to <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code> and <code><a href="../reference/adjustedcif.html">adjustedcif()</a></code> to allow usage of FORK based parallel backends on Linux and MacOS, as suggested by <a href="https://github.com/HUI950319" class="external-link">@HUI950319</a></li>
 </ul><p>Bug Fixes</p>
 <ul><li>Fixed a small bug that occurred in <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code> with <code>method="iptw_km"</code>, when one or more rows of the supplied <code>data</code> contained an event exactly at time 0.</li>
+<li>Fixed a small bug where using the <code>times</code> argument in <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code> sometimes produced errors with <code>method="km"</code> when a value in <code>times</code> was beyond <code>surv = 0</code> for one or more groups.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.11.4" id="adjustedcurves-0114">adjustedCurves 0.11.4<a class="anchor" aria-label="anchor" href="#adjustedcurves-0114"></a></h2><p class="text-muted">CRAN release: 2026-02-05</p>
@@ -149,7 +150,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

@@ -17,6 +17,10 @@ Bug Fixes
   [`adjustedsurv()`](https://robindenz1.github.io/adjustedCurves/reference/adjustedsurv.md)
   with `method="iptw_km"`, when one or more rows of the supplied `data`
   contained an event exactly at time 0.
+- Fixed a small bug where using the `times` argument in
+  [`adjustedsurv()`](https://robindenz1.github.io/adjustedCurves/reference/adjustedsurv.md)
+  sometimes produced errors with `method="km"` when a value in `times`
+  was beyond `surv = 0` for one or more groups.
 
 ## adjustedCurves 0.11.4
 
