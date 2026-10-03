@@ -30,7 +30,7 @@ Further arguments passed to \code{\link[riskRegression]{ate}} when a \code{Cause
 \item{\strong{Type of Adjustment:} Requires a model describing the outcome mechanism. Both Cause-Specific-Cox models (\code{\link[riskRegression]{CSC}}) and Fine & Gray models (\code{\link[riskRegression]{FGR}}) are supported, as well as other models. See \code{\link[adjustedCurves]{models_cif_direct}} for a full list.}
 \item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}
 \item{\strong{Categorical groups:} Any number of levels in \code{variable} are allowed. Must be a factor variable.}
-\item{\strong{Approximate Variance:} Asymptotic variance calculations are only available if the \code{outcome_model} is a \code{CauseSpecificCox} model. The \code{\link[riskRegression]{ate}} function is used for the calculation in that case. Bootstrap confidence intervals can however be calculated with all supported models. See \code{?adjustedcif} for more information on bootstrapping.}
+\item{\strong{Approximate Variance:} Asymptotic variance calculations are only available if the \code{outcome_model} is a \code{CauseSpecificCox} model or a model fit using \code{\link[mets]{cifreg}} or \code{cifregFG} from the \pkg{mets} package. The \code{\link[riskRegression]{ate}} function or the \code{survivalG} function of the \pkg{mets} package, respectively, is used for the calculation in that case. Bootstrap confidence intervals can however be calculated with all other supported models. See \code{?adjustedcif} for more information on bootstrapping.}
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are guaranteed to be bounded in the 0 to 1 probability range.}
 \item{\strong{Monotone Function:} Estimates are guaranteed to be monotone.}
@@ -110,6 +110,25 @@ adjcif <- adjustedcif(data=sim_dat,
 
 # plot the curves
 plot(adjcif)
+
+# a Fine & Gray model fit using the mets package also allows
+# confidence intervals without bootstrapping
+if (requireNamespace("mets")) {
+
+mets_mod <- mets::cifregFG(mets::Event(time, event) ~ x1 + x2 + x3 + x4 +
+                             x5 + x6 + group, data=sim_dat, cause=1)
+
+adjcif <- adjustedcif(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      cause=1,
+                      method="direct",
+                      outcome_model=mets_mod,
+                      conf_int=TRUE)
+
+plot(adjcif, conf_int=TRUE)
+}
 }
 
 # not run because it would be too slow

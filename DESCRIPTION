@@ -38,6 +38,7 @@ Suggests:
     geepack (>= 1.3),
     ggplot2 (>= 3.4.0),
     knitr,
+    mets (>= 1.3.9),
     mice (>= 3.0.0),
     nnet,
     pammtools (>= 0.5),

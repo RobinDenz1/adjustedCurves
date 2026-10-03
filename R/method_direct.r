@@ -183,6 +183,20 @@ cif_direct <- function(data, variable, ev_time, event, cause, conf_int,
                    ate_object=cif)
     class(output) <- "adjustedcif.method"
 
+  # Using a Fine & Gray or proportional odds model from the mets package
+  } else if (inherits(outcome_model, "cifreg") & is.null(predict_fun)) {
+
+    plotdata <- cif_g_comp_mets(outcome_model=outcome_model,
+                                data=data,
+                                variable=variable,
+                                ev_time=ev_time,
+                                times=times,
+                                conf_int=conf_int,
+                                conf_level=conf_level)
+
+    output <- list(plotdata=plotdata)
+    class(output) <- "adjustedcif.method"
+
   # Using a Fine & Gray or other Model
   } else {
 
@@ -286,6 +300,66 @@ cif_g_comp <- function(outcome_model, data, variable, times,
   }
   plotdata <- as.data.frame(dplyr::bind_rows(plotdata))
   row.names(plotdata) <- seq_len(nrow(plotdata))
+
+  return(plotdata)
+}
+
+## using models fit using mets::cifreg() or mets::cifregFG(), with
+## mets::survivalG() providing influence function based standard errors
+cif_g_comp_mets <- function(outcome_model, data, variable, ev_time, times,
+                            conf_int, conf_level) {
+
+  # mets stores one jump of the baseline per tied event and only uses the
+  # first one when predicting exactly at a tied event time, see
+  # https://github.com/kkholst/mets/issues/23. Times equal to an observed
+  # time are therefore moved slightly to the right, but never as far as
+  # the next observed time
+  obs_times <- sort(unique(data[, ev_time]))
+  index <- match(times, obs_times)
+  exact <- !is.na(index)
+  next_time <- c(obs_times[-1], Inf)[index[exact]]
+  eval_times <- times
+  eval_times[exact] <- times[exact] +
+    pmin(1e-8 * pmax(1, abs(times[exact])), (next_time - times[exact]) / 2)
+
+  # needed for the S3 predict method
+  requireNamespace("mets")
+
+  # no event has happened yet at these times, so the CIF is 0
+  levs <- levels(data[, variable])
+  zero <- eval_times < min(outcome_model$cumhaz[, 1])
+  cif <- se <- matrix(0, nrow=length(times), ncol=length(levs))
+
+  if (conf_int) {
+    # standard errors are only available for one point in time per call
+    for (i in which(!zero)) {
+      est <- mets::survivalG(outcome_model, data=data, time=eval_times[i],
+                             varname=variable)$risk$coefmat
+      cif[i, ] <- est[paste0("risk", levs), "Estimate"]
+      se[i, ] <- est[paste0("risk", levs), "Std.Err"]
+    }
+  } else if (any(!zero)) {
+    # point estimates for all points in time at once
+    data_temp <- data
+    for (j in seq_len(length(levs))) {
+      data_temp[, variable] <- factor(levs[j], levels=levs)
+      pred <- stats::predict(outcome_model, newdata=data_temp,
+                             times=eval_times[!zero], se=FALSE)$cif
+      cif[!zero, j] <- colMeans(matrix(pred, nrow=nrow(data_temp)))
+    }
+  }
+
+  plotdata <- data.frame(time=rep(times, length(levs)),
+                         cif=as.vector(cif),
+                         group=rep(levs, each=length(times)))
+
+  if (conf_int) {
+    plotdata$se <- as.vector(se)
+    cis <- confint_surv(surv=plotdata$cif, se=plotdata$se,
+                        conf_level=conf_level, conf_type="plain")
+    plotdata$ci_lower <- cis$left
+    plotdata$ci_upper <- cis$right
+  }
 
   return(plotdata)
 }

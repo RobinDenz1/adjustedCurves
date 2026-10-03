@@ -35,12 +35,15 @@ The following models are directly supported in the \code{outcome_model} in the \
 
   \item \code{\link[timereg]{comp.risk}} [\strong{C}, Required Packages: \pkg{timereg}]
 
+  \item \code{\link[mets]{cifreg}} [\strong{D}, Required Packages: \pkg{mets}]
+
   \item Any model with a fitting S3 prediction method or a valid \code{predict_fun} can be used as well. See below.
 }
 
 \strong{Group A:} The direct adjusted cumulative incidences are estimated directly using the \code{\link[riskRegression]{ate}} function. Additional arguments supplied using the \code{...} syntax are passed to the \code{\link[riskRegression]{ate}} function. \cr
 \strong{Group B:} The \code{\link[riskRegression]{predictRisk}} function is used to obtain predicted cumulative incidences, which are then used in the G-Computation step. Additional arguments supplied using the \code{...} syntax are passed to the \code{\link[riskRegression]{predictRisk}} function.\cr
 \strong{Group C:} Custom code is used to do the estimation. Additional arguments supplied using the \code{...} syntax are currently not supported.\cr
+\strong{Group D:} Models fit using \code{cifreg} or \code{cifregFG} from the \pkg{mets} package. The direct adjusted cumulative incidences are estimated using the \code{survivalG} function of the \pkg{mets} package, which also provides influence function based standard errors, so that \code{conf_int=TRUE} can be used without bootstrapping. Since these standard errors are calculated separately for each point in time, it may be useful to specify a smaller number of points in time using the \code{times} argument in this case. Bootstrapping and data with events at time 0 are currently not supported for these models. Additional arguments supplied using the \code{...} syntax are not used.\cr
 
 It is sometimes possible to use models even if they are not listed here. There are two ways to make this work. The first one is to use the models S3 \code{predict} method. This works if the \code{predict} function contains the arguments \code{object}, \code{newdata}, \code{times} and \code{cause} and returns a matrix of predicted cause-specific cumulative incidences. The matrix should be of size \code{nrow(data) * length(times)}, where each row corresponds to a row in the original dataset and each column to one point in time. The matrix should contain the cause-specific cumulative incidences predicted by the model given covariates. If no such \code{predict} method exists the only option left is to write your own function which produces the output described above and supply this function to the \code{predict_fun} argument.
 
