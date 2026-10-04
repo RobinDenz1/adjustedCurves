@@ -74,7 +74,7 @@ This page explains the details of estimating confounder-adjusted CIFs using a pr
 <ul><li><p><strong>Type of Adjustment:</strong> Requires a model describing the outcome mechanism. Both Cause-Specific-Cox models (<code><a href="https://rdrr.io/pkg/riskRegression/man/CSC.html" class="external-link">CSC</a></code>) and Fine &amp; Gray models (<code><a href="https://rdrr.io/pkg/riskRegression/man/FGR.html" class="external-link">FGR</a></code>) are supported, as well as other models. See <code><a href="models_cif_direct.html">models_cif_direct</a></code> for a full list.</p></li>
 <li><p><strong>Doubly-Robust:</strong> Estimates are not Doubly-Robust.</p></li>
 <li><p><strong>Categorical groups:</strong> Any number of levels in <code>variable</code> are allowed. Must be a factor variable.</p></li>
-<li><p><strong>Approximate Variance:</strong> Asymptotic variance calculations are only available if the <code>outcome_model</code> is a <code>CauseSpecificCox</code> model. The <code><a href="https://rdrr.io/pkg/riskRegression/man/ate.html" class="external-link">ate</a></code> function is used for the calculation in that case. Bootstrap confidence intervals can however be calculated with all supported models. See <code><a href="adjustedcif.html">?adjustedcif</a></code> for more information on bootstrapping.</p></li>
+<li><p><strong>Approximate Variance:</strong> Asymptotic variance calculations are only available if the <code>outcome_model</code> is a <code>CauseSpecificCox</code> model or a model fit using <code><a href="http://kkholst.github.io/mets/reference/cifreg.html" class="external-link">cifreg</a></code> or <code>cifregFG</code> from the <span class="pkg">mets</span> package. The <code><a href="https://rdrr.io/pkg/riskRegression/man/ate.html" class="external-link">ate</a></code> function or the <code>survivalG</code> function of the <span class="pkg">mets</span> package, respectively, is used for the calculation in that case. Bootstrap confidence intervals can however be calculated with all other supported models. See <code><a href="adjustedcif.html">?adjustedcif</a></code> for more information on bootstrapping.</p></li>
 <li><p><strong>Allowed Time Values:</strong> Allows both continuous and integer time.</p></li>
 <li><p><strong>Bounded Estimates:</strong> Estimates are guaranteed to be bounded in the 0 to 1 probability range.</p></li>
 <li><p><strong>Monotone Function:</strong> Estimates are guaranteed to be monotone.</p></li>
@@ -150,8 +150,28 @@ This page explains the details of estimating confounder-adjusted CIFs using a pr
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plot the curves</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># a Fine &amp; Gray model fit using the mets package also allows</span></span></span>
+<span class="r-in"><span><span class="co"># confidence intervals without bootstrapping</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"mets"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">mets_mod</span> <span class="op">&lt;-</span> <span class="fu">mets</span><span class="fu">::</span><span class="fu"><a href="http://kkholst.github.io/mets/reference/cifregFG.html" class="external-link">cifregFG</a></span><span class="op">(</span><span class="fu">mets</span><span class="fu">::</span><span class="fu"><a href="http://kkholst.github.io/mets/reference/Event.html" class="external-link">Event</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">event</span><span class="op">)</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x3</span> <span class="op">+</span> <span class="va">x4</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>                             <span class="va">x5</span> <span class="op">+</span> <span class="va">x6</span> <span class="op">+</span> <span class="va">group</span>, data<span class="op">=</span><span class="va">sim_dat</span>, cause<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">adjcif</span> <span class="op">&lt;-</span> <span class="fu"><a href="adjustedcif.html">adjustedcif</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">sim_dat</span>,</span></span>
+<span class="r-in"><span>                      variable<span class="op">=</span><span class="st">"group"</span>,</span></span>
+<span class="r-in"><span>                      ev_time<span class="op">=</span><span class="st">"time"</span>,</span></span>
+<span class="r-in"><span>                      event<span class="op">=</span><span class="st">"event"</span>,</span></span>
+<span class="r-in"><span>                      cause<span class="op">=</span><span class="fl">1</span>,</span></span>
+<span class="r-in"><span>                      method<span class="op">=</span><span class="st">"direct"</span>,</span></span>
+<span class="r-in"><span>                      outcome_model<span class="op">=</span><span class="va">mets_mod</span>,</span></span>
+<span class="r-in"><span>                      conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adjcif</span>, conf_int<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Rare event </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: pammtools</span>
 <span class="r-plt img"><img src="cif_direct-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># not run because it would be too slow</span></span></span>

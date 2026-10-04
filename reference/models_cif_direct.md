@@ -37,6 +37,9 @@ group.
 - [`comp.risk`](https://rdrr.io/pkg/timereg/man/comp.risk.html) \[**C**,
   Required Packages: timereg\]
 
+- [`cifreg`](http://kkholst.github.io/mets/reference/cifreg.md) \[**D**,
+  Required Packages: mets\]
+
 - Any model with a fitting S3 prediction method or a valid `predict_fun`
   can be used as well. See below.
 
@@ -54,6 +57,16 @@ the `...` syntax are passed to the
 function.  
 **Group C:** Custom code is used to do the estimation. Additional
 arguments supplied using the `...` syntax are currently not supported.  
+**Group D:** Models fit using `cifreg` or `cifregFG` from the mets
+package. The direct adjusted cumulative incidences are estimated using
+the `survivalG` function of the mets package, which also provides
+influence function based standard errors, so that `conf_int=TRUE` can be
+used without bootstrapping. Since these standard errors are calculated
+separately for each point in time, it may be useful to specify a smaller
+number of points in time using the `times` argument in this case.
+Bootstrapping and data with events at time 0 are currently not supported
+for these models. Additional arguments supplied using the `...` syntax
+are not used.  
 
 It is sometimes possible to use models even if they are not listed here.
 There are two ways to make this work. The first one is to use the models

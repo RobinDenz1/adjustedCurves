@@ -10,6 +10,19 @@ Enhancements
   [`adjustedcif()`](https://robindenz1.github.io/adjustedCurves/reference/adjustedcif.md)
   to allow usage of FORK based parallel backends on Linux and MacOS, as
   suggested by [@HUI950319](https://github.com/HUI950319)
+- [`adjustedcif()`](https://robindenz1.github.io/adjustedCurves/reference/adjustedcif.md)
+  with `method="direct"` now directly supports Fine & Gray models fit
+  using
+  [`mets::cifregFG()`](http://kkholst.github.io/mets/reference/cifregFG.md)
+  (or other models fit using
+  [`mets::cifreg()`](http://kkholst.github.io/mets/reference/cifreg.md))
+  in the `outcome_model` argument. The adjusted CIFs are then estimated
+  using
+  [`mets::survivalG()`](http://kkholst.github.io/mets/reference/survivalG.md),
+  which also provides influence function based standard errors, so that
+  confidence intervals can be obtained without bootstrapping, as
+  suggested by [@HUI950319](https://github.com/HUI950319)
+  ([\#59](https://github.com/RobinDenz1/adjustedCurves/issues/59))
 
 Bug Fixes
 

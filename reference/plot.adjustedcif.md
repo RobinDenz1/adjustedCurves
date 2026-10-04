@@ -321,5 +321,4 @@ plot(adjcif) + theme_bw()
 #> Warning: Loglik converged before variable  1 ; coefficient may be infinite. 
 #> Warning: Rare event 
 #> Warning: Rare event 
-#> Loading required namespace: pammtools
 ```

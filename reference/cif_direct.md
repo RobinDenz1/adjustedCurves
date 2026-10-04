@@ -62,10 +62,14 @@ listed below.
   allowed. Must be a factor variable.
 
 - **Approximate Variance:** Asymptotic variance calculations are only
-  available if the `outcome_model` is a `CauseSpecificCox` model. The
-  [`ate`](https://rdrr.io/pkg/riskRegression/man/ate.html) function is
-  used for the calculation in that case. Bootstrap confidence intervals
-  can however be calculated with all supported models. See
+  available if the `outcome_model` is a `CauseSpecificCox` model or a
+  model fit using
+  [`cifreg`](http://kkholst.github.io/mets/reference/cifreg.md) or
+  `cifregFG` from the mets package. The
+  [`ate`](https://rdrr.io/pkg/riskRegression/man/ate.html) function or
+  the `survivalG` function of the mets package, respectively, is used
+  for the calculation in that case. Bootstrap confidence intervals can
+  however be calculated with all other supported models. See
   [`?adjustedcif`](https://robindenz1.github.io/adjustedCurves/reference/adjustedcif.md)
   for more information on bootstrapping.
 
@@ -192,8 +196,28 @@ adjcif <- adjustedcif(data=sim_dat,
 
 # plot the curves
 plot(adjcif)
+
+# a Fine & Gray model fit using the mets package also allows
+# confidence intervals without bootstrapping
+if (requireNamespace("mets")) {
+
+mets_mod <- mets::cifregFG(mets::Event(time, event) ~ x1 + x2 + x3 + x4 +
+                             x5 + x6 + group, data=sim_dat, cause=1)
+
+adjcif <- adjustedcif(data=sim_dat,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      cause=1,
+                      method="direct",
+                      outcome_model=mets_mod,
+                      conf_int=TRUE)
+
+plot(adjcif, conf_int=TRUE)
+}
 }
 #> Warning: Rare event 
+#> Loading required namespace: pammtools
 
 
 # not run because it would be too slow
