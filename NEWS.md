@@ -4,6 +4,7 @@
 Enhancements
 
 * Added the `parallel_backend` argument to `adjustedsurv()` and `adjustedcif()` to allow usage of FORK based parallel backends on Linux and MacOS, as suggested by @HUI950319
+* `adjustedcif()` with `method="direct"` now directly supports Fine & Gray models fit using `mets::cifregFG()` (or other models fit using `mets::cifreg()`) in the `outcome_model` argument. The adjusted CIFs are then estimated using `mets::survivalG()`, which also provides influence function based standard errors, so that confidence intervals can be obtained without bootstrapping, as suggested by @HUI950319 (#59)
 
 Bug Fixes
 

@@ -1096,6 +1096,80 @@ test_that("cause is not the same as the cause in FGR", {
                      "'cause' as specified in the 'cause' argument."))
 })
 
+class(outcome_model) <- "cifreg"
+
+test_that("cause is not the same as the cause in cifreg", {
+  expect_error(check_inputs_adjustedcif(data=sim_dat,
+                                        variable="group",
+                                        ev_time="time",
+                                        event="event",
+                                        method="direct",
+                                        conf_int=TRUE,
+                                        conf_level=0.95,
+                                        times=NULL,
+                                        bootstrap=FALSE,
+                                        n_boot=2,
+                                        na.action="na.omit",
+                                        clean_data=TRUE,
+                                        outcome_model=outcome_model,
+                                        cause=1,
+                                        parallel_backend="psock"),
+              paste0("The cifreg model needs to be fit with the same ",
+                     "'cause' as specified in the 'cause' argument."))
+})
+
+outcome_model <- list(cause=1)
+class(outcome_model) <- "cifreg"
+
+test_that("bootstrap with cifreg", {
+  expect_error(check_inputs_adjustedcif(data=sim_dat,
+                                        variable="group",
+                                        ev_time="time",
+                                        event="event",
+                                        method="direct",
+                                        conf_int=TRUE,
+                                        conf_level=0.95,
+                                        times=NULL,
+                                        bootstrap=TRUE,
+                                        n_boot=2,
+                                        na.action="na.omit",
+                                        clean_data=TRUE,
+                                        outcome_model=outcome_model,
+                                        cause=1,
+                                        parallel_backend="psock"),
+              paste0("Bootstrapping is currently not supported with ",
+                     "method='direct' and an 'outcome_model' of class ",
+                     "'cifreg'. Use conf_int=TRUE to obtain influence ",
+                     "function based standard errors instead."),
+              fixed=TRUE)
+})
+
+sim_dat_0 <- sim_dat
+sim_dat_0$time[which(sim_dat_0$event!=0)[1]] <- 0
+
+test_that("events at time 0 with cifreg", {
+  expect_error(check_inputs_adjustedcif(data=sim_dat_0,
+                                        variable="group",
+                                        ev_time="time",
+                                        event="event",
+                                        method="direct",
+                                        conf_int=TRUE,
+                                        conf_level=0.95,
+                                        times=NULL,
+                                        bootstrap=FALSE,
+                                        n_boot=2,
+                                        na.action="na.omit",
+                                        clean_data=TRUE,
+                                        outcome_model=outcome_model,
+                                        cause=1,
+                                        parallel_backend="psock"),
+              paste0("Events at time 0 are currently not supported with ",
+                     "method='direct' and an 'outcome_model' of class ",
+                     "'cifreg', because mets::survivalG() fails in this ",
+                     "case."),
+              fixed=TRUE)
+})
+
 test_that("conf_int with non-supported method", {
   expect_warning(check_inputs_adjustedcif(data=sim_dat,
                                           variable="group",

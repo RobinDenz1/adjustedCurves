@@ -912,6 +912,20 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
       stop("The FGR model needs to be fit with the same 'cause' as specified",
            " in the 'cause' argument.")
     }
+    if (inherits(obj$outcome_model, "cifreg")) {
+      if (cause != obj$outcome_model$cause) {
+        stop("The cifreg model needs to be fit with the same 'cause' as",
+             " specified in the 'cause' argument.")
+      } else if (bootstrap) {
+        stop("Bootstrapping is currently not supported with method='direct'",
+             " and an 'outcome_model' of class 'cifreg'. Use conf_int=TRUE",
+             " to obtain influence function based standard errors instead.")
+      } else if (any(data[, ev_time]==0 & data[, event]!=0, na.rm=TRUE)) {
+        stop("Events at time 0 are currently not supported with",
+             " method='direct' and an 'outcome_model' of class 'cifreg',",
+             " because mets::survivalG() fails in this case.")
+      }
+    }
   ## IPTW
   } else if (method=="iptw" & !inherits(data, "mids")) {
     # need treatment_model

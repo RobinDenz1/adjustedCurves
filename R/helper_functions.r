@@ -250,7 +250,7 @@ remove_unnecessary_covars <- function(data, method, variable, ev_time,
   }
 
   # extract variables from outcome model
-  if (inherits(args$outcome_model, c("coxph", "mexhaz"))) {
+  if (inherits(args$outcome_model, c("coxph", "mexhaz", "cifreg"))) {
     outcome_vars <- all.vars(args$outcome_model$formula)
   } else if (inherits(args$outcome_model, c("CauseSpecificCox", "FGR", "aalen",
                                             "cox.aalen", "flexsurvreg",
