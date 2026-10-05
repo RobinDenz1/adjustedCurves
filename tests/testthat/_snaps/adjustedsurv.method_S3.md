@@ -24,11 +24,11 @@
 
 # summary.adjustedsurv.method
 
-          time               surv           group          
-     Min.   :0.006907   Min.   :0.0000   Length:20         
-     1st Qu.:0.198868   1st Qu.:0.2779   Class :character  
-     Median :0.358030   Median :0.6039   Mode  :character  
-     Mean   :0.530936   Mean   :0.5318                     
-     3rd Qu.:0.784398   3rd Qu.:0.7500                     
-     Max.   :1.994752   Max.   :1.0000                     
+          time               surv              group   
+     Min.   :0.006907   Min.   :0.0000   Length   :20  
+     1st Qu.:0.198868   1st Qu.:0.2779   N.unique : 2  
+     Median :0.358030   Median :0.6039   N.blank  : 0  
+     Mean   :0.530936   Mean   :0.5318   Min.nchar: 1  
+     3rd Qu.:0.784398   3rd Qu.:0.7500   Max.nchar: 1  
+     Max.   :1.994752   Max.   :1.0000                 
 
