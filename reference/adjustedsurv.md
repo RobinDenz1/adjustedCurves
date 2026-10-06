@@ -188,6 +188,10 @@ as well. Currently the following methods can be used:
 - "[iptw_pseudo](https://robindenz1.github.io/adjustedCurves/reference/surv_iptw_pseudo.md)":
   A weighted estimator based on Pseudo-Values.
 
+- "[iptw_cens](https://robindenz1.github.io/adjustedCurves/reference/surv_iptw_cens.md)":
+  A weighted estimator that also allows adjustment for dependent
+  censoring (Cheng et al. 2022).
+
 - "[matching](https://robindenz1.github.io/adjustedCurves/reference/surv_matching.md)":
   Using Propensity Score Matching to estimate the adjusted survival
   curves.

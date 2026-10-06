@@ -28,7 +28,7 @@ and Van der Laan (2020) for more details
 
 ***What features are included in this package?***
 
-This package includes 15 methods to estimate confounder-adjusted
+This package includes 16 methods to estimate confounder-adjusted
 survival curves (single event) and 7 methods to estimate confounder
 adjusted cumulative incidence functions (possibly with multiple
 competing events). It provides `plot` functions to easily produce highly

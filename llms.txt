@@ -197,6 +197,10 @@ methods
   : Inverse Probability of Treatment Weighted Survival Estimates using
   Pseudo-Values
 
+- [`surv_iptw_cens`](https://robindenz1.github.io/adjustedCurves/reference/surv_iptw_cens.md)
+  : Inverse Probability of Treatment Weighting Combined with Inverse
+  Probability of Censoring Weighting
+
 - [`surv_matching`](https://robindenz1.github.io/adjustedCurves/reference/surv_matching.md)
   : Using Propensity-Score Matching to Calculate Adjusted Survival
   Curves
