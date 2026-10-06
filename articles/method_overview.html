@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">adjustedCurves</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.4.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.12.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -132,7 +132,7 @@ in <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code>:</p>
 <td align="left">yes</td>
 <td align="left">yes</td>
 <td align="left">no</td>
-<td align="left">no</td>
+<td align="left">(yes)</td>
 <td align="left">outcome</td>
 <td align="left">no</td>
 <td align="left">+</td>
@@ -164,7 +164,7 @@ in <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code>:</p>
 <td align="left">yes</td>
 <td align="left">yes</td>
 <td align="left">no</td>
-<td align="left">(no)</td>
+<td align="left">no</td>
 <td align="left">treatment</td>
 <td align="left">depends</td>
 <td align="left">++</td>
@@ -180,7 +180,7 @@ in <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code>:</p>
 <td align="left">yes</td>
 <td align="left">yes</td>
 <td align="left">no</td>
-<td align="left">(no)</td>
+<td align="left">no</td>
 <td align="left">treatment</td>
 <td align="left">depends</td>
 <td align="left">++</td>
@@ -200,10 +200,26 @@ in <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code>:</p>
 <td align="left">treatment</td>
 <td align="left">depends</td>
 <td align="left">-</td>
-<td align="left">prodlim</td>
+<td align="left">survival</td>
 </tr>
 <tr class="even">
 <td align="left">6</td>
+<td align="left">“iptw_cens”</td>
+<td align="left">no</td>
+<td align="left">yes</td>
+<td align="left">yes</td>
+<td align="left">no</td>
+<td align="left">no</td>
+<td align="left">yes</td>
+<td align="left">no</td>
+<td align="left">yes</td>
+<td align="left">treatment</td>
+<td align="left">no</td>
+<td align="left">+</td>
+<td align="left">prodlim</td>
+</tr>
+<tr class="odd">
+<td align="left">7</td>
 <td align="left">“matching”</td>
 <td align="left">no</td>
 <td align="left">no</td>
@@ -218,8 +234,8 @@ in <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code>:</p>
 <td align="left">-</td>
 <td align="left">Matching</td>
 </tr>
-<tr class="odd">
-<td align="left">7</td>
+<tr class="even">
+<td align="left">8</td>
 <td align="left">“emp_lik”</td>
 <td align="left">no</td>
 <td align="left">no</td>
@@ -234,8 +250,8 @@ in <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code>:</p>
 <td align="left">+</td>
 <td align="left">MASS</td>
 </tr>
-<tr class="even">
-<td align="left">8</td>
+<tr class="odd">
+<td align="left">9</td>
 <td align="left">“aiptw”</td>
 <td align="left">no</td>
 <td align="left">no</td>
@@ -250,8 +266,8 @@ in <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code>:</p>
 <td align="left">-</td>
 <td align="left">riskRegression</td>
 </tr>
-<tr class="odd">
-<td align="left">9</td>
+<tr class="even">
+<td align="left">10</td>
 <td align="left">“aiptw_pseudo”</td>
 <td align="left">no</td>
 <td align="left">yes</td>
@@ -266,8 +282,8 @@ in <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code>:</p>
 <td align="left">- -</td>
 <td align="left">geepack, prodlim</td>
 </tr>
-<tr class="even">
-<td align="left">11</td>
+<tr class="odd">
+<td align="left">12</td>
 <td align="left">“strat_amato”</td>
 <td align="left">no</td>
 <td align="left">yes</td>
@@ -282,8 +298,8 @@ in <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code>:</p>
 <td align="left">+++</td>
 <td align="left">-</td>
 </tr>
-<tr class="odd">
-<td align="left">12</td>
+<tr class="even">
+<td align="left">13</td>
 <td align="left">“strat_nieto”</td>
 <td align="left">no</td>
 <td align="left">yes</td>
@@ -298,8 +314,8 @@ in <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code>:</p>
 <td align="left">+++</td>
 <td align="left">-</td>
 </tr>
-<tr class="even">
-<td align="left">13</td>
+<tr class="odd">
+<td align="left">14</td>
 <td align="left">“strat_cupples”</td>
 <td align="left">no</td>
 <td align="left">yes</td>
@@ -314,8 +330,8 @@ in <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code>:</p>
 <td align="left">+++</td>
 <td align="left">-</td>
 </tr>
-<tr class="odd">
-<td align="left">14</td>
+<tr class="even">
+<td align="left">15</td>
 <td align="left">“iv_2SRIF”</td>
 <td align="left">yes</td>
 <td align="left">no</td>
@@ -330,8 +346,8 @@ in <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code>:</p>
 <td align="left">+</td>
 <td align="left">-</td>
 </tr>
-<tr class="even">
-<td align="left">15</td>
+<tr class="odd">
+<td align="left">16</td>
 <td align="left">“prox_iptw”</td>
 <td align="left">yes</td>
 <td align="left">no</td>
@@ -346,8 +362,8 @@ in <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code>:</p>
 <td align="left">- -</td>
 <td align="left">numDeriv</td>
 </tr>
-<tr class="odd">
-<td align="left">16</td>
+<tr class="even">
+<td align="left">17</td>
 <td align="left">“prox_aiptw”</td>
 <td align="left">yes</td>
 <td align="left">no</td>
@@ -362,8 +378,8 @@ in <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code>:</p>
 <td align="left">- -</td>
 <td align="left">numDeriv</td>
 </tr>
-<tr class="even">
-<td align="left">17</td>
+<tr class="odd">
+<td align="left">18</td>
 <td align="left">“km”</td>
 <td align="left">no</td>
 <td align="left">yes</td>
