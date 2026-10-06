@@ -82,6 +82,7 @@ The primary purpose of the \code{adjustedsurv} function is to provide a convenie
   \item{"\link[=surv_iptw_km]{iptw_km}": A weighted Kaplan-Meier estimator.}
   \item{"\link[=surv_iptw_cox]{iptw_cox}": A weighted estimator based on a stratified weighted Cox-Regression model.}
   \item{"\link[=surv_iptw_pseudo]{iptw_pseudo}": A weighted estimator based on Pseudo-Values.}
+  \item{"\link[=surv_iptw_cens]{iptw_cens}": A weighted estimator that also allows adjustment for dependent censoring (Cheng et al. 2022).}
   \item{"\link[=surv_matching]{matching}": Using Propensity Score Matching to estimate the adjusted survival curves.}
   \item{"\link[=surv_emp_lik]{emp_lik}": An Empirical Likelihood based estimator.}
   \item{"\link[=surv_aiptw]{aiptw}": An Augmented Inverse Probability of Treatment Weighting estimator.}

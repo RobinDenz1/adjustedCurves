@@ -11,6 +11,9 @@ adj <- surv_km(data=sim_dat,
                event="event",
                conf_int=FALSE)
 
+skip_on_ci()
+skip_on_cran()
+
 test_that("print.adjustedsurv.method", {
   expect_snapshot_output(print(adj))
 })

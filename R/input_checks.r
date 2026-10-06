@@ -56,7 +56,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
                             "aiptw", "matching",
                             "emp_lik", "strat_cupples", "strat_amato",
                             "strat_nieto", "tmle", "iv_2SRIF",
-                            "prox_iptw", "prox_aiptw")) {
+                            "prox_iptw", "prox_aiptw", "iptw_cens")) {
     stop("Method '", method, "' is undefined. See documentation for ",
          "details on available methods.")
   # conf_int
@@ -83,6 +83,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
   # clean_data
   } else if (!is.logical(clean_data)) {
     stop("'clean_data' must be either TRUE or FALSE.")
+  # parallel_backend
   } else if (!(length(parallel_backend)==1 && is.character(parallel_backend) &&
                parallel_backend %in% c("psock", "fork"))) {
     stop("'parallel_backend' must be either 'psock' or 'fork'.")
@@ -155,10 +156,12 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
            " to 'outcome_model' instead of single models. See documentation.")
     }
     # censoring_model
-    if (!is.null(obj$censoring_model) &
-        !inherits(obj$censoring_model, "mira")) {
-      stop("When using multiple imputation, mira objects need to be supplied",
-           " to 'censoring_model' instead of single models. See documentation.")
+    if (!is.null(obj$censoring_model) &&
+        !inherits(obj$censoring_model, "mira") &&
+        !(rlang::is_formula(obj$censoring_model) & method=="iptw_cens")) {
+      stop("When using multiple imputation, mira objects or formulas ",
+           "need to be supplied to 'censoring_model' instead of single ",
+           "models. See documentation.")
     }
   }
 
@@ -347,7 +350,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
            method, "'. Please rename that variable and rerun the function.")
     }
   ## IPTW KM, IPW COX
-  } else if (method=="iptw_km" | method=="iptw_cox") {
+  } else if (method=="iptw_km" | method=="iptw_cox" | method=="iptw_cens") {
     # need treatment_model
     if (!"treatment_model" %in% names(obj)) {
       stop("Argument 'treatment_model' must be defined when using",
@@ -414,6 +417,14 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     check_inputs_prox(data=data, adjust_vars=obj$adjust_vars,
                       treatment_proxy=obj$treatment_proxy,
                       outcome_proxy=obj$outcome_proxy)
+  } else if (method=="iptw_cens") {
+    if (!"censoring_model" %in% names(obj)) {
+      stop("Argument 'censoring_model' needs to be specified when using",
+           " method='iptw_cens'.")
+    } else if (!rlang::is_formula(obj$censoring_model)) {
+      stop("Argument 'censoring_model' should be a formula when using",
+           " method='iptw_cens'.")
+    }
   }
 
   # bootstrapping
@@ -424,7 +435,8 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
 
   # asymptotic variance calculations
   if (conf_int & (method %in% c("emp_lik", "matching", "direct_pseudo",
-                                "strat_cupples", "strat_amato", "iptw_cox"))) {
+                                "strat_cupples", "strat_amato", "iptw_cox",
+                                "iptw_cens"))) {
     warning("Asymptotic or exact variance calculations are currently",
             " not available for method='", method, "'. Use bootstrap=TRUE",
             " to get bootstrap estimates.", call.=FALSE)

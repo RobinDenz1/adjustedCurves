@@ -22,6 +22,7 @@ reference:
       - surv_iptw_km
       - surv_iptw_cox
       - surv_iptw_pseudo
+      - surv_iptw_cens
       - surv_matching
       - surv_emp_lik
       - surv_aiptw

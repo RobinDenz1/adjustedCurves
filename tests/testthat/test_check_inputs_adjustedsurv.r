@@ -1474,7 +1474,8 @@ test_that("wrong censoring_model with mira", {
                                          clean_data=TRUE,
                                          censoring_model=outcome_model,
                                          parallel_backend="psock"),
-               paste0("When using multiple imputation, mira objects need to ",
+               paste0("When using multiple imputation, mira objects or ",
+                      "formulas need to ",
                       "be supplied to 'censoring_model' instead of single ",
                       "models. See documentation."))
 })

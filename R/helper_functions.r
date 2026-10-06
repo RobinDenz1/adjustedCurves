@@ -273,6 +273,8 @@ remove_unnecessary_covars <- function(data, method, variable, ev_time,
   # extract variables from censoring model
   if (inherits(args$censoring_model, "coxph")) {
     censoring_vars <- all.vars(args$censoring_model$formula)
+  } else if (rlang::is_formula(args$censoring_model)) {
+    censoring_vars <- all.vars(args$censoring_model)
   } else {
     censoring_vars <- NULL
   }
@@ -304,6 +306,8 @@ remove_unnecessary_covars <- function(data, method, variable, ev_time,
   } else if (method=="prox_iptw" | method=="prox_aiptw") {
     needed_covars <- c(needed_covars, args$adjust_vars, args$treatment_proxy,
                        args$outcome_proxy)
+  } else if (method=="iptw_cens") {
+    needed_covars <- c(needed_covars, treatment_vars, censoring_vars)
   }
 
   # remove duplicates
@@ -323,7 +327,7 @@ load_needed_packages <- function(method, kind, treatment_model,
 
     # survival
     if (method=="direct" | method=="km" | method=="strat_cupples" |
-        method=="tmle" | method=="iv_2SRIF") {
+        method=="tmle" | method=="iv_2SRIF" | method=="iptw_cens") {
       requireNamespace("survival")
     }
 
@@ -342,7 +346,7 @@ load_needed_packages <- function(method, kind, treatment_model,
     }
 
     # WeightIt
-    if ((method %in% c("iptw_km", "iptw_cox", "iptw_pseudo"))
+    if ((method %in% c("iptw_km", "iptw_cox", "iptw_pseudo", "iptw_cens"))
                && inherits(treatment_model, "formula")) {
       requireNamespace("WeightIt")
     }

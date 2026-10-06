@@ -80,7 +80,10 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
 
     # extract censoring models
     censoring_models <- args$censoring_model$analyses
-    args$censoring_model <- NULL
+
+    if (method!="iptw_cens") {
+      args$censoring_model <- NULL
+    }
 
     # call adjustedsurv once for each multiply imputed dataset
     out <- vector(mode="list", length=max(mids$.imp))
@@ -103,7 +106,12 @@ adjustedsurv <- function(data, variable, ev_time, event, method,
       args2$data <- imp_data
       args2$outcome_model <- outcome_models[[i]]
       args2$treatment_model <- treatment_models[[i]]
-      args2$censoring_model <- censoring_models[[i]]
+
+      if (method!="iptw_cens") {
+        args2$censoring_model <- censoring_models[[i]]
+      } else {
+        args2$censoring_model <- args$censoring_model
+      }
 
       out[[i]] <- do.call(adjustedsurv, args=args2)
 

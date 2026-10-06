@@ -279,6 +279,39 @@ test_that("MI, iptw_pseudo, using conf_int", {
   expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
+## iptw_cens
+test_that("MI, iptw_cens, no boot", {
+  adj <- adjustedsurv(data=imp,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="iptw_cens",
+                      conf_int=FALSE,
+                      treatment_model=treat_mod,
+                      censoring_model=~ x1)
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
+})
+
+test_that("MI, iptw_cens, boot", {
+  adj <- suppressWarnings(
+    adjustedsurv(data=imp,
+                      variable="group",
+                      ev_time="time",
+                      event="event",
+                      method="iptw_cens",
+                      conf_int=FALSE,
+                      bootstrap=TRUE,
+                      n_boot=2,
+                      treatment_model=treat_mod,
+                      censoring_model=~ x1)
+  )
+  expect_s3_class(adj, "adjustedsurv")
+  expect_true(is.numeric(adj$adj$surv))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
+})
+
 ### matching
 test_that("MI, matching, no boot", {
   adj <- adjustedsurv(data=imp,
