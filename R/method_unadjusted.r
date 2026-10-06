@@ -1,6 +1,5 @@
 
 ## simple Kaplan-Meier estimate
-#' @export
 surv_km <- function(data, variable, ev_time, event, conf_int,
                     conf_level=0.95, times=NULL, conf_type="log") {
 
@@ -38,7 +37,6 @@ surv_km <- function(data, variable, ev_time, event, conf_int,
 }
 
 ## Aalen-Johansen estimator
-#' @export
 cif_aalen_johansen <- function(data, variable, ev_time, event, cause,
                                conf_int, conf_level=0.95, times=NULL, ...) {
 

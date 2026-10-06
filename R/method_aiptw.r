@@ -1,6 +1,5 @@
 
 ## Using Augmented Inverse Probability of Treatment Weighting for CIFs
-#' @export
 cif_aiptw <- function(data, variable, ev_time, event, cause, conf_int,
                       conf_level=0.95, times, outcome_model,
                       treatment_model, censoring_model=NULL,
@@ -47,7 +46,6 @@ cif_aiptw <- function(data, variable, ev_time, event, cause, conf_int,
 
 ## Using Augmented Inverse Probability of Treatment Weighting for
 ## Survival Curves
-#' @export
 surv_aiptw <- function(data, variable, ev_time, event, conf_int,
                        conf_level=0.95, times, outcome_model,
                        treatment_model, censoring_model=NULL,

@@ -1,7 +1,6 @@
 
 ## Adjustment based on a weighted average of stratified Kaplan-Meier estimates
 ## using the method by Cupples et al.
-#' @export
 surv_strat_cupples <- function(data, variable, ev_time, event,
                                conf_int=FALSE, conf_level=0.95, times,
                                adjust_vars, reference=NULL) {
@@ -61,7 +60,6 @@ surv_strat_cupples <- function(data, variable, ev_time, event,
 
 ## Adjustment based on a weighted average of stratified Kaplan-Meier estimates
 ## using the method by Amato (1988)
-#' @export
 surv_strat_amato <- function(data, variable, ev_time, event,
                              conf_int=FALSE, conf_level=0.95,
                              times=NULL, adjust_vars, reference=NULL) {
@@ -166,7 +164,6 @@ surv_strat_amato <- function(data, variable, ev_time, event,
 # NOTE: Equations are due to Nieto & Coresh (1996) because while both
 #       methods produce the same results when using the full data as reference,
 #       only Nieto's formulation allows the calculation of confidence intervals.
-#' @export
 surv_strat_nieto <- function(data, variable, ev_time, event,
                              conf_int, conf_level=0.95,
                              times=NULL, adjust_vars) {

@@ -99,7 +99,6 @@ method_direct_pseudo <- function(data, variable, ev_time, event, cause,
 }
 
 ## Using Pseudo Observations and Direct Adjustment
-#' @export
 surv_direct_pseudo <- function(data, variable, ev_time, event,
                                conf_int=FALSE, conf_level=0.95, times,
                                outcome_vars, type_time="factor",
@@ -117,7 +116,6 @@ surv_direct_pseudo <- function(data, variable, ev_time, event,
 }
 
 ## Using Pseudo Observations and Direct Adjustment
-#' @export
 cif_direct_pseudo <- function(data, variable, ev_time, event, cause,
                               conf_int=FALSE, conf_level=0.95, times,
                               outcome_vars, type_time="factor", spline_df=5) {

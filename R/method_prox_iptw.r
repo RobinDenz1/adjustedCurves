@@ -38,7 +38,6 @@ get_piptw_se <- function(data, variable, ev_time, sorted_time,
 }
 
 ## proximal inverse probability of treatment weighting
-#' @export
 surv_prox_iptw <- function(data, variable, ev_time, event, conf_int,
                            conf_level=0.95, times=NULL, adjust_vars,
                            treatment_proxy, outcome_proxy,

@@ -1,6 +1,5 @@
 
 ## IPTW Kaplan-Meier estimate
-#' @export
 surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
                          conf_level=0.95, times=NULL, treatment_model,
                          weight_method="ps", stabilize=FALSE,
@@ -107,7 +106,6 @@ surv_iptw_km <- function(data, variable, ev_time, event, conf_int,
 # - using the G-Formula directly on the iptw cox model does not work,
 #   probably because all predict() methods ignore the weights when
 #   calculating the baseline hazard. Only this version is actually unbiased
-#' @export
 surv_iptw_cox <- function(data, variable, ev_time, event, conf_int=FALSE,
                           conf_level=0.95, times=NULL, treatment_model,
                           weight_method="ps", stabilize=FALSE,
@@ -161,7 +159,6 @@ surv_iptw_cox <- function(data, variable, ev_time, event, conf_int=FALSE,
 }
 
 ## IPTW
-#' @export
 cif_iptw <- function(data, variable, ev_time, event, cause, conf_int,
                      conf_level=0.95, times, treatment_model,
                      censoring_model=NULL, verbose=FALSE, ...) {

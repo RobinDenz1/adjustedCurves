@@ -93,7 +93,6 @@ method_iptw_pseudo <- function(data, variable, ev_time, event, cause, conf_int,
 }
 
 ## Using Pseudo-Observations and IPTW for Survival Curves
-#' @export
 surv_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
                              conf_level=0.95, times, treatment_model,
                              weight_method="ps", stabilize=FALSE,
@@ -114,7 +113,6 @@ surv_iptw_pseudo <- function(data, variable, ev_time, event, conf_int,
 }
 
 ## Using Pseudo-Observations and IPTW for CIFs
-#' @export
 cif_iptw_pseudo <- function(data, variable, ev_time, event, cause,
                             conf_int, conf_level=0.95, times,
                             treatment_model, weight_method="ps",

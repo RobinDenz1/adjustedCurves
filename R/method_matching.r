@@ -1,6 +1,5 @@
 
 ## Using Propensity Score Matching
-#' @export
 surv_matching <- function(data, variable, ev_time, event, conf_int=FALSE,
                           conf_level=0.95, times, treatment_model,
                           gtol=0.001, ...) {
@@ -52,7 +51,6 @@ surv_matching <- function(data, variable, ev_time, event, conf_int=FALSE,
 }
 
 ## Matching
-#' @export
 cif_matching <- function(data, variable, ev_time, event, cause, conf_int,
                          conf_level=0.95, times, treatment_model,
                          gtol=0.001, ...) {

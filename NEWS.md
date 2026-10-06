@@ -1,5 +1,9 @@
 
-# adjustedCurves 0.11.5 (developmental version)
+# adjustedCurves 0.12.0
+
+New features
+
+* Added the `"iptw_cens"` method to the `adjustedsurv()` function, which is a weighting based method that simultaneously allows adjustment for confounding via IPTW and adjustment for dependent censoring via IPCW.
 
 Enhancements
 
@@ -10,6 +14,10 @@ Bug Fixes
 
 * Fixed a small bug that occurred in `adjustedsurv()` with `method="iptw_km"`, when one or more rows of the supplied `data` contained an event exactly at time 0.
 * Fixed a small bug where using the `times` argument in `adjustedsurv()` sometimes produced errors with `method="km"` when a value in `times` was beyond `surv = 0` for one or more groups.
+
+Refactored
+
+* No longer exports the underlying `surv_()` and `cif_()` functions, as they are not meant to be called outside `adjustedsurv()` or `adjustedcif()`.
 
 # adjustedCurves 0.11.4
 

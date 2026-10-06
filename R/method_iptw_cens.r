@@ -2,7 +2,6 @@
 ## applies the estimator introduced by Cheng et al. (2022), which combines
 ## weighting based adjustment for confounding with inverse probability of
 ## censoring weighting
-#' @export
 surv_iptw_cens <- function(data, variable, ev_time, event, conf_int=FALSE,
                            conf_level=0.95, times=NULL, treatment_model,
                            weight_method="ps", stabilize=FALSE,

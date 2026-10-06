@@ -5,9 +5,7 @@
 Inverse Probability of Treatment Weighting Combined with Inverse Probability of Censoring Weighting
 }
 \description{
-
 This page explains the details of estimating inverse probability of treatment and censoring weighted survival curves using the estimator by Cheng et al. (2022) for single event time-to-event data (\code{method="iptw_cens"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function). All regular arguments of the \code{adjustedsurv} function can be used. Additionally, the \code{treatment_model} and \code{censoring_model} argument have to be specified in the \code{adjustedsurv()} call. Further arguments specific to this method are listed below.
-
 }
 
 \arguments{

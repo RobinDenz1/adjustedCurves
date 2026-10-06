@@ -10,7 +10,6 @@ remove_plus_at_end <- function(form_str) {
 
 ## estimate counterfactual survival curves using a two-stage instrumental
 ## variable approach as described in Martinez-Camblor (2021)
-#' @export
 surv_iv_2SRIF <- function(data, variable, ev_time, event, conf_int=FALSE,
                           conf_level=0.95, times, adjust_vars, instrument,
                           frailty_dist="gaussian", return_models=TRUE) {

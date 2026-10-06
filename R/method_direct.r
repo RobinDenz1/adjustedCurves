@@ -1,6 +1,5 @@
 
 ## Direct Adjustment
-#' @export
 surv_direct <- function(data, variable, ev_time, event, conf_int,
                         conf_level=0.95, times, outcome_model,
                         verbose=FALSE, predict_fun=NULL, ...) {
@@ -148,7 +147,6 @@ surv_g_comp <- function(outcome_model, data, variable, times,
 }
 
 ## Direct Adjustment
-#' @export
 cif_direct <- function(data, variable, ev_time, event, cause, conf_int,
                        conf_level=0.95, times, outcome_model,
                        verbose=FALSE, predict_fun=NULL, ...) {

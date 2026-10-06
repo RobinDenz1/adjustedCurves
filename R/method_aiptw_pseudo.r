@@ -141,7 +141,6 @@ method_aiptw_pseudo <- function(data, variable, ev_time, event, cause,
 }
 
 ## AIPTW with Pseudo-Values for Survival Curves
-#' @export
 surv_aiptw_pseudo <- function(data, variable, ev_time, event, conf_int,
                               conf_level=0.95, times, outcome_vars,
                               treatment_model, type_time="factor",
@@ -160,7 +159,6 @@ surv_aiptw_pseudo <- function(data, variable, ev_time, event, conf_int,
 }
 
 ## AIPTW with Pseudo-Values for CIF
-#' @export
 cif_aiptw_pseudo <- function(data, variable, ev_time, event, cause,
                              conf_int, conf_level=0.95, times,
                              outcome_vars, treatment_model,
