@@ -10,9 +10,9 @@ used. Additionally, the `outcome_model` argument has to be specified in
 the `adjustedsurv` call. Further arguments specific to this method are
 listed below.
 
-## Arguments
+**Arguments**
 
-- outcome_model:
+- `outcome_model`:
 
   \[**required**\] Must be a previously fit model object including
   `variable` as independent variable. Apart from the classic `coxph`
@@ -20,13 +20,13 @@ listed below.
   [`models_surv_direct`](https://robindenz1.github.io/adjustedCurves/reference/models_surv_direct.md)
   for a list of supported model objects and some more details.
 
-- verbose:
+- `verbose`:
 
   Whether to print estimation information of the `ate` function in the
   riskRegression package. Ignored if `outcome_model` is not a `coxph`
   object. Defaults to `FALSE`.
 
-- predict_fun:
+- `predict_fun`:
 
   A function which should be used to calculate the predicted survival
   probabilities given covariates and some points in time. This argument
@@ -35,7 +35,7 @@ listed below.
   [`models_surv_direct`](https://robindenz1.github.io/adjustedCurves/reference/models_surv_direct.md)
   for more information. Defaults to `NULL`.
 
-- ...:
+- `...`:
 
   Further arguments passed to `ate` if `outcome_model` is a `coxph`
   object. Otherwise the additional arguments are passed to the

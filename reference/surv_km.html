@@ -3,11 +3,27 @@
 
 This page explains the details of estimating group-specific Kaplan-Meier curves for single event time-to-event data (method="km" in the adjustedsurv function). All regular arguments of the adjustedsurv function can be used. Further arguments specific to this method are listed below.
 Calculates standard Kaplan-Meier survival curves, stratified by the group variable.
-NO adjustment for any confounders is made. This function is included only for reference and should not be used when confounder adjusted survival curves are desired.'><meta property="og:description" content='
+NO adjustment for any confounders is made. This function is included only for reference and should not be used when confounder adjusted survival curves are desired.
+Arguments
+
+  conf_type
+The type of confidence interval that should be calculated. Has to be a character string, passed to the conf.type argument in the survfit function. Defaults to "log", which is also the default in survfit.
+
+
+
+'><meta property="og:description" content='
 
 This page explains the details of estimating group-specific Kaplan-Meier curves for single event time-to-event data (method="km" in the adjustedsurv function). All regular arguments of the adjustedsurv function can be used. Further arguments specific to this method are listed below.
 Calculates standard Kaplan-Meier survival curves, stratified by the group variable.
-NO adjustment for any confounders is made. This function is included only for reference and should not be used when confounder adjusted survival curves are desired.'><meta property="og:image" content="https://robindenz1.github.io/adjustedCurves/logo.png"></head><body>
+NO adjustment for any confounders is made. This function is included only for reference and should not be used when confounder adjusted survival curves are desired.
+Arguments
+
+  conf_type
+The type of confidence interval that should be calculated. Has to be a character string, passed to the conf.type argument in the survfit function. Defaults to "log", which is also the default in survfit.
+
+
+
+'><meta property="og:image" content="https://robindenz1.github.io/adjustedCurves/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -54,16 +70,14 @@ NO adjustment for any confounders is made. This function is included only for re
 <p>This page explains the details of estimating group-specific Kaplan-Meier curves for single event time-to-event data (<code>method="km"</code> in the <code><a href="adjustedsurv.html">adjustedsurv</a></code> function). All regular arguments of the <code>adjustedsurv</code> function can be used. Further arguments specific to this method are listed below.</p>
 <p>Calculates standard Kaplan-Meier survival curves, stratified by the group variable.
 NO adjustment for any confounders is made. This function is included only for reference and should not be used when confounder adjusted survival curves are desired.</p>
-    </div>
-
-
-    <div class="section level2">
-    <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <p></p>
-<dl><dt id="arg-conf-type">conf_type<a class="anchor" aria-label="anchor" href="#arg-conf-type"></a></dt>
+<p><strong>Arguments</strong></p>
+<dl><dt><code>conf_type</code></dt>
 <dd><p>The type of confidence interval that should be calculated. Has to be a character string, passed to the <code>conf.type</code> argument in the <code>survfit</code> function. Defaults to <code>"log"</code>, which is also the default in <code>survfit</code>.</p></dd>
 
+
 </dl></div>
+
+
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 

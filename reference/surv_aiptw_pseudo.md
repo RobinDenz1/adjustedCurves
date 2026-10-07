@@ -9,35 +9,35 @@ used. Additionally, the `outcome_vars` argument and the
 `treatment_model` argument have to be specified in the `adjustedsurv`
 call. Further arguments specific to this method are listed below.
 
-## Arguments
+**Arguments**
 
-- outcome_vars:
+- `outcome_vars`:
 
   \[**required**\] A character vector of column names specifying
   variables to be used when modeling the outcome mechanism using
   [`geese`](https://rdrr.io/pkg/geepack/man/geese.html). See details and
   examples.
 
-- treatment_model:
+- `treatment_model`:
 
   \[**required**\] Must be a `glm` or `multinom` model object with
   `variable` as response variable. Alternatively you can supply a
   numeric vector of propensity scores directly. See details and
   examples.
 
-- type_time:
+- `type_time`:
 
   A character string specifying how the time should be modeled. Possible
   values are `"factor"` (modeling each point in time as a separate
   variable, the default), `"bs"` (modeling time using B-Splines) or
   `"ns"` (modeling time using natural splines).
 
-- spline_df:
+- `spline_df`:
 
   The number of degrees of freedom used for the natural-spline or
   B-spline function. Ignored if `type_time="factor"`. Defaults to 5.
 
-- censoring_vars:
+- `censoring_vars`:
 
   An optional character vector specifying variables in `data`. Those are
   used in the calculation of inverse probability of censoring weighted
@@ -45,7 +45,7 @@ call. Further arguments specific to this method are listed below.
   `NULL` (default) to use standard pseudo-values without corrections for
   dependent censoring instead.
 
-- ipcw_method:
+- `ipcw_method`:
 
   The specific method used in the calculation of inverse probability of
   censoring weighted pseudo observations. Can be either `"binder"`

@@ -11,27 +11,27 @@ have to be specified in the
 [`adjustedsurv()`](https://robindenz1.github.io/adjustedCurves/reference/adjustedsurv.md)
 call. Further arguments specific to this method are listed below.
 
-## Arguments
+**Arguments**
 
-- treatment_model:
+- `treatment_model`:
 
   \[**required**\] Must be either a model object with `variable` as
   response variable, a vector of weights or a formula which can be
   passed to `WeightIt`.
 
-- weight_method:
+- `weight_method`:
 
   Method used in `WeightIt` function call. Ignored if `treatment_model`
   is not a formula object. Defaults to `"ps"`.
 
-- stabilize:
+- `stabilize`:
 
   Whether to stabilize the weights or not. Is set to `FALSE` by default.
   Stabilizing weights ensures that the sum of all weights is equal to
   the original sample size. It has no effect on point estimates, only on
   the asymptotic variance calculations and confidence intervals.
 
-- trim:
+- `trim`:
 
   Can be either `FALSE` (default) or a numeric value at which to trim
   the weights. If `FALSE`, weights are used as calculated or supplied.
@@ -39,7 +39,7 @@ call. Further arguments specific to this method are listed below.
   `trim` are set to `trim` before the analysis is carried out. Useful
   when some weights are extremely large.
 
-- trim_quantiles:
+- `trim_quantiles`:
 
   Alternative argument to trim weights based on quantiles. Can be either
   `FALSE` (default) to use no trimming, or a numeric vector containing
@@ -50,7 +50,7 @@ call. Further arguments specific to this method are listed below.
   all weights that are higher than the 0.99 quantile of the weight
   distributions will be set to the 0.99 quantile.
 
-- censoring_model:
+- `censoring_model`:
 
   \[**required**\] Must be a `formula` object with nothing on the
   left-hand side and the covariates for which censoring should be
@@ -62,19 +62,19 @@ call. Further arguments specific to this method are listed below.
   variables in the Cox models, and their influence on censoring is thus
   adjusted for through the Cox model (under the required assumptions).
 
-- coxph_control:
+- `coxph_control`:
 
   A `list` passed to the `coxph.control` argument of the
   [`coxph`](https://rdrr.io/pkg/survival/man/coxph.html) function when
   creating the `censoring_model`s.
 
-- ties:
+- `ties`:
 
   A single character string passed directly to the argument of the same
   name in the [`coxph`](https://rdrr.io/pkg/survival/man/coxph.html)
   function when creating the `censoring_model`s.
 
-- ...:
+- `...`:
 
   Further arguments passed to
   [`weightit`](https://ngreifer.github.io/WeightIt/reference/weightit.html).

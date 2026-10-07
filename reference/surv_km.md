@@ -11,9 +11,9 @@ group variable. NO adjustment for any confounders is made. This function
 is included only for reference and should not be used when confounder
 adjusted survival curves are desired.
 
-## Arguments
+**Arguments**
 
-- conf_type:
+- `conf_type`:
 
   The type of confidence interval that should be calculated. Has to be a
   character string, passed to the `conf.type` argument in the `survfit`

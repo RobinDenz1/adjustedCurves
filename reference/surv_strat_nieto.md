@@ -10,9 +10,9 @@ used. Additionally, the `adjust_vars` argument has to be specified in
 the `adjustedsurv` call. Further arguments specific to this method are
 listed below.
 
-## Arguments
+**Arguments**
 
-- adjust_vars:
+- `adjust_vars`:
 
   \[**required**\] A single string or character vector specifying column
   names in data for which the survival curves should be adjusted for.

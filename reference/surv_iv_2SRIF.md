@@ -10,30 +10,30 @@ used. Additionally, the `adjust_vars` argument and the `instrument`
 argument have to be specified in the `adjustedsurv` call. Further
 arguments specific to this method are listed below.
 
-## Arguments
+**Arguments**
 
-- adjust_vars:
+- `adjust_vars`:
 
   \[**required**\] A character vector of column names specifying
   observed variables to be used as covariates in both the linear
   regression model and the Cox model. Set to `NULL` to use no additional
   observed covariates. See details and examples.
 
-- instrument:
+- `instrument`:
 
   \[**required**\] A single character string specifying the instrumental
   variable. This variable should be numeric and fulfill all conditions
   required to be called a instrumental variable. See details and
   references for more information.
 
-- frailty_dist:
+- `frailty_dist`:
 
   A single character string specifying the distribution that should be
   used for the frailty term (internally passed to the `distribution`
   argument of the `frailty` function). Defaults to `"gaussian"` and
   should usually be kept at this value.
 
-- return_models:
+- `return_models`:
 
   Either `TRUE` (default) or `FALSE`, indicating whether the output
   object should also contain the two models used for the estimation of

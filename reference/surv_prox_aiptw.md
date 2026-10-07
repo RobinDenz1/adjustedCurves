@@ -10,9 +10,9 @@ used. Additionally, the `treatment_proxy`, `outcome_proxy` and
 `adjust_vars` arguments have to be specified in the `adjustedsurv` call.
 Further arguments specific to this method are listed below.
 
-## Arguments
+**Arguments**
 
-- adjust_vars:
+- `adjust_vars`:
 
   \[**required**\] A character vector specifying names of variables in
   `data`. These variables may consist of observed confounders. At least
@@ -20,19 +20,19 @@ Further arguments specific to this method are listed below.
   variables. Corresponds to \\X\\ (type 1 proxy) in the article by Ying
   et al. (2022).
 
-- treatment_proxy:
+- `treatment_proxy`:
 
   \[**required**\] A single character string specifying the (numeric)
   variable that should be used as a treatment proxy. Corresponds to
   \\Z\\ (type 3 proxy) in the article by Ying et al. (2022).
 
-- outcome_proxy:
+- `outcome_proxy`:
 
   \[**required**\] A single character string specifying the (numeric)
   variable that should be used as a outcome proxy. Corresponds to \\W\\
   (type 2 proxy) in the article by Ying et al. (2022).
 
-- optim_method:
+- `optim_method`:
 
   A single character string passed to the `method` argument of the
   `optim` function, used internally when fitting the q-confounding
@@ -40,7 +40,7 @@ Further arguments specific to this method are listed below.
   `"BFGS"`. To pass additional argument to the internal `optim` call,
   see argument `optim_control`.
 
-- optim_control:
+- `optim_control`:
 
   A list of named arguments passed to the `control` argument of the
   `optim` function, used internally when fitting the q-confounding
@@ -48,7 +48,7 @@ Further arguments specific to this method are listed below.
   [`list()`](https://rdrr.io/r/base/list.html) to not pass any
   additional argument (default).
 
-- return_fit:
+- `return_fit`:
 
   Whether to add intermediate results, such as the q-confounding bridge
   function to the output object. Defaults to `TRUE`.

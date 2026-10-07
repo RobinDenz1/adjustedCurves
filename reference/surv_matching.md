@@ -9,15 +9,15 @@ used. Additionally, the `treatment_model` argument has to be specified
 in the `adjustedsurv` call. Further arguments specific to this method
 are listed below.
 
-## Arguments
+**Arguments**
 
-- treatment_model:
+- `treatment_model`:
 
   \[**required**\] Must be either a model object with `variable` as
   response variable or a vector of previously estimated propensity
   scores.
 
-- gtol:
+- `gtol`:
 
   Tolerance at which estimated treatment assignment probabilities are
   truncated. Every propensity score bigger than 1 - `gtol` is set to 1 -
@@ -25,7 +25,7 @@ are listed below.
   `gtol`. Useful when there are extreme propensity scores close to 0
   or 1. Defaults to 0.001.
 
-- ...:
+- `...`:
 
   Further arguments passed to the
   [`Match`](https://rdrr.io/pkg/Matching/man/Match.html) function of the

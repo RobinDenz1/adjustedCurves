@@ -9,22 +9,22 @@ used. Additionally, the `outcome_vars` argument has to be specified in
 the `adjustedcif` call. Further arguments specific to this method are
 listed below.
 
-## Arguments
+**Arguments**
 
-- outcome_vars:
+- `outcome_vars`:
 
   \[**required**\] A character vector of column names specifying
   variables to be used when modeling the outcome mechanism. See details
   and examples.
 
-- type_time:
+- `type_time`:
 
   A character string specifying how the time should be modeled. Possible
   values are `"factor"` (modeling each point in time as a separate
   variable, the default), `"bs"` (modeling time using B-Splines) or
   `"ns"` (modeling time using natural splines).
 
-- spline_df:
+- `spline_df`:
 
   The number of degrees of freedom used for the natural-spline or
   B-spline function. Defaults to 5. Ignored if `type_time="factor"`.

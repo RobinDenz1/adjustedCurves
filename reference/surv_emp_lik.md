@@ -10,36 +10,36 @@ used. Additionally, the `treatment_vars` argument has to be specified in
 the `adjustedsurv` call. Further arguments specific to this method are
 listed below.
 
-## Arguments
+**Arguments**
 
-- treatment_vars:
+- `treatment_vars`:
 
   \[**required**\] A character vector of column names specifying
   variables to be used as covariates in the empirical likelihood
   estimation. See details and examples.
 
-- moment:
+- `moment`:
 
   A character string specifying which moment to adjust for. Can be
   either `"first"` (default) or `"second"`.
 
-- standardize:
+- `standardize`:
 
   A logical variable indicating whether the `treatment_vars` variables
   should be standardized. Defaults to `FALSE`. See details.
 
-- gtol:
+- `gtol`:
 
   A number specifying the tolerance for the weights. Is basically only
   used to avoid division by 0 errors in cases where the weights are
   estimated to be 0. Defaults to 0.00001.
 
-- max_iter:
+- `max_iter`:
 
   Maximum number of iterations allowed in the newton-raphson algorithm.
   Set to 100 by default which is more than enough in most cases.
 
-- newton_tol:
+- `newton_tol`:
 
   Tolerance used in the newton-raphson algorithm. Set to 1.0e-06 by
   default which is more than enough in most cases.

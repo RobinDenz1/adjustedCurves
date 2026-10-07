@@ -9,26 +9,26 @@ used. Additionally, the `treatment_model` argument has to be specified
 in the `adjustedcif` call. Further arguments specific to this method are
 listed below.
 
-## Arguments
+**Arguments**
 
-- treatment_model:
+- `treatment_model`:
 
   \[**required**\] Must be a `glm` or `multinom` model object with
   `variable` as response variable.
 
-- censoring_model:
+- `censoring_model`:
 
   Either `NULL` (default) to make no adjustments for dependent
   censoring, or a `coxph` object. See
   [`?ate`](https://rdrr.io/pkg/riskRegression/man/ate.html) for more
   details.
 
-- verbose:
+- `verbose`:
 
   Whether to print estimation information of the `ate` function in the
   riskRegression package. Defaults to `FALSE`.
 
-- ...:
+- `...`:
 
   Further arguments passed to
   [`ate`](https://rdrr.io/pkg/riskRegression/man/ate.html).

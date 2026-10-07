@@ -10,27 +10,27 @@ used. Additionally, the `treatment_model` argument has to be specified
 in the `adjustedsurv` call. Further arguments specific to this method
 are listed below.
 
-## Arguments
+**Arguments**
 
-- treatment_model:
+- `treatment_model`:
 
   \[**required**\] Must be either a model object with `variable` as
   response variable, a vector of weights or a formula which can be
   passed to `WeightIt`.
 
-- weight_method:
+- `weight_method`:
 
   Method used in `WeightIt` function call. Ignored if `treatment_model`
   is not a formula object. Defaults to `"ps"`.
 
-- stabilize:
+- `stabilize`:
 
   Whether to stabilize the weights or not. Is set to `FALSE` by default.
   Stabilizing weights ensures that the sum of all weights is equal to
   the original sample size. It has no effect on point estimates, only on
   the asymptotic variance calculations and confidence intervals.
 
-- trim:
+- `trim`:
 
   Can be either `FALSE` (default) or a numeric value at which to trim
   the weights. If `FALSE`, weights are used as calculated or supplied.
@@ -38,7 +38,7 @@ are listed below.
   `trim` are set to `trim` before the analysis is carried out. Useful
   when some weights are extremely large.
 
-- trim_quantiles:
+- `trim_quantiles`:
 
   Alternative argument to trim weights based on quantiles. Can be either
   `FALSE` (default) to use no trimming, or a numeric vector containing
@@ -49,13 +49,13 @@ are listed below.
   all weights that are higher than the 0.99 quantile of the weight
   distributions will be set to the 0.99 quantile.
 
-- extend_to_last:
+- `extend_to_last`:
 
   Either `TRUE` (default) or `FALSE`, indicating whether the survival
   curves should be extended up to the last censored observation time
   (`TRUE`) or only to the last event time (`FALSE`).
 
-- ...:
+- `...`:
 
   Further arguments passed to
   [`weightit`](https://ngreifer.github.io/WeightIt/reference/weightit.html).

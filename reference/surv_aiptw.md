@@ -9,31 +9,31 @@ used. Additionally, the `outcome_model` argument and the
 `treatment_model` argument have to be specified in the `adjustedsurv`
 call. Further arguments specific to this method are listed below.
 
-## Arguments
+**Arguments**
 
-- outcome_model:
+- `outcome_model`:
 
   \[**required**\] Must be a `coxph` model object, modeling the
   time-to-event mechanism. See details and examples.
 
-- treatment_model:
+- `treatment_model`:
 
   \[**required**\] Must be a `glm` model object with `variable` as
   response variable. See details and examples.
 
-- censoring_model:
+- `censoring_model`:
 
   Must be a `coxph` model object, modeling the censoring mechanism or
   `NULL`. If `NULL` (default) independent censoring is assumed. See
   details and examples.
 
-- verbose:
+- `verbose`:
 
   Whether to print estimation information of the
   [`ate`](https://rdrr.io/pkg/riskRegression/man/ate.html) function in
   the riskRegression package. Defaults to `FALSE`.
 
-- ...:
+- `...`:
 
   Further arguments passed to
   [`ate`](https://rdrr.io/pkg/riskRegression/man/ate.html).

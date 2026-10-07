@@ -10,16 +10,16 @@ used. Additionally, the `adjust_vars` argument has to be specified in
 the `adjustedsurv` call. Further arguments specific to this method are
 listed below.
 
-## Arguments
+**Arguments**
 
-- adjust_vars:
+- `adjust_vars`:
 
   \[**required**\] A single string or character vector specifying column
   names in data for which the survival curves should be adjusted for.
   The variables specified can be integers, factors or characters. Only
   categorical variables can be used with this method. See details.
 
-- reference:
+- `reference`:
 
   A `data.frame` to be used as a reference population when weighting the
   survival curves or `NULL` (default). If `NULL` the survival curves are

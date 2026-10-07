@@ -11,9 +11,9 @@ NO adjustment for any confounders are made. This function is included
 only for reference and should not be used when confounder adjusted CIFs
 are desired.
 
-## Arguments
+**Arguments**
 
-- ...:
+- `...`:
 
   Further arguments passed to
   [`cuminc`](https://rdrr.io/pkg/cmprsk/man/cuminc.html).

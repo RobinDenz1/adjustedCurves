@@ -9,9 +9,9 @@ used. Additionally, the `outcome_model` argument has to be specified in
 the `adjustedcif` call. Further arguments specific to this method are
 listed below.
 
-## Arguments
+**Arguments**
 
-- outcome_model:
+- `outcome_model`:
 
   \[**required**\] Must be a previously fit model object including
   `variable` as independent variable. Apart from the classic
@@ -21,13 +21,13 @@ listed below.
   [`models_cif_direct`](https://robindenz1.github.io/adjustedCurves/reference/models_cif_direct.md)
   for a list of supported model objects and some more details.
 
-- verbose:
+- `verbose`:
 
   Whether to print estimation information of the `ate` function in the
   riskRegression package. Defaults to `FALSE`. Ignored if a
   `outcome_model` is not a `CauseSpecificCox` model.
 
-- predict_fun:
+- `predict_fun`:
 
   A function which should be used to calculate the predicted
   cause-specific cumulative incidences given covariates and some points
@@ -36,7 +36,7 @@ listed below.
   [`models_cif_direct`](https://robindenz1.github.io/adjustedCurves/reference/models_cif_direct.md)
   for more information. Defaults to `NULL`.
 
-- ...:
+- `...`:
 
   Further arguments passed to
   [`ate`](https://rdrr.io/pkg/riskRegression/man/ate.html) when a
