@@ -6,36 +6,38 @@ Inverse Probability of Treatment Weighting Combined with Inverse Probability of 
 }
 \description{
 This page explains the details of estimating inverse probability of treatment and censoring weighted survival curves using the estimator by Cheng et al. (2022) for single event time-to-event data (\code{method="iptw_cens"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function). All regular arguments of the \code{adjustedsurv} function can be used. Additionally, the \code{treatment_model} and \code{censoring_model} argument have to be specified in the \code{adjustedsurv()} call. Further arguments specific to this method are listed below.
-}
 
-\arguments{
-  \item{treatment_model}{
+\strong{Arguments}
+
+\describe{
+  \item{\code{treatment_model}}{
 [\strong{required}] Must be either a model object with \code{variable} as response variable, a vector of weights or a formula which can be passed to \code{WeightIt}.
 }
-  \item{weight_method}{
+  \item{\code{weight_method}}{
 Method used in \code{WeightIt} function call. Ignored if \code{treatment_model} is not a formula object. Defaults to \code{"ps"}.
 }
-  \item{stabilize}{
+  \item{\code{stabilize}}{
 Whether to stabilize the weights or not. Is set to \code{FALSE} by default. Stabilizing weights ensures that the sum of all weights is equal to the original sample size. It has no effect on point estimates, only on the asymptotic variance calculations and confidence intervals.
   }
-  \item{trim}{
+  \item{\code{trim}}{
 Can be either \code{FALSE} (default) or a numeric value at which to trim the weights. If \code{FALSE}, weights are used as calculated or supplied. If a numeric value is supplied, all weights that are bigger than \code{trim} are set to \code{trim} before the analysis is carried out. Useful when some weights are extremely large.
   }
-  \item{trim_quantiles}{
+  \item{\code{trim_quantiles}}{
 Alternative argument to trim weights based on quantiles. Can be either \code{FALSE} (default) to use no trimming, or a numeric vector containing exactly two values between 0 and 1. These values specify the quantiles that the weights should be trimmed at. For example, if \code{c(0.01, 0.99)} is supplied to this argument, all weights that are lower than the 0.01 quantile of the weight distribution will be set to that quantile and all weights that are higher than the 0.99 quantile of the weight distributions will be set to the 0.99 quantile.
   }
-  \item{censoring_model}{
+  \item{\code{censoring_model}}{
 [\strong{required}] Must be a \code{formula} object with nothing on the left-hand side and the covariates for which censoring should be adjusted for on the right-hand side. Internally, a Cox proportional hazards model is then fitted for each treatment group, in which the event indicator is reversed and the variables listed in the supplied \code{formula} are used as censoring predictors. For example, \code{~ x1 + x2} would mean that both \code{x1} and \code{x2} are included as independent variables in the Cox models, and their influence on censoring is thus adjusted for through the Cox model (under the required assumptions).
   }
-  \item{coxph_control}{
+  \item{\code{coxph_control}}{
 A \code{list} passed to the \code{coxph.control} argument of the \code{\link[survival]{coxph}} function when creating the \code{censoring_model}s.
   }
-  \item{ties}{
+  \item{\code{ties}}{
 A single character string passed directly to the argument of the same name in the \code{\link[survival]{coxph}} function when creating the \code{censoring_model}s.
   }
-  \item{...}{
+  \item{\code{...}}{
 Further arguments passed to \code{\link[WeightIt]{weightit}}.
   }
+}
 }
 \details{
 

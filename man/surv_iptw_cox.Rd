@@ -8,27 +8,28 @@ Inverse Probability of Treatment Weighted Survival using Cox-Regression
 
 This page explains the details of estimating inverse probability of treatment weighted survival curves using a weighted univariate cox-regression for single event time-to-event data (\code{method="iptw_cox"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function). All regular arguments of the \code{adjustedsurv} function can be used. Additionally, the \code{treatment_model} argument has to be specified in the \code{adjustedsurv} call. Further arguments specific to this method are listed below.
 
-}
+\strong{Arguments}
 
-\arguments{
-  \item{treatment_model}{
+\describe{
+  \item{\code{treatment_model}}{
 [\strong{required}] Must be either a model object with \code{variable} as response variable, a vector of weights or a formula which can be passed to \code{WeightIt}.
 }
-  \item{weight_method}{
+  \item{\code{weight_method}}{
 Method used in \code{WeightIt} function call. Ignored if \code{treatment_model} is not a formula object. Defaults to \code{"ps"}.
 }
-  \item{stabilize}{
+  \item{\code{stabilize}}{
 Whether to stabilize the weights or not. Is set to \code{FALSE} by default. Stabilizing weights ensures that the sum of all weights is equal to the original sample size. It has no effect on point estimates, only on the asymptotic variance calculations and confidence intervals.
   }
-  \item{trim}{
+  \item{\code{trim}}{
 Can be either \code{FALSE} (default) or a numeric value at which to trim the weights. If \code{FALSE}, weights are used as calculated or supplied. If a numeric value is supplied, all weights that are bigger than \code{trim} are set to \code{trim} before the analysis is carried out. Useful when some weights are extremely large.
   }
-  \item{trim_quantiles}{
+  \item{\code{trim_quantiles}}{
 Alternative argument to trim weights based on quantiles. Can be either \code{FALSE} (default) to use no trimming, or a numeric vector containing exactly two values between 0 and 1. These values specify the quantiles that the weights should be trimmed at. For example, if \code{c(0.01, 0.99)} is supplied to this argument, all weights that are lower than the 0.01 quantile of the weight distribution will be set to that quantile and all weights that are higher than the 0.99 quantile of the weight distributions will be set to the 0.99 quantile.
   }
-  \item{...}{
+  \item{\code{...}}{
 Further arguments passed to \code{\link[WeightIt]{weightit}}.
   }
+}
 }
 \details{
 

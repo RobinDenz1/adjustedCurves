@@ -8,18 +8,19 @@ Using Propensity-Score Matching to Calculate Adjusted CIFs
 
 This page explains the details of estimating adjusted cumulative incidence functions using propensity-score matching in a competing risks setting (\code{method="matching"} in the \code{\link[=adjustedcif]{adjustedcif}} function). All regular arguments of the \code{adjustedcif} function can be used. Additionally, the \code{treatment_model} argument has to be specified in the \code{adjustedcif} call. Further arguments specific to this method are listed below.
 
-}
+\strong{Arguments}
 
-\arguments{
-  \item{treatment_model}{
+\describe{
+  \item{\code{treatment_model}}{
 [\strong{required}] Must be either a model object with \code{variable} as response variable or a vector of previously estimated propensity scores.
 }
-  \item{gtol}{
+  \item{\code{gtol}}{
 Tolerance at which estimated treatment assignment probabilities are truncated. Every propensity score bigger than 1 - \code{gtol} is set to 1 - \code{gtol} and every propensity score smaller than \code{gtol} is set to \code{gtol}. Useful when there are extreme propensity scores close to 0 or 1. Defaults to 0.001,
   }
-  \item{...}{
+  \item{\code{...}}{
 Further arguments passed to the \code{Match} function of the \pkg{Matching} Package.
   }
+}
 }
 \details{
 

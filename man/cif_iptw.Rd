@@ -8,22 +8,24 @@ Inverse Probability of Treatment Weighted CIFs
 
 This page explains the details of estimating inverse probability of treatment weighted cumulative incidence functions in a competing risks setting (\code{method="iptw"} in the \code{\link[=adjustedcif]{adjustedcif}} function). All regular arguments of the \code{adjustedcif} function can be used. Additionally, the \code{treatment_model} argument has to be specified in the \code{adjustedcif} call. Further arguments specific to this method are listed below.
 
-}
+\strong{Arguments}
 
-\arguments{
-  \item{treatment_model}{
+\describe{
+  \item{\code{treatment_model}}{
 [\strong{required}] Must be a \code{glm} or \code{multinom} model object with \code{variable} as response variable.
 }
-  \item{censoring_model}{
+  \item{\code{censoring_model}}{
 Either \code{NULL} (default) to make no adjustments for dependent censoring, or a \code{coxph} object. See \code{?ate} for more details.
   }
-  \item{verbose}{
+  \item{\code{verbose}}{
 Whether to print estimation information of the \code{ate} function in the \pkg{riskRegression} package. Defaults to \code{FALSE}.
   }
-  \item{...}{
+  \item{\code{...}}{
 Further arguments passed to \code{\link[riskRegression]{ate}}.
   }
 }
+}
+
 \details{
 
 \itemize{

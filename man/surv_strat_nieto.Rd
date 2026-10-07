@@ -8,12 +8,13 @@ Adjusted Survival Curves for Categorical Confounders using the Method by Gregory
 
 This page explains the details of estimating confounder-adjusted survival curves using a weighted average of stratified Kaplan-Meier estimates using the method described in Gregory (1988) and Nieto & Coresh (1996) (\code{method="strat_gregory_nieto"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function). All regular arguments of the \code{adjustedsurv} function can be used. Additionally, the \code{adjust_vars} argument has to be specified in the \code{adjustedsurv} call. Further arguments specific to this method are listed below.
 
-}
+\strong{Arguments}
 
-\arguments{
-  \item{adjust_vars}{
+\describe{
+  \item{\code{adjust_vars}}{
 [\strong{required}] A single string or character vector specifying column names in data for which the survival curves should be adjusted for. The variables specified can be integers, factors or characters. Only categorical variables can be used with this method. See details.
   }
+}
 }
 \details{
 

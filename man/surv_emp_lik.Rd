@@ -8,26 +8,27 @@ Empirical Likelihood Estimation Survival Curves
 
 This page explains the details of estimating adjusted survival curves using the empirical likelihood estimation methodology introduced by Wang et al. (2019) for single event time-to-event data (\code{method="emp_lik"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function). All regular arguments of the \code{adjustedsurv} function can be used. Additionally, the \code{treatment_vars} argument has to be specified in the \code{adjustedsurv} call. Further arguments specific to this method are listed below.
 
-}
+\strong{Arguments}
 
-\arguments{
-  \item{treatment_vars}{
+\describe{
+  \item{\code{treatment_vars}}{
 [\strong{required}] A character vector of column names specifying variables to be used as covariates in the empirical likelihood estimation. See details and examples.
 }
-  \item{moment}{
+  \item{\code{moment}}{
 A character string specifying which moment to adjust for. Can be either \code{"first"} (default) or \code{"second"}.
 }
-  \item{standardize}{
+  \item{\code{standardize}}{
 A logical variable indicating whether the \code{treatment_vars} variables should be standardized. Defaults to \code{FALSE}. See details.
 }
-  \item{gtol}{
+  \item{\code{gtol}}{
 A number specifying the tolerance for the weights. Is basically only used to avoid division by 0 errors in cases where the weights are estimated to be 0. Defaults to 0.00001.
 }
-  \item{max_iter}{
+  \item{\code{max_iter}}{
 Maximum number of iterations allowed in the newton-raphson algorithm. Set to 100 by default which is more than enough in most cases.
 }
-  \item{newton_tol}{
+  \item{\code{newton_tol}}{
 Tolerance used in the newton-raphson algorithm. Set to 1.0e-06 by default which is more than enough in most cases.
+}
 }
 }
 \details{

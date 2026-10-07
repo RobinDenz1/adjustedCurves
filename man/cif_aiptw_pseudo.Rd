@@ -8,21 +8,23 @@ Augmented Inverse Probability of Treatment Weighted CIFs using Pseudo-Values
 
 This page explains the details of estimating augmented inverse probability of treatment weighted CIFs using pseudo-values in a competing risks setting (\code{method="aiptw_pseudo"} in the \code{\link[=adjustedcif]{adjustedcif}} function). All regular arguments of the \code{adjustedcif} function can be used. Additionally, the \code{outcome_vars} argument and the \code{treatment_model} argument have to be specified in the \code{adjustedcif} call. Further arguments specific to this method are listed below.
 
-}
+\strong{Arguments}
 
-\arguments{
-  \item{outcome_vars}{
+\describe{
+  \item{\code{outcome_vars}}{
 [\strong{required}] A character vector of column names specifying variables to be used when modeling the outcome mechanism using \code{geese}. See details and examples.
 }
-  \item{treatment_model}{
+  \item{\code{treatment_model}}{
 [\strong{required}] Must be a \code{glm} or \code{multinom} model object with \code{variable} as response variable. See details and examples.
 }
-  \item{type_time}{
+  \item{\code{type_time}}{
 A character string specifying how the time should be modeled. Possible values are \code{"factor"} (modeling each point in time as a separate variable, the default), \code{"bs"} (modeling time using B-Splines) or \code{"ns"} (modeling time using natural splines).
 }
-  \item{spline_df}{
+  \item{\code{spline_df}}{
 The number of degrees of freedom used for the natural-spline or B-spline function. Defaults to 5. Ignored if \code{type_time="factor"}.
 }
+}
+
 }
 \details{
 

@@ -8,20 +8,22 @@ Direct Adjusted Survival Curves
 
 This page explains the details of estimating confounder-adjusted survival curves using a previously fit Cox-Regression model for single event time-to-event data using Direct Standardization (\code{method="direct"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function). All regular arguments of the \code{adjustedsurv} function can be used. Additionally, the \code{outcome_model} argument has to be specified in the \code{adjustedsurv} call. Further arguments specific to this method are listed below.
 
-}
-\arguments{
-  \item{outcome_model}{
+\strong{Arguments}
+
+\describe{
+  \item{\code{outcome_model}}{
 [\strong{required}] Must be a previously fit model object including \code{variable} as independent variable. Apart from the classic \code{coxph} model this function also supports a variety of other models. See \code{\link[adjustedCurves]{models_surv_direct}} for a list of supported model objects and some more details.
 }
-  \item{verbose}{
+  \item{\code{verbose}}{
 Whether to print estimation information of the \code{ate} function in the \pkg{riskRegression} package. Ignored if \code{outcome_model} is not a \code{coxph} object. Defaults to \code{FALSE}.
 }
-  \item{predict_fun}{
+  \item{\code{predict_fun}}{
 A function which should be used to calculate the predicted survival probabilities given covariates and some points in time. This argument only needs to be specified if the kind of model supplied in the \code{outcome_model} is not directly supported. See \code{\link[adjustedCurves]{models_surv_direct}} for more information. Defaults to \code{NULL}.
 }
-  \item{...}{
+  \item{\code{...}}{
 Further arguments passed to \code{ate} if \code{outcome_model} is a \code{coxph} object. Otherwise the additional arguments are passed to the respective \code{predict} method. See \code{\link[adjustedCurves]{models_surv_direct}} for more information.
   }
+}
 }
 \details{
 

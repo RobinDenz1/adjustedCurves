@@ -8,24 +8,25 @@ Augmented Inverse Probability of Treatment Weighted Survival Curves
 
 This page explains the details of estimating augmented inverse probability of treatment weighted survival curves for single event time-to-event data (\code{method="aiptw"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function). All regular arguments of the \code{adjustedsurv} function can be used. Additionally, the \code{outcome_model} argument and the \code{treatment_model} argument have to be specified in the \code{adjustedsurv} call. Further arguments specific to this method are listed below.
 
-}
+\strong{Arguments}
 
-\arguments{
-  \item{outcome_model}{
+\describe{
+  \item{\code{outcome_model}}{
 [\strong{required}] Must be a \code{coxph} model object, modeling the time-to-event mechanism. See details and examples.
 }
-  \item{treatment_model}{
+  \item{\code{treatment_model}}{
 [\strong{required}] Must be a \code{glm} model object with \code{variable} as response variable. See details and examples.
 }
-  \item{censoring_model}{
+  \item{\code{censoring_model}}{
 Must be a \code{coxph} model object, modeling the censoring mechanism or \code{NULL}. If \code{NULL} (default) independent censoring is assumed. See details and examples.
 }
-  \item{verbose}{
+  \item{\code{verbose}}{
 Whether to print estimation information of the \code{\link[riskRegression]{ate}} function in the \pkg{riskRegression} package. Defaults to \code{FALSE}.
 }
-  \item{...}{
+  \item{\code{...}}{
 Further arguments passed to \code{\link[riskRegression]{ate}}.
   }
+}
 }
 \details{
 

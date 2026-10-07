@@ -8,20 +8,21 @@ Instrumental Variable based Survival Curve Estimation using the Two Stage Residu
 
 This page explains the details of estimating adjusted survival curves using the 2SRI-F instrumental variable method introduced by Martinez-Camblor et al. (2021) for single event time-to-event data (\code{method="iv_2SRIF"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function). All regular arguments of the \code{adjustedsurv} function can be used. Additionally, the \code{adjust_vars} argument and the \code{instrument} argument have to be specified in the \code{adjustedsurv} call. Further arguments specific to this method are listed below.
 
-}
+\strong{Arguments}
 
-\arguments{
-  \item{adjust_vars}{
+\describe{
+  \item{\code{adjust_vars}}{
 [\strong{required}] A character vector of column names specifying observed variables to be used as covariates in both the linear regression model and the Cox model. Set to \code{NULL} to use no additional observed covariates. See details and examples.
 }
-  \item{instrument}{
+  \item{\code{instrument}}{
 [\strong{required}] A single character string specifying the instrumental variable. This variable should be numeric and fulfill all conditions required to be called a instrumental variable. See details and references for more information.
 }
-  \item{frailty_dist}{
+  \item{\code{frailty_dist}}{
 A single character string specifying the distribution that should be used for the frailty term (internally passed to the \code{distribution} argument of the \code{frailty} function). Defaults to \code{"gaussian"} and should usually be kept at this value.
 }
-  \item{return_models}{
+  \item{\code{return_models}}{
 Either \code{TRUE} (default) or \code{FALSE}, indicating whether the output object should also contain the two models used for the estimation of the suvival curves.
+}
 }
 }
 \details{

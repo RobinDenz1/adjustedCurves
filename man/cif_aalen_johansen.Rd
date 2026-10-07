@@ -9,15 +9,16 @@ Group-Specific Aalen-Johansen CIFs
 This page explains the details of estimating standard Aalen-Johansen cumulative incidence functions, stratified by the group variable (\code{method="aalen_johansen"} in the \code{\link[=adjustedcif]{adjustedcif}} function). All regular arguments of the \code{adjustedcif} function can be used. Further arguments specific to this method are listed below.
 
 NO adjustment for any confounders are made. This function is included only for reference and should not be used when confounder adjusted CIFs are desired.
-}
 
-\arguments{
-  \item{...}{
+\strong{Arguments}
+
+\describe{
+  \item{\code{...}}{
 Further arguments passed to \code{\link[cmprsk]{cuminc}}.
   }
 }
+}
 \details{
-
 \itemize{
 \item{\strong{Type of Adjustment:} NO adjustments are made. This is just a stratified Aalen-Johansen estimator.}
 \item{\strong{Doubly-Robust:} Estimates are not Doubly-Robust.}

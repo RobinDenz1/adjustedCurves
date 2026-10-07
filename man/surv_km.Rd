@@ -11,12 +11,13 @@ This page explains the details of estimating group-specific Kaplan-Meier curves 
 Calculates standard Kaplan-Meier survival curves, stratified by the group variable.
 NO adjustment for any confounders is made. This function is included only for reference and should not be used when confounder adjusted survival curves are desired.
 
-}
+\strong{Arguments}
 
-\arguments{
-  \item{conf_type}{
+\describe{
+  \item{\code{conf_type}}{
 The type of confidence interval that should be calculated. Has to be a character string, passed to the \code{conf.type} argument in the \code{survfit} function. Defaults to \code{"log"}, which is also the default in \code{survfit}.
   }
+}
 }
 \details{
 

@@ -8,26 +8,27 @@ Augmented Inverse Probability of Treatment Weighted Survival Curves using Pseudo
 
 This page explains the details of estimating augmented inverse probability of treatment weighted survival curves using Pseudo-Values for single event time-to-event data (\code{method="aiptw_pseudo"} in the \code{\link[=adjustedsurv]{adjustedsurv}} function). All regular arguments of the \code{adjustedsurv} function can be used. Additionally, the \code{outcome_vars} argument and the \code{treatment_model} argument have to be specified in the \code{adjustedsurv} call. Further arguments specific to this method are listed below.
 
-}
+\strong{Arguments}
 
-\arguments{
-  \item{outcome_vars}{
+\describe{
+  \item{\code{outcome_vars}}{
 [\strong{required}] A character vector of column names specifying variables to be used when modeling the outcome mechanism using \code{\link[geepack]{geese}}. See details and examples.
 }
-  \item{treatment_model}{
+  \item{\code{treatment_model}}{
 [\strong{required}] Must be a \code{glm} or \code{multinom} model object with \code{variable} as response variable. Alternatively you can supply a numeric vector of propensity scores directly. See details and examples.
 }
-  \item{type_time}{
+  \item{\code{type_time}}{
 A character string specifying how the time should be modeled. Possible values are \code{"factor"} (modeling each point in time as a separate variable, the default), \code{"bs"} (modeling time using B-Splines) or \code{"ns"} (modeling time using natural splines).
 }
-  \item{spline_df}{
+  \item{\code{spline_df}}{
 The number of degrees of freedom used for the natural-spline or B-spline function. Ignored if \code{type_time="factor"}. Defaults to 5.
 }
-  \item{censoring_vars}{
+  \item{\code{censoring_vars}}{
 An optional character vector specifying variables in \code{data}. Those are used in the calculation of inverse probability of censoring weighted pseudo observations. See \code{?pseudo_aareg} for more information. Set to \code{NULL} (default) to use standard pseudo-values without corrections for dependent censoring instead.
 }
-  \item{ipcw_method}{
+  \item{\code{ipcw_method}}{
 The specific method used in the calculation of inverse probability of censoring weighted pseudo observations. Can be either \code{"binder"} (default) or \code{"hajek"}. See \code{?pseudo_aareg} for more information. Ignored if \code{censoring_vars=NULL}.
+}
 }
 }
 \details{

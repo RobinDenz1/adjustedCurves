@@ -8,27 +8,28 @@ Proximal Inverse Probability of Treatment Weighted Survival Curve Estimates
 
 This page explains the details of estimating inverse probability of treatment weighted survival curves using a proximal causal inference based method for single event time-to-event data (\code{method="prox_iptw"} as described by Ying et al. (2022) in the \code{\link[=adjustedsurv]{adjustedsurv}} function). All regular arguments of the \code{adjustedsurv} function can be used. Additionally, the \code{treatment_proxy}, \code{outcome_proxy} and \code{adjust_vars} arguments have to be specified in the \code{adjustedsurv} call. Further arguments specific to this method are listed below.
 
-}
+\strong{Arguments}
 
-\arguments{
-  \item{adjust_vars}{
+\describe{
+  \item{\code{adjust_vars}}{
 [\strong{required}] A character vector specifying names of variables in \code{data}. These variables may consist of observed confounders. At least one variable has to be named. Corresponds to \eqn{X} (type 1 proxy) in the article by Ying et al. (2022).
 }
-  \item{treatment_proxy}{
+  \item{\code{treatment_proxy}}{
 [\strong{required}] A single character string specifying the variable that should be used as a treatment proxy. Corresponds to \eqn{Z} (type 3 proxy) in the article by Ying et al. (2022).
 }
-  \item{outcome_proxy}{
+  \item{\code{outcome_proxy}}{
 [\strong{required}] A single character string specifying the variable that should be used as a outcome proxy. Corresponds to \eqn{W} (type 2 proxy) in the article by Ying et al. (2022).
   }
-  \item{optim_method}{
+  \item{\code{optim_method}}{
 A single character string passed to the \code{method} argument of the \code{optim} function, used internally when fitting the q-confounding bridge function. Defaults to \code{"BFGS"}. To pass additional argument to the internal \code{optim} call, see argument \code{optim_control}.
   }
-  \item{optim_control}{
+  \item{\code{optim_control}}{
 A list of named arguments passed to the \code{control} argument of the \code{optim} function, used internally when fitting the q-confounding bridge function. Set to \code{list()} to not pass any additional argument (default).
   }
-  \item{return_fit}{
+  \item{\code{return_fit}}{
 Whether to add intermediate results, such as the q-confounding bridge function to the output object. Defaults to \code{TRUE}.
   }
+}
 }
 \details{
 
