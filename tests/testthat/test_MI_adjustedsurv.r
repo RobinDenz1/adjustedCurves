@@ -55,6 +55,10 @@ test_that("MI, direct, boot", {
   expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
+# NOTE: only here because the tests take too much time in total,
+#       they are run locally regularly
+skip_on_cran()
+
 ### direct_pseudo
 test_that("MI, direct_pseudo, no boot", {
   adj <- adjustedsurv(data=imp,

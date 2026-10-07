@@ -59,6 +59,10 @@ test_that("MI, direct, boot", {
   expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
 
+# NOTE: only here because the tests take too much time in total,
+#       they are run locally regularly
+skip_on_cran()
+
 test_that("MI, direct, conf_int", {
   adj <- adjustedcif(data=imp,
                      variable="group",

@@ -68,6 +68,9 @@ test_that("default arguments", {
   expect_true(is.numeric(out$adj$surv))
 })
 
+# skipped on CRAN only to safe time, run locally regularly
+skip_on_cran()
+
 test_that("using conf_int", {
   out <- adjustedsurv(data=dat,
                       variable="A",
