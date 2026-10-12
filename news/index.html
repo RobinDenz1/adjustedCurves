@@ -36,11 +36,16 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/RobinDenz1/adjustedCurves/blob/v0.12.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/RobinDenz1/adjustedCurves/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.12.0" id="adjustedcurves-0120">adjustedCurves 0.12.0<a class="anchor" aria-label="anchor" href="#adjustedcurves-0120"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.12.1" id="adjustedcurves-0121-developmental-version">adjustedCurves 0.12.1 (developmental version)<a class="anchor" aria-label="anchor" href="#adjustedcurves-0121-developmental-version"></a></h2>
+<p>Bug Fixes</p>
+<ul><li>Fixed a bug in <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code> with <code>method="km"</code> and <code>conf_int=TRUE</code>, where the <code>se</code> column contained the standard error of the cumulative hazard returned by <code><a href="https://rdrr.io/pkg/survival/man/survfit.html" class="external-link">survfit()</a></code> instead of the standard error of the survival probability. The survival curves and their confidence intervals were not affected, but the confidence intervals and p-values of <code><a href="../reference/adjusted_curve_diff.html">adjusted_curve_diff()</a></code>, <code><a href="../reference/adjusted_curve_diff.html">adjusted_curve_ratio()</a></code>, <code><a href="../reference/plot_curve_diff.html">plot_curve_diff()</a></code> and <code><a href="../reference/plot_curve_diff.html">plot_curve_ratio()</a></code>, and the confidence intervals pooled over multiply imputed datasets, were based on a standard error that was too large by a factor of 1/S (<a href="https://github.com/RobinDenz1/adjustedCurves/issues/61" class="external-link">#61</a>)</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.12.0" id="adjustedcurves-0120">adjustedCurves 0.12.0<a class="anchor" aria-label="anchor" href="#adjustedcurves-0120"></a></h2><p class="text-muted">CRAN release: 2026-10-07</p>
 <p>New features</p>
 <ul><li>Added the <code>"iptw_cens"</code> method to the <code><a href="../reference/adjustedsurv.html">adjustedsurv()</a></code> function, which is a weighting based method that simultaneously allows adjustment for confounding via IPTW and adjustment for dependent censoring via IPCW.</li>
 </ul><p>Enhancements</p>

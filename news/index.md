@@ -1,6 +1,29 @@
 # Changelog
 
+## adjustedCurves 0.12.1 (developmental version)
+
+Bug Fixes
+
+- Fixed a bug in
+  [`adjustedsurv()`](https://robindenz1.github.io/adjustedCurves/reference/adjustedsurv.md)
+  with `method="km"` and `conf_int=TRUE`, where the `se` column
+  contained the standard error of the cumulative hazard returned by
+  [`survfit()`](https://rdrr.io/pkg/survival/man/survfit.html) instead
+  of the standard error of the survival probability. The survival curves
+  and their confidence intervals were not affected, but the confidence
+  intervals and p-values of
+  [`adjusted_curve_diff()`](https://robindenz1.github.io/adjustedCurves/reference/adjusted_curve_diff.md),
+  [`adjusted_curve_ratio()`](https://robindenz1.github.io/adjustedCurves/reference/adjusted_curve_diff.md),
+  [`plot_curve_diff()`](https://robindenz1.github.io/adjustedCurves/reference/plot_curve_diff.md)
+  and
+  [`plot_curve_ratio()`](https://robindenz1.github.io/adjustedCurves/reference/plot_curve_diff.md),
+  and the confidence intervals pooled over multiply imputed datasets,
+  were based on a standard error that was too large by a factor of 1/S
+  ([\#61](https://github.com/RobinDenz1/adjustedCurves/issues/61))
+
 ## adjustedCurves 0.12.0
+
+CRAN release: 2026-10-07
 
 New features
 
