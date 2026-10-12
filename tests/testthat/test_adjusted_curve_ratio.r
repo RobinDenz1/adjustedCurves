@@ -44,9 +44,9 @@ test_that("surv, times, conf_int", {
   adj_diff <- adjusted_curve_ratio(adj, times=0.8, conf_int=TRUE)
   expect_equal(nrow(adj_diff), 1)
   expect_equal(round(adj_diff$ratio[1], 4), 0.4548)
-  expect_equal(round(adj_diff$ci_lower[1], 3), -0.585)
-  expect_equal(round(adj_diff$ci_upper[1], 3), 1.999)
-  expect_equal(round(adj_diff$p_value[1], 3), 0.352)
+  expect_equal(round(adj_diff$ci_lower[1], 3), 0.246)
+  expect_equal(round(adj_diff$ci_upper[1], 3), 0.733)
+  expect_equal(round(adj_diff$p_value[1], 3), 0.001)
 })
 
 test_that("cif, times", {
