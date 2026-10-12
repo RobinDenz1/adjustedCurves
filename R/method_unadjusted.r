@@ -20,7 +20,9 @@ surv_km <- function(data, variable, ev_time, event, conf_int,
 
   # get se and confidence interval
   if (conf_int) {
-    plotdata$se <- surv$std.err
+    # survfit() returns the standard error of the cumulative hazard,
+    # multiply by S to get the standard error of the survival probability
+    plotdata$se <- surv$std.err * surv$surv
     plotdata$ci_lower <- surv$lower
     plotdata$ci_upper <- surv$upper
   }
