@@ -11,11 +11,13 @@ Given a previously created \code{adjustedsurv} or \code{adjustedcif} object, cal
 \usage{
 adjusted_curve_diff(adj, group_1=NULL, group_2=NULL,
                     times=NULL, conf_int=FALSE, conf_level=0.95,
-                    use_boot=FALSE, interpolation="steps")
+                    use_boot=FALSE, interpolation="steps",
+                    paired_boot=TRUE)
 
 adjusted_curve_ratio(adj, group_1=NULL, group_2=NULL,
                      times=NULL, conf_int=FALSE, conf_level=0.95,
-                     use_boot=FALSE, interpolation="steps")
+                     use_boot=FALSE, interpolation="steps",
+                     paired_boot=TRUE)
 }
 
 \arguments{
@@ -43,6 +45,9 @@ Whether to use the standard errors estimated using bootstrapping for the confide
   \item{interpolation}{
 Either \code{"steps"} (default) or \code{"linear"}. This parameter controls how interpolation is performed. If this argument is set to \code{"steps"}, the curves will be treated as step functions. If it is set to \code{"linear"}, the curves wil be treated as if there are straight lines between the point estimates instead. Points that lie between estimated points will be interpolated accordingly. Should usually be kept at \code{"steps"}. See Details.
   }
+  \item{paired_boot}{
+Either \code{TRUE} (default) or \code{FALSE}, specifying how the bootstrap estimates are used when \code{use_boot=TRUE}. If \code{TRUE}, the variances of the two curves and their covariance are estimated from the bootstrap replications, in which both curves were estimated on the same bootstrap sample, so that the two curves do not have to be assumed independent. If \code{FALSE}, the bootstrap standard errors of the two curves are combined assuming independence, which was the only option in versions before 0.12.1. Ignored if \code{conf_int=FALSE} or \code{use_boot=FALSE}. See Details.
+  }
 }
 \details{
 
@@ -54,6 +59,10 @@ For differences, the standard error of the difference is estimated using the poo
 Confidence intervals are then calculated using this pooled standard error and the normal approximation. The P-Values are also obtained using this standard error combined with a two-sided one-sample t-test. The null-hypothesis is that the difference is equal to 0, and the alternative hypothesis is that the difference is not equal to 0.
 
 For ratios, the confidence intervals are calculated according to the method given by Fieller (1954), assuming the probabilities to be independent. P-values are calculated using a one-sample two-sided t-test with the test-statistic of Fieller (1954).
+
+The two curves are, however, not always independent. For example, with \code{method="direct"} both curves are estimated using the same outcome model and averaged over the same individuals, which usually makes them positively correlated. The pooled standard error is then too large, which leads to conservative confidence intervals and p-values. When \code{use_boot=TRUE} and \code{paired_boot=TRUE} (default), this assumption is not needed. Both curves are estimated on the same sample in each bootstrap replication, so their variances \eqn{Var_{group_1}}, \eqn{Var_{group_2}} and their covariance \eqn{Cov_{group_1, group_2}} can be estimated from the paired bootstrap estimates. The standard error of the difference is then given by:
+\deqn{SE_{group_1 - group_2} = \sqrt{Var_{group_1} + Var_{group_2} - 2 Cov_{group_1, group_2}}}
+which is the standard deviation of the bootstrapped differences. For ratios, the covariance is included in the confidence interval of Fieller (1954) and in the test-statistic. Only bootstrap replications in which both curves could be estimated at a point in time are used there. Setting \code{paired_boot=FALSE} gives the pooled standard error based on the bootstrap standard errors of the two curves instead.
 
 If p-values are calculated for multiple points in time simultaneously, the user should adjust those. See \code{?p.adjust} for more information.
 
@@ -71,7 +80,7 @@ There is no directly associated \code{plot} method for this function. However, t
 
 \strong{\emph{Multiple Imputation}}
 
-This function works exactly the same way for adjusted survival curves or adjusted CIFs estimated using multiple imputation as it does without any missing values. If multiple imputation was used previously, this function simply uses the pooled estimates to calculate the differences or ratios.
+This function works exactly the same way for adjusted survival curves or adjusted CIFs estimated using multiple imputation as it does without any missing values. If multiple imputation was used previously, this function simply uses the pooled estimates to calculate the differences or ratios. With \code{use_boot=TRUE} and \code{paired_boot=TRUE}, the variances and the covariance of the two curves are estimated in each imputed dataset and pooled using Rubin's rules.
 
 \strong{\emph{Computational Details}}
 
