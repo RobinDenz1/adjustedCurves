@@ -138,7 +138,7 @@ exact_integral <- function(data, from, to, est, interpolation) {
 ## using either linear or step-function interpolation
 difference_function <- function(adj, times, est="surv", interpolation="steps",
                                 conf_int=FALSE, conf_level=0.95,
-                                type="diff", p_value=FALSE) {
+                                type="diff", p_value=FALSE, boot_cov=NULL) {
 
   levs <- levels(adj$group)
   adjsurv_0 <- adj[which(adj$group==levs[1]), ]
@@ -168,6 +168,15 @@ difference_function <- function(adj, times, est="surv", interpolation="steps",
     }
   }
 
+  # (co-)variances estimated from paired bootstrap estimates, if supplied,
+  # otherwise both curves are assumed to be independent
+  cov_01 <- 0
+  if (conf_int && !is.null(boot_cov)) {
+    se_0 <- sqrt(boot_cov$var_0)
+    se_1 <- sqrt(boot_cov$var_1)
+    cov_01 <- boot_cov$cov_01
+  }
+
   if (type=="diff") {
     surv_diff <- surv_0 - surv_1
 
@@ -175,8 +184,8 @@ difference_function <- function(adj, times, est="surv", interpolation="steps",
     diff_dat[, est] <- surv_diff
 
     if (conf_int) {
-      # calculate confidence interval from pooled SE
-      diff_se <- sqrt(se_0^2 + se_1^2)
+      # calculate confidence interval from the SE of the difference
+      diff_se <- sqrt(se_0^2 + se_1^2 - 2*cov_01)
       diff_ci <- confint_surv(surv=surv_diff, se=diff_se, conf_level=conf_level,
                               conf_type="plain")
       # put together
@@ -199,14 +208,15 @@ difference_function <- function(adj, times, est="surv", interpolation="steps",
 
     if (conf_int) {
       ci_ratio <- fieller_ratio_ci(a=surv_0, b=surv_1, a_se=se_0,
-                                   b_se=se_1, conf_level=conf_level)
+                                   b_se=se_1, conf_level=conf_level,
+                                   ab_cov=cov_01)
       diff_dat$ci_lower <- ci_ratio$ci_lower
       diff_dat$ci_upper <- ci_ratio$ci_upper
     }
 
     if (conf_int & p_value) {
       diff_dat$p_value <- fieller_p_val(a=surv_0, b=surv_1, a_se=se_0,
-                                        b_se=se_1)
+                                        b_se=se_1, ab_cov=cov_01)
     }
   }
 

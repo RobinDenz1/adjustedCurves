@@ -1099,7 +1099,8 @@ check_inputs_plot_difference <- function(x, group_1, group_2, conf_int,
 }
 
 ## check inputs for adjusted_curve_diff function
-check_inputs_adj_diff <- function(adj, group_1, group_2, conf_int, use_boot) {
+check_inputs_adj_diff <- function(adj, group_1, group_2, conf_int, use_boot,
+                                  paired_boot=TRUE) {
 
   if (!inherits(adj, c("adjustedsurv", "adjustedcif"))) {
     stop("'x' must be an 'adjustedsurv' object created using the adjustedsurv",
@@ -1119,6 +1120,9 @@ check_inputs_adj_diff <- function(adj, group_1, group_2, conf_int, use_boot) {
     stop(group_2, " is not a valid group in 'variable'.")
   } else if (!is.null(group_1) && !is.null(group_2) && group_1 == group_2) {
     stop("'group_1' and 'group_2' may not be equal.")
+  } else if (!(length(paired_boot)==1 && is.logical(paired_boot) &&
+               !is.na(paired_boot))) {
+    stop("'paired_boot' must be either TRUE or FALSE.")
   } else if (use_boot & is.null(adj$boot_adj)) {
     stop("Bootstrapped estimates can only be calculated if 'bootstrap=TRUE'",
          " was used in the original adjustedsurv or adjustedcif function",

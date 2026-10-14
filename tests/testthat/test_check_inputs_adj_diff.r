@@ -133,6 +133,17 @@ test_that("using conf_int without approximate stuff surv", {
                fixed=TRUE)
 })
 
+test_that("paired_boot not logical", {
+  expect_error(check_inputs_adj_diff(adj=adj2,
+                                     group_1="0",
+                                     group_2="1",
+                                     conf_int=FALSE,
+                                     use_boot=FALSE,
+                                     paired_boot="yes"),
+               "'paired_boot' must be either TRUE or FALSE.",
+               fixed=TRUE)
+})
+
 adj2$adj <- dplyr::select(adj2$adj, c("time", "group", "surv"))
 
 test_that("using conf_int without approximate stuff surv", {
