@@ -2,6 +2,27 @@
 
 ## adjustedCurves 0.12.1 (developmental version)
 
+Enhancements
+
+- Added the `paired_boot` argument to
+  [`adjusted_curve_diff()`](https://robindenz1.github.io/adjustedCurves/reference/adjusted_curve_diff.md)
+  and
+  [`adjusted_curve_ratio()`](https://robindenz1.github.io/adjustedCurves/reference/adjusted_curve_diff.md).
+  With `use_boot=TRUE` and the new default `paired_boot=TRUE`, the
+  variances of the two curves and their covariance are now estimated
+  from the paired bootstrap estimates, so the standard errors,
+  confidence intervals and p-values no longer assume that the two curves
+  are independent. This mainly affects methods in which both curves are
+  estimated using the same model, such as `method="direct"`, where the
+  previous intervals were conservative. `paired_boot=FALSE` gives the
+  previous behavior. The bootstrap confidence intervals of
+  [`plot_curve_diff()`](https://robindenz1.github.io/adjustedCurves/reference/plot_curve_diff.md)
+  and
+  [`plot_curve_ratio()`](https://robindenz1.github.io/adjustedCurves/reference/plot_curve_diff.md)
+  change accordingly, as suggested by
+  [@HUI950319](https://github.com/HUI950319)
+  ([\#63](https://github.com/RobinDenz1/adjustedCurves/issues/63))
+
 Bug Fixes
 
 - Fixed a bug in

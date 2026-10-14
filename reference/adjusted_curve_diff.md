@@ -10,11 +10,13 @@ or estimates at specified points in time.
 ``` r
 adjusted_curve_diff(adj, group_1=NULL, group_2=NULL,
                     times=NULL, conf_int=FALSE, conf_level=0.95,
-                    use_boot=FALSE, interpolation="steps")
+                    use_boot=FALSE, interpolation="steps",
+                    paired_boot=TRUE)
 
 adjusted_curve_ratio(adj, group_1=NULL, group_2=NULL,
                      times=NULL, conf_int=FALSE, conf_level=0.95,
-                     use_boot=FALSE, interpolation="steps")
+                     use_boot=FALSE, interpolation="steps",
+                     paired_boot=TRUE)
 ```
 
 ## Arguments
@@ -75,6 +77,18 @@ adjusted_curve_ratio(adj, group_1=NULL, group_2=NULL,
   be interpolated accordingly. Should usually be kept at `"steps"`. See
   Details.
 
+- paired_boot:
+
+  Either `TRUE` (default) or `FALSE`, specifying how the bootstrap
+  estimates are used when `use_boot=TRUE`. If `TRUE`, the variances of
+  the two curves and their covariance are estimated from the bootstrap
+  replications, in which both curves were estimated on the same
+  bootstrap sample, so that the two curves do not have to be assumed
+  independent. If `FALSE`, the bootstrap standard errors of the two
+  curves are combined assuming independence, which was the only option
+  in versions before 0.12.1. Ignored if `conf_int=FALSE` or
+  `use_boot=FALSE`. See Details.
+
 ## Details
 
 ***Confidence Intervals & P-Values***
@@ -94,6 +108,25 @@ For ratios, the confidence intervals are calculated according to the
 method given by Fieller (1954), assuming the probabilities to be
 independent. P-values are calculated using a one-sample two-sided t-test
 with the test-statistic of Fieller (1954).
+
+The two curves are, however, not always independent. For example, with
+`method="direct"` both curves are estimated using the same outcome model
+and averaged over the same individuals, which usually makes them
+positively correlated. The pooled standard error is then too large,
+which leads to conservative confidence intervals and p-values. When
+`use_boot=TRUE` and `paired_boot=TRUE` (default), this assumption is not
+needed. Both curves are estimated on the same sample in each bootstrap
+replication, so their variances \\Var\_{group_1}\\, \\Var\_{group_2}\\
+and their covariance \\Cov\_{group_1, group_2}\\ can be estimated from
+the paired bootstrap estimates. The standard error of the difference is
+then given by: \$\$SE\_{group_1 - group_2} = \sqrt{Var\_{group_1} +
+Var\_{group_2} - 2 Cov\_{group_1, group_2}}\$\$ which is the standard
+deviation of the bootstrapped differences. For ratios, the covariance is
+included in the confidence interval of Fieller (1954) and in the
+test-statistic. Only bootstrap replications in which both curves could
+be estimated at a point in time are used there. Setting
+`paired_boot=FALSE` gives the pooled standard error based on the
+bootstrap standard errors of the two curves instead.
 
 If p-values are calculated for multiple points in time simultaneously,
 the user should adjust those. See
@@ -133,7 +166,9 @@ This function works exactly the same way for adjusted survival curves or
 adjusted CIFs estimated using multiple imputation as it does without any
 missing values. If multiple imputation was used previously, this
 function simply uses the pooled estimates to calculate the differences
-or ratios.
+or ratios. With `use_boot=TRUE` and `paired_boot=TRUE`, the variances
+and the covariance of the two curves are estimated in each imputed
+dataset and pooled using Rubin's rules.
 
 ***Computational Details***
 

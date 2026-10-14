@@ -48,11 +48,13 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">adjusted_curve_diff</span><span class="op">(</span><span class="va">adj</span>, group_1<span class="op">=</span><span class="cn">NULL</span>, group_2<span class="op">=</span><span class="cn">NULL</span>,</span>
 <span>                    times<span class="op">=</span><span class="cn">NULL</span>, conf_int<span class="op">=</span><span class="cn">FALSE</span>, conf_level<span class="op">=</span><span class="fl">0.95</span>,</span>
-<span>                    use_boot<span class="op">=</span><span class="cn">FALSE</span>, interpolation<span class="op">=</span><span class="st">"steps"</span><span class="op">)</span></span>
+<span>                    use_boot<span class="op">=</span><span class="cn">FALSE</span>, interpolation<span class="op">=</span><span class="st">"steps"</span>,</span>
+<span>                    paired_boot<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">adjusted_curve_ratio</span><span class="op">(</span><span class="va">adj</span>, group_1<span class="op">=</span><span class="cn">NULL</span>, group_2<span class="op">=</span><span class="cn">NULL</span>,</span>
 <span>                     times<span class="op">=</span><span class="cn">NULL</span>, conf_int<span class="op">=</span><span class="cn">FALSE</span>, conf_level<span class="op">=</span><span class="fl">0.95</span>,</span>
-<span>                     use_boot<span class="op">=</span><span class="cn">FALSE</span>, interpolation<span class="op">=</span><span class="st">"steps"</span><span class="op">)</span></span></code></pre></div>
+<span>                     use_boot<span class="op">=</span><span class="cn">FALSE</span>, interpolation<span class="op">=</span><span class="st">"steps"</span>,</span>
+<span>                     paired_boot<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -82,6 +84,9 @@
   <dt id="arg-interpolation">interpolation<a class="anchor" aria-label="anchor" href="#arg-interpolation"></a></dt>
 <dd><p>Either <code>"steps"</code> (default) or <code>"linear"</code>. This parameter controls how interpolation is performed. If this argument is set to <code>"steps"</code>, the curves will be treated as step functions. If it is set to <code>"linear"</code>, the curves wil be treated as if there are straight lines between the point estimates instead. Points that lie between estimated points will be interpolated accordingly. Should usually be kept at <code>"steps"</code>. See Details.</p></dd>
 
+  <dt id="arg-paired-boot">paired_boot<a class="anchor" aria-label="anchor" href="#arg-paired-boot"></a></dt>
+<dd><p>Either <code>TRUE</code> (default) or <code>FALSE</code>, specifying how the bootstrap estimates are used when <code>use_boot=TRUE</code>. If <code>TRUE</code>, the variances of the two curves and their covariance are estimated from the bootstrap replications, in which both curves were estimated on the same bootstrap sample, so that the two curves do not have to be assumed independent. If <code>FALSE</code>, the bootstrap standard errors of the two curves are combined assuming independence, which was the only option in versions before 0.12.1. Ignored if <code>conf_int=FALSE</code> or <code>use_boot=FALSE</code>. See Details.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -92,6 +97,9 @@
 $$SE_{group_1 - group_2} = \sqrt{SE_{group_1}^2 + SE_{group_2}^2}$$</p>
 <p>Confidence intervals are then calculated using this pooled standard error and the normal approximation. The P-Values are also obtained using this standard error combined with a two-sided one-sample t-test. The null-hypothesis is that the difference is equal to 0, and the alternative hypothesis is that the difference is not equal to 0.</p>
 <p>For ratios, the confidence intervals are calculated according to the method given by Fieller (1954), assuming the probabilities to be independent. P-values are calculated using a one-sample two-sided t-test with the test-statistic of Fieller (1954).</p>
+<p>The two curves are, however, not always independent. For example, with <code>method="direct"</code> both curves are estimated using the same outcome model and averaged over the same individuals, which usually makes them positively correlated. The pooled standard error is then too large, which leads to conservative confidence intervals and p-values. When <code>use_boot=TRUE</code> and <code>paired_boot=TRUE</code> (default), this assumption is not needed. Both curves are estimated on the same sample in each bootstrap replication, so their variances \(Var_{group_1}\), \(Var_{group_2}\) and their covariance \(Cov_{group_1, group_2}\) can be estimated from the paired bootstrap estimates. The standard error of the difference is then given by:
+$$SE_{group_1 - group_2} = \sqrt{Var_{group_1} + Var_{group_2} - 2 Cov_{group_1, group_2}}$$
+which is the standard deviation of the bootstrapped differences. For ratios, the covariance is included in the confidence interval of Fieller (1954) and in the test-statistic. Only bootstrap replications in which both curves could be estimated at a point in time are used there. Setting <code>paired_boot=FALSE</code> gives the pooled standard error based on the bootstrap standard errors of the two curves instead.</p>
 <p>If p-values are calculated for multiple points in time simultaneously, the user should adjust those. See <code><a href="https://rdrr.io/r/stats/p.adjust.html" class="external-link">?p.adjust</a></code> for more information.</p>
 <p><strong><em>Overall Difference Test</em></strong></p>
 <p>This function does not perform a test of the overall difference between two functions. To calculate the integral of the difference in a given interval the <code><a href="plot_curve_diff.html">plot_curve_diff</a></code> function can be used. Additionally, to test whether that integral is equal to zero the <code><a href="adjusted_curve_test.html">adjusted_curve_test</a></code> function can be used. No such test is available for ratios, as it is unclear what that would entail.</p>
@@ -100,7 +108,7 @@ $$SE_{group_1 - group_2} = \sqrt{SE_{group_1}^2 + SE_{group_2}^2}$$</p>
 <p><strong><em>Graphical Displays</em></strong></p>
 <p>There is no directly associated <code>plot</code> method for this function. However, this function is used internally when calling the <code><a href="plot_curve_diff.html">plot_curve_diff</a></code> function. In order to get a plot of the difference curve or point estimates, that function can be used.</p>
 <p><strong><em>Multiple Imputation</em></strong></p>
-<p>This function works exactly the same way for adjusted survival curves or adjusted CIFs estimated using multiple imputation as it does without any missing values. If multiple imputation was used previously, this function simply uses the pooled estimates to calculate the differences or ratios.</p>
+<p>This function works exactly the same way for adjusted survival curves or adjusted CIFs estimated using multiple imputation as it does without any missing values. If multiple imputation was used previously, this function simply uses the pooled estimates to calculate the differences or ratios. With <code>use_boot=TRUE</code> and <code>paired_boot=TRUE</code>, the variances and the covariance of the two curves are estimated in each imputed dataset and pooled using Rubin's rules.</p>
 <p><strong><em>Computational Details</em></strong></p>
 <p>When estimating the difference or ratios at some point in time at which no direct point estimates are available, this function needs to interpolate the curves. The interpolation method can be controlled using the <code>interpolation</code> function. In most cases, the estimated curves are step functions and the default (<code>interpolation="steps"</code>) is therefore appropriate. However, when parametric survival models where used in the estimation process it might be preferable to use linear interpolation instead.</p>
     </div>
