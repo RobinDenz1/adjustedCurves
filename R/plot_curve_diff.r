@@ -4,8 +4,8 @@
 #' @export
 plot_curve_diff <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
                             conf_level=0.95, type="steps", times=NULL,
-                            max_t=Inf, use_boot=FALSE, size=0.7, color="black",
-                            linetype="solid", alpha=1,
+                            max_t=Inf, use_boot=FALSE, paired_boot=TRUE,
+                            size=0.7, color="black", linetype="solid", alpha=1,
                             conf_int_alpha=0.4, points_ci_size=NULL,
                             points_ci_width=NULL, xlab="Time", ylab=NULL,
                             title=NULL, subtitle=NULL,
@@ -54,7 +54,7 @@ plot_curve_diff <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
   plotdata <- adjusted_curve_diff(adj=x, group_1=group_1, group_2=group_2,
                                   conf_int=conf_int, conf_level=conf_level,
                                   interpolation=interpolation, times=times,
-                                  use_boot=use_boot)
+                                  use_boot=use_boot, paired_boot=paired_boot)
   plotdata <- plotdata[which(!is.na(plotdata$diff)), ]
   plotdata <- plotdata[which(plotdata$time <= max_t), ]
 
@@ -250,8 +250,8 @@ plot_curve_diff <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
 #' @export
 plot_curve_ratio <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
                              conf_level=0.95, type="steps", times=NULL,
-                             max_t=Inf, use_boot=FALSE, size=0.7, color="black",
-                             linetype="solid", alpha=1,
+                             max_t=Inf, use_boot=FALSE, paired_boot=TRUE,
+                             size=0.7, color="black", linetype="solid", alpha=1,
                              conf_int_alpha=0.4, xlab="Time", ylab=NULL,
                              title=NULL, subtitle=NULL,
                              gg_theme=ggplot2::theme_classic(),
@@ -286,7 +286,7 @@ plot_curve_ratio <- function(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
   plotdata <- adjusted_curve_ratio(adj=x, group_1=group_1, group_2=group_2,
                                    conf_int=conf_int, conf_level=conf_level,
                                    interpolation=interpolation, times=times,
-                                   use_boot=use_boot)
+                                   use_boot=use_boot, paired_boot=paired_boot)
   plotdata <- plotdata[which(!is.na(plotdata$ratio)), ]
   plotdata <- plotdata[which(plotdata$time <= max_t), ]
 

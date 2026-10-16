@@ -34,7 +34,8 @@ test_that("plot, with conf_int", {
 })
 
 test_that("plot, with conf_int boot", {
-  plt <- plot_curve_ratio(adj, conf_int=TRUE, use_boot=TRUE)
+  plt <- plot_curve_ratio(adj, conf_int=TRUE, use_boot=TRUE,
+                          paired_boot=FALSE)
   expect_s3_class(plt, "ggplot")
   vdiffr::expect_doppelganger("plot, with conf_int boot", fig=plt)
 })

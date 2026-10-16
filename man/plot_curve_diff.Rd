@@ -11,7 +11,7 @@ A function to graphically display the difference or ratio between two confounder
 \usage{
 plot_curve_diff(x, group_1=NULL, group_2=NULL,
                 conf_int=FALSE, conf_level=0.95, type="steps",
-                times=NULL, max_t=Inf, use_boot=FALSE,
+                times=NULL, max_t=Inf, use_boot=FALSE, paired_boot=TRUE,
                 size=0.7, color="black", linetype="solid",
                 alpha=1, conf_int_alpha=0.4,
                 points_ci_size=NULL, points_ci_width=NULL,
@@ -36,8 +36,8 @@ plot_curve_diff(x, group_1=NULL, group_2=NULL,
 
 plot_curve_ratio(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
                  conf_level=0.95, type="steps", times=NULL,
-                 max_t=Inf, use_boot=FALSE, size=0.7, color="black",
-                 linetype="solid", alpha=1,
+                 max_t=Inf, use_boot=FALSE, paired_boot=TRUE,
+                 size=0.7, color="black", linetype="solid", alpha=1,
                  conf_int_alpha=0.4, xlab="Time", ylab=NULL,
                  title=NULL, subtitle=NULL,
                  gg_theme=ggplot2::theme_classic(),
@@ -74,6 +74,9 @@ A number indicating the latest time to which the curve should be extended to.
   }
   \item{use_boot}{
 Whether to use the bootstrapped estimates to calculate the confidence intervals or not. Can only be used if \code{bootstrap=TRUE} was used in the original \code{adjustedsurv} or \code{adjustedcif} function call. Ignored if \code{conf_int=FALSE}.
+  }
+  \item{paired_boot}{
+Either \code{TRUE} (default) or \code{FALSE}, specifying how the bootstrap estimates are used when \code{use_boot=TRUE}. If \code{TRUE}, the variances of the two curves and their covariance are estimated from the bootstrap replications, in which both curves were estimated on the same bootstrap sample, so that the two curves do not have to be assumed independent. If \code{FALSE}, the bootstrap standard errors of the two curves are combined assuming independence, which was the only option in versions before 0.12.1. Ignored if \code{conf_int=FALSE} or \code{use_boot=FALSE}. See Details.
   }
   \item{size}{
 A number controlling the thickness of the curve.

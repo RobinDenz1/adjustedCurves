@@ -14,7 +14,7 @@
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.5.0 (2025-04-11 ucrt)",
+  "runtimePlatform": "R version 4.6.1 (2026-06-24 ucrt)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -432,7 +432,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "3197.778KB",
+  "fileSize": "3237.368KB",
   "citation": [
     {
       "@type": "ScholarlyArticle",
@@ -469,7 +469,9 @@
       }
     }
   ],
-  "releaseNotes": "https://github.com/RobinDenz1/adjustedCurves/blob/master/NEWS.md",
+  "releaseNotes": "https://github.com/RobinDenz1/adjustedCurves/blob/main/NEWS.md",
+  "readme": "https://github.com/RobinDenz1/adjustedCurves/blob/main/README.md",
   "contIntegration": ["https://github.com/RobinDenz1/adjustedCurves/actions", "https://app.codecov.io/gh/RobinDenz1/adjustedCurves?branch=main"],
-  "developmentStatus": "https://www.repostatus.org/#active"
+  "developmentStatus": "https://www.repostatus.org/#active",
+  "keywords": ["adjusted", "survival-curves", "cumulative-incidence", "confidence-intervals"]
 }
