@@ -48,7 +48,7 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plot_curve_diff</span><span class="op">(</span><span class="va">x</span>, group_1<span class="op">=</span><span class="cn">NULL</span>, group_2<span class="op">=</span><span class="cn">NULL</span>,</span>
 <span>                conf_int<span class="op">=</span><span class="cn">FALSE</span>, conf_level<span class="op">=</span><span class="fl">0.95</span>, type<span class="op">=</span><span class="st">"steps"</span>,</span>
-<span>                times<span class="op">=</span><span class="cn">NULL</span>, max_t<span class="op">=</span><span class="cn">Inf</span>, use_boot<span class="op">=</span><span class="cn">FALSE</span>,</span>
+<span>                times<span class="op">=</span><span class="cn">NULL</span>, max_t<span class="op">=</span><span class="cn">Inf</span>, use_boot<span class="op">=</span><span class="cn">FALSE</span>, paired_boot<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>                size<span class="op">=</span><span class="fl">0.7</span>, color<span class="op">=</span><span class="st">"black"</span>, linetype<span class="op">=</span><span class="st">"solid"</span>,</span>
 <span>                alpha<span class="op">=</span><span class="fl">1</span>, conf_int_alpha<span class="op">=</span><span class="fl">0.4</span>,</span>
 <span>                points_ci_size<span class="op">=</span><span class="cn">NULL</span>, points_ci_width<span class="op">=</span><span class="cn">NULL</span>,</span>
@@ -73,8 +73,8 @@
 <span></span>
 <span><span class="fu">plot_curve_ratio</span><span class="op">(</span><span class="va">x</span>, group_1<span class="op">=</span><span class="cn">NULL</span>, group_2<span class="op">=</span><span class="cn">NULL</span>, conf_int<span class="op">=</span><span class="cn">FALSE</span>,</span>
 <span>                 conf_level<span class="op">=</span><span class="fl">0.95</span>, type<span class="op">=</span><span class="st">"steps"</span>, times<span class="op">=</span><span class="cn">NULL</span>,</span>
-<span>                 max_t<span class="op">=</span><span class="cn">Inf</span>, use_boot<span class="op">=</span><span class="cn">FALSE</span>, size<span class="op">=</span><span class="fl">0.7</span>, color<span class="op">=</span><span class="st">"black"</span>,</span>
-<span>                 linetype<span class="op">=</span><span class="st">"solid"</span>, alpha<span class="op">=</span><span class="fl">1</span>,</span>
+<span>                 max_t<span class="op">=</span><span class="cn">Inf</span>, use_boot<span class="op">=</span><span class="cn">FALSE</span>, paired_boot<span class="op">=</span><span class="cn">TRUE</span>,</span>
+<span>                 size<span class="op">=</span><span class="fl">0.7</span>, color<span class="op">=</span><span class="st">"black"</span>, linetype<span class="op">=</span><span class="st">"solid"</span>, alpha<span class="op">=</span><span class="fl">1</span>,</span>
 <span>                 conf_int_alpha<span class="op">=</span><span class="fl">0.4</span>, xlab<span class="op">=</span><span class="st">"Time"</span>, ylab<span class="op">=</span><span class="cn">NULL</span>,</span>
 <span>                 title<span class="op">=</span><span class="cn">NULL</span>, subtitle<span class="op">=</span><span class="cn">NULL</span>,</span>
 <span>                 gg_theme<span class="op">=</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -113,6 +113,9 @@
 
   <dt id="arg-use-boot">use_boot<a class="anchor" aria-label="anchor" href="#arg-use-boot"></a></dt>
 <dd><p>Whether to use the bootstrapped estimates to calculate the confidence intervals or not. Can only be used if <code>bootstrap=TRUE</code> was used in the original <code>adjustedsurv</code> or <code>adjustedcif</code> function call. Ignored if <code>conf_int=FALSE</code>.</p></dd>
+
+  <dt id="arg-paired-boot">paired_boot<a class="anchor" aria-label="anchor" href="#arg-paired-boot"></a></dt>
+<dd><p>Either <code>TRUE</code> (default) or <code>FALSE</code>, specifying how the bootstrap estimates are used when <code>use_boot=TRUE</code>. If <code>TRUE</code>, the variances of the two curves and their covariance are estimated from the bootstrap replications, in which both curves were estimated on the same bootstrap sample, so that the two curves do not have to be assumed independent. If <code>FALSE</code>, the bootstrap standard errors of the two curves are combined assuming independence, which was the only option in versions before 0.12.1. Ignored if <code>conf_int=FALSE</code> or <code>use_boot=FALSE</code>. See Details.</p></dd>
 
   <dt id="arg-size">size<a class="anchor" aria-label="anchor" href="#arg-size"></a></dt>
 <dd><p>A number controlling the thickness of the curve.</p></dd>

@@ -16,7 +16,7 @@ features can be added using the standard `ggplot2` syntax.
 ``` r
 plot_curve_diff(x, group_1=NULL, group_2=NULL,
                 conf_int=FALSE, conf_level=0.95, type="steps",
-                times=NULL, max_t=Inf, use_boot=FALSE,
+                times=NULL, max_t=Inf, use_boot=FALSE, paired_boot=TRUE,
                 size=0.7, color="black", linetype="solid",
                 alpha=1, conf_int_alpha=0.4,
                 points_ci_size=NULL, points_ci_width=NULL,
@@ -41,8 +41,8 @@ plot_curve_diff(x, group_1=NULL, group_2=NULL,
 
 plot_curve_ratio(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
                  conf_level=0.95, type="steps", times=NULL,
-                 max_t=Inf, use_boot=FALSE, size=0.7, color="black",
-                 linetype="solid", alpha=1,
+                 max_t=Inf, use_boot=FALSE, paired_boot=TRUE,
+                 size=0.7, color="black", linetype="solid", alpha=1,
                  conf_int_alpha=0.4, xlab="Time", ylab=NULL,
                  title=NULL, subtitle=NULL,
                  gg_theme=ggplot2::theme_classic(),
@@ -119,6 +119,18 @@ plot_curve_ratio(x, group_1=NULL, group_2=NULL, conf_int=FALSE,
   intervals or not. Can only be used if `bootstrap=TRUE` was used in the
   original `adjustedsurv` or `adjustedcif` function call. Ignored if
   `conf_int=FALSE`.
+
+- paired_boot:
+
+  Either `TRUE` (default) or `FALSE`, specifying how the bootstrap
+  estimates are used when `use_boot=TRUE`. If `TRUE`, the variances of
+  the two curves and their covariance are estimated from the bootstrap
+  replications, in which both curves were estimated on the same
+  bootstrap sample, so that the two curves do not have to be assumed
+  independent. If `FALSE`, the bootstrap standard errors of the two
+  curves are combined assuming independence, which was the only option
+  in versions before 0.12.1. Ignored if `conf_int=FALSE` or
+  `use_boot=FALSE`. See Details.
 
 - size:
 
