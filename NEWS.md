@@ -4,6 +4,7 @@
 Enhancements
 
 * Added the `paired_boot` argument to `adjusted_curve_diff()` and `adjusted_curve_ratio()`. With `use_boot=TRUE` and the new default `paired_boot=TRUE`, the variances of the two curves and their covariance are now estimated from the paired bootstrap estimates, so the standard errors, confidence intervals and p-values no longer assume that the two curves are independent. This mainly affects methods in which both curves are estimated using the same model, such as `method="direct"`, where the previous intervals were conservative. `paired_boot=FALSE` gives the previous behavior. The bootstrap confidence intervals of `plot_curve_diff()` and `plot_curve_ratio()` change accordingly, as suggested by @HUI950319 (#63)
+* Treatments with > 2 categories are now supported for `method = "aiptw"` in both `adjustedsurv()` and `adjustedcif()`. The underlying estimation in both cases is still performed using `ate()` from the `riskRegression` package.
 
 Bug Fixes
 

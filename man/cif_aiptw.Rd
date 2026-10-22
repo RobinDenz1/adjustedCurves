@@ -15,7 +15,7 @@ This page explains the details of estimating augmented inverse probability of tr
 [\strong{required}] Must be a \code{CauseSpecificCox} model object created using the \code{\link[riskRegression]{CSC}} function, modeling the time-to-event mechanism. See details and examples.
 }
   \item{\code{treatment_model}}{
-[\strong{required}] Must be a \code{glm} model object with \code{variable} as response variable. See details and examples.
+[\strong{required}] Must be a \code{glm} model object with \code{variable} as response variable, or a \code{\link[nnet]{multinom}} model if the treatment is categorical. See details and examples.
 }
   \item{\code{censoring_model}}{
 Must be a \code{coxph} model object, modeling the censoring mechanism or \code{NULL}. If \code{NULL} (default) independent censoring is assumed. See details and examples.
@@ -34,7 +34,7 @@ Further arguments passed to \code{\link[riskRegression]{ate}}.
 \itemize{
 \item{\strong{Type of Adjustment:} Requires both a treatment assignment model (\code{\link{glm}}) and a outcome model (\code{\link[riskRegression]{CSC}}). Also allows, but does not rely on, an additional model describing the censoring mechanism (a \code{\link[survival]{coxph}} object).}
 \item{\strong{Doubly-Robust:} Estimates are Doubly-Robust.}
-\item{\strong{Categorical groups:} Currently only two groups in \code{variable} are allowed. Must still be a factor variable.}
+\item{\strong{Categorical groups:} Categorical treatments are allowed.}
 \item{\strong{Approximate Variance:} Calculations to approximate the variance and confidence intervals are available.}
 \item{\strong{Allowed Time Values:} Allows both continuous and integer time.}
 \item{\strong{Bounded Estimates:} Estimates are not guaranteed to be bounded in the 0 to 1 probability range.}

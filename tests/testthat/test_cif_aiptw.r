@@ -101,3 +101,33 @@ test_that("2 treatments, no conf_int, no boot, with times, with cens_mod", {
   expect_true(is.numeric(adj$adj$cif))
   expect_equal(levels(adj$adj$group), levels(sim_dat$group))
 })
+
+set.seed(37)
+
+sim_dat <- readRDS(system.file("testdata",
+                               "d_sim_crisk_n_200.Rds",
+                               package="adjustedCurves"))
+sim_dat$group[sim_dat$group==1] <- sample(c(1, 2),
+                                          size=nrow(sim_dat[sim_dat$group==1, ]),
+                                          replace=TRUE)
+sim_dat$group <- as.factor(sim_dat$group)
+
+# outcome models
+mod_CSC <- riskRegression::CSC(Hist(time, event) ~ x1 + x2 + x3 + x4 + x5 + x6,
+                               data=sim_dat)
+mod_multinom <- quiet(nnet::multinom(group ~ x1 + x2, data=sim_dat))
+
+test_that("3 treatments, no conf_int, no boot", {
+  adj <- adjustedcif(data=sim_dat,
+                     variable="group",
+                     ev_time="time",
+                     event="event",
+                     method="aiptw",
+                     conf_int=FALSE,
+                     outcome_model=mod_CSC,
+                     treatment_model=mod_multinom,
+                     cause=1)
+  expect_s3_class(adj, "adjustedcif")
+  expect_true(is.numeric(adj$adj$cif))
+  expect_equal(levels(adj$adj$group), levels(sim_dat$group))
+})

@@ -106,7 +106,7 @@ check_inputs_adjustedsurv <- function(data, variable, ev_time, event, method,
     levs_len <- length(unique(data[, variable]))
     if (levs_len < 2) {
       stop("There have to be at least two groups in 'variable'.")
-    } else if (levs_len > 2 & method %in% c("matching", "emp_lik", "aiptw",
+    } else if (levs_len > 2 & method %in% c("matching", "emp_lik",
                                             "tmle", "iv_2SRIF", "prox_iptw",
                                             "prox_aiptw")) {
       stop("Categorical treatments are currently not supported for ",
@@ -796,7 +796,7 @@ check_inputs_adjustedcif <- function(data, variable, ev_time, event, method,
     levs_len <- length(unique(data[, variable]))
     if (levs_len < 2) {
       stop("There have to be at least two groups in 'variable'.")
-    } else if (levs_len > 2 & method %in% c("matching", "aiptw")) {
+    } else if (levs_len > 2 & method %in% c("matching")) {
       stop("Categorical treatments are currently not supported for ",
            "method='", method, "'.")
     }

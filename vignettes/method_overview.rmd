@@ -22,8 +22,8 @@ tab <- data.frame(
            '"strat_cupples"', '"iv_2SRIF"', '"prox_iptw"', '"prox_aiptw"',
            '"km"'),
   supp_unmeasured=c(rep("no", 14), rep("yes", 3), "no"),
-  supp_categorical=c(rep("yes", 6), rep("no", 3), "yes", "no", rep("yes", 3),
-                     "no", "no", "no", "yes"),
+  supp_categorical=c(rep("yes", 6), rep("no", 2), "yes", "yes", "no",
+                     rep("yes", 3), "no", "no", "no", "yes"),
   supp_continuous_conf=c(rep("yes", 11), rep("no", 3), rep("yes", 3), "no"),
   supp_approx_var=c("yes", "no", "yes", "no", "yes", "no", "no", "no", "yes",
                     "yes", "yes", "no", "yes", "no", "no", "yes", "yes", "yes"),
@@ -74,7 +74,7 @@ tab <- data.frame(
            "glm or multinom object, weights, formula for weightit()",
            "glm or multinom object, weights, formula for weightit()",
            "glm object or propensity scores",
-           "glm object",
+           "glm object or multinom object",
            "glm or multinom object or propensity scores",
            "vector of SuperLearner libraries")
 )
@@ -109,7 +109,7 @@ tab <- data.frame(
            '"matching"', '"aiptw"', '"aiptw_pseudo"', '"tmle"',
            '"aalen_johansen"'),
   supp_unmeasured="no",
-  supp_categorical=c("yes", "yes", "yes", "yes", "no", "no", "yes", "no",
+  supp_categorical=c("yes", "yes", "yes", "yes", "no", "yes", "yes", "no",
                      "yes"),
   supp_continuous_conf=c(rep("yes", 8), "no"),
   supp_approx_var=c("yes", "no", "yes", "yes", "no", "yes", "yes", "yes",
@@ -152,7 +152,7 @@ tab <- data.frame(
   allows=c("glm or multinom object",
            "glm or multinom object, weights, formula for weightit()",
            "glm object or propensity scores",
-           "glm object",
+           "glm object or multinom object",
            "glm or multinom object or propensity scores",
            "vector of SuperLearner libraries")
 )
