@@ -27,7 +27,7 @@ The following table gives a general overview of all supported methods in
 | 6 | “iptw_cens” | no | yes | yes | no | no | yes | no | yes | treatment | no | \+ | prodlim |
 | 7 | “matching” | no | no | yes | no | yes | yes | no | no | treatment | depends | \- | Matching |
 | 8 | “emp_lik” | no | no | yes | no | yes | yes | no | no | treatment | yes | \+ | MASS |
-| 9 | “aiptw” | no | no | yes | yes | no | no | yes | yes | both | no | \- | riskRegression |
+| 9 | “aiptw” | no | yes | yes | yes | no | no | yes | yes | both | no | \- | riskRegression |
 | 10 | “aiptw_pseudo” | no | yes | yes | yes | no | no | yes | yes | both | no | \- - | geepack, prodlim |
 | 12 | “strat_amato” | no | yes | no | no | yes | yes | no | no | \- | yes | +++ | \- |
 | 13 | “strat_nieto” | no | yes | no | yes | yes | yes | no | no | \- | yes | +++ | \- |
@@ -56,7 +56,7 @@ The following table gives an overview of the supported input to the
 | “iptw_cox”     | glm or multinom object, weights, formula for weightit() |
 | “iptw_pseudo”  | glm or multinom object, weights, formula for weightit() |
 | “matching”     | glm object or propensity scores                         |
-| “aiptw”        | glm object                                              |
+| “aiptw”        | glm object or multinom object                           |
 | “aiptw_pseudo” | glm or multinom object or propensity scores             |
 
 After having created an `adjustedsurv` object using the
@@ -101,7 +101,7 @@ The following table gives a general overview of all supported methods in
 | 3 | “iptw” | no | yes | yes | yes | yes | yes | no | yes | treatment | no | \+ | riskRegression |
 | 4 | “iptw_pseudo” | no | yes | yes | yes | no | no | no | no | treatment | depends | \+ | prodlim |
 | 5 | “matching” | no | no | yes | no | yes | yes | no | no | treatment | depends | \- | Matching |
-| 6 | “aiptw” | no | no | yes | yes | no | no | yes | yes | both | no | \- | riskRegression |
+| 6 | “aiptw” | no | yes | yes | yes | no | no | yes | yes | both | no | \- | riskRegression |
 | 7 | “aiptw_pseudo” | no | yes | yes | yes | no | no | yes | no | both | no | \- - | geepack, prodlim |
 | 9 | “aalen_johansen” | no | yes | no | yes | yes | yes | no | no | none | yes | ++ | cmprsk |
 
@@ -113,7 +113,7 @@ The following table gives an overview of the supported input to the
 | “iptw”         | glm or multinom object                                  |
 | “iptw_pseudo”  | glm or multinom object, weights, formula for weightit() |
 | “matching”     | glm object or propensity scores                         |
-| “aiptw”        | glm object                                              |
+| “aiptw”        | glm object or multinom object                           |
 | “aiptw_pseudo” | glm or multinom object or propensity scores             |
 
 Note that method `"iptw"` currently does not support directly supplying

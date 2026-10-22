@@ -21,7 +21,9 @@ call. Further arguments specific to this method are listed below.
 - `treatment_model`:
 
   \[**required**\] Must be a `glm` model object with `variable` as
-  response variable. See details and examples.
+  response variable, or a
+  [`multinom`](https://rdrr.io/pkg/nnet/man/multinom.html) model if the
+  treatment is categorical. See details and examples.
 
 - `censoring_model`:
 
@@ -50,8 +52,7 @@ call. Further arguments specific to this method are listed below.
 
 - **Doubly-Robust:** Estimates are Doubly-Robust.
 
-- **Categorical groups:** Currently only two groups in `variable` are
-  allowed. Must still be a factor variable.
+- **Categorical groups:** Categorical treatments are allowed.
 
 - **Approximate Variance:** Calculations to approximate the variance and
   confidence intervals are available.

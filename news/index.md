@@ -22,6 +22,14 @@ Enhancements
   change accordingly, as suggested by
   [@HUI950319](https://github.com/HUI950319)
   ([\#63](https://github.com/RobinDenz1/adjustedCurves/issues/63))
+- Treatments with \> 2 categories are now supported for
+  `method = "aiptw"` in both
+  [`adjustedsurv()`](https://robindenz1.github.io/adjustedCurves/reference/adjustedsurv.md)
+  and
+  [`adjustedcif()`](https://robindenz1.github.io/adjustedCurves/reference/adjustedcif.md).
+  The underlying estimation in both cases is still performed using
+  [`ate()`](https://rdrr.io/pkg/riskRegression/man/ate.html) from the
+  `riskRegression` package.
 
 Bug Fixes
 
