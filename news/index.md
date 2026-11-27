@@ -49,6 +49,22 @@ Bug Fixes
   and the confidence intervals pooled over multiply imputed datasets,
   were based on a standard error that was too large by a factor of 1/S
   ([\#61](https://github.com/RobinDenz1/adjustedCurves/issues/61))
+- Fixed the same bug in
+  [`adjustedsurv()`](https://robindenz1.github.io/adjustedCurves/reference/adjustedsurv.md)
+  with `method="strat_nieto"` and `conf_int=TRUE`, where the `se` column
+  contained the standard error of the log survival probability (equation
+  7 of Nieto & Coresh 1996) instead of the standard error of the
+  survival probability. As with `method="km"`, the survival curves and
+  their confidence intervals were not affected, but the confidence
+  intervals and p-values of
+  [`adjusted_curve_diff()`](https://robindenz1.github.io/adjustedCurves/reference/adjusted_curve_diff.md),
+  [`adjusted_curve_ratio()`](https://robindenz1.github.io/adjustedCurves/reference/adjusted_curve_diff.md),
+  [`plot_curve_diff()`](https://robindenz1.github.io/adjustedCurves/reference/plot_curve_diff.md)
+  and
+  [`plot_curve_ratio()`](https://robindenz1.github.io/adjustedCurves/reference/plot_curve_diff.md),
+  and the confidence intervals pooled over multiply imputed datasets,
+  were based on a standard error that was too large by a factor of 1/S
+  ([\#66](https://github.com/RobinDenz1/adjustedCurves/issues/66))
 
 ## adjustedCurves 0.12.0
 
