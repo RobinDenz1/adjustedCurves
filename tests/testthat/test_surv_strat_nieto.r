@@ -36,6 +36,38 @@ test_that("2 treatments, one confounder, with conf_int", {
   expect_equal(levels(adj$adj$group), levels(sim_dat$group2))
 })
 
+test_that("se is the standard error of the survival probability", {
+  dat_one <- sim_dat
+  dat_one$const <- factor("all")
+  times <- c(0.2, 0.4, 0.6)
+
+  adj_nieto <- adjustedsurv(data=dat_one,
+                            variable="group2",
+                            ev_time="time",
+                            event="event",
+                            method="strat_nieto",
+                            adjust_vars="const",
+                            conf_int=TRUE,
+                            times=times)
+  adj_km <- adjustedsurv(data=dat_one,
+                         variable="group2",
+                         ev_time="time",
+                         event="event",
+                         method="km",
+                         conf_int=TRUE,
+                         times=times)
+
+  expect_equal(adj_nieto$adj$surv, adj_km$adj$surv)
+  expect_equal(adj_nieto$adj$se, adj_km$adj$se)
+  expect_equal(adj_nieto$adj$ci_lower, adj_km$adj$ci_lower)
+  expect_equal(adj_nieto$adj$ci_upper, adj_km$adj$ci_upper)
+
+  diff_nieto <- adjusted_curve_diff(adj_nieto, times=times, conf_int=TRUE)
+  diff_km <- adjusted_curve_diff(adj_km, times=times, conf_int=TRUE)
+  expect_equal(diff_nieto$se, diff_km$se)
+  expect_equal(diff_nieto$p_value, diff_km$p_value)
+})
+
 test_that("2 treatments, one confounder, with boot", {
   adj <- adjustedsurv(data=sim_dat,
                       variable="group2",
