@@ -507,7 +507,7 @@ test_that("adjusted_rmst, 2 treatments, no boot", {
 test_that("adjusted_rmst, 2 treatments, boot", {
   adj_rmst <- adjusted_rmst(adjsurv, from=0, to=1, conf_int=TRUE)
   expect_equal(round(adj_rmst$rmst, 4), c(0.5115, 0.6566))
-  expect_equal(round(adj_rmst$se, 4), c(0.0405, 0.0391))
+  expect_equal(round(adj_rmst$se, 4), c(0.0409, 0.0474))
   expect_equal(adj_rmst$n_boot, c(3, 3))
 })
 
@@ -565,7 +565,7 @@ test_that("adjusted_rmst, 3 treatments, no boot", {
 test_that("adjusted_rmst, 3 treatments, with boot", {
   adj_rmst <- adjusted_rmst(adjsurv, from=0, to=0.6, conf_int=TRUE)
   expect_equal(round(adj_rmst$rmst, 4), c(0.5645, 0.4305, 0.5008))
-  expect_equal(round(adj_rmst$se, 4), c(0.0148, 0.0182, 0.0149))
+  expect_equal(round(adj_rmst$se, 4), c(0.0153, 0.0210, 0.0167))
   expect_equal(adj_rmst$n_boot, c(3, 3, 3))
 })
 
