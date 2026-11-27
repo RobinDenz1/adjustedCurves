@@ -30,10 +30,13 @@ area_under_curve <- function(adj, from, to, conf_int, conf_level,
         dplyr::summarise(auc=mean(auc))
       out <- as.data.frame(out)
     } else {
+      # use Rubins Rule, as in adjustedsurv() and adjustedcif()
       out <- mids_out %>%
         dplyr::group_by(., to, group) %>%
-        dplyr::summarise(auc=mean(auc),
-                         se=mean(se),
+        dplyr::summarise(var_w=mean(se^2),
+                         var_b=stats::var(auc),
+                         auc=mean(auc),
+                         se=sqrt(var_w + var_b + var_b/dplyr::n()),
                          n_boot=min(n_boot))
 
       auc_ci <- confint_surv(surv=out$auc,
