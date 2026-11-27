@@ -9,6 +9,7 @@ Enhancements
 Bug Fixes
 
 * Fixed a bug in `adjustedsurv()` with `method="km"` and `conf_int=TRUE`, where the `se` column contained the standard error of the cumulative hazard returned by `survfit()` instead of the standard error of the survival probability. The survival curves and their confidence intervals were not affected, but the confidence intervals and p-values of `adjusted_curve_diff()`, `adjusted_curve_ratio()`, `plot_curve_diff()` and `plot_curve_ratio()`, and the confidence intervals pooled over multiply imputed datasets, were based on a standard error that was too large by a factor of 1/S (#61)
+* Fixed the same bug in `adjustedsurv()` with `method="strat_nieto"` and `conf_int=TRUE`, where the `se` column contained the standard error of the log survival probability (equation 7 of Nieto & Coresh 1996) instead of the standard error of the survival probability. As with `method="km"`, the survival curves and their confidence intervals were not affected, but the confidence intervals and p-values of `adjusted_curve_diff()`, `adjusted_curve_ratio()`, `plot_curve_diff()` and `plot_curve_ratio()`, and the confidence intervals pooled over multiply imputed datasets, were based on a standard error that was too large by a factor of 1/S (#66)
 
 # adjustedCurves 0.12.0
 

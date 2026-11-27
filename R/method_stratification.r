@@ -254,10 +254,13 @@ surv_strat_nieto <- function(data, variable, ev_time, event,
 
   # equation 8 appendix
   if (conf_int) {
+    # se is on the log(S) scale from equation 7; compute log-scale CIs first,
+    # then convert to the survival probability scale via the delta method
     surv_ci <- confint_surv(surv=log(plotdata$surv),
                             se=plotdata$se,
                             conf_level=conf_level,
                             conf_type="plain")
+    plotdata$se <- plotdata$se * plotdata$surv
     plotdata$ci_lower <- exp(surv_ci$left)
     plotdata$ci_upper <- exp(surv_ci$right)
   } else {
